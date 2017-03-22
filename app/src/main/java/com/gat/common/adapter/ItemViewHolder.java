@@ -1,0 +1,35 @@
+package com.gat.common.adapter;
+
+import android.support.annotation.CallSuper;
+import android.support.annotation.LayoutRes;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+/**
+ * Created by Rey on 2/14/2017.
+ */
+
+public class ItemViewHolder<T extends Item> extends RecyclerView.ViewHolder {
+
+    protected T item;
+
+    public ItemViewHolder(ViewGroup parent, @LayoutRes int layoutId) {
+        super(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false));
+        itemView.setTag(this);
+    }
+
+    public T getItem(){
+        return item;
+    }
+
+    @CallSuper
+    public void onBindItem(T item){
+        this.item = item;
+    }
+
+    @CallSuper
+    public void onViewRecycled(){
+        this.item = null;
+    }
+}

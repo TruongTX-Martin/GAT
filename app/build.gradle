@@ -1,0 +1,215 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+apply from: "$rootProject.projectDir/buildsystem/config.gradle"
+apply from: "$rootProject.projectDir/buildsystem/library.gradle"
+//apply from: "$rootProject.projectDir/buildsystem/jacoco.gradle"
+//apply from: "$rootProject.projectDir/buildsystem/beta.gradle"
+//apply plugin: 'io.fabric'
+
+def configuration = ext.configuration;
+def library = ext.library;
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
+        // Code coverage.
+        classpath 'org.jacoco:org.jacoco.core:0.7.6.201602180812'
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    compileSdkVersion                   configuration.compileSdkVersion
+    buildToolsVersion                   configuration.buildToolsVersion
+
+    signingConfigs {
+        debug {
+            storeFile                   file("debug.jks")
+            storePassword               "android"
+            keyAlias                    "androiddebugkey"
+            keyPassword                 "android"
+        }
+    }
+
+    defaultConfig {
+        applicationId                   configuration.applicationId
+        minSdkVersion                   configuration.minimumSdkVersion
+        targetSdkVersion                configuration.targetSdkVersion
+        versionCode                     buildVersionCode()
+        versionName                     buildVersionName()
+    }
+
+    buildTypes {
+        debug {
+            versionNameSuffix           '-SNAPSHOT'
+
+            // Enables code coverage with Jacoco only for instrumentation tests.
+            // Coverage for JVM tests done by code_quality_tools/jacoco.gradle.
+            testCoverageEnabled         false
+            debuggable                  true
+            signingConfig               signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled               false
+            proguardFiles               getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            // Enables code coverage with Jacoco only for instrumentation tests.
+            // Coverage for JVM tests done by code_quality_tools/jacoco.gradle.
+            testCoverageEnabled         false
+        }
+    }
+
+    productFlavors {
+        dev {
+            minSdkVersion               21
+            multiDexEnabled             true
+            buildConfigField            'boolean', 'MULTI_DEX', 'false'
+        }
+
+        staging{
+            minSdkVersion               configuration.minimumSdkVersion
+            multiDexEnabled             true
+            buildConfigField            'boolean', 'MULTI_DEX', 'true'
+        }
+
+        prod {
+            minSdkVersion               configuration.minimumSdkVersion
+            multiDexEnabled             false
+            buildConfigField            'boolean', 'MULTI_DEX', 'false'
+        }
+    }
+
+    sourceSets {
+        // Common code for all tests lives in src/commonTests.
+        test.java.srcDir 'src/commonTests/java'
+        androidTest.java.srcDir 'src/commonTests/java'
+
+        // Unit tests live in src/unitTest.
+        test.java.srcDir 'src/unitTests/java'
+
+        // Integration tests live in src/integrationTest.
+        test.java.srcDir 'src/integrationTests/java'
+
+        // Unit tests for debug build type specific code live in src/debugUnitTest.
+        testDebug.java.srcDir 'src/debugUnitTests/java'
+
+        // Unit tests for release build type specific code live in src/releaseUnitTest.
+        testRelease.java.srcDir 'src/releaseUnitTests/java'
+
+        // Functional tests live in src/functionalTests.
+        androidTest.java.srcDir 'src/functionalTests/java'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    // This allows us see tests execution progress in the output on the CI.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+            exceptionFormat 'full'
+        }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "${library.support_annotations}"
+        force 'org.ow2.asm:asm:5.0.4'
+        force 'org.objenesis:objenesis:2.2'
+    }
+}
+
+dependencies {
+    compile                 fileTree(dir: 'libs', include: ['*.jar'])
+    //compile                 "${library.support_annotations}"
+    compile                 "${library.support_appcompat}"
+    compile                 "${library.support_design}"
+    compile                 "${library.support_recyclerview}"
+    compile                 "${library.support_cardview}"
+    compile                 "${library.mvp2}"
+    compile                 "${library.retrofit}"
+    compile                 "${library.retrofit_gson}"
+
+    //compile                 "${library.rxjava2_interop}"
+    //compile                 "${library.retrofit_rxjava}"
+    compile                 "${library.rxjava2_adapter}"
+    compile                 "${library.rxjava}"
+    compile                 "${library.rxbinding}"
+    compile                 "${library.rxjava2}"
+    compile                 "${library.rxandroid2}"
+
+
+    //compile                 "${library.rxjava2_adapter}"
+    compile                 "${library.glide}"
+    compile                 "${library.glide_okhttp}"
+    compile                 "${library.okhttp}"
+    compile                 "${library.gson}"
+    compile                 "${library.materialish_progress}"
+    compile                 "${library.paper}"
+
+    compile                 "${library.dagger2}"
+    apt                     "${library.dagger2_compiler}"
+    provided                "${library.javax_annotation}"
+    compile                 "${library.butterknife}"
+    apt                     "${library.butterknife_compiler}"
+    provided                "${library.auto_value}"
+    apt                     "${library.auto_value}"
+
+
+    compile                 "${library.play_service}"
+    compile                 "${library.play_service_location}"
+    compile                 "${library.play_service_maps}"
+    // facebook sdk
+    compile                 "com.facebook.android:facebook-android-sdk:4.+"
+    compile                 "me.dm7.barcodescanner:zxing:1.9"
+
+    compile                 "${library.timber}"
+//    compile                 ("${library.crashlytics}")          {transitive = true}
+
+    testCompile             "${library.junit}"
+    testCompile             "${library.assertj}"
+    testCompile             "${library.mockito}"
+    testCompile             "${library.robolectric}"
+
+    stagingCompile          "${library.multidex}"
+
+    androidTestCompile      "${library.support_annotations}"
+    androidTestCompile      "${library.support_test}"
+    androidTestCompile      "${library.support_test_rules}"
+    androidTestCompile      "${library.espresso}"
+    androidTestCompile      "${library.assertj}"
+    androidTestCompile      "${library.mockito}"
+    androidTestCompile      "${library.dexmaker}"
+    androidTestCompile      "${library.dexmaker_mockito}"
+}

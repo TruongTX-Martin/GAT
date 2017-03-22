@@ -1,0 +1,103 @@
+<resources>
+    <string name="app_name">GAT</string>
+
+    <!-- facebook login strings for GatEx-->
+    <!--<string name="facebook_app_id">1130625350393376</string>-->
+
+    <string name="facebook_app_id">1455075604537875</string>
+
+    <string name="hintSearch">Search book</string>
+
+    <string name="start_login_btn">Login</string>
+    <string name="start_register_btn">Register</string>
+
+    <string name="login_title">Login</string>
+    <string name="login_bysocial_title">Login by social account</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_button">Login</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+
+    <string name="login_email_empty">Email is empty</string>
+    <string name="login_email_invalid">Email is invalid</string>
+    <string name="login_password_empty">Password is empty</string>
+    <string name="login_password_length">Password length is not valid</string>
+
+    <string name="login_fail_title">Login failed</string>
+    <string name="login_fail_mes">User name or password is wrong. Check it again</string>
+    <string name="login_forgot_title">Forgot password</string>
+    <string name="forgot_sendreq_btn">Send request</string>
+    <string name="forgot_sendreq_message">Request will be sent to email</string>
+    <string name="forgot_inputtoken_message">Please input token sent to email</string>
+    <string name="forgot_inputpass_message">Please input new password</string>
+    <string name="forgot_inputtoken_hint">Token has 6 numbers</string>
+    <string name="forgot_inputtoken_length">Correct token</string>
+    <string name="verify_token_btn">Verify token</string>
+    <string name="reset_pass_btn">Change password</string>
+
+    <string name="register_title">Register</string>
+    <string name="register_btn">Register</string>
+    <string name="register_google_btn">Register with google account</string>
+    <string name="register_face_btn">Register with facebook account</string>
+    <string name="register_twitter_btn">Register with twitter account</string>
+
+    <string name="login_social_cancel">Login failed.</string>
+    <string name="register_policy">GAT policy</string>
+    <string name="authenticating">Authenticating...</string>
+    <string name="register_update_info_btn">Finish register</string>
+    <string name="name_field_null">Name is required</string>
+    <string name="btn_add_location">Save location</string>
+    <string name="btn_pass_over">Next</string>
+
+    <!-- For map -->
+    <string name="title_activity_maps">Current Place Details</string>
+    <string name="default_info_title">Hanoi Capital</string>
+    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
+    <string name="option_get_place">Get place</string>
+    <string name="pick_place">Choose a place</string>
+    <string name="app_tour"><u>Tour the application without account</u></string>
+    <string name="intro_title_1">Reading book is your hobby?</string>
+    <string name="intro_content_1">Text sample 1\nText sample 1</string>
+    <string name="intro_title_2">You want to share your book</string>
+    <string name="intro_content_2">Text sample 2\nText sample 2</string>
+    <string name="intro_title_3">You want to exchange book with others</string>
+    <string name="intro_content_3">Text sample 3\nText sample 3</string>
+    <string name="sending_failed">Sending failed</string>
+    <string name="sending">Sending...</string>
+    <string name="verifying">Verifying...</string>
+    <string name="verify_failed">Token verify failed</string>
+    <string name="pass_reseting">Changing...</string>
+    <string name="reset_pass_failed">Reset password failed.</string>
+    <string name="register_failed">Register failed</string>
+    <string name="map_connection_failed">Cannot connect to map service.</string>
+    <string name="error_auto_place">Cannot detect place.</string>
+    <string name="service_not_available">Service is not availabe</string>
+    <string name="invalid_lat_long_used">Location is invalid</string>
+    <string name="no_address_found">Address is not found</string>
+    <string name="error_detect_location">Cannot detect current location.</string>
+    <string name="update_location_failed">Cannot update location</string>
+    <string name="update_category_failed">Cannot update category</string>
+    <string name="updating">Updating...</string>
+    <string name="invalid_location">Please select location first.</string>
+
+    <string name="category_1">Category1</string>
+    <string name="category_2">Category2</string>
+    <string name="category_3">Category3</string>
+    <string name="category_4">Category4</string>
+    <string name="category_5">Category5</string>
+    <string name="category_6">Category6</string>
+    <string name="category_7">Category7</string>
+    <string name="category_8">Category8</string>
+    <string name="category_9">Category9</string>
+    <string name="category_10">Category10</string>
+    <string name="btn_add_category">Add category</string>
+    <string name="register_category_header">Favourite category</string>
+    <string name="scan_barcode_header">Scan barcode</string>
+    <string name="scan_barcode_guide">Move camera to barcode area\nto scan barcode</string>
+    <string name="btn_turn_on_light">Turn on light</string>
+    <string name="has_no_flash">Device has no compatible flash.</string>
+    <string name="btn_turn_off_light">Turn off flash</string>
+    <string name="isbn_invalid">Barcode is not valid.</string>
+    <string name="error_throw">Error happened.</string>
+
+</resources>
