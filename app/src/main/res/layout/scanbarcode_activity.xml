@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/barcode_layout">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/backgroundApp"
+        android:text="@string/scan_barcode_header"
+        android:textColor="@color/colorWhite"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="@dimen/header_textsize"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorWhite">
+
+        <me.dm7.barcodescanner.zxing.ZXingScannerView
+            android:id="@+id/barcode_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".50"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/scan_barcode_guide" />
+
+        <Button
+            android:id="@+id/btn_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="@dimen/margin_left_right"
+            android:layout_marginRight="@dimen/margin_left_right"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_rounded_blue"
+            android:drawableEnd="@drawable/forma_1"
+            android:paddingEnd="@dimen/padding_end"
+            android:paddingStart="@dimen/padding_start"
+            android:paddingTop="5dp"
+            android:text="@string/btn_turn_on_light"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+</LinearLayout>

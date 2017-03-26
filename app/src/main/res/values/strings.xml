@@ -4,7 +4,7 @@
     <!-- facebook login strings for GatEx-->
     <!--<string name="facebook_app_id">1130625350393376</string>-->
 
-    <string name="facebook_app_id">1455075604537875</string>
+    <string name="facebook_app_id">213118392506307</string>
 
     <string name="hintSearch">Search book</string>
 
@@ -99,5 +99,10 @@
     <string name="btn_turn_off_light">Turn off flash</string>
     <string name="isbn_invalid">Barcode is not valid.</string>
     <string name="error_throw">Error happened.</string>
+    <string name="tab_home">Home page</string>
+    <string name="tab_personal">Personal</string>
+    <string name="tab_scanbarcode">Scan ISBN</string>
+    <string name="tab_notification">Notification</string>
+    <string name="tab_setting">Setting</string>
 
 </resources>

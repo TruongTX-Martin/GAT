@@ -13,6 +13,8 @@ import com.gat.feature.register.update.location.AddLocationPresenterImpl;
 import com.gat.feature.search.SearchItemBuilder;
 import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.search.SearchPresenterImpl;
+import com.gat.feature.suggestion.SuggestionPresenter;
+import com.gat.feature.suggestion.SuggestionPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;
@@ -57,6 +59,13 @@ public class PresenterModule {
     AddCategoryPresenter provideAddCategoryPresenter(UseCaseFactory useCaseFactory,
                                                      SchedulerFactory schedulerFactory){
         return new AddCategoryPresenterImpl(useCaseFactory, schedulerFactory) {
+        };
+    }
+
+    @Provides
+    SuggestionPresenter provideSuggestionPresenter(UseCaseFactory useCaseFactory,
+                                                    SchedulerFactory schedulerFactory){
+        return new SuggestionPresenterImpl(useCaseFactory, schedulerFactory) {
         };
     }
 }

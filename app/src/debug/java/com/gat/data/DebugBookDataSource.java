@@ -3,6 +3,7 @@ package com.gat.data;
 import com.gat.data.api.GatApi;
 import com.gat.data.id.LongId;
 import com.gat.data.response.ServerResponse;
+import com.gat.dependency.DataComponent;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Author;
 import com.gat.repository.entity.Book;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 //import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Observable;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 //import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,6 +26,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class DebugBookDataSource implements BookDataSource {
+    private final DataComponent dataComponent;
+
+    public DebugBookDataSource(DataComponent dataComponent) {
+        this.dataComponent = dataComponent;
+    }
 
     private List<Book> listOfBooks(Book... books){
         ArrayList list = new ArrayList();
@@ -71,27 +78,17 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<ServerResponse<Book>> searchBookByIsbn(String isbn) {
-        /*Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://gatbook-api-v1.azurewebsites.net/api/")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    public Observable<Book> searchBookByIsbn(String isbn) {
+        GatApi gatApi = dataComponent.getPublicGatApi();
 
-        GatApi gatApi = retrofit.create(GatApi.class);
-
-        Observable<ServerResponse<Book>> bookResponse = RxJavaInterop.toV2Observable(
-                gatApi.getBookByIsbn(isbn).map(response -> {
-                    ServerResponse serverResponse = response.body();
-                    if (serverResponse != null) {
-                        return serverResponse;
-                    } else {
-                        throw new RuntimeException();
-                    }
-                })
-        );
-        return bookResponse;
-        */
-        return null;
+        Observable<Response<ServerResponse<Book>>> bookResponse = gatApi.getBookByIsbn(isbn);
+        return bookResponse.map(response -> {
+            ServerResponse<Book> serverResponse = response.body();
+            if (serverResponse != null) {
+                return serverResponse.data();
+            } else {
+                throw new RuntimeException();
+            }
+        });
     }
 }

@@ -6,6 +6,7 @@ import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchScreen;
+import com.gat.feature.suggestion.SuggestionScreen;
 import com.rey.mvp2.Presenter;
 import com.rey.mvp2.PresenterFactory;
 
@@ -34,6 +35,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P)presenterComponent.getAddLocationPresenter();
         else if (key instanceof AddCategoryScreen)
             return (P) presenterComponent.getAddCategoryPresenter();
+        else if (key instanceof SuggestionScreen)
+            return (P) presenterComponent.getSuggestionPresenter();
 
         throw new IllegalArgumentException("Not support key " + key);
     }

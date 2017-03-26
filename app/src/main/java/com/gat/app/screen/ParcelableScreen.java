@@ -8,6 +8,7 @@ import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchScreen;
+import com.gat.feature.suggestion.SuggestionScreen;
 
 /**
  * Created by Rey on 2/14/2017.
@@ -22,6 +23,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int REGISTER = 3;
     private static final int ADD_LOCATION = 4;
     private static final int ADD_CATEGORY = 5;
+    private static final int SUGGESTION = 6;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -47,6 +49,8 @@ public class ParcelableScreen implements Parcelable {
             return ADD_LOCATION;
         if (screen instanceof AddCategoryScreen)
             return ADD_CATEGORY;
+        if (screen instanceof SuggestionScreen)
+            return SUGGESTION;
         throw new IllegalArgumentException("Not support screen " + screen);
     }
 
@@ -64,6 +68,8 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof AddLocationScreen) {
 
         } else if (screen instanceof AddCategoryScreen) {
+
+        } else if (screen instanceof SuggestionScreen) {
 
         }
 
@@ -88,6 +94,9 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case ADD_CATEGORY:
                 screen = AddCategoryScreen.instance();
+                break;
+            case SUGGESTION:
+                screen = SuggestionScreen.instance();
                 break;
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);

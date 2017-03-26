@@ -23,13 +23,8 @@ public class DebugAppModule extends AppModule {
     }
 
     @Override
-    BookDataSource provideNetworkBookDataSource() {
-        return new DebugBookDataSource();
-    }
-
-    @Override
-    BookDataSource provideLocalBookDataSource() {
-        return new DebugBookDataSource();
+    BookDataSource provideNetworkBookDataSource(DataComponent dataComponent) {
+        return new DebugBookDataSource(dataComponent);
     }
 
     @Override

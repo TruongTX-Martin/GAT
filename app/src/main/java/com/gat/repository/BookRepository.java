@@ -14,6 +14,6 @@ import io.reactivex.Observable;
 public interface BookRepository {
 
     Observable<List<Book>> searchBookByKeyword(String keyword, int page, int sizeOfPage);
-    Observable<ServerResponse<Book>> searchBookByIsbn(String isbn);
+    Observable<Book> searchBookByIsbn(String isbn);
 
 }

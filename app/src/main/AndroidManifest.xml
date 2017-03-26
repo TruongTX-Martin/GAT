@@ -29,6 +29,9 @@
         <activity android:name=".feature.search.SearchActivity">
 
         </activity>
+        <activity android:name=".feature.suggestion.SuggestionActivity">
+
+        </activity>
         <activity android:name=".feature.login.LoginActivity">
         </activity>
         <activity android:name=".feature.register.update.location.AddLocationActivity">

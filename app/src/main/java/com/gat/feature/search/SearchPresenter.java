@@ -27,7 +27,7 @@ public interface SearchPresenter extends Presenter {
     void refreshBooks();
 
     void setIsbn(String isbn);
-    Observable<ServerResponse<Book>> getBookResult();
+    Observable<Book> getBookResult();
     Observable<ServerResponse> onError();
 
 }

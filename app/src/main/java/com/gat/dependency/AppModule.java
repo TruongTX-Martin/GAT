@@ -48,7 +48,7 @@ public class AppModule {
     @Provides
     @Singleton
     @Named("network")
-    BookDataSource provideNetworkBookDataSource(){
+    BookDataSource provideNetworkBookDataSource(DataComponent dataComponent){
         //TODO: provide implementation
         return null;
     }

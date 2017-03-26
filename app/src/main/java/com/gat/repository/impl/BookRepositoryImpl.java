@@ -30,7 +30,7 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Observable<ServerResponse<Book>> searchBookByIsbn(String isbn) {
+    public Observable<Book> searchBookByIsbn(String isbn) {
         return Observable.defer(() -> networkDataSourceLazy.get().searchBookByIsbn(isbn));
     }
 }

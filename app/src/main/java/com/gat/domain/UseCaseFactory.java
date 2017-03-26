@@ -44,7 +44,7 @@ public interface UseCaseFactory {
 
     UseCase<ServerResponse> updateCategories(List<Integer> categories);
 
-    UseCase<ServerResponse<Book>> getBookByIsbn(String isbn);
+    UseCase<Book> getBookByIsbn(String isbn);
 
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);
 

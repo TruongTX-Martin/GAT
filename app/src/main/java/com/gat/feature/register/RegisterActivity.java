@@ -157,6 +157,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                                     String name = object.has("name") ? object.getString("name") : Strings.EMPTY;
                                     String email = object.has("email") ? object.getString("email") : Strings.EMPTY;
                                     String image = object.has("picture") ? object.getJSONObject("picture").getJSONObject("data").getString("url") : Strings.EMPTY;
+                                    String userId = loginResult.getAccessToken().getUserId();
                                     // Logging
                                     getPresenter().setIdentity(SocialLoginData.instance(
                                             loginResult.getAccessToken().getToken(),
@@ -164,7 +165,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                                             email,
                                             Strings.EMPTY,
                                             name,
-                                            image
+                                            userId
                                     ));
                                     // Loading
                                     onLogging(true);

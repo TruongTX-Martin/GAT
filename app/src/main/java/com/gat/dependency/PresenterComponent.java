@@ -6,6 +6,7 @@ import com.gat.feature.register.update.category.AddCategoryPresenter;
 import com.gat.feature.register.update.location.AddLocationPresenter;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchPresenter;
+import com.gat.feature.suggestion.SuggestionPresenter;
 
 import dagger.Subcomponent;
 
@@ -24,4 +25,5 @@ public interface PresenterComponent {
     RegisterPresenter getRegisterPresenter();
     AddLocationPresenter getAddLocationPresenter();
     AddCategoryPresenter getAddCategoryPresenter();
+    SuggestionPresenter getSuggestionPresenter();
 }

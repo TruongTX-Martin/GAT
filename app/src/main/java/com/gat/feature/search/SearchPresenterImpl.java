@@ -50,9 +50,9 @@ public class SearchPresenterImpl implements SearchPresenter {
     private CompositeDisposable compositeDisposable;
 
     private final Subject<String> isbnSubject;
-    private final Subject<ServerResponse<Book>> bookResultSubject;
+    private final Subject<Book> bookResultSubject;
     private final Subject<ServerResponse> errorSubject;
-    private UseCase<ServerResponse<Book>> getByIsbnUseCase;
+    private UseCase<Book> getByIsbnUseCase;
 
     public SearchPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory, SearchItemBuilder itemBuilder){
         this.useCaseFactory = useCaseFactory;
@@ -188,7 +188,7 @@ public class SearchPresenterImpl implements SearchPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<Book>> getBookResult() {
+    public Observable<Book> getBookResult() {
         return bookResultSubject.observeOn(schedulerFactory.main());
     }
 

@@ -57,7 +57,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<ServerResponse<Book>> getBookByIsbn(String isbn) {
+    public UseCase<Book> getBookByIsbn(String isbn) {
         return new SearchBookByIsbn(bookRepositoryLazy.get(), isbn);
     }
 
