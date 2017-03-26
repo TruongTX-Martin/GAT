@@ -33,4 +33,9 @@ public class BookRepositoryImpl implements BookRepository {
     public Observable<Book> searchBookByIsbn(String isbn) {
         return Observable.defer(() -> networkDataSourceLazy.get().searchBookByIsbn(isbn));
     }
+
+    @Override
+    public Observable<List<Book>> suggestMostSearched() {
+        return Observable.defer(()-> networkDataSourceLazy.get().suggestMostSearched());
+    }
 }

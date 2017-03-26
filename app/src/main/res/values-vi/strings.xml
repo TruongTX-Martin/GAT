@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tab_home">Trang Chủ</string>
+
+    <!-- suggession text -->
+    <string name="share_near_me">Chia sẻ sách gần bạn</string>
+    <string name="cover_content_description">Book Image Cover</string>
+    <string name="most_search_by_user">Sách tìm kiếm nhiều nhất</string>
+    <string name="suggest">Đề xuất</string>
+
+
+</resources>

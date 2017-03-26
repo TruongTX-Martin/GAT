@@ -29,7 +29,7 @@
         <activity android:name=".feature.search.SearchActivity">
 
         </activity>
-        <activity android:name=".feature.suggestion.SuggestionActivity">
+        <activity android:name=".feature.suggestion.activity.SuggestionActivity">
 
         </activity>
         <activity android:name=".feature.login.LoginActivity">
@@ -64,6 +64,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".feature.main.MainActivity" >
+        </activity>
+
 
         <service
             android:name=".data.service.FetchAddressIntentService"

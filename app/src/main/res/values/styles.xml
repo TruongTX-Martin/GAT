@@ -36,4 +36,28 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="textAllCaps">true</item>
     </style>
+
+    <style name="TextViewBase">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextViewHeaderTop" parent="TextViewBase">
+        <item name="android:textSize">8.5sp</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="TextViewHeaderTitle" parent="TextViewBase">
+        <item name="android:textSize">7sp</item>
+        <item name="android:paddingTop">6sp</item>
+        <item name="android:paddingBottom">6sp</item>
+    </style>
+
+    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/ratingbar</item>
+        <item name="android:minHeight">18dp</item>
+        <item name="android:maxHeight">18dp</item>
+    </style>
+
 </resources>

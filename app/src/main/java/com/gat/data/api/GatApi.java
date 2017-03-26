@@ -103,4 +103,11 @@ public interface GatApi {
     Observable<Response<ServerResponse<Book>>> getBookByIsbn(
         @Field("isbn") String isbn
     );
+
+    @GET("suggestion/most_borrowing")
+    Observable<Response<List<Book>>> suggestMostBorrowing (
+
+    );
+
+
 }

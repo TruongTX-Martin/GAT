@@ -49,4 +49,6 @@ public interface UseCaseFactory {
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);
 
     <T> UseCase<T> doWork(Callable<T> callable);
+
+    UseCase<List<Book>> suggestMostSearched();
 }

@@ -23,4 +23,13 @@
     <dimen name="category_width">100dp</dimen>
     <dimen name="header_height">100dp</dimen>
 
+
+    <dimen name="navigation_header_height">32dp</dimen>
+    <dimen name="navigation_main_height">48dp</dimen>
+
+    <!-- book item  -->
+    <dimen name="rating_bar_height">8dp</dimen>
+    <dimen name="item_book_suggest_height">98dp</dimen>
+
+
 </resources>

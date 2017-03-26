@@ -16,6 +16,7 @@ import com.gat.domain.usecase.ResetPassword;
 import com.gat.domain.usecase.SearchBookByIsbn;
 import com.gat.domain.usecase.SearchBookByKeyword;
 import com.gat.domain.usecase.SendRequestResetPassword;
+import com.gat.domain.usecase.SuggestMostSearched;
 import com.gat.domain.usecase.TransformUseCase;
 import com.gat.domain.usecase.UpdateCategory;
 import com.gat.domain.usecase.UpdateLocation;
@@ -119,5 +120,10 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public <T> UseCase<T> doWork(Callable<T> callable) {
         return new WorkUseCase<>(callable);
+    }
+
+    @Override
+    public UseCase<List<Book>> suggestMostSearched() {
+        return new SuggestMostSearched(bookRepositoryLazy.get());
     }
 }

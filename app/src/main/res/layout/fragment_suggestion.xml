@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundApp"
+    android:paddingLeft="@dimen/paddingNormal"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height"
+        android:padding="@dimen/paddingNormal">
+
+        <ImageButton
+            android:id="@+id/image_button_search"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/cover_content_description"
+            android:src="@drawable/ic_search_white" />
+
+        <TextView
+            android:id="@+id/text_view_suggestion_title"
+            style="@style/TextViewHeaderTop"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:text="@string/tab_home" />
+
+    </RelativeLayout>
+
+    <TextView
+        style="@style/TextViewHeaderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/share_near_me" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+
+    <TextView
+        style="@style/TextViewHeaderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/most_search_by_user" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_most_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_book_suggest_height" />
+
+    <TextView
+        style="@style/TextViewHeaderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/suggest" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_suggest"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_book_suggest_height" />
+
+</LinearLayout>
