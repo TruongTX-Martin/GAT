@@ -174,9 +174,10 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                                     String name = object.has("name") ? object.getString("name") : Strings.EMPTY;
                                     String email = object.has("email") ? object.getString("email") : Strings.EMPTY;
                                     String image = object.has("picture") ? object.getJSONObject("picture").getJSONObject("data").getString("url") : Strings.EMPTY;
-                                    // Logging
+                                    String userId = loginResult.getAccessToken().getUserId();
+
                                     getPresenter().setIdentity(SocialLoginData.instance(
-                                            loginResult.getAccessToken().getToken(),
+                                            userId,
                                             LoginData.Type.FACE,
                                             email,
                                             Strings.EMPTY,
@@ -190,9 +191,13 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                                 }
                             }
                         });
+                        //Here we put the requested fields to be returned from the JSONObject
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "name, email, picture");
+                        request.setParameters(parameters);
+                        request.executeAsync();
 
                     }
-
                     @Override
                     public void onCancel() {
                         Toast.makeText(getApplicationContext(), getString(R.string.login_social_cancel), Toast.LENGTH_SHORT).show();
