@@ -21,6 +21,8 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Multipart;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by ducbtsn on 2/25/17.
@@ -102,6 +104,6 @@ public interface GatApi {
 
     @GET("search/book_by_isbn")
     Observable<Response<ServerResponse<Book>>> getBookByIsbn(
-        @Field("isbn") String isbn
+        @Query("isbn") String isbn
     );
 }
