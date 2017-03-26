@@ -160,12 +160,12 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                                     String userId = loginResult.getAccessToken().getUserId();
                                     // Logging
                                     getPresenter().setIdentity(SocialLoginData.instance(
-                                            loginResult.getAccessToken().getToken(),
+                                            userId,
                                             LoginData.Type.FACE,
                                             email,
                                             Strings.EMPTY,
                                             name,
-                                            userId
+                                            image
                                     ));
                                     // Loading
                                     onLogging(true);

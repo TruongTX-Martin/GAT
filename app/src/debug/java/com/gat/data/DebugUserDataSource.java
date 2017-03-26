@@ -2,7 +2,6 @@ package com.gat.data;
 
 import android.location.Address;
 import android.util.Log;
-
 import com.gat.data.api.GatApi;
 import com.gat.data.exception.LoginException;
 import com.gat.data.id.LongId;
@@ -18,14 +17,10 @@ import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.google.android.gms.maps.model.LatLng;
-
-import java.io.File;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Response;
 
 /**
@@ -99,14 +94,18 @@ public class DebugUserDataSource implements UserDataSource {
             response = api.registerByEmail(emailLoginData.email(), emailLoginData.password(), emailLoginData.name());
         } else {
             SocialLoginData socialLoginData = (SocialLoginData)loginData;
-            File file = new File(socialLoginData.image());
-            RequestBody image = RequestBody.create(MediaType.parse("image/*"), file);
-            response = api.registerBySocial(socialLoginData.socialID(),
-                            Integer.toString(socialLoginData.type()),
-                            socialLoginData.name(),
-                            socialLoginData.email(),
-                            socialLoginData.password(),
-                            image);
+            try {
+                response = api.registerBySocial(
+                        socialLoginData.socialID(),
+                        Integer.toString(socialLoginData.type()),
+                        socialLoginData.name(),
+                        socialLoginData.email(),
+                        socialLoginData.password()/*,
+                        image*/);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new LoginException(ServerResponse.EXCEPTION);
+            }
         }
         ObservableTransformer<Response<ServerResponse<LoginResponseData>>, ServerResponse<LoginResponseData>> transformer =
                 upstream -> upstream.map(result -> {

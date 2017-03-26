@@ -1,5 +1,6 @@
 package com.gat.data.api;
 
+import com.gat.common.util.Strings;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.LoginResponseData;
@@ -50,7 +51,7 @@ public interface GatApi {
             @Field("socialType") String socialType);
 
     @FormUrlEncoded
-    @Multipart
+    //@Multipart
     @POST("user/register_by_social")
     Observable<Response<ServerResponse<LoginResponseData>>> registerBySocial(
             //@Field("user_id") String userId,
@@ -58,8 +59,8 @@ public interface GatApi {
             @Field("socialType") String socialType,
             @Field("name") String name,
             @Field("email") String email,
-            @Field("password") String password,
-            @Part("image") RequestBody image
+            @Field("password") String password/*,
+            @Field("image") RequestBody image*/
     );
 
     @FormUrlEncoded
