@@ -96,6 +96,8 @@ public class MainTabFragment extends Fragment{
                 if (myTabSelectedListener != null) {
                     myTabSelectedListener.onTabSelectedListener(selectedPosition);
                 }
+                // For refresh layout 
+                tabLayout.setScrollPosition(selectedPosition, 0, true);
             }
 
             @Override
