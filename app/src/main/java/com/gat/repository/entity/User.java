@@ -1,13 +1,14 @@
 package com.gat.repository.entity;
 
 import com.gat.common.util.Strings;
+import com.gat.data.id.LongId;
 import com.google.auto.value.AutoValue;
 
 /**
  * Created by Rey on 2/23/2017.
  */
 @AutoValue
-public abstract class User {
+public abstract class   User {
 
     public static User NONE = builder().id(Id.NONE).name(Strings.EMPTY).build();
 
@@ -19,6 +20,7 @@ public abstract class User {
 
     public static Builder builder(){
         return new AutoValue_User.Builder()
+                .name("Test")
                 .avatar(Strings.EMPTY)
                 .address(Strings.EMPTY)
                 .phoneNumber(Strings.EMPTY);

@@ -6,7 +6,9 @@ import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserInfo;
 
 import java.util.List;
 
@@ -103,4 +105,7 @@ public interface GatApi {
     Observable<Response<ServerResponse<Book>>> getBookByIsbn(
         @Field("isbn") String isbn
     );
+
+    @GET("user/get_user_private_info")
+    Observable<Response<ServerResponse<Data>>> getPersonalInformation();
 }

@@ -8,8 +8,10 @@ import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserInfo;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -51,5 +53,7 @@ public interface UserDataSource {
 
     Observable<ServerResponse> updateLocation(String address, float longitude, float latitude);
     Observable<ServerResponse> updateCategories(List<Integer> categories);
+
+    Observable<Data> getPersonalInfo();
 
 }

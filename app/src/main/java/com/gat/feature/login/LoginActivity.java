@@ -31,6 +31,7 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.feature.login.ForgotPassword.ForgotPasswordActivity;
+import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 import com.gat.repository.entity.LoginData;

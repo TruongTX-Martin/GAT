@@ -1,11 +1,13 @@
 package com.gat.feature.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.Strings;
+import com.gat.feature.personal.PersonalActivity;
 
 /**
  * Created by Rey on 2/13/2017.
@@ -36,6 +38,7 @@ public class SearchActivity extends ScreenActivity<SearchScreen, SearchPresenter
         if (savedInstanceState == null)
             getPresenter().setKeyword(getScreen().keyword());
         view = new SearchView(findViewById(R.id.search_cl), getPresenter());
+        startActivity(new Intent(this, PersonalActivity.class));
     }
 
     @Override

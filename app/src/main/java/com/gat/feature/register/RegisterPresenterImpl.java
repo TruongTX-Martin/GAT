@@ -86,7 +86,7 @@ public class RegisterPresenterImpl implements RegisterPresenter {
 
     @Override
     public void onDestroy() {
-        // Release all disposable to avoid leak
+        //Release all disposable to avoid leak
         registerUseCase = UseCases.release(registerUseCase);
         registerDisposable.dispose();
 

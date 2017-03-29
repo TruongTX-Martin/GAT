@@ -15,8 +15,10 @@ import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.dependency.DataComponent;
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserInfo;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
@@ -224,6 +226,20 @@ public class DebugUserDataSource implements UserDataSource {
             serverResponse.code(response.code());
             return serverResponse;
         });
+    }
+
+    @Override
+    public Observable<Data> getPersonalInfo() {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getPersonalInformation();
+       return responseObservable.map(response -> {
+           ServerResponse<Data> serverResponse = response.body();
+           if(serverResponse == null){
+               serverResponse = ServerResponse.BAD_RESPONSE;
+           }
+           serverResponse.code(response.code());
+           return serverResponse.data();
+       });
     }
 
     @Override

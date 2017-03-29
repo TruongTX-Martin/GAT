@@ -6,10 +6,13 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.data.user.UserDataSourceImpl;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserInfo;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -121,6 +124,15 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<ServerResponse> updateCategories(List<Integer> categories) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().updateCategories(categories));
+    }
+
+    @Override
+    public Observable<Data> getPersonalData() {
+        System.out.println("UserRepositoryImpl");
+        Observable<Data>  stringObservable = Observable.defer(() -> networkUserDataSourceLazy.get().getPersonalInfo());
+        //convert
+        return  stringObservable;
+
     }
 
 }

@@ -3,14 +3,11 @@ package com.gat.domain.impl;
 import android.support.annotation.Nullable;
 
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.ResetPasswordResponseData;
-import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetLoginData;
 import com.gat.domain.usecase.GetUser;
 import com.gat.domain.usecase.Login;
+import com.gat.domain.usecase.GetPersonalData;
 import com.gat.domain.usecase.Register;
 import com.gat.domain.usecase.ResetPassword;
 import com.gat.domain.usecase.SearchBookByIsbn;
@@ -25,8 +22,10 @@ import com.gat.domain.usecase.WorkUseCase;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserInfo;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -119,5 +118,10 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public <T> UseCase<T> doWork(Callable<T> callable) {
         return new WorkUseCase<>(callable);
+    }
+
+    @Override
+    public UseCase<Data> getUserInfo() {
+        return new GetPersonalData(userRepositoryLazy.get());
     }
 }

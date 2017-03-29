@@ -1,6 +1,7 @@
 package com.gat.dependency;
 
 import com.gat.feature.login.LoginPresenter;
+import com.gat.feature.personal.PersonalPresenter;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
 import com.gat.feature.register.update.location.AddLocationPresenter;
@@ -24,4 +25,5 @@ public interface PresenterComponent {
     RegisterPresenter getRegisterPresenter();
     AddLocationPresenter getAddLocationPresenter();
     AddCategoryPresenter getAddCategoryPresenter();
+    PersonalPresenter getPersonalPresenter();
 }

@@ -9,8 +9,10 @@ import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserInfo;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -49,4 +51,6 @@ public interface UseCaseFactory {
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);
 
     <T> UseCase<T> doWork(Callable<T> callable);
+
+    UseCase<Data> getUserInfo();
 }
