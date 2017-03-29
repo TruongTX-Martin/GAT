@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gat.R;
+
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.data.response.ResponseData;
