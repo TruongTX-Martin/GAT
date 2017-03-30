@@ -1,9 +1,7 @@
 package com.gat.domain.usecase;
 
 import com.gat.repository.UserRepository;
-import com.gat.repository.entity.Data;
-import com.gat.repository.entity.User;
-import com.gat.repository.entity.UserInfo;
+import com.gat.feature.personal.entity.Data;
 
 import io.reactivex.Observable;
 

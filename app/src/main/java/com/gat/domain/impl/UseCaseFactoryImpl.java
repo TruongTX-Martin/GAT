@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.UseCaseFactory;
+import com.gat.domain.usecase.GetBookInstance;
 import com.gat.domain.usecase.GetLoginData;
 import com.gat.domain.usecase.GetUser;
 import com.gat.domain.usecase.Login;
@@ -19,13 +20,13 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
-import com.gat.repository.entity.Data;
+import com.gat.feature.personal.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
-import com.gat.repository.entity.UserInfo;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -123,5 +124,10 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<Data> getUserInfo() {
         return new GetPersonalData(userRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Data> getBookInstance(BookInstanceInput input) {
+        return new GetBookInstance(userRepositoryLazy.get(),input);
     }
 }

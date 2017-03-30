@@ -4,14 +4,13 @@ import android.location.Address;
 
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.repository.datasource.UserDataSource;
-import com.gat.repository.entity.Data;
+import com.gat.feature.personal.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
-import com.gat.repository.entity.UserInfo;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -121,6 +120,11 @@ public class UserDataSourceImpl implements UserDataSource {
     @Override
     public Observable<Data> getPersonalInfo() {
         System.out.println("Get user data sort");
+        return null;
+    }
+
+    @Override
+    public Observable<Data> getBookInstance(BookInstanceInput input) {
         return null;
     }
 }

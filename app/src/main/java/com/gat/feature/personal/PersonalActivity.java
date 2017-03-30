@@ -19,11 +19,12 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.personal.entity.DataInfo;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentLoanBook;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
-import com.gat.repository.entity.Data;
-import com.gat.repository.entity.UserInfo;
+import com.gat.feature.personal.entity.Data;
+import com.gat.feature.personal.entity.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,8 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-    private CompositeDisposable disposables;
+    private CompositeDisposable disposablesPersonal;
+    private CompositeDisposable disposablesBookInstance;
     @Override
     protected PersonalScreen getDefaultScreen() {
         return PersonalScreen.instance();
@@ -70,8 +72,11 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        disposables = new CompositeDisposable(getPresenter().getResponse().subscribe(this::getUserInfoSuccess),
-                getPresenter().onError().subscribe(this::getUserInfoError));
+        disposablesPersonal = new CompositeDisposable(getPresenter().getResponsePersonal().subscribe(this::getUserInfoSuccess),
+                getPresenter().onErrorPersonal().subscribe(this::getUserInfoError));
+
+        disposablesBookInstance = new CompositeDisposable(getPresenter().getResponseBookInstance().subscribe(this::getBookInstanceSuccess),
+                getPresenter().onErrorBookInstance().subscribe(this::getBookInstanceError));
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
@@ -114,19 +119,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         adapter.addFrag(new FragmentBookRequest(), "");
         viewPager.setAdapter(adapter);
     }
-    private void getUserInfoSuccess(Data data){
-        System.out.println(data);
-        System.out.println("Get user info success");
-        if(data != null){
-            UserInfo userInfo = data.getUserInfo();
-            if(userInfo != null && ClientUtils.validate(userInfo.getName())){
-                txtName.setText(userInfo.getName());
-            }
-        }
-    }
-    private void getUserInfoError(ServerResponse<ResponseData> error) {
-        Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
-    }
+
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -161,5 +154,33 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     public void onBackPressed() {
         super.onBackPressed();
         System.out.println("On Back");
+    }
+
+    //handle data personal return
+    private void getUserInfoSuccess(Data data){
+        System.out.println(data);
+        System.out.println("Get user info success");
+        if(data != null){
+            Object object = data.getResultInfo();
+            String datax = object.toString();
+            System.out.println(datax);
+            System.out.println(object);
+//            UserInfo userInfo =  data.getUserInfo();
+//            if(userInfo != null && ClientUtils.validate(userInfo.getName())){
+//                txtName.setText(userInfo.getName());
+//            }
+        }
+    }
+    private void getUserInfoError(ServerResponse<ResponseData> error) {
+        Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
+    }
+
+    //handle get bookInstance return
+
+    private void getBookInstanceSuccess(Data data){
+        System.out.println(data);
+    }
+    private void getBookInstanceError(ServerResponse<ResponseData> error){
+        Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
     }
 }

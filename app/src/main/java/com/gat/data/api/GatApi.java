@@ -2,13 +2,11 @@ package com.gat.data.api;
 
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.repository.entity.Book;
-import com.gat.repository.entity.Data;
+import com.gat.feature.personal.entity.Data;
 import com.gat.repository.entity.User;
-import com.gat.repository.entity.UserInfo;
 
 import java.util.List;
 
@@ -108,4 +106,11 @@ public interface GatApi {
 
     @GET("user/get_user_private_info")
     Observable<Response<ServerResponse<Data>>> getPersonalInformation();
+
+    @POST("/api/book/selfget_book_instance")
+    Observable<Response<ServerResponse<Data>>> getBookInstance(
+            @Field("sharingFilter") boolean sharingFilter,
+            @Field("notSharingFilter") boolean notSharingFilter,
+            @Field("lostFilter") boolean lostFilter
+    );
 }

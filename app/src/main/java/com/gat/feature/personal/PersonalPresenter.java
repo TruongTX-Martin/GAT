@@ -2,10 +2,7 @@ package com.gat.feature.personal;
 
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
-import com.gat.domain.usecase.UseCase;
-import com.gat.repository.entity.Data;
-import com.gat.repository.entity.User;
-import com.gat.repository.entity.UserInfo;
+import com.gat.feature.personal.entity.Data;
 import com.rey.mvp2.Presenter;
 
 import io.reactivex.Observable;
@@ -16,6 +13,9 @@ import io.reactivex.Observable;
 
 public interface PersonalPresenter extends Presenter{
 
-    Observable<Data> getResponse();
-    Observable<ServerResponse<ResponseData>> onError();
+    Observable<Data> getResponsePersonal();
+    Observable<ServerResponse<ResponseData>> onErrorPersonal();
+
+    Observable<Data> getResponseBookInstance();
+    Observable<ServerResponse<ResponseData>> onErrorBookInstance();
 }

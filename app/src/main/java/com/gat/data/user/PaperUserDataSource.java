@@ -4,26 +4,22 @@ import android.location.Address;
 import android.util.Log;
 
 import com.gat.common.util.Strings;
-import com.gat.data.id.LongId;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.repository.datasource.UserDataSource;
-import com.gat.repository.entity.Data;
+import com.gat.feature.personal.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
-import com.gat.repository.entity.UserInfo;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 
 import java.util.List;
 
 import io.paperdb.Book;
 import io.paperdb.Paper;
 import io.reactivex.Observable;
-import okhttp3.Response;
 
 /**
  * Created by Rey on 2/23/2017.
@@ -154,6 +150,11 @@ public class PaperUserDataSource implements UserDataSource {
 
     @Override
     public Observable<Data> getPersonalInfo() {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> getBookInstance(BookInstanceInput input) {
         return null;
     }
 }
