@@ -104,5 +104,6 @@
     <string name="tab_scanbarcode">Scan ISBN</string>
     <string name="tab_notification">Notification</string>
     <string name="tab_setting">Setting</string>
+    <string name="message_header">Message</string>
 
 </resources>

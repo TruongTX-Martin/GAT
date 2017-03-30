@@ -10,10 +10,13 @@ import com.gat.domain.UseCaseFactory;
 import com.gat.domain.impl.SchedulerFactoryImpl;
 import com.gat.domain.impl.UseCaseFactoryImpl;
 import com.gat.repository.BookRepository;
+import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.BookDataSource;
+import com.gat.repository.datasource.MessageDataSource;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.impl.BookRepositoryImpl;
+import com.gat.repository.impl.MesssageRepositoryImpl;
 import com.gat.repository.impl.UserRepositoryImpl;
 import com.rey.mvp2.PresenterManager;
 import com.rey.mvp2.impl.SimplePresenterManager;
@@ -85,10 +88,35 @@ public class AppModule {
 
     @Provides
     @Singleton
+    @Named("network")
+    MessageDataSource provideNetworkMessageDataSource() {
+        // TODO: provide implementation
+        return null;
+    }
+
+    @Provides
+    @Singleton
+    @Named("local")
+    MessageDataSource provideLocalMessageDataSource() {
+        // TODO: provide implementation
+        return null;
+    }
+
+    @Provides
+    @Singleton
+    MessageRepository provideMessageRepository(@Named("network")Lazy<MessageDataSource> networkDataSourceLazy,
+                                         @Named("local")Lazy<MessageDataSource> localDataSourceLazy){
+        return new MesssageRepositoryImpl(networkDataSourceLazy, localDataSourceLazy);
+    }
+
+    @Provides
+    @Singleton
     UserRepository provideUserRepository(@Named("network")Lazy<UserDataSource> networkDataSourceLazy,
                                          @Named("local")Lazy<UserDataSource> localDataSourceLazy){
         return new UserRepositoryImpl(networkDataSourceLazy, localDataSourceLazy);
     }
+
+
 
     @Provides
     @Singleton
@@ -99,8 +127,9 @@ public class AppModule {
     @Provides
     @Singleton
     UseCaseFactory provideUseCaseFactory(Lazy<BookRepository> bookRepositoryLazy,
-                                         Lazy<UserRepository> userRepositoryLazy){
-        return new UseCaseFactoryImpl(bookRepositoryLazy, userRepositoryLazy);
+                                         Lazy<UserRepository> userRepositoryLazy,
+                                         Lazy<MessageRepository> messageRepositoryLazy){
+        return new UseCaseFactoryImpl(bookRepositoryLazy, userRepositoryLazy, messageRepositoryLazy);
     }
 
     @Provides

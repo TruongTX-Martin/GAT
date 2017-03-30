@@ -9,6 +9,7 @@ import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetLoginData;
+import com.gat.domain.usecase.GetMessageList;
 import com.gat.domain.usecase.GetUser;
 import com.gat.domain.usecase.Login;
 import com.gat.domain.usecase.Register;
@@ -23,9 +24,11 @@ import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
 import com.gat.repository.BookRepository;
+import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.LoginData;
+import com.gat.repository.entity.Message;
 import com.gat.repository.entity.User;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -44,11 +47,14 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
 
     private final Lazy<BookRepository> bookRepositoryLazy;
     private final Lazy<UserRepository> userRepositoryLazy;
+    private final Lazy<MessageRepository> messageRepositoryLazy;
 
     public UseCaseFactoryImpl(Lazy<BookRepository> bookRepositoryLazy,
-                              Lazy<UserRepository> userRepositoryLazy){
+                              Lazy<UserRepository> userRepositoryLazy,
+                              Lazy<MessageRepository> messageRepositoryLazy){
         this.bookRepositoryLazy = bookRepositoryLazy;
         this.userRepositoryLazy = userRepositoryLazy;
+        this.messageRepositoryLazy = messageRepositoryLazy;
     }
 
     @Override
@@ -59,6 +65,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<Book> getBookByIsbn(String isbn) {
         return new SearchBookByIsbn(bookRepositoryLazy.get(), isbn);
+    }
+
+    @Override
+    public UseCase<List<Message>> getMessageList() {
+        return new GetMessageList(messageRepositoryLazy.get());
     }
 
     @Override
