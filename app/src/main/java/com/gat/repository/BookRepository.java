@@ -16,6 +16,7 @@ public interface BookRepository {
 
     Observable<List<Book>> searchBookByKeyword(String keyword, int page, int sizeOfPage);
     Observable<Book> searchBookByIsbn(String isbn);
-    Observable<List<Book>> suggestMostSearched();
+    Observable<List<Book>> suggestMostBorrowing();
+    Observable<List<Book>> suggestBooks();
 
 }

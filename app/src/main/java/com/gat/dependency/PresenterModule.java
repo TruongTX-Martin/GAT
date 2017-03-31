@@ -4,6 +4,8 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
+import com.gat.feature.main.MainPresenter;
+import com.gat.feature.main.MainPresenterImpl;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.RegisterPresenterImpl;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
@@ -66,6 +68,13 @@ public class PresenterModule {
     SuggestionPresenter provideSuggestionPresenter(UseCaseFactory useCaseFactory,
                                                     SchedulerFactory schedulerFactory){
         return new SuggestionPresenterImpl(useCaseFactory, schedulerFactory) {
+        };
+    }
+
+    @Provides
+    MainPresenter provideMainPresenter(UseCaseFactory useCaseFactory,
+                                       SchedulerFactory schedulerFactory){
+        return new MainPresenterImpl(useCaseFactory, schedulerFactory) {
         };
     }
 }

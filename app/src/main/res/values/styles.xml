@@ -32,7 +32,7 @@
     </style>
 
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">5sp</item>
+        <item name="android:textSize">8sp</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="textAllCaps">true</item>
     </style>
@@ -41,23 +41,26 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="TextViewHeaderTop" parent="TextViewBase">
-        <item name="android:textSize">8.5sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="textAllCaps">true</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
     <style name="TextViewHeaderTitle" parent="TextViewBase">
-        <item name="android:textSize">7sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:paddingTop">6sp</item>
         <item name="android:paddingBottom">6sp</item>
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingbar</item>
-        <item name="android:minHeight">18dp</item>
-        <item name="android:maxHeight">18dp</item>
+        <item name="android:minHeight">28dp</item>
+        <item name="android:maxHeight">28dp</item>
     </style>
 
 </resources>

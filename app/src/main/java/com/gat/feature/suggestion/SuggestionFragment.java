@@ -16,6 +16,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
+//import com.gat.feature.suggestion.viewholder.BookSuggestAdapter;
 
 /**
  * Created by mryit on 3/26/2017.
@@ -26,10 +27,14 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     @BindView(R.id.image_button_search)
     ImageButton textViewTitle;
 
-    @BindView(R.id.recycler_view_most_search)
-    RecyclerView mRecyclerViewMostSearch;
+    @BindView(R.id.recycler_view_most_borrowing)
+    RecyclerView mRecyclerViewMostBorrowing;
+
+    @BindView(R.id.recycler_view_suggest_books)
+    RecyclerView mRecyclerViewSuggestBooks;
 
     private CompositeDisposable disposables;
+    private BookSuggestAdapter mMostBorrowingAdapter;
     private BookSuggestAdapter mBookSuggestAdapter;
 
     @Override
@@ -41,10 +46,10 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         disposables = new CompositeDisposable(
-                getPresenter().onResult().subscribe(this::onResult),
+                getPresenter().onTopBorrowingSuccess().subscribe(this::onTopBorrowingSuccess),
+                getPresenter().onBookSuggestSuccess().subscribe(this::onSuggestBooksSuccess),
                 getPresenter().onError().subscribe(this::onError)
         );
-
     }
 
     @Nullable
@@ -54,19 +59,33 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
                              @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        // setup recycler view
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRecyclerViewMostSearch.setLayoutManager(linearLayoutManager);
+        // setup recycler view linear
+        mRecyclerViewMostBorrowing.setHasFixedSize(true);
+        mRecyclerViewMostBorrowing.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerViewMostBorrowing.setNestedScrollingEnabled(false);
+
+        mRecyclerViewSuggestBooks.setHasFixedSize(true);
+        mRecyclerViewSuggestBooks.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerViewSuggestBooks.setNestedScrollingEnabled(false);
+
+
+        getPresenter().suggestMostBorrowing();
+        getPresenter().suggestBooks();
 
         return view;
     }
 
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        getPresenter().suggestMostSearched();
     }
 
     @OnClick(R.id.image_button_search)
@@ -74,14 +93,19 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         // TODO start search activity
     }
 
-    void onResult (List<Book> list) {
-        Toast.makeText(getActivity().getApplicationContext(),
-                "Lấy được: " + list.size() + " quyển sách", Toast.LENGTH_SHORT).show();
+    void onTopBorrowingSuccess (List<Book> list) {
+        // setup adapter
+        mMostBorrowingAdapter = new BookSuggestAdapter(getActivity(), list);
+        mRecyclerViewMostBorrowing.setAdapter(mMostBorrowingAdapter);
+    }
 
+
+    void onSuggestBooksSuccess (List<Book> list) {
         // setup adapter
         mBookSuggestAdapter = new BookSuggestAdapter(getActivity(), list);
-        mRecyclerViewMostSearch.setAdapter(mBookSuggestAdapter);
+        mRecyclerViewSuggestBooks.setAdapter(mBookSuggestAdapter);
     }
+
 
     void onError (String message) {
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();

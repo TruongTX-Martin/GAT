@@ -3,10 +3,6 @@ package com.gat.domain.impl;
 import android.support.annotation.Nullable;
 
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.ResetPasswordResponseData;
-import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetLoginData;
 import com.gat.domain.usecase.GetUser;
@@ -16,7 +12,8 @@ import com.gat.domain.usecase.ResetPassword;
 import com.gat.domain.usecase.SearchBookByIsbn;
 import com.gat.domain.usecase.SearchBookByKeyword;
 import com.gat.domain.usecase.SendRequestResetPassword;
-import com.gat.domain.usecase.SuggestMostSearched;
+import com.gat.domain.usecase.SuggestBooks;
+import com.gat.domain.usecase.SuggestMostBorrowing;
 import com.gat.domain.usecase.TransformUseCase;
 import com.gat.domain.usecase.UpdateCategory;
 import com.gat.domain.usecase.UpdateLocation;
@@ -123,7 +120,13 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Book>> suggestMostSearched() {
-        return new SuggestMostSearched(bookRepositoryLazy.get());
+    public UseCase<List<Book>> suggestMostBorrowing() {
+        return new SuggestMostBorrowing(bookRepositoryLazy.get());
     }
+
+    @Override
+    public UseCase<List<Book>> suggestBooks() {
+        return new SuggestBooks(bookRepositoryLazy.get());
+    }
+
 }

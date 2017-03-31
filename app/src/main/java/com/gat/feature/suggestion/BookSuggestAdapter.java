@@ -1,6 +1,9 @@
 package com.gat.feature.suggestion;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +47,9 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
 
         holder.textViewBookName.setText(item.title());
         holder.ratingBar.setRating(item.rating());
+
+        LayerDrawable stars = (LayerDrawable) holder.ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override

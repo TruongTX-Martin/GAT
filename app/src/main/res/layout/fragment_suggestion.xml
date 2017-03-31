@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundApp"
-    android:paddingLeft="@dimen/paddingNormal"
+    android:paddingStart="@dimen/paddingLarge"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/navigation_header_height"
-        android:padding="@dimen/paddingNormal">
+        android:paddingEnd="@dimen/paddingNormal">
 
         <ImageButton
             android:id="@+id/image_button_search"
-            android:layout_width="20dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
+            android:scaleType="centerInside"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/cover_content_description"
@@ -24,22 +26,71 @@
         <TextView
             android:id="@+id/text_view_suggestion_title"
             style="@style/TextViewHeaderTop"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_centerHorizontal="true"
+            android:layout_toStartOf="@+id/image_button_search"
             android:text="@string/tab_home" />
 
     </RelativeLayout>
 
-    <TextView
-        style="@style/TextViewHeaderTitle"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/share_near_me" />
+        android:layout_height="wrap_content">
 
-    <android.support.v7.widget.RecyclerView
+        <TextView
+            android:id="@+id/textView"
+            style="@style/TextViewHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="start"
+            android:text="@string/share_near_me" />
+
+
+
+        <Button
+            android:id="@+id/button_more_sharing_near"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            style="@style/TextViewHeaderTitle"
+            android:layout_gravity="end"
+            android:drawableRight="@drawable/ic_arrow_right_16"
+            android:text="@string/view_more"/>
+    </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="@dimen/item_sharing_near_height"
+        android:orientation="horizontal"
+        android:weightSum="5"
+        tools:ignore="DisableBaselineAlignment">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            tools:ignore="UselessParent">
+
+            <com.gat.common.customview.CircleImage
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/demo_people_near"
+                android:layout_gravity="top|center_horizontal"
+                tools:ignore="NestedWeights" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#4e4e4e"
+                android:text="@string/suggest"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <TextView
@@ -49,8 +100,9 @@
         android:text="@string/most_search_by_user" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_most_search"
+        android:id="@+id/recycler_view_most_borrowing"
         android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:layout_height="@dimen/item_book_suggest_height" />
 
     <TextView
@@ -60,8 +112,9 @@
         android:text="@string/suggest" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_suggest"
+        android:id="@+id/recycler_view_suggest_books"
         android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:layout_height="@dimen/item_book_suggest_height" />
 
 </LinearLayout>

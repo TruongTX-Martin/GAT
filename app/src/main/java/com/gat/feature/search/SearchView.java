@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 //import hu.akarnokd.rxjava.interop.RxJavaInterop;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
+//import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -71,14 +71,14 @@ public class SearchView {
         disposables = new CompositeDisposable(
                 presenter.keywordChanged().subscribe(this::onKeywordChanged),
                 presenter.itemsChanged().subscribe(this::onItemChanged),
-                presenter.loadingEvents().subscribe(this::onLoadingEvent),
+                presenter.loadingEvents().subscribe(this::onLoadingEvent)
 
-                RxJavaInterop.toV2Observable(RxTextView.editorActionEvents(keywordView))
-                        .filter(event -> event.actionId() == EditorInfo.IME_ACTION_SEARCH)
-                        .doOnNext(event -> Views.hideKeyboard(view.getContext()))
-                        .map(event -> event.view().getText().toString().trim())
-                        .filter(keyword -> !Strings.isNullOrEmpty(keyword))
-                        .subscribe(keyword -> presenter.setKeyword(keyword))
+//                RxJavaInterop.toV2Observable(RxTextView.editorActionEvents(keywordView))
+//                        .filter(event -> event.actionId() == EditorInfo.IME_ACTION_SEARCH)
+//                        .doOnNext(event -> Views.hideKeyboard(view.getContext()))
+//                        .map(event -> event.view().getText().toString().trim())
+//                        .filter(keyword -> !Strings.isNullOrEmpty(keyword))
+//                        .subscribe(keyword -> presenter.setKeyword(keyword))
         );
     }
 

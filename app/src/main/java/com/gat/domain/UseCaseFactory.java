@@ -50,5 +50,7 @@ public interface UseCaseFactory {
 
     <T> UseCase<T> doWork(Callable<T> callable);
 
-    UseCase<List<Book>> suggestMostSearched();
+    UseCase<List<Book>> suggestMostBorrowing();
+
+    UseCase<List<Book>> suggestBooks();
 }

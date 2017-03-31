@@ -60,6 +60,8 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         // setup tab layout
         mTabLayout.setupWithViewPager(mViewPager);
         setupTabLayoutIcons(mTabLayout);
+        // set up icon high light
+        mTabLayout.getTabAt(TAB_POS.TAB_HOME).setIcon(R.drawable.home_ic_selected);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -86,6 +88,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         adapter.addFragment(new SuggestionFragment(), "SCAN");
         adapter.addFragment(new SuggestionFragment(), "NOTICE");
         adapter.addFragment(new SuggestionFragment(), "SETTING");
+        viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
     }
 

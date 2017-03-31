@@ -30,6 +30,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
         resultSubject = PublishSubject.create();
         errorSubject = PublishSubject.create();
     }
+
     @Override
     public void onCreate() {
 
@@ -40,8 +41,14 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
 
     }
 
+
     @Override
-    public Observable<List<Book>> onResult() {
+    public Observable<List<Book>> onTopBorrowingSuccess() {
+        return resultSubject.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<List<Book>> onBookSuggestSuccess() {
         return resultSubject.subscribeOn(schedulerFactory.main());
     }
 
@@ -51,17 +58,21 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     }
 
     @Override
-    public void suggestMostSearched() {
-        suggestionUseCase = useCaseFactory.suggestMostSearched();
+    public void suggestMostBorrowing() {
+        suggestionUseCase = useCaseFactory.suggestMostBorrowing();
         suggestionUseCase.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(listBook -> {
-                    Book book = listBook.get(0);
                     resultSubject.onNext(listBook);
                 })
                 .onError(throwable -> {
                     errorSubject.onNext("bắt được rồi");
                 })
                 .execute();
+    }
+
+    @Override
+    public void suggestBooks() {
+
     }
 }

@@ -107,7 +107,6 @@ public interface GatApi {
 
     @GET("suggestion/most_borrowing")
     Observable<Response<List<Book>>> suggestMostBorrowing (
-
     );
 
 

@@ -14,10 +14,14 @@ import io.reactivex.Observable;
 
 public interface SuggestionPresenter extends Presenter{
 
-    Observable<List<Book>> onResult();
+    Observable<List<Book>> onTopBorrowingSuccess();
+
+    Observable<List<Book>> onBookSuggestSuccess();
 
     Observable<String> onError();
 
-    void suggestMostSearched();
+    void suggestMostBorrowing();
+
+    void suggestBooks();
 
 }
