@@ -17,6 +17,8 @@ import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.search.SearchPresenterImpl;
 import com.gat.feature.suggestion.SuggestionPresenter;
 import com.gat.feature.suggestion.SuggestionPresenterImpl;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;
@@ -75,6 +77,13 @@ public class PresenterModule {
     MainPresenter provideMainPresenter(UseCaseFactory useCaseFactory,
                                        SchedulerFactory schedulerFactory){
         return new MainPresenterImpl(useCaseFactory, schedulerFactory) {
+        };
+    }
+
+    @Provides
+    ShareNearByUserDistancePresenter provideShareNearByUserDistance(UseCaseFactory useCaseFactory,
+                                                                    SchedulerFactory schedulerFactory){
+        return new ShareNearByUserDistancePresenterImpl(useCaseFactory, schedulerFactory) {
         };
     }
 }

@@ -8,6 +8,7 @@ import com.gat.feature.register.update.location.AddLocationPresenter;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.suggestion.SuggestionPresenter;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
 
 import dagger.Subcomponent;
 
@@ -28,4 +29,5 @@ public interface PresenterComponent {
     AddCategoryPresenter getAddCategoryPresenter();
     SuggestionPresenter getSuggestionPresenter();
     MainPresenter getMainPresenter();
+    ShareNearByUserDistancePresenter getShareNearByUserDistancePresenter();
 }

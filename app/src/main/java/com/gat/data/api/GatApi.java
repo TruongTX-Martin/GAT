@@ -15,12 +15,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.Response;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Multipart;
-import retrofit2.http.Part;
+import retrofit2.http.*;
 
 /**
  * Created by ducbtsn on 2/25/17.
@@ -109,5 +104,24 @@ public interface GatApi {
     Observable<Response<List<Book>>> suggestMostBorrowing (
     );
 
+
+    // api v1
+    @GET("search/nearby_user_by_distance")
+    Observable<Response<ServerResponse>> getPeopleNearByUserV1 (
+            @Query("longitude") float currentLongitude,
+            @Query("latitude") float currentLatitude
+
+    );
+
+    // api v2
+    @GET("search/nearby_user")
+    Observable<Response<ServerResponse>> getPeopleNearByUser (
+            @Query("currentLat") float currentLatitude,
+            @Query("currentLong") float currentLongitude,
+            @Query("neLat") float neLatitude,
+            @Query("neLong") float neLongitude,
+            @Query("wsLat") float wsLatitude,
+            @Query("wsLong") float wsLongitude
+    );
 
 }

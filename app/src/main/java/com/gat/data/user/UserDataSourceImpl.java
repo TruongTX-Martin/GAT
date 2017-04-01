@@ -10,6 +10,7 @@ import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -113,6 +114,11 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<ServerResponse> updateCategories(List<Integer> categories) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance(float currentLongitude, float currentLatitude, float neLongitude, float neLatitude, float wsLongitude, float wsLatitude) {
         return null;
     }
 }

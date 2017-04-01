@@ -13,6 +13,7 @@ import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 
@@ -147,6 +148,11 @@ public class PaperUserDataSource implements UserDataSource {
 
     @Override
     public Observable<ServerResponse> updateCategories(List<Integer> categories) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance(float currentLongitude, float currentLatitude, float neLongitude, float neLatitude, float wsLongitude, float wsLatitude) {
         throw new UnsupportedOperationException();
     }
 }

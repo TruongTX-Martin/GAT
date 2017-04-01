@@ -10,11 +10,13 @@ import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.internal.operators.observable.ObservableSerialized;
 
 /**
  * Created by Rey on 2/23/2017.
@@ -51,5 +53,12 @@ public interface UserDataSource {
 
     Observable<ServerResponse> updateLocation(String address, float longitude, float latitude);
     Observable<ServerResponse> updateCategories(List<Integer> categories);
+
+    Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance
+            (float currentLongitude, float currentLatitude,
+             float neLongitude, float neLatitude,
+             float wsLongitude, float wsLatitude);
+
+
 
 }

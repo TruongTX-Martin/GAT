@@ -2,6 +2,7 @@ package com.gat.feature.suggestion.nearby_user;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.app.screen.Screen;
 import com.rey.mvp2.PresenterManager;
 import com.rey.mvp2.impl.MvpActivity;
 
@@ -20,6 +21,7 @@ public class ShareNearByUserDistanceActivity extends ScreenActivity {
     protected Class getPresenterClass() {
         return ShareNearByUserDistancePresenter.class;
     }
+
 
 
 
