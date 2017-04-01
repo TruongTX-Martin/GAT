@@ -62,9 +62,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         bookInstanceDisposable = new CompositeDisposable(bookInstanceInputSubject.
                 observeOn(schedulerFactory.main()).subscribe(this::getBookInstance));
         //start get personal data
-        personalInputSubject.onNext("");
+//        personalInputSubject.onNext("");
 
-
+        BookInstanceInput input = new BookInstanceInput(true, false, false);
+        bookInstanceInputSubject.onNext(input);
     }
 
     @Override
@@ -114,7 +115,9 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         getBookIntanceUsecase = UseCases.release(getBookIntanceUsecase);
         getBookIntanceUsecase = useCaseFactory.getBookInstance(bookInstanceInput);
         getBookIntanceUsecase.executeOn(schedulerFactory.io()).returnOn(schedulerFactory.main()).
-                onNext(reponse -> bookInstanceResultSubject.onNext(reponse))
+                onNext(reponse -> {
+                    bookInstanceResultSubject.onNext(reponse);
+                })
                 .onError(throwableable -> {
                     bookInstanceError.onError(throwableable);
                 }).onStop(

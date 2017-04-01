@@ -29,7 +29,7 @@
             />
     </RelativeLayout>
     <ListView
-        android:id="@+id/lvLoanBook"
+        android:id="@+id/lvBookSharing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layoutBottom"

@@ -20,6 +20,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Multipart;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 /**
  * Created by ducbtsn on 2/25/17.
@@ -107,10 +108,10 @@ public interface GatApi {
     @GET("user/get_user_private_info")
     Observable<Response<ServerResponse<Data>>> getPersonalInformation();
 
-    @POST("/api/book/selfget_book_instance")
+    @GET("book/selfget_book_instance")
     Observable<Response<ServerResponse<Data>>> getBookInstance(
-            @Field("sharingFilter") boolean sharingFilter,
-            @Field("notSharingFilter") boolean notSharingFilter,
-            @Field("lostFilter") boolean lostFilter
+            @Query("sharingFilter") boolean sharingFilter,
+            @Query("notSharingFilter") boolean notSharingFilter,
+            @Query("lostFilter") boolean lostFilter
     );
 }

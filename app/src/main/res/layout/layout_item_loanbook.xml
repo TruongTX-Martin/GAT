@@ -31,6 +31,15 @@
         android:layout_toRightOf="@+id/imgAvatar"
         android:text="author"
         android:textColor="#000000"
-
+        />
+    <Switch
+        android:id="@+id/mySwitch"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
         />
 </RelativeLayout>
