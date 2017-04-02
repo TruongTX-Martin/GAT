@@ -108,7 +108,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
 
     @Override
     public Observable<List<UserNearByDistance>> onPeopleNearByUserSuccess() {
-        return null;
+        return resultListUserNearByDistance.subscribeOn(schedulerFactory.main());
     }
 
     @Override

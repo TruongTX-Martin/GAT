@@ -10,6 +10,9 @@ import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
+
+import java.util.List;
 
 /**
  * Created by Rey on 2/14/2017.
@@ -26,6 +29,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int ADD_LOCATION = 4;
     private static final int ADD_CATEGORY = 5;
     private static final int SUGGESTION = 6;
+    private static final int SHARE_NEAR_BY_USER_DISTANCE = 7;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -55,6 +59,8 @@ public class ParcelableScreen implements Parcelable {
             return SUGGESTION;
         if (screen instanceof MainScreen)
             return MAIN;
+        if (screen instanceof ShareNearByUserDistanceScreen)
+            return SHARE_NEAR_BY_USER_DISTANCE;
 
         throw new IllegalArgumentException("Not support screen " + screen);
     }
@@ -78,6 +84,10 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof MainScreen) {
 
+        } else if (screen instanceof ShareNearByUserDistanceScreen) {
+//            ShareNearByUserDistanceScreen shareNearByUserDistanceScreen =
+//                    (ShareNearByUserDistanceScreen) screen;
+//            dest.writeList(shareNearByUserDistanceScreen.listUsers());
         }
 
         else
@@ -105,6 +115,8 @@ public class ParcelableScreen implements Parcelable {
             case SUGGESTION:
                 screen = SuggestionScreen.instance();
                 break;
+            case SHARE_NEAR_BY_USER_DISTANCE:
+                screen = ShareNearByUserDistanceScreen.instance();
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);
         }

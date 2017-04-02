@@ -8,8 +8,8 @@ import com.gat.data.exception.LoginException;
 import com.gat.data.id.LongId;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
+import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
@@ -20,7 +20,6 @@ import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -234,14 +233,12 @@ public class DebugUserDataSource implements UserDataSource {
         MZDebug.d(TAG, "getPeopleNearByUserByDistance");
 
         GatApi api = dataComponent.getPublicGatApi();
-        Observable<Response<ServerResponse>> responseObservable;
+        Observable<Response<ServerResponse<ResultInfoList<UserNearByDistance>>>> responseObservable;
         responseObservable = api.getPeopleNearByUserV1(currentLongitude, currentLatitude);
 
         return responseObservable.map(response -> {
-            ServerResponse data = response.body();
-            MZDebug.d(TAG, data.data().toString());
-
-            return null;
+            List<UserNearByDistance> list = response.body().data().getResultInfo();
+            return list;
         });
     }
 
