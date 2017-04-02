@@ -9,6 +9,7 @@ import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -41,4 +42,7 @@ public interface UserRepository {
 
     Observable<ServerResponse> updateLocation(String address, LatLng location);
     Observable<ServerResponse> updateCategories(List<Integer> categories);
+
+    Observable<List<UserNearByDistance>>
+            getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
 }

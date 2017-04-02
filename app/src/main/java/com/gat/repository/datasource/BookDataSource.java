@@ -17,4 +17,8 @@ public interface BookDataSource {
     Observable<List<Book>> searchBookByKeyword(String keyword, int page, int sizeOfPage);
 
     Observable<Book> searchBookByIsbn(String isbn);
+
+    Observable<List<Book>> suggestMostBorrowing();
+
+    Observable<List<Book>> suggestBooks();
 }

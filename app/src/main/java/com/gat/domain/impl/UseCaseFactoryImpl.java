@@ -3,30 +3,14 @@ package com.gat.domain.impl;
 import android.support.annotation.Nullable;
 
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.ResetPasswordResponseData;
-import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.domain.UseCaseFactory;
-import com.gat.domain.usecase.GetLoginData;
-import com.gat.domain.usecase.GetUser;
-import com.gat.domain.usecase.Login;
-import com.gat.domain.usecase.Register;
-import com.gat.domain.usecase.ResetPassword;
-import com.gat.domain.usecase.SearchBookByIsbn;
-import com.gat.domain.usecase.SearchBookByKeyword;
-import com.gat.domain.usecase.SendRequestResetPassword;
-import com.gat.domain.usecase.TransformUseCase;
-import com.gat.domain.usecase.UpdateCategory;
-import com.gat.domain.usecase.UpdateLocation;
-import com.gat.domain.usecase.UseCase;
-import com.gat.domain.usecase.VerifyResetToken;
-import com.gat.domain.usecase.WorkUseCase;
+import com.gat.domain.usecase.*;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -120,4 +104,20 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     public <T> UseCase<T> doWork(Callable<T> callable) {
         return new WorkUseCase<>(callable);
     }
+
+    @Override
+    public UseCase<List<Book>> suggestMostBorrowing() {
+        return new SuggestMostBorrowing(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<Book>> suggestBooks() {
+        return new SuggestBooks(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation) {
+        return new PeopleNearByUser(userRepositoryLazy.get(), userLocation, neLocation, wsLocation);
+    }
+
 }

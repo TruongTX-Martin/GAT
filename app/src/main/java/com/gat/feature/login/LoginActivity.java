@@ -31,6 +31,8 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.feature.login.ForgotPassword.ForgotPasswordActivity;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 import com.gat.repository.entity.LoginData;
@@ -151,7 +153,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     private void onLoginResult(User user) {
         onLogging(false);
-        start(this, SearchActivity.class, SearchScreen.instance(Strings.EMPTY));
+        start(this, MainActivity.class, MainScreen.instance());
         finish();
     }
 

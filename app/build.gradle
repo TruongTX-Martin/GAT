@@ -212,4 +212,7 @@ dependencies {
     androidTestCompile      "${library.mockito}"
     androidTestCompile      "${library.dexmaker}"
     androidTestCompile      "${library.dexmaker_mockito}"
+
+    // easy permission
+    compile 'pub.devrel:easypermissions:0.3.0'
 }

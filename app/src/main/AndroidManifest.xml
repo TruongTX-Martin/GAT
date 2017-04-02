@@ -27,11 +27,8 @@
             android:value="@string/facebook_app_id"/>
 
         <activity android:name=".feature.search.SearchActivity">
-
         </activity>
-        <activity android:name=".feature.suggestion.SuggestionActivity">
 
-        </activity>
         <activity android:name=".feature.login.LoginActivity">
         </activity>
         <activity android:name=".feature.register.update.location.AddLocationActivity">
@@ -64,6 +61,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".feature.main.MainActivity" >
+        </activity>
+
+        <activity android:name=".feature.suggestion.nearby_user.ShareNearByUserDistanceActivity" >
+        </activity>
+
 
         <service
             android:name=".data.service.FetchAddressIntentService"

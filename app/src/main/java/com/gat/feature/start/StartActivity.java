@@ -21,16 +21,15 @@ import com.gat.data.response.ServerResponse;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterActivity;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
-import com.gat.feature.suggestion.SuggestionActivity;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -122,7 +121,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
 
         skip.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), SuggestionActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         });
 
@@ -180,7 +179,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     private void onLoginResult(User user) {
         onLogging(false);
-        start(this, SearchActivity.class, SearchScreen.instance(Strings.EMPTY));
+        start(this, MainActivity.class, MainScreen.instance());
         finish();
     }
 

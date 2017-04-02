@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
@@ -18,6 +19,7 @@ public class ParcelableScreen implements Parcelable {
 
     private final Screen screen;
 
+    private static final int MAIN = 0;
     private static final int SEARCH = 1;
     private static final int LOGIN = 2;
     private static final int REGISTER = 3;
@@ -51,6 +53,9 @@ public class ParcelableScreen implements Parcelable {
             return ADD_CATEGORY;
         if (screen instanceof SuggestionScreen)
             return SUGGESTION;
+        if (screen instanceof MainScreen)
+            return MAIN;
+
         throw new IllegalArgumentException("Not support screen " + screen);
     }
 
@@ -70,6 +75,8 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof AddCategoryScreen) {
 
         } else if (screen instanceof SuggestionScreen) {
+
+        } else if (screen instanceof MainScreen) {
 
         }
 

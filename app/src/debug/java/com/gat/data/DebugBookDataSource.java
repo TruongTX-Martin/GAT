@@ -91,4 +91,47 @@ public class DebugBookDataSource implements BookDataSource {
             }
         });
     }
+
+    @Override
+    public Observable<List<Book>> suggestMostBorrowing() {
+        return Observable.fromCallable(() -> {
+            int length = 10;
+            Book[] books = new Book[length];
+            Random rand = new Random();
+            for (int i = 0; i < books.length; i++) {
+                books[i] = Book.builder()
+                        .id(LongId.instance(i))
+                        .title("Book " + i)
+                        .publisher("NXB ABC")
+                        .publishedDate(System.currentTimeMillis())
+                        .pages(100)
+                        .authors(listOfAuthors("Author " + i))
+                        .rating(rand.nextFloat() * 5f)
+                        .build();
+            }
+            return listOfBooks(books);
+        }).delay(1000, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public Observable<List<Book>> suggestBooks() {
+        return Observable.fromCallable(() -> {
+            int length = 10;
+            Book[] books = new Book[length];
+            Random rand = new Random();
+            for (int i = 0; i < books.length; i++) {
+                books[i] = Book.builder()
+                        .id(LongId.instance(i))
+                        .title("Book " + i)
+                        .publisher("NXB ABC")
+                        .publishedDate(System.currentTimeMillis())
+                        .pages(100)
+                        .authors(listOfAuthors("Author " + i))
+                        .rating(rand.nextFloat() * 5f)
+                        .build();
+            }
+            return listOfBooks(books);
+        }).delay(1000, TimeUnit.MILLISECONDS);
+    }
+
 }

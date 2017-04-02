@@ -2,6 +2,7 @@ package com.gat.data;
 
 import android.location.Address;
 import android.util.Log;
+import com.gat.common.util.MZDebug;
 import com.gat.data.api.GatApi;
 import com.gat.data.exception.LoginException;
 import com.gat.data.id.LongId;
@@ -16,7 +17,10 @@ import com.gat.dependency.DataComponent;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -224,6 +228,23 @@ public class DebugUserDataSource implements UserDataSource {
             return serverResponse;
         });
     }
+
+    @Override
+    public Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance(float currentLongitude, float currentLatitude, float neLongitude, float neLatitude, float wsLongitude, float wsLatitude) {
+        MZDebug.d(TAG, "getPeopleNearByUserByDistance");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse>> responseObservable;
+        responseObservable = api.getPeopleNearByUserV1(currentLongitude, currentLatitude);
+
+        return responseObservable.map(response -> {
+            ServerResponse data = response.body();
+            MZDebug.d(TAG, data.data().toString());
+
+            return null;
+        });
+    }
+
 
     @Override
     public void storeLoginToken(String token) {
