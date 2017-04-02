@@ -122,7 +122,7 @@ public interface GatApi {
 
     // api v2
     @GET("search/nearby_user")
-    Observable<Response<ServerResponse>> getPeopleNearByUser (
+    Observable<Response<ServerResponse<ResultInfoList<UserNearByDistance>>>> getPeopleNearByUser (
             @Query("currentLat") float currentLatitude,
             @Query("currentLong") float currentLongitude,
             @Query("neLat") float neLatitude,

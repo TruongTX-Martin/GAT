@@ -229,12 +229,15 @@ public class DebugUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance(float currentLongitude, float currentLatitude, float neLongitude, float neLatitude, float wsLongitude, float wsLatitude) {
+    public Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance(
+            float currentLongitude, float currentLatitude,
+            float neLongitude, float neLatitude, float wsLongitude, float wsLatitude) {
         MZDebug.d(TAG, "getPeopleNearByUserByDistance");
 
         GatApi api = dataComponent.getPublicGatApi();
         Observable<Response<ServerResponse<ResultInfoList<UserNearByDistance>>>> responseObservable;
-        responseObservable = api.getPeopleNearByUserV1(currentLongitude, currentLatitude);
+        responseObservable = api.getPeopleNearByUser(currentLatitude, currentLongitude,
+                neLatitude, neLongitude, wsLatitude, wsLongitude);
 
         return responseObservable.map(response -> {
             List<UserNearByDistance> list = response.body().data().getResultInfo();

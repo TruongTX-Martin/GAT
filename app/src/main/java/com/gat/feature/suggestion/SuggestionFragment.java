@@ -63,7 +63,8 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     private BookSuggestAdapter mBookSuggestAdapter;
 
     private TrackGPS gps;
-    List<UserNearByDistance> mListUserDistance;
+    private List<UserNearByDistance> mListUserDistance;
+    private LatLng currentLatLng;
 
     @Override
     protected int getLayoutResource() {
@@ -147,19 +148,12 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
     @OnClick(R.id.button_more_sharing_near)
     void onMoreSharingNearTap() {
-
-        if ( ! gps.isGPSAvailable()) {
-            Toast.makeText(mContext, "Please, Enable location & try again", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         Intent intent = new Intent(mContext, ShareNearByUserDistanceActivity.class);
-        intent.putParcelableArrayListExtra(ShareNearByUserDistanceActivity.PASS_LIST_USER_DISTANCE,
-                (ArrayList) mListUserDistance);
-
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(ShareNearByUserDistanceActivity.PASS_LIST_USER_DISTANCE,
                 (ArrayList<? extends Parcelable>) mListUserDistance);
+        bundle.putDouble(ShareNearByUserDistanceActivity.PASS_USER_LOCATION_LATITUDE, currentLatLng.latitude);
+        bundle.putDouble(ShareNearByUserDistanceActivity.PASS_USER_LOCATION_LONGITUDE, currentLatLng.longitude);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -186,7 +180,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             TextView textViewName = (TextView) viewItem.findViewById(R.id.tv_people_near_suggest_name);
 
             // set data
-            if (!userItem.getImageId().isEmpty()) {
+            if ( ! userItem.getImageId().isEmpty()) {
                 Glide.with(getActivity()).
                         load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
                                 + userItem.getImageId() + "?size=t").into(imageViewAvatar);
@@ -267,8 +261,12 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         double longitude = gps.getLongitude();
         double latitude = gps.getLatitude();
         MZDebug.i("longitude: " + longitude + ", longitude: " + latitude);
-        LatLng currentLatLng = new LatLng(latitude, longitude);
-        getPresenter().getPeopleNearByUser(currentLatLng, currentLatLng, currentLatLng);
+        currentLatLng = new LatLng(latitude, longitude);
+
+        LatLng neLocation = new LatLng(latitude - 20, longitude - 20);
+        LatLng wsLocation = new LatLng(latitude + 20, longitude + 20);
+
+        getPresenter().getPeopleNearByUser(currentLatLng, neLocation, wsLocation);
     }
 
 }
