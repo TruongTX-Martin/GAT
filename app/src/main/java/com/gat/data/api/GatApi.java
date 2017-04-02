@@ -16,6 +16,14 @@ import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 import retrofit2.http.*;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Multipart;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by ducbtsn on 2/25/17.
@@ -97,7 +105,7 @@ public interface GatApi {
 
     @GET("search/book_by_isbn")
     Observable<Response<ServerResponse<Book>>> getBookByIsbn(
-        @Field("isbn") String isbn
+        @Query("isbn") String isbn
     );
 
     @GET("suggestion/most_borrowing")
