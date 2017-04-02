@@ -42,7 +42,7 @@
     <string name="register_twitter_btn">Register with twitter account</string>
 
     <string name="login_social_cancel">Login failed.</string>
-    <string name="register_policy">GAT policy</string>
+    <string name="register_policy">GAT terms and policy</string>
     <string name="authenticating">Authenticating...</string>
     <string name="register_update_info_btn">Finish register</string>
     <string name="name_field_null">Name is required</string>
