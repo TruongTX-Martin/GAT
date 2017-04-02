@@ -62,10 +62,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         bookInstanceDisposable = new CompositeDisposable(bookInstanceInputSubject.
                 observeOn(schedulerFactory.main()).subscribe(this::getBookInstance));
         //start get personal data
-//        personalInputSubject.onNext("");
-
-        BookInstanceInput input = new BookInstanceInput(true, false, false);
-        bookInstanceInputSubject.onNext(input);
+        personalInputSubject.onNext("");
     }
 
     @Override
@@ -82,6 +79,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorPersonal() {
         return personalError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestBookInstance(BookInstanceInput input) {
+        bookInstanceInputSubject.onNext(input);
     }
 
     @Override

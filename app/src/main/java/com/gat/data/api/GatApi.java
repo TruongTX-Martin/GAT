@@ -114,4 +114,5 @@ public interface GatApi {
             @Query("notSharingFilter") boolean notSharingFilter,
             @Query("lostFilter") boolean lostFilter
     );
+
 }

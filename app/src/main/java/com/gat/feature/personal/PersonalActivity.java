@@ -17,8 +17,13 @@ import com.gat.R;
 
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.util.Constance;
+import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.dependency.AppModule;
+import com.gat.feature.personal.entity.BookEntity;
+import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
@@ -29,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -37,8 +43,8 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPresenter> {
 
-    @BindView(R.id.imgAvatar)
-    ImageView imgAvatar;
+//    @BindView(R.id.imgAvatar)
+    CircleImageView imgAvatar;
 
     @BindView(R.id.txtName)
     TextView txtName;
@@ -81,6 +87,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ClientUtils.context = getApplicationContext();
+        imgAvatar = (CircleImageView) findViewById(R.id.imgAvatar);
         disposablesPersonal = new CompositeDisposable(getPresenter().getResponsePersonal().subscribe(this::getUserInfoSuccess),
                 getPresenter().onErrorPersonal().subscribe(this::getUserInfoError));
 
@@ -89,6 +96,10 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+
+        //default request book
+        BookInstanceInput input = new BookInstanceInput(true, false, false);
+        requestBookInstance(input);
     }
 
     private void setupTabIcons() {
@@ -180,25 +191,53 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     private void getUserInfoSuccess(Data data){
         if(data != null){
            UserInfo userInfo = (UserInfo) data.getDataReturn(UserInfo.class);
-            fragmentBookSharing.setUserData();
-            System.out.println(userInfo);
+            if(!Strings.isNullOrEmpty(userInfo.getName())) {
+                txtName.setText(userInfo.getName());
+            }
+            if(!Strings.isNullOrEmpty(userInfo.getEmail())) {
+                txtAddress.setText(userInfo.getEmail());
+            }
+            if(!Strings.isNullOrEmpty(userInfo.getImageid())) {
+                String url = ClientUtils.getUrlImage(userInfo.getImageid(), Constance.IMAGE_SIZE_ORIGINAL);
+                ClientUtils.setImage(imgAvatar,R.drawable.ic_profile,url);
+            }
         }
     }
     private void getUserInfoError(ServerResponse<ResponseData> error) {
         Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
     }
 
-    //handle get bookInstance return
 
+    public void requestBookInstance(BookInstanceInput input) {
+        getPresenter().requestBookInstance(input);
+    }
+
+    //handle get bookInstance return
     private void getBookInstanceSuccess(Data data){
-        System.out.println(data);
         if(data != null) {
             int totalSharing = data.getTotalSharing();
             int totalNotSharing = data.getTotalNotSharing();
             int lostTotal = data.getLostTotal();
+            List<BookEntity> listBook = data.getListDataReturn(BookEntity.class);
+            fragmentBookSharing.setListBook(listBook);
         }
     }
     private void getBookInstanceError(ServerResponse<ResponseData> error){
         Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void fakeData(){
+        //fake data listbook sharing
+        List<BookEntity> list = new ArrayList<>();
+        for (int i=0; i< 10; i++) {
+            BookEntity info = new BookEntity();
+            info.setTitle("Cuộc đời, sự nghiệp Steve Jobs"+i);
+            info.setAuthor("Frank Luca" + i);
+            info.setRateCount(4);
+            info.setBorrowingUserName("Trần Duy Hưng "+i);
+            list.add(info);
+        }
+//        fragmentBookSharing.setListBook(list);
+
     }
 }

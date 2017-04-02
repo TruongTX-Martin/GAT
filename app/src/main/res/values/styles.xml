@@ -22,4 +22,10 @@
 
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
+
+    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:minHeight">18dip</item>
+        <item name="android:maxHeight">18dip</item>
+        <item name="android:progressDrawable">@drawable/custom_ratingbar</item>
+    </style>
 </resources>

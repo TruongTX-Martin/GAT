@@ -42,4 +42,12 @@ public class UserInfo extends Object {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getImageid() {
+        return imageid;
+    }
 }
+

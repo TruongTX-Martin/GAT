@@ -1,66 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtSharing"
+    <RelativeLayout
+        android:id="@+id/layoutTop"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="Sharing"
-        android:textColor="#17658c"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="60dp">
+
+        <ImageView
+            android:id="@+id/imgFilter"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_filter_green" />
+
+        <ImageView
+            android:id="@+id/imgClose"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_cancle" />
+
+        <TextView
+            android:id="@+id/txtFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imgFilter"
+            android:layout_marginLeft="10dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="#5297ba"
+            android:text="Bộ lọc" />
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#CACACA" />
 
-    <TextView
-        android:id="@+id/txtNotSharing"
+    <RelativeLayout
+        android:id="@+id/layoutBookSharing"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="Not Sharing"
-        android:textColor="#17658c"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_layout_filter_book">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CACACA" />
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_circle_white"
+            android:layout_marginLeft="10dp" />
 
-    <TextView
-        android:id="@+id/txtLost"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="Lost"
-        android:textColor="#17658c"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/imgCheckSharing"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_check_filter_book"
+            android:layout_marginLeft="15dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CACACA" />
+        <TextView
+            android:id="@+id/txtBookSharing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorWhite"
+            android:text="Sách cho mượn"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/txtCancle"
+    <RelativeLayout
+        android:id="@+id/layoutMyBook"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="Cancel"
-        android:textColor="#17658c"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_layout_filter_book">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_circle_white"
+            android:layout_marginLeft="10dp" />
+
+        <ImageView
+            android:id="@+id/imgCheckNotShare"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_check_filter_book"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:id="@+id/txtNotShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorWhite"
+            android:text="Sách của bạn"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutBookLost"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_layout_filter_book">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_circle_white"
+            android:layout_marginLeft="10dp" />
+
+        <ImageView
+            android:id="@+id/imgCheckLost"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_check_filter_book"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:id="@+id/txtLost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorWhite"
+            android:text="Sách thất lạc"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 </LinearLayout>
