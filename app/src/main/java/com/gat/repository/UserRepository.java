@@ -4,7 +4,7 @@ import android.location.Address;
 
 import com.gat.data.response.ServerResponse;
 import com.gat.feature.personal.entity.BookInstanceInput;
-import com.gat.feature.personal.entity.Data;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.google.android.gms.maps.model.LatLng;

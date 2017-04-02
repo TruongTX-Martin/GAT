@@ -17,12 +17,14 @@ public abstract class   User {
     public abstract String avatar();
     public abstract String address();
     public abstract String phoneNumber();
+    public abstract String imageId();
 
     public static Builder builder(){
         return new AutoValue_User.Builder()
                 .name("Test")
                 .avatar(Strings.EMPTY)
                 .address(Strings.EMPTY)
+                .imageId(Strings.EMPTY)
                 .phoneNumber(Strings.EMPTY);
     }
 
@@ -34,6 +36,7 @@ public abstract class   User {
         public abstract Builder avatar(String value);
         public abstract Builder address(String value);
         public abstract Builder phoneNumber(String value);
+        public abstract Builder imageId(String imageId);
         public abstract User build();
 
     }

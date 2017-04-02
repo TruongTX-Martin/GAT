@@ -7,7 +7,7 @@ import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.personal.entity.BookInstanceInput;
-import com.gat.feature.personal.entity.Data;
+import com.gat.repository.entity.Data;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;

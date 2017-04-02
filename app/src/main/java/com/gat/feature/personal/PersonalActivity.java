@@ -19,15 +19,15 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
-import com.gat.dependency.AppModule;
 import com.gat.feature.personal.entity.BookEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
-import com.gat.feature.personal.entity.Data;
+import com.gat.repository.entity.Data;
 import com.gat.feature.personal.entity.UserInfo;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     TabLayout tabLayout;
 
     @BindView(R.id.viewpager)
-    ViewPager viewPager;
+    NonSwipeableViewPager viewPager;
 
     private CompositeDisposable disposablesPersonal;
     private CompositeDisposable disposablesBookInstance;
@@ -100,8 +100,27 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         //default request book
         BookInstanceInput input = new BookInstanceInput(true, false, false);
         requestBookInstance(input);
+        handleEvent();
     }
 
+    private void handleEvent(){
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
     private void setupTabIcons() {
 
         View tabOne =  LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
@@ -190,16 +209,16 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     //handle data personal return
     private void getUserInfoSuccess(Data data){
         if(data != null){
-           UserInfo userInfo = (UserInfo) data.getDataReturn(UserInfo.class);
-            if(!Strings.isNullOrEmpty(userInfo.getName())) {
+                UserInfo userInfo = (UserInfo) data.getDataReturn(UserInfo.class);
+            if (!Strings.isNullOrEmpty(userInfo.getName())) {
                 txtName.setText(userInfo.getName());
             }
-            if(!Strings.isNullOrEmpty(userInfo.getEmail())) {
+            if (!Strings.isNullOrEmpty(userInfo.getEmail())) {
                 txtAddress.setText(userInfo.getEmail());
             }
-            if(!Strings.isNullOrEmpty(userInfo.getImageid())) {
+            if (!Strings.isNullOrEmpty(userInfo.getImageid())) {
                 String url = ClientUtils.getUrlImage(userInfo.getImageid(), Constance.IMAGE_SIZE_ORIGINAL);
-                ClientUtils.setImage(imgAvatar,R.drawable.ic_profile,url);
+                ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
             }
         }
     }

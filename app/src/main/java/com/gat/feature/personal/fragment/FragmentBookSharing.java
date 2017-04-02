@@ -3,6 +3,7 @@ package com.gat.feature.personal.fragment;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -107,6 +108,9 @@ public class FragmentBookSharing extends Fragment {
         PopupWindow popupWindow = new PopupWindow(customView,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setOutsideTouchable(true);
         ImageView imgClose = (ImageView) customView.findViewById(R.id.imgClose);
         RelativeLayout layoutSharing = (RelativeLayout) customView.findViewById(R.id.layoutBookSharing);
         RelativeLayout layoutNotSharing = (RelativeLayout) customView.findViewById(R.id.layoutMyBook);
