@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "177876099439",
+    "firebase_url": "https://gatbook-163112.firebaseio.com",
+    "project_id": "gatbook-163112",
+    "storage_bucket": "gatbook-163112.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177876099439:android:ed767cc57f3481be",
+        "android_client_info": {
+          "package_name": "com.gat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177876099439-1v7jh2g75epo9bg7ev2d141u949e5gvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gat",
+            "certificate_hash": "9a75330dae95d959e96e8debe51f59c9ac5cf0a4"
+          }
+        },
+        {
+          "client_id": "177876099439-q6vnk5r2bjv541lkntqmbmi2ekhcmnnc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvnK-Gvn5hS6CFxr_UNtCSJS8cwPVhKpw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177876099439-q6vnk5r2bjv541lkntqmbmi2ekhcmnnc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
