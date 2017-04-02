@@ -9,6 +9,10 @@
 
     <dimen name="margin_left_right">50dp</dimen>
 
+    <dimen name="small_text_view_size">12sp</dimen>
+    <dimen name="normal_text_view_size">14sp</dimen>
+    <dimen name="large_text_view_size">16sp</dimen>
+
     <dimen name="small_textsize">13sp</dimen>
 
     <dimen name="normal_textsize">18sp</dimen>
@@ -26,7 +30,7 @@
     <dimen name="header_height">100dp</dimen>
 
 
-    <dimen name="navigation_header_height">60dp</dimen>
+    <dimen name="navigation_header_height">72dp</dimen>
     <dimen name="navigation_main_height">60dp</dimen>
 
     <!-- book item  -->

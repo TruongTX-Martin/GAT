@@ -12,4 +12,14 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
     public ShareNearByUserDistancePresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
 
     }
+
+    @Override
+    public void onCreate() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }

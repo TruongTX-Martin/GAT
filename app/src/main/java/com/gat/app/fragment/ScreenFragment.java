@@ -1,5 +1,6 @@
 package com.gat.app.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
@@ -23,12 +24,14 @@ public abstract class ScreenFragment<S extends Screen, P extends Presenter> exte
     private Unbinder unbinder;
     private volatile S screen;
     protected View mView;
+    protected Context mContext;
 
     protected abstract @LayoutRes int getLayoutResource();
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        mContext = getActivity().getApplicationContext();
         mView = inflater.inflate(getLayoutResource(), container, false);
         unbinder = ButterKnife.bind(this, mView);
         return mView;

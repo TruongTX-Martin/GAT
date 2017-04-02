@@ -9,6 +9,8 @@
     <string name="most_search_by_user">Sách tìm kiếm nhiều nhất</string>
     <string name="suggest">Đề xuất</string>
     <string name="view_more">Xem thêm </string>
+    <string name="book_lend">Sách cho mượn</string>
+    <string name="book_reading">Sách đang đọc</string>
 
 
 </resources>

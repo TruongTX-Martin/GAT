@@ -9,6 +9,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.Strings;
 import com.gat.feature.scanbarcode.ScanBarcodeActivity;
+import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionFragment;
 import java.lang.annotation.Retention;
@@ -84,10 +85,10 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
-        adapter.addFragment(new SuggestionFragment(), "PERSONAL");
-        adapter.addFragment(new SuggestionFragment(), "SCAN");
-        adapter.addFragment(new SuggestionFragment(), "NOTICE");
-        adapter.addFragment(new SuggestionFragment(), "SETTING");
+        adapter.addFragment(new ScanFragment(), "PERSONAL");
+        adapter.addFragment(new ScanFragment(), "SCAN");
+        adapter.addFragment(new ScanFragment(), "NOTICE");
+        adapter.addFragment(new ScanFragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
     }

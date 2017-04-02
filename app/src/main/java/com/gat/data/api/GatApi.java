@@ -1,19 +1,18 @@
 package com.gat.data.api;
 
-import com.gat.common.util.Strings;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
+import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 
 import java.util.List;
 
 //import rx.Observable;
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
 import retrofit2.Response;
 import retrofit2.http.*;
 import retrofit2.http.Field;
@@ -115,7 +114,7 @@ public interface GatApi {
 
     // api v1
     @GET("search/nearby_user_by_distance")
-    Observable<Response<ServerResponse>> getPeopleNearByUserV1 (
+    Observable<Response<ServerResponse<ResultInfoList<UserNearByDistance>>>> getPeopleNearByUserV1 (
             @Query("longitude") float currentLongitude,
             @Query("latitude") float currentLatitude
 
@@ -123,7 +122,7 @@ public interface GatApi {
 
     // api v2
     @GET("search/nearby_user")
-    Observable<Response<ServerResponse>> getPeopleNearByUser (
+    Observable<Response<ServerResponse<ResultInfoList<UserNearByDistance>>>> getPeopleNearByUser (
             @Query("currentLat") float currentLatitude,
             @Query("currentLong") float currentLongitude,
             @Query("neLat") float neLatitude,
