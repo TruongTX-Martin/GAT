@@ -215,4 +215,8 @@ dependencies {
 
     // easy permission
     compile 'pub.devrel:easypermissions:0.3.0'
+
+    // autovalue + gson
+    apt 'com.ryanharter.auto.value:auto-value-gson:0.3.1'
+
 }
