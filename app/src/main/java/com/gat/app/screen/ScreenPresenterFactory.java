@@ -2,6 +2,8 @@ package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
 import com.gat.feature.login.LoginScreen;
+import com.gat.feature.message.MessagePresenter;
+import com.gat.feature.message.MessageScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
@@ -37,6 +39,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getAddCategoryPresenter();
         else if (key instanceof SuggestionScreen)
             return (P) presenterComponent.getSuggestionPresenter();
+        else if (key instanceof MessageScreen)
+            return (P) presenterComponent.getMessagePresenter();
 
         throw new IllegalArgumentException("Not support key " + key);
     }

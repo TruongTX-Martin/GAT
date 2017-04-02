@@ -1,4 +1,4 @@
-package com.gat.feature.notification.message.item;
+package com.gat.feature.message.item;
 
 import com.gat.common.adapter.Item;
 import com.gat.repository.entity.Message;

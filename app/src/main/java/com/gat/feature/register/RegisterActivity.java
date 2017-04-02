@@ -134,7 +134,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                 passwordText.setError(error);
                 return;
             }
-            // Get name from head of email
+            // Get sender from head of email
             String name = email.substring(0, email.indexOf('@'));
             onLogging(true);
             getPresenter().setIdentity(
@@ -154,7 +154,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 try {
-                                    String name = object.has("name") ? object.getString("name") : Strings.EMPTY;
+                                    String name = object.has("sender") ? object.getString("sender") : Strings.EMPTY;
                                     String email = object.has("email") ? object.getString("email") : Strings.EMPTY;
                                     String image = object.has("picture") ? object.getJSONObject("picture").getJSONObject("data").getString("url") : Strings.EMPTY;
                                     String userId = loginResult.getAccessToken().getUserId();
@@ -176,7 +176,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                         });
                         //Here we put the requested fields to be returned from the JSONObject
                         Bundle parameters = new Bundle();
-                        parameters.putString("fields", "name, email, picture");
+                        parameters.putString("fields", "sender, email, picture");
                         request.setParameters(parameters);
                         request.executeAsync();
 

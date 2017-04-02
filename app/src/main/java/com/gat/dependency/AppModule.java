@@ -3,7 +3,8 @@ package com.gat.dependency;
 import android.app.Application;
 
 import com.gat.app.screen.ScreenPresenterFactory;
-import com.gat.data.response.ServerResponse;
+import com.gat.data.firebase.FirebaseService;
+import com.gat.data.firebase.FirebaseServiceImpl;
 import com.gat.data.user.PaperUserDataSource;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
@@ -16,7 +17,7 @@ import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.datasource.MessageDataSource;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.impl.BookRepositoryImpl;
-import com.gat.repository.impl.MesssageRepositoryImpl;
+import com.gat.repository.impl.MessageRepositoryImpl;
 import com.gat.repository.impl.UserRepositoryImpl;
 import com.rey.mvp2.PresenterManager;
 import com.rey.mvp2.impl.SimplePresenterManager;
@@ -88,8 +89,13 @@ public class AppModule {
 
     @Provides
     @Singleton
+    FirebaseService provideFirebaseService(@Named("local") Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
+        return new FirebaseServiceImpl(userDataSourceLazy, schedulerFactory);
+    }
+    @Provides
+    @Singleton
     @Named("network")
-    MessageDataSource provideNetworkMessageDataSource() {
+    MessageDataSource provideNetworkMessageDataSource(FirebaseService firebaseService) {
         // TODO: provide implementation
         return null;
     }
@@ -106,7 +112,7 @@ public class AppModule {
     @Singleton
     MessageRepository provideMessageRepository(@Named("network")Lazy<MessageDataSource> networkDataSourceLazy,
                                          @Named("local")Lazy<MessageDataSource> localDataSourceLazy){
-        return new MesssageRepositoryImpl(networkDataSourceLazy, localDataSourceLazy);
+        return new MessageRepositoryImpl(networkDataSourceLazy, localDataSourceLazy);
     }
 
     @Provides

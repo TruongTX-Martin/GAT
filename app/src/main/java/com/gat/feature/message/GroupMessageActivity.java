@@ -1,49 +1,30 @@
-package com.gat.feature.notification.message;
+package com.gat.feature.message;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
 import com.gat.common.listener.LoadMoreScrollListener;
-import com.gat.repository.entity.Message;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.gat.common.util.Strings;
+import com.gat.feature.message.adapter.GroupMessageAdapter;
+import com.gat.feature.message.event.RecyclerItemClickListener;
+import com.gat.feature.message.item.GroupItem;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
- * Created by ducbtsn on 3/27/17.
+ * Created by ducbtsn on 4/1/17.
  */
 
-public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresenter> {
-
+public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessagePresenter> {
     @BindView(R.id.message_refresh)
     SwipeRefreshLayout refreshLayout;
 
@@ -51,38 +32,53 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     RecyclerView recyclerView;
 
     private LoadMoreScrollListener loadMoreScrollListener;
-    private MessageAdapter messageAdapter;
+    private GroupMessageAdapter groupMessageAdapter;
 
     private CompositeDisposable compositeDisposable;
-    private Unbinder unbinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        unbinder = ButterKnife.bind(this);
         compositeDisposable = new CompositeDisposable(
                 getPresenter().itemsChanged().subscribe(this::onItemChanged),
                 getPresenter().loadingEvents().subscribe(this::onLoadingEvent)
 
         );
-        messageAdapter = new MessageAdapter();
-        recyclerView.setAdapter(messageAdapter);
+        groupMessageAdapter = new GroupMessageAdapter();
+        recyclerView.setAdapter(groupMessageAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        // Get group list
+        getPresenter().refreshGroupList();
 
         loadMoreScrollListener = new LoadMoreScrollListener(3, true, () -> {
-            if (messageAdapter.hasLoadMoreItem())
-                getPresenter().loadMoreMessageList();
+            if (groupMessageAdapter.hasLoadMoreItem())
+                getPresenter().loadMoreGroupList();
         });
         recyclerView.addOnScrollListener(loadMoreScrollListener);
 
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                GroupItem item = (GroupItem)groupMessageAdapter.getItemAt(position);
+                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(item.group().groupId()));
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+
         refreshLayout.setColorSchemeResources(R.color.colorAccent);
         refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
-        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList());
+        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshGroupList());
 
     }
 
     private void onItemChanged(ItemResult result) {
-        if (messageAdapter.setItem(result.items()) && result.diffResult() != null)
-            result.diffResult().dispatchUpdatesTo(messageAdapter);
+        if (groupMessageAdapter.setItem(result.items()) && result.diffResult() != null)
+            result.diffResult().dispatchUpdatesTo(groupMessageAdapter);
     }
 
     private void onLoadingEvent(LoadingEvent event) {
@@ -90,10 +86,10 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
             case LoadingEvent.Status.BEGIN:
                 loadMoreScrollListener.setEnable(false);
                 refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(!event.refresh() && messageAdapter.getItemCount() > 1);
+                refreshLayout.setEnabled(!event.refresh() && groupMessageAdapter.getItemCount() > 1);
                 break;
             case LoadingEvent.Status.DONE:
-                loadMoreScrollListener.setEnable(messageAdapter.hasLoadMoreItem());
+                loadMoreScrollListener.setEnable(groupMessageAdapter.hasLoadMoreItem());
                 refreshLayout.setRefreshing(false);
                 refreshLayout.setEnabled(true);
                 if (event.refresh())
@@ -109,14 +105,13 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         recyclerView.clearOnScrollListeners();
         recyclerView.setAdapter(null);
         recyclerView.getRecycledViewPool().clear();
-        messageAdapter = null;
+        groupMessageAdapter = null;
         loadMoreScrollListener = null;
-        unbinder.unbind();
         compositeDisposable.dispose();
+        super.onDestroy();
     }
 
     @Override
@@ -126,11 +121,13 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     @Override
     protected MessageScreen getDefaultScreen() {
-        return MessageScreen.instance();
+        return MessageScreen.instance(Strings.EMPTY);
     }
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.message_activity;
+        return R.layout.group_message_activity;
     }
 }
+
+

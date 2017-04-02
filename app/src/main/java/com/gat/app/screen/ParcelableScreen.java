@@ -3,7 +3,10 @@ package com.gat.app.screen;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.gat.common.util.Strings;
 import com.gat.feature.login.LoginScreen;
+import com.gat.feature.message.MessagePresenter;
+import com.gat.feature.message.MessageScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
@@ -24,6 +27,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int ADD_LOCATION = 4;
     private static final int ADD_CATEGORY = 5;
     private static final int SUGGESTION = 6;
+    private static final int MESSAGER = 7;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -51,6 +55,8 @@ public class ParcelableScreen implements Parcelable {
             return ADD_CATEGORY;
         if (screen instanceof SuggestionScreen)
             return SUGGESTION;
+        if (screen instanceof MessageScreen)
+            return MESSAGER;
         throw new IllegalArgumentException("Not support screen " + screen);
     }
 
@@ -71,6 +77,9 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof SuggestionScreen) {
 
+        } else if (screen instanceof MessageScreen) {
+            MessageScreen messageScreen = (MessageScreen) screen;
+            dest.writeString(messageScreen.groupId());
         }
 
         else
@@ -97,6 +106,9 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case SUGGESTION:
                 screen = SuggestionScreen.instance();
+                break;
+            case MESSAGER:
+                screen = MessageScreen.instance(in.readString());
                 break;
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);

@@ -22,5 +22,9 @@
     <dimen name="intro_height">450dp</dimen>
     <dimen name="category_width">100dp</dimen>
     <dimen name="header_height">100dp</dimen>
+    <dimen name="message_message_size">16sp</dimen>
 
+    <dimen name="message_image_width">50.9dp</dimen>
+    <dimen name="message_image_height">50.4dp</dimen>
+    <dimen name="message_name_size">18.7sp</dimen>
 </resources>

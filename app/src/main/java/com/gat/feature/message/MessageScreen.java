@@ -1,4 +1,4 @@
-package com.gat.feature.notification.message;
+package com.gat.feature.message;
 
 import com.gat.app.screen.Screen;
 import com.google.auto.value.AutoValue;
@@ -9,7 +9,8 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class MessageScreen implements Screen {
-    public static MessageScreen instance() {
-        return new AutoValue_MessageScreen();
+    public abstract String groupId();
+    public static MessageScreen instance(String groupId) {
+        return new AutoValue_MessageScreen(groupId);
     }
 }

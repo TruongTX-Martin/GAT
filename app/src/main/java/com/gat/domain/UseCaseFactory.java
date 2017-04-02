@@ -9,6 +9,7 @@ import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Group;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.Message;
 import com.gat.repository.entity.User;
@@ -47,7 +48,9 @@ public interface UseCaseFactory {
 
     UseCase<Book> getBookByIsbn(String isbn);
 
-    UseCase<List<Message>> getMessageList();
+    UseCase<List<Message>> getMessageList(String groupId);
+
+    UseCase<List<Group>> getGroupList();
 
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);
 

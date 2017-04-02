@@ -21,16 +21,14 @@ import com.gat.data.response.ServerResponse;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
+import com.gat.feature.message.GroupMessageActivity;
 import com.gat.feature.register.RegisterActivity;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
-import com.gat.feature.suggestion.SuggestionActivity;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -122,7 +120,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
 
         skip.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), SuggestionActivity.class);
+            Intent intent = new Intent(getApplicationContext(), GroupMessageActivity.class);
             startActivity(intent);
         });
 

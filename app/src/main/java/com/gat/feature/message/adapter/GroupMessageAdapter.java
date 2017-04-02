@@ -1,4 +1,4 @@
-package com.gat.feature.notification.message;
+package com.gat.feature.message.adapter;
 
 import android.support.annotation.IntDef;
 import android.view.ViewGroup;
@@ -7,49 +7,47 @@ import com.gat.R;
 import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemAdapter;
 import com.gat.common.adapter.ItemViewHolder;
-import com.gat.feature.notification.message.viewholder.LoadingMessageViewHolder;
-import com.gat.feature.search.SearchAdapter;
-import com.gat.feature.search.item.BookItem;
-import com.gat.feature.search.item.LoadingItem;
-import com.gat.feature.search.viewholder.BookItemViewHolder;
-import com.gat.feature.search.viewholder.LoadingItemViewHolder;
+import com.gat.feature.message.item.GroupItem;
+import com.gat.feature.message.item.LoadingMessage;
+import com.gat.feature.message.viewholder.GroupMessageViewHolder;
+import com.gat.feature.message.viewholder.LoadingMessageViewHolder;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by ducbtsn on 3/30/17.
+ * Created by ducbtsn on 4/1/17.
  */
 
-public class MessageAdapter extends ItemAdapter {
-    @IntDef({MessageAdapter.Type.LOADING, MessageAdapter.Type.MESSAGE})
+public class GroupMessageAdapter extends ItemAdapter {
+    @IntDef({GroupMessageAdapter.Type.LOADING, GroupMessageAdapter.Type.MESSAGE})
     @Retention(RetentionPolicy.SOURCE)
     @interface Type {
         int LOADING = 1;
         int MESSAGE    = 2;
     }
-    public MessageAdapter() {
+    public GroupMessageAdapter() {
         setReady();
     }
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case Type.MESSAGE:
-                return new BookItemViewHolder(parent, R.layout.message_item);
-            case Type.LOADING:
+            case GroupMessageAdapter.Type.MESSAGE:
+                return new GroupMessageViewHolder(parent, R.layout.group_message_item);
+            case GroupMessageAdapter.Type.LOADING:
                 return new LoadingMessageViewHolder(parent, R.layout.search_item_loading);
         }
         throw new IllegalArgumentException("Not support type " + viewType);
     }
 
     @Override
-    public @MessageAdapter.Type
+    public @GroupMessageAdapter.Type
     int getItemViewType(int position) {
         Item item = getItemAt(position);
-        if(item instanceof LoadingItem)
-            return Type.LOADING;
-        if(item instanceof BookItem)
-            return Type.MESSAGE;
+        if(item instanceof LoadingMessage)
+            return GroupMessageAdapter.Type.LOADING;
+        if(item instanceof GroupItem)
+            return GroupMessageAdapter.Type.MESSAGE;
         throw new IllegalArgumentException("Not support item " + item);
     }
 
@@ -57,6 +55,6 @@ public class MessageAdapter extends ItemAdapter {
         if(items.isEmpty())
             return false;
         Item item = items.get(items.size() - 1);
-        return item instanceof LoadingItem && !((LoadingItem)item).fullHeight();
+        return item instanceof LoadingMessage && !((LoadingMessage)item).fullHeight();
     }
 }

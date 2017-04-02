@@ -105,5 +105,6 @@
     <string name="tab_notification">Notification</string>
     <string name="tab_setting">Setting</string>
     <string name="message_header">Message</string>
+    <string name="send_message_btn">Send</string>
 
 </resources>

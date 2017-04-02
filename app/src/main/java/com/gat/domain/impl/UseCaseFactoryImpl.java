@@ -8,6 +8,7 @@ import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.domain.UseCaseFactory;
+import com.gat.domain.usecase.GetGroupList;
 import com.gat.domain.usecase.GetLoginData;
 import com.gat.domain.usecase.GetMessageList;
 import com.gat.domain.usecase.GetUser;
@@ -27,6 +28,7 @@ import com.gat.repository.BookRepository;
 import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Group;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.Message;
 import com.gat.repository.entity.User;
@@ -68,8 +70,13 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Message>> getMessageList() {
-        return new GetMessageList(messageRepositoryLazy.get());
+    public UseCase<List<Message>> getMessageList(String groupId) {
+        return new GetMessageList(messageRepositoryLazy.get(), groupId);
+    }
+
+    @Override
+    public UseCase<List<Group>> getGroupList() {
+        return new GetGroupList(messageRepositoryLazy.get());
     }
 
     @Override

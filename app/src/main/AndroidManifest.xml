@@ -26,6 +26,14 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
+        <activity android:name=".feature.message.MessageActivity">
+
+        </activity>
+
+        <activity android:name=".feature.message.GroupMessageActivity">
+
+        </activity>
+
         <activity android:name=".feature.search.SearchActivity">
 
         </activity>

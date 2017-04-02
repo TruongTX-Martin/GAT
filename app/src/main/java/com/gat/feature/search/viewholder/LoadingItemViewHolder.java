@@ -9,7 +9,8 @@ import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
-import com.gat.feature.search.item.LoadingItem;
+import com.gat.common.event.LoadingEvent;
+import com.gat.feature.message.item.LoadingMessage;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import butterknife.BindView;
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by Rey on 2/15/2017.
  */
 
-public class LoadingItemViewHolder extends ItemViewHolder<LoadingItem>{
+public class LoadingItemViewHolder extends ItemViewHolder<LoadingMessage>{
 
     @BindView(R.id.loading_pw)
     ProgressWheel progressWheel;
@@ -36,10 +37,10 @@ public class LoadingItemViewHolder extends ItemViewHolder<LoadingItem>{
     }
 
     @Override
-    public void onBindItem(LoadingItem item) {
+    public void onBindItem(LoadingMessage item) {
         super.onBindItem(item);
 
-        if(item.message() == LoadingItem.Message.LOADING){
+        if(item.message() == LoadingMessage.Message.LOADING){
             progressWheel.setVisibility(View.VISIBLE);
             errorLayout.setVisibility(View.GONE);
         }
@@ -48,13 +49,13 @@ public class LoadingItemViewHolder extends ItemViewHolder<LoadingItem>{
             errorLayout.setVisibility(View.VISIBLE);
 
             switch (item.message()) {
-                case LoadingItem.Message.DEFAULT:
+                case LoadingMessage.Message.DEFAULT:
                     messageView.setText("Please enter some keyword.");
                     break;
-                case LoadingItem.Message.EMPTY:
+                case LoadingMessage.Message.EMPTY:
                     messageView.setText("Not found any book.");
                     break;
-                case LoadingItem.Message.ERROR:
+                case LoadingMessage.Message.ERROR:
                     messageView.setText("There is an error.\nPlease try again.");
                     break;
             }

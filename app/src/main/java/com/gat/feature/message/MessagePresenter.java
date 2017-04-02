@@ -1,4 +1,4 @@
-package com.gat.feature.notification.message;
+package com.gat.feature.message;
 
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
@@ -11,11 +11,17 @@ import io.reactivex.Observable;
  */
 
 public interface MessagePresenter extends Presenter{
-    void loadMoreMessageList();
+    void loadMoreMessageList(String groupId);
 
-    void refreshMessageList();
+    void refreshMessageList(String groupId);
+
+    void refreshGroupList();
+
+    void loadMoreGroupList();
 
     Observable<LoadingEvent> loadingEvents();
 
     Observable<ItemResult> itemsChanged();
+
+
 }
