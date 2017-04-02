@@ -24,6 +24,7 @@ import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.TrackGPS;
 import com.gat.feature.main.MainActivity;
+import com.gat.feature.register.update.location.AddLocationActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceActivity;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.UserNearByDistance;
