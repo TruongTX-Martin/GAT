@@ -1,11 +1,13 @@
 package com.gat.feature.personal.adapter;
 
 import android.content.Context;
+import android.support.annotation.Dimension;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -53,6 +55,7 @@ public class BookSharingAdapter extends BaseAdapter {
         TextView txtAuthor = (TextView) convertView.findViewById(R.id.txtAuthor);
         TextView txtBorrowFrom = (TextView) convertView.findViewById(R.id.txtBorrowFrom);
         ImageView imgBook = (ImageView) convertView.findViewById(R.id.imgAvatar);
+        RatingBar ratingBar = (RatingBar) convertView.findViewById(R.id.ratingBar);
         BookEntity entity = (BookEntity) getItem(position);
         if (entity != null){
             txtTitle.setText(entity.getTitle());

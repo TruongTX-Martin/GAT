@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.util.ClientUtils;
 import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
 import com.gat.feature.personal.entity.BookEntity;
@@ -42,6 +43,7 @@ public class FragmentBookSharing extends Fragment {
     private PersonalActivity parrentActivity;
     private Context context;
     private View rootView;
+    private BookInstanceInput currentInput;
 
 
     public void setParrentActivity(PersonalActivity parrentActivity) {
@@ -71,6 +73,7 @@ public class FragmentBookSharing extends Fragment {
         lvBookSharing.setAdapter(adapterBookSharing);
         handleEvent();
         showLoading();
+        currentInput = new BookInstanceInput(true,false,true);
         return rootView;
     }
 
@@ -103,6 +106,7 @@ public class FragmentBookSharing extends Fragment {
     }
 
     private void showDialogFilter() {
+        BookInstanceInput temporatyInput = currentInput;
         LayoutInflater inflater = LayoutInflater.from(parrentActivity);
         View customView = inflater.inflate(R.layout.layout_popup_book_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
@@ -112,28 +116,70 @@ public class FragmentBookSharing extends Fragment {
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.setOutsideTouchable(true);
         ImageView imgClose = (ImageView) customView.findViewById(R.id.imgClose);
-        RelativeLayout layoutSharing = (RelativeLayout) customView.findViewById(R.id.layoutBookSharing);
-        RelativeLayout layoutNotSharing = (RelativeLayout) customView.findViewById(R.id.layoutMyBook);
-        RelativeLayout layoutLost = (RelativeLayout) customView.findViewById(R.id.layoutBookLost);
-        imgClose.setOnClickListener(v -> popupWindow.dismiss());
-        layoutSharing.setOnClickListener(v -> {
-            BookInstanceInput input = new BookInstanceInput(true,false,false);
-            parrentActivity.requestBookInstance(input);
-            showLoading();
+        RelativeLayout layoutSharingBorder = (RelativeLayout) customView.findViewById(R.id.layoutSharingBorder);
+        RelativeLayout layoutSharingOverlay = (RelativeLayout) customView.findViewById(R.id.layoutSharingOverlay);
+        RelativeLayout layoutNotSharingBorder = (RelativeLayout) customView.findViewById(R.id.layoutMyBookBorder);
+        RelativeLayout layoutNotSharingOverlay = (RelativeLayout) customView.findViewById(R.id.layoutMyBookOverLay);
+        RelativeLayout layoutLostBorder = (RelativeLayout) customView.findViewById(R.id.layoutBookLostBorder);
+        RelativeLayout layoutLostOverlay = (RelativeLayout) customView.findViewById(R.id.layoutBookLostOverlay);
+        imgClose.setOnClickListener(v -> {
+            if(currentInput != temporatyInput){
+                ClientUtils.showToast("Searching....");
+            }
+            currentInput = temporatyInput;
             popupWindow.dismiss();
         });
-        layoutNotSharing.setOnClickListener(v -> {
-            BookInstanceInput input = new BookInstanceInput(false,true,false);
-            parrentActivity.requestBookInstance(input);
-            showLoading();
-            popupWindow.dismiss();
+        layoutSharingBorder.setOnClickListener(v -> {
+            layoutSharingBorder.setVisibility(View.GONE);
+            layoutSharingOverlay.setVisibility(View.VISIBLE);
+            temporatyInput.setSharingFilter(false);
         });
-        layoutLost.setOnClickListener(v -> {
-            BookInstanceInput input = new BookInstanceInput(false,false,true);
-            parrentActivity.requestBookInstance(input);
-            showLoading();
-            popupWindow.dismiss();
+        layoutSharingOverlay.setOnClickListener(v -> {
+            layoutSharingBorder.setVisibility(View.VISIBLE);
+            layoutSharingOverlay.setVisibility(View.GONE);
+            temporatyInput.setSharingFilter(true);
         });
+        layoutNotSharingBorder.setOnClickListener(v -> {
+            layoutNotSharingBorder.setVisibility(View.GONE);
+            layoutNotSharingOverlay.setVisibility(View.VISIBLE);
+            temporatyInput.setNotSharingFilter(false);
+        });
+        layoutNotSharingOverlay.setOnClickListener(v -> {
+            layoutNotSharingBorder.setVisibility(View.VISIBLE);
+            layoutNotSharingOverlay.setVisibility(View.GONE);
+            temporatyInput.setNotSharingFilter(true);
+        });
+        layoutLostBorder.setOnClickListener(v -> {
+            layoutLostBorder.setVisibility(View.GONE);
+            layoutLostOverlay.setVisibility(View.VISIBLE);
+            temporatyInput.setLostFilter(false);
+        });
+        layoutLostOverlay.setOnClickListener(v -> {
+            layoutLostBorder.setVisibility(View.VISIBLE);
+            layoutLostOverlay.setVisibility(View.GONE);
+            temporatyInput.setLostFilter(true);
+        });
+        if(currentInput.isSharingFilter()){
+            layoutSharingBorder.setVisibility(View.VISIBLE);
+            layoutSharingOverlay.setVisibility(View.GONE);
+        }else{
+            layoutSharingBorder.setVisibility(View.GONE);
+            layoutSharingOverlay.setVisibility(View.VISIBLE);
+        }
+        if(currentInput.isNotSharingFilter()){
+            layoutNotSharingBorder.setVisibility(View.VISIBLE);
+            layoutNotSharingOverlay.setVisibility(View.GONE);
+        }else{
+            layoutNotSharingBorder.setVisibility(View.GONE);
+            layoutNotSharingOverlay.setVisibility(View.VISIBLE);
+        }
+        if(currentInput.isLostFilter()){
+            layoutLostBorder.setVisibility(View.VISIBLE);
+            layoutLostOverlay.setVisibility(View.GONE);
+        }else{
+            layoutLostBorder.setVisibility(View.GONE);
+            layoutLostOverlay.setVisibility(View.VISIBLE);
+        }
         popupWindow.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
 
     }
