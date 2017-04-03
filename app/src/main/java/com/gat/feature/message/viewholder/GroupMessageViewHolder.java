@@ -10,6 +10,7 @@ import com.gat.common.util.Strings;
 import com.gat.feature.message.item.GroupItem;
 import com.gat.repository.entity.Group;
 
+import java.util.Date;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -43,11 +44,9 @@ public class GroupMessageViewHolder extends ItemViewHolder<GroupItem> {
     public void onBindItem(GroupItem item) {
         super.onBindItem(item);
         group = item.group();
-        //Map<String, Group.Member> members = group.getMembers();
-        //Group.Member member = members.get("");
         name.setText("TODO");
         text.setText(group.lastMessage());
-        time.setText("TODO"/*group.timeStamp()*/);
+        time.setText(getDateDisplay(group.timeStamp()));
         userImage.setImageResource(R.drawable.steve_job);
     }
 
@@ -57,5 +56,26 @@ public class GroupMessageViewHolder extends ItemViewHolder<GroupItem> {
         } else {
             return Strings.EMPTY;
         }
+    }
+
+    private String getDateDisplay(Long timeStamp) {
+        Date now = new Date();
+        if (now.getTime() < timeStamp)
+            return "Invalid";
+        Long diff = now.getTime() - timeStamp;
+        String result;
+        if (diff < 60 * 1000) {
+            result = "just few second.";
+        } else if (diff < 60 * 60 * 1000) {
+            Long minutes = diff/(60 *1000);
+            result = minutes + ((minutes == 1) ? "minute" : "minutes");
+        } else if (diff < 24 * 60 * 60 * 1000) {
+            Long hours = diff/(60 * 60 *1000);
+            result = hours + ((hours == 1) ? "hour" : "hours");
+        } else {
+            Long days = diff/(24 * 60 * 60 *1000);
+            result = days + ((days == 1) ? "day" : "days");
+        }
+        return result;
     }
 }

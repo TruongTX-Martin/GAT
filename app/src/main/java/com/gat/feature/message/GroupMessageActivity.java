@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
 import com.gat.common.listener.LoadMoreScrollListener;
@@ -60,8 +61,10 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                GroupItem item = (GroupItem)groupMessageAdapter.getItemAt(position);
-                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(item.group().groupId()));
+                Item item = groupMessageAdapter.getItemAt(position);
+                if (!(item instanceof GroupItem))
+                    return;
+                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(((GroupItem)item).group().groupId()));
             }
 
             @Override

@@ -55,6 +55,8 @@ public class MessagePresenterImpl implements MessagePresenter {
 
     private UseCase<ItemResult> loadMessageUseCase;
 
+    UseCase<List<Group>> getGroupUseCase;
+
     public MessagePresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
@@ -113,7 +115,8 @@ public class MessagePresenterImpl implements MessagePresenter {
         );
         pageCnt = (type == ACTION.GROUP_REFRESH) ? 0 : pageCnt++;
 
-        UseCase<List<Group>> getGroupUseCase = useCaseFactory.getGroupList();
+        getGroupUseCase = UseCases.release(getGroupUseCase);
+        getGroupUseCase = useCaseFactory.getGroupList();
         GroupItemBuilder itemBuilder = new GroupItemBuilder();
         ObservableTransformer<List<Group>, ItemResult> transformer =
                 upstream -> upstream.map(groups -> {
@@ -141,7 +144,7 @@ public class MessagePresenterImpl implements MessagePresenter {
                     Timber.d(throwable, "Error loading message");
                 })
                 .onStop(() -> {
-                    UseCases.release(getGroupUseCase);
+                    getGroupUseCase = UseCases.release(getGroupUseCase);
                     loadMessageUseCase = UseCases.release(loadMessageUseCase);
                 })
                 .execute();
@@ -150,6 +153,7 @@ public class MessagePresenterImpl implements MessagePresenter {
     private void showLoadingItem(boolean refresh, boolean clear, @LoadingMessage.Message int message){
         Callable<ItemResult> job = () -> {
             List<Item> items = itemResultSubject.blockingFirst().items();
+            Log.d(TAG, "do job");
             ItemResult result = ItemBuilder.showLoading(items, clear, !refresh || clear, message);
             itemResultSubject.onNext(result);
             return result;
@@ -175,6 +179,7 @@ public class MessagePresenterImpl implements MessagePresenter {
     @Override
     public void onDestroy() {
         loadMessageUseCase = UseCases.release(loadMessageUseCase);
+        getGroupUseCase = UseCases.release(getGroupUseCase);
     }
 
     @Override

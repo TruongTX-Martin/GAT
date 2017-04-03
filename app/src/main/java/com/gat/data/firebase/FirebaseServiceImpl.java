@@ -8,18 +8,14 @@ import com.gat.repository.entity.Group;
 import com.gat.repository.entity.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import dagger.Lazy;
 import io.reactivex.Observable;
@@ -52,33 +48,25 @@ public class FirebaseServiceImpl implements FirebaseService{
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
-    private Subject<List<Group>> groupList;
+    private Subject<List<Group>> groupListSubject;
+    private Subject<List<Group>> groupListSubject2;
 
-    private Subject<List<String>> groupListId;
-
-    private Subject<List<String>> usersSubject;
+    private Subject<List<String>> groupListIdSubject;
 
     private List<Group> groups;
-
-    private List<Group> messageGroups;
-
-    private List<Message> messages;
 
     Subject<List<Message>> messageList;
 
     private void init() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        groupList = BehaviorSubject.create();
-        groupListId = BehaviorSubject.create();
+        groupListSubject = BehaviorSubject.create();
+        groupListSubject2 = BehaviorSubject.create();
+        groupListIdSubject = BehaviorSubject.create();
 
         messageList = BehaviorSubject.create();
-        usersSubject = BehaviorSubject.create();
 
         groups = new ArrayList();
-        messageGroups = new ArrayList<>();
-
-        messages = new ArrayList();
 
         if (firebaseUser == null) {
             login();
@@ -106,7 +94,7 @@ public class FirebaseServiceImpl implements FirebaseService{
                     stringList.add(snapshot.getKey());
                     Log.d(TAG, "GroupID=" + snapshot.getKey());
                 }
-                groupListId.onNext(stringList);
+                groupListIdSubject.onNext(stringList);
             }
 
             @Override
@@ -116,8 +104,26 @@ public class FirebaseServiceImpl implements FirebaseService{
         });
     }
 
-    private void getMessageFromFirebase(String groupId) {
-        // TODO
+    private void getMessageFromGroup(String groupId) {
+        Log.d(TAG, "GetMessageFrom:"+groupId);
+        databaseReference.child(MESSAGE_LEVEL).child(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Message> list = new ArrayList();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Message message = snapshot.getValue(Message.class);
+                    message.userId = snapshot.getKey();
+                    list.add(message);
+                    Log.d(TAG, "Message:"+message.message);
+                }
+                messageList.onNext(list);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getUserInGroup(String groupId) {
@@ -129,7 +135,6 @@ public class FirebaseServiceImpl implements FirebaseService{
                     if (snapshot != null)
                         userList.add(snapshot.getValue(String.class));
                 }
-                usersSubject.onNext(userList);
             }
 
             @Override
@@ -160,7 +165,7 @@ public class FirebaseServiceImpl implements FirebaseService{
                         groups.add(Group.builder().groupId(groupId).users(userId).build());
                     Log.d(TAG, "GroupSize:" + Integer.toString(groups.size()));
                     if (groups.size() >= groupIds.size())
-                        groupList.onNext(groups);
+                        groupListSubject.onNext(makeCopyGroupList(groups));
                 }
 
                 @Override
@@ -172,8 +177,7 @@ public class FirebaseServiceImpl implements FirebaseService{
     }
 
     private void getLastMessageInGroups(List<Group> listGroup) {
-        messageGroups.clear();
-        //groups.clear();
+        groups.clear();
         Log.d(TAG, "getLastMessage:GroupSize " + listGroup.size());
         for (Group group : listGroup) {
             Log.d(TAG, "GetMessageFrom:"+group.groupId());
@@ -183,13 +187,13 @@ public class FirebaseServiceImpl implements FirebaseService{
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Message message = snapshot.getValue(Message.class);
                         Log.d(TAG, "Message:"+message.message);
-                        messageGroups.add(Group.builder().groupId(group.groupId())
+                        groups.add(Group.builder().groupId(group.groupId())
                                 .users(group.users())
                                 .timeStamp(message.timeStamp)
                                 .lastMessage(message.message)
                                 .build());
-                        if (messageGroups.size() >= listGroup.size())
-                            groupList.onNext(messageGroups);
+                        if (groups.size() >= listGroup.size())
+                            groupListSubject2.onNext(makeCopyGroupList(groups));
                         break;
                     }
                 }
@@ -206,7 +210,7 @@ public class FirebaseServiceImpl implements FirebaseService{
 
     @Override
     public Observable<List<Message>> getMessageList(String groupId) {
-        getMessageFromFirebase(groupId);
+        getMessageFromGroup(groupId);
         return messageList.observeOn(schedulerFactory.io());
     }
 
@@ -214,32 +218,31 @@ public class FirebaseServiceImpl implements FirebaseService{
     @Override
     public Observable<List<String>> getGroupList() {
         getGroupList(userDataSourceLazy.get().loadUser().blockingFirst().id().toString());
-        return groupListId.observeOn(schedulerFactory.io());
+        return groupListIdSubject.observeOn(schedulerFactory.io());
     }
-
-    /*
-    @Override
-    public Observable<List<String>> getUserList(String groupId) {
-        getUserInGroup(groupId);
-        return usersSubject.observeOn(schedulerFactory.io());
-    }
-    */
 
     @Override
     public Observable<List<Group>> getGroupUserList(List<String> groupIds) {
         getUsersInGroups(groupIds);
-        return groupList.observeOn(schedulerFactory.io());
+        return groupListSubject.observeOn(schedulerFactory.io());
     }
 
     @Override
     public Observable<List<Group>> getGroupLastMessage(List<Group> listGroup) {
         getLastMessageInGroups(listGroup);
-        return groupList.observeOn(schedulerFactory.io());
+        return groupListSubject2.observeOn(schedulerFactory.io());
     }
 
     @Override
     public Observable<List<Group>> getGroupList(int page, int size) {
         return null;
+    }
+
+    private List<Group> makeCopyGroupList(List<Group> srcList) {
+        List<Group> tarList = new ArrayList<>();
+        for (Group group : srcList)
+            tarList.add(Group.instance(group));
+        return tarList;
     }
 
 }

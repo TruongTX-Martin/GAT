@@ -11,8 +11,8 @@ import java.io.Serializable;
 @AutoValue
 public abstract class SocialLoginData implements LoginData{
 
-    public static SocialLoginData instance(String socialID, int type, String email, String password, String name, String image){
-        return new AutoValue_SocialLoginData(socialID, type, email, password, name, image);
+    public static SocialLoginData instance(String socialID, int type, String email, String password, String name, String image, String token){
+        return new AutoValue_SocialLoginData(socialID, type, email, password, name, image, token);
     }
     public abstract String socialID();
     public abstract int type();
@@ -20,4 +20,5 @@ public abstract class SocialLoginData implements LoginData{
     public abstract String password();
     public abstract String name();
     public abstract String image();
+    public abstract String token();
 }

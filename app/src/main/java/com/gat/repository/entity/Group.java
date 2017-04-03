@@ -19,6 +19,14 @@ public abstract class Group {
     public abstract Long timeStamp();
     public abstract List<String> users();
 
+    public static Group instance(Group group) {
+        return new AutoValue_Group.Builder()
+                .groupId(group.groupId())
+                .lastMessage(group.lastMessage())
+                .users(group.users())
+                .timeStamp(group.timeStamp())
+                .build();
+    }
 
     public static Builder builder() {
         return new AutoValue_Group.Builder()

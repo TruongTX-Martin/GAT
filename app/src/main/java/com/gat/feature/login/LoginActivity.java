@@ -175,6 +175,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                                     String email = object.has("email") ? object.getString("email") : Strings.EMPTY;
                                     String image = object.has("picture") ? object.getJSONObject("picture").getJSONObject("data").getString("url") : Strings.EMPTY;
                                     String userId = loginResult.getAccessToken().getUserId();
+                                    String token = loginResult.getAccessToken().getToken();
 
                                     getPresenter().setIdentity(SocialLoginData.instance(
                                             userId,
@@ -182,7 +183,8 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                                             email,
                                             Strings.EMPTY,
                                             name,
-                                            image
+                                            image,
+                                            token
                                     ));
                                     // Loading
                                     onLogging(true);
