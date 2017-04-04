@@ -112,7 +112,9 @@ public interface GatApi {
     Observable<Response<ServerResponse<Data>>> getBookInstance(
             @Query("sharingFilter") boolean sharingFilter,
             @Query("notSharingFilter") boolean notSharingFilter,
-            @Query("lostFilter") boolean lostFilter
+            @Query("lostFilter") boolean lostFilter,
+            @Query("page") int page,
+            @Query("per_page") int per_page
     );
 
 }

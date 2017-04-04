@@ -7,6 +7,7 @@ import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookSharingInput;
 import com.gat.repository.entity.Data;
 
 import io.reactivex.Observable;
@@ -40,6 +41,14 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private final Subject<ServerResponse<ResponseData>> bookInstanceError;
 
 
+    //change book sharing status
+    private CompositeDisposable changeBookSharingStatusDisposable;
+    private UseCase<Data> changeBookSharingStatusUsecase;
+    private Subject<Data> changeBookSharingStatusResultSubject;
+    private Subject<BookInstanceInput> changeBookSharingStatusInputSubject;
+    private  Subject<ServerResponse<ResponseData>> changeBookSharingStatusError;
+
+
     public PersonalPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
@@ -52,6 +61,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         this.bookInstanceError = PublishSubject.create();
         bookInstanceResultSubject = PublishSubject.create();
         bookInstanceInputSubject = BehaviorSubject.create();
+
+        this.changeBookSharingStatusError = PublishSubject.create();
+        changeBookSharingStatusResultSubject = PublishSubject.create();
+        changeBookSharingStatusInputSubject = BehaviorSubject.create();
     }
 
     @Override
@@ -94,6 +107,20 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorBookInstance() {
         return bookInstanceError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestChangeBookSharingStatus(BookSharingInput input) {
+    }
+
+    @Override
+    public Observable<Data> getResponseBookSharingStatus() {
+        return null;
+    }
+
+    @Override
+    public Observable<ServerResponse<ResponseData>> onErrorBookSharingStatus() {
+        return null;
     }
 
     private void getPersonalData(String input) {

@@ -3,6 +3,7 @@ package com.gat.feature.personal;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookSharingInput;
 import com.gat.repository.entity.Data;
 import com.rey.mvp2.Presenter;
 
@@ -21,4 +22,8 @@ public interface PersonalPresenter extends Presenter{
     void requestBookInstance(BookInstanceInput input);
     Observable<Data> getResponseBookInstance();
     Observable<ServerResponse<ResponseData>> onErrorBookInstance();
+
+    void requestChangeBookSharingStatus(BookSharingInput input);
+    Observable<Data> getResponseBookSharingStatus();
+    Observable<ServerResponse<ResponseData>> onErrorBookSharingStatus();
 }

@@ -10,6 +10,8 @@ public class BookInstanceInput {
     private boolean sharingFilter;
     private boolean notSharingFilter;
     private boolean lostFilter;
+    private int page = 1;
+    private int per_page = 10;
 
 
 
@@ -17,6 +19,18 @@ public class BookInstanceInput {
         this.sharingFilter = sharingFilter;
         this.notSharingFilter = notSharingFilter;
         this.lostFilter = lostFilter;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public int getPer_page() {
+        return per_page;
     }
 
     public boolean isSharingFilter() {

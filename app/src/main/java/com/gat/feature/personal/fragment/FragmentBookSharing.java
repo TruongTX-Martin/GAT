@@ -1,7 +1,5 @@
 package com.gat.feature.personal.fragment;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -10,8 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -20,12 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
-import com.gat.common.util.ClientUtils;
 import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
 import com.gat.feature.personal.entity.BookEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,26 +31,40 @@ import java.util.List;
 public class FragmentBookSharing extends Fragment {
 
     private ListView lvBookSharing;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar,progressLoadMore;
     private ImageView imgFilter;
+    private TextView txtMessage;
     private BookSharingAdapter adapterBookSharing;
     private List<BookEntity> listBook = new ArrayList<>();
     private PersonalActivity parrentActivity;
     private Context context;
     private View rootView;
     private BookInstanceInput currentInput;
-
+    private boolean isSharing,isNotSharing,isLost;
+    //for loadmore listview
+    private int firstVisibleItem, visibleItemCount,totalItemCount;
+    private boolean isRequesting = false;
 
     public void setParrentActivity(PersonalActivity parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
 
     public void setListBook(List<BookEntity> listBook) {
-        this.listBook.clear();
         if (listBook != null && listBook.size() > 0) {
             this.listBook.addAll(listBook);
         }
+        if(currentInput.getPage() == 1){
+            if(listBook.size() == 0){
+                lvBookSharing.setVisibility(View.GONE);
+                txtMessage.setVisibility(View.VISIBLE);
+            }else{
+                lvBookSharing.setVisibility(View.VISIBLE);
+                txtMessage.setVisibility(View.GONE);
+            }
+        }
         hideLoading();
+        hideLoadMore();
+        isRequesting = false;
         adapterBookSharing.notifyDataSetChanged();
     }
 
@@ -65,21 +74,47 @@ public class FragmentBookSharing extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.layout_fragment_book_loan, container, false);
         context = getActivity().getApplicationContext();
-        fakeData();
         adapterBookSharing = new BookSharingAdapter(listBook, getActivity().getApplicationContext());
         lvBookSharing = (ListView) rootView.findViewById(R.id.lvBookSharing);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
         imgFilter = (ImageView) rootView.findViewById(R.id.imgFilter);
+        txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
         lvBookSharing.setAdapter(adapterBookSharing);
         handleEvent();
         showLoading();
-        currentInput = new BookInstanceInput(true,false,true);
+        currentInput = new BookInstanceInput(true,false,false);
+        searchBook(currentInput);
         return rootView;
     }
 
     private void handleEvent() {
         imgFilter.setOnClickListener(v -> {
             showDialogFilter();
+        });
+        lvBookSharing.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                try {
+                    final int lastItem = firstVisibleItem + visibleItemCount;
+                    if (lastItem == totalItemCount && scrollState == SCROLL_STATE_IDLE) {
+                        if(isRequesting == false) {
+                            showLoadMore();
+                            currentInput.setPage(currentInput.getPage()+1);
+                            searchBook(currentInput);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstItem, int visibleCount, int totalCount) {
+                firstVisibleItem = firstItem;
+                visibleItemCount = visibleCount;
+                totalItemCount = totalCount;
+            }
         });
 
     }
@@ -90,6 +125,12 @@ public class FragmentBookSharing extends Fragment {
     private void hideLoading(){
         lvBookSharing.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
+    }
+    private void showLoadMore(){
+        progressLoadMore.setVisibility(View.VISIBLE);
+    }
+    private void hideLoadMore(){
+        progressLoadMore.setVisibility(View.GONE);
     }
 
     private void fakeData() {
@@ -106,7 +147,7 @@ public class FragmentBookSharing extends Fragment {
     }
 
     private void showDialogFilter() {
-        BookInstanceInput temporatyInput = currentInput;
+        isSharing = currentInput.isSharingFilter();isNotSharing = currentInput.isNotSharingFilter(); isLost = currentInput.isLostFilter();
         LayoutInflater inflater = LayoutInflater.from(parrentActivity);
         View customView = inflater.inflate(R.layout.layout_popup_book_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
@@ -123,41 +164,50 @@ public class FragmentBookSharing extends Fragment {
         RelativeLayout layoutLostBorder = (RelativeLayout) customView.findViewById(R.id.layoutBookLostBorder);
         RelativeLayout layoutLostOverlay = (RelativeLayout) customView.findViewById(R.id.layoutBookLostOverlay);
         imgClose.setOnClickListener(v -> {
-            if(currentInput != temporatyInput){
-                ClientUtils.showToast("Searching....");
+            if (currentInput.isSharingFilter() == isSharing && currentInput.isNotSharingFilter() == isNotSharing
+                    && currentInput.isLostFilter() == isLost){
+                //do nothing
+            }else{
+                currentInput.setSharingFilter(isSharing);
+                currentInput.setNotSharingFilter(isNotSharing);
+                currentInput.setLostFilter(isLost);
+                currentInput.setPage(1);
+                searchBook(currentInput);
             }
-            currentInput = temporatyInput;
+            currentInput.setSharingFilter(isSharing);
+            currentInput.setNotSharingFilter(isNotSharing);
+            currentInput.setLostFilter(isLost);
             popupWindow.dismiss();
         });
         layoutSharingBorder.setOnClickListener(v -> {
             layoutSharingBorder.setVisibility(View.GONE);
             layoutSharingOverlay.setVisibility(View.VISIBLE);
-            temporatyInput.setSharingFilter(false);
+            isSharing = false;
         });
         layoutSharingOverlay.setOnClickListener(v -> {
             layoutSharingBorder.setVisibility(View.VISIBLE);
             layoutSharingOverlay.setVisibility(View.GONE);
-            temporatyInput.setSharingFilter(true);
+           isSharing = true;
         });
         layoutNotSharingBorder.setOnClickListener(v -> {
             layoutNotSharingBorder.setVisibility(View.GONE);
             layoutNotSharingOverlay.setVisibility(View.VISIBLE);
-            temporatyInput.setNotSharingFilter(false);
+            isNotSharing = false;
         });
         layoutNotSharingOverlay.setOnClickListener(v -> {
             layoutNotSharingBorder.setVisibility(View.VISIBLE);
             layoutNotSharingOverlay.setVisibility(View.GONE);
-            temporatyInput.setNotSharingFilter(true);
+            isNotSharing = true;
         });
         layoutLostBorder.setOnClickListener(v -> {
             layoutLostBorder.setVisibility(View.GONE);
             layoutLostOverlay.setVisibility(View.VISIBLE);
-            temporatyInput.setLostFilter(false);
+            isLost = false;
         });
         layoutLostOverlay.setOnClickListener(v -> {
             layoutLostBorder.setVisibility(View.VISIBLE);
             layoutLostOverlay.setVisibility(View.GONE);
-            temporatyInput.setLostFilter(true);
+            isLost = true;
         });
         if(currentInput.isSharingFilter()){
             layoutSharingBorder.setVisibility(View.VISIBLE);
@@ -185,8 +235,14 @@ public class FragmentBookSharing extends Fragment {
     }
 
 
-    private void filterBook(BookInstanceInput input) {
+    private void searchBook(BookInstanceInput input) {
+        isRequesting = true;
         parrentActivity.requestBookInstance(input);
+        if(input.getPage() == 1){
+            txtMessage.setVisibility(View.GONE);
+            showLoading();
+            listBook.clear();
+        }
     }
 
 }

@@ -98,8 +98,8 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         setupTabIcons();
 
         //default request book
-        BookInstanceInput input = new BookInstanceInput(true, false, false);
-        requestBookInstance(input);
+//        BookInstanceInput input = new BookInstanceInput(true, false, false);
+//        requestBookInstance(input);
         handleEvent();
     }
 
@@ -235,6 +235,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     private void getBookInstanceSuccess(Data data){
         if(data != null) {
             int totalSharing = data.getTotalSharing();
+            txtNumberSharing.setText(totalSharing+"");
             int totalNotSharing = data.getTotalNotSharing();
             int lostTotal = data.getLostTotal();
             List<BookEntity> listBook = data.getListDataReturn(BookEntity.class);

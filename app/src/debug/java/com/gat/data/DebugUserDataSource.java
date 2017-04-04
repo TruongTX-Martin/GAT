@@ -245,7 +245,7 @@ public class DebugUserDataSource implements UserDataSource {
     @Override
     public Observable<Data> getBookInstance(BookInstanceInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter());
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter(),input.getPage(),input.getPer_page());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = response.body();
             if (serverResponse == null) {

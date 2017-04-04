@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -54,13 +55,30 @@ public class BookSharingAdapter extends BaseAdapter {
         TextView txtTitle = (TextView) convertView.findViewById(R.id.txtName);
         TextView txtAuthor = (TextView) convertView.findViewById(R.id.txtAuthor);
         TextView txtBorrowFrom = (TextView) convertView.findViewById(R.id.txtBorrowFrom);
+        TextView txtShared = (TextView) convertView.findViewById(R.id.txtShared);
         ImageView imgBook = (ImageView) convertView.findViewById(R.id.imgAvatar);
+        ImageView imgExtend = (ImageView) convertView.findViewById(R.id.imgExtend);
         RatingBar ratingBar = (RatingBar) convertView.findViewById(R.id.ratingBar);
+        Switch mySwitch = (Switch) convertView.findViewById(R.id.mySwitch);
         BookEntity entity = (BookEntity) getItem(position);
         if (entity != null){
+            if(entity.getSharingStatus() == 2 || entity.getSharingStatus() == 1){
+                imgExtend.setVisibility(View.VISIBLE);
+                mySwitch.setVisibility(View.GONE);
+                txtShared.setVisibility(View.GONE);
+            }else if(entity.getSharingStatus() == 0){
+                imgExtend.setVisibility(View.GONE);
+                mySwitch.setVisibility(View.VISIBLE);
+                txtShared.setVisibility(View.GONE);
+            }else{
+                imgExtend.setVisibility(View.GONE);
+                mySwitch.setVisibility(View.GONE);
+                txtShared.setVisibility(View.GONE);
+            }
             txtTitle.setText(entity.getTitle());
             txtAuthor.setText(entity.getAuthor());
             txtBorrowFrom.setText(entity.getBorrowingUserName());
+            ratingBar.setRating(entity.getRateCount());
             if(!Strings.isNullOrEmpty(entity.getImageId())) {
                 ClientUtils.setImage(imgBook,R.drawable.ic_book_default,ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
             }
