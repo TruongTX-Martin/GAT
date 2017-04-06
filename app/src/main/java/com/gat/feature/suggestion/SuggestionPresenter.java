@@ -1,6 +1,8 @@
 package com.gat.feature.suggestion;
 
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.impl.BookMostBorrowing;
+import com.gat.data.response.impl.BookSuggest;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
@@ -20,10 +22,10 @@ public interface SuggestionPresenter extends Presenter{
     Observable<List<UserNearByDistance>> onPeopleNearByUserSuccess();
 
     void suggestMostBorrowing();
-    Observable<List<Book>> onTopBorrowingSuccess();
+    Observable<List<BookMostBorrowing>> onTopBorrowingSuccess();
 
     void suggestBooks();
-    Observable<List<Book>> onBookSuggestSuccess();
+    Observable<List<BookSuggest>> onBookSuggestSuccess();
 
     Observable<String> onError();
 

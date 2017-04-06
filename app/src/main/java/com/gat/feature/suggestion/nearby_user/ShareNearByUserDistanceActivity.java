@@ -72,6 +72,7 @@ public class ShareNearByUserDistanceActivity
     private LocationRequest mLocationRequest;
     private Marker mCurrentLocationMaker;
     private int mReasonMapMoved;
+    private ShareNearByUserDistanceAdapter adapter;
 
     @Override
     protected int getLayoutResource() {
@@ -232,18 +233,16 @@ public class ShareNearByUserDistanceActivity
         mGoogleApiClient.connect();
     }
 
-    private void addMaker (Location location) {
+    private Marker addMaker (Location location, String title) {
 
         // add icon type book stop
-
         // add icon type user share book
-
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_current_location);
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_user_near);
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(new LatLng(location.getLatitude(), location.getLatitude()))
-                .title("Your Location")
+                .title(title)
                 .icon(icon);
-        Marker maker = mMap.addMarker(markerOptions);
+        return mMap.addMarker(markerOptions);
     }
 
     private void moveCameraToNewLocation(Location location) {
@@ -268,6 +267,7 @@ public class ShareNearByUserDistanceActivity
         switch (mReasonMapMoved) {
             case GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE: {
                 MZDebug.w("_____________The camera has stopped moving BY USER__ UPDATE DATA______");
+
                 break;
             }
             case GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION: {

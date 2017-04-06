@@ -1,6 +1,8 @@
 package com.gat.data.api;
 
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.impl.BookMostBorrowing;
+import com.gat.data.response.impl.BookSuggest;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
@@ -8,20 +10,14 @@ import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
-
 import java.util.List;
-
 //import rx.Observable;
 import io.reactivex.Observable;
 import retrofit2.Response;
-import retrofit2.http.*;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Multipart;
-import retrofit2.http.Part;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -108,7 +104,15 @@ public interface GatApi {
     );
 
     @GET("suggestion/most_borrowing")
-    Observable<Response<List<Book>>> suggestMostBorrowing (
+    Observable<Response<ServerResponse<ResultInfoList<BookMostBorrowing>>>> suggestMostBorrowing (
+    );
+
+    @GET("suggestion/book_without_login")
+    Observable<Response<ServerResponse<ResultInfoList<BookSuggest>>>> suggestWithoutLogin (
+    );
+
+    @GET("suggestion/book_after_login")
+    Observable<Response<ServerResponse<ResultInfoList<BookSuggest>>>> suggestAfterLogin (
     );
 
 

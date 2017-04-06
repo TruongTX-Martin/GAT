@@ -3,6 +3,8 @@ package com.gat.domain.impl;
 import android.support.annotation.Nullable;
 
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.impl.BookMostBorrowing;
+import com.gat.data.response.impl.BookSuggest;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.*;
 import com.gat.repository.BookRepository;
@@ -106,12 +108,12 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Book>> suggestMostBorrowing() {
+    public UseCase<List<BookMostBorrowing>> suggestMostBorrowing() {
         return new SuggestMostBorrowing(bookRepositoryLazy.get());
     }
 
     @Override
-    public UseCase<List<Book>> suggestBooks() {
+    public UseCase<List<BookSuggest>> suggestBooks() {
         return new SuggestBooks(bookRepositoryLazy.get());
     }
 

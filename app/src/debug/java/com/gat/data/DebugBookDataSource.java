@@ -1,8 +1,12 @@
 package com.gat.data;
 
+import com.gat.common.util.MZDebug;
 import com.gat.data.api.GatApi;
 import com.gat.data.id.LongId;
+import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.impl.BookMostBorrowing;
+import com.gat.data.response.impl.BookSuggest;
 import com.gat.dependency.DataComponent;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Author;
@@ -93,45 +97,49 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<List<Book>> suggestMostBorrowing() {
-        return Observable.fromCallable(() -> {
-            int length = 10;
-            Book[] books = new Book[length];
-            Random rand = new Random();
-            for (int i = 0; i < books.length; i++) {
-                books[i] = Book.builder()
-                        .id(LongId.instance(i))
-                        .title("Book " + i)
-                        .publisher("NXB ABC")
-                        .publishedDate(System.currentTimeMillis())
-                        .pages(100)
-                        .authors(listOfAuthors("Author " + i))
-                        .rating(rand.nextFloat() * 5f)
-                        .build();
-            }
-            return listOfBooks(books);
-        }).delay(1000, TimeUnit.MILLISECONDS);
+    public Observable<List<BookMostBorrowing>> suggestMostBorrowing() {
+        MZDebug.i("_____________________________________ suggestMostBorrowing ___________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<ResultInfoList<BookMostBorrowing>>>> responseObservable;
+        responseObservable = api.suggestMostBorrowing();
+        return responseObservable.map(response -> {
+            List<BookMostBorrowing> list = response.body().data().getResultInfo();
+
+            MZDebug.i("__list most borrowing size: " + list.size());
+
+            MZDebug.i("__item 0: " + list.get(0).toString());
+
+            return list;
+
+        });
     }
 
     @Override
-    public Observable<List<Book>> suggestBooks() {
-        return Observable.fromCallable(() -> {
-            int length = 10;
-            Book[] books = new Book[length];
-            Random rand = new Random();
-            for (int i = 0; i < books.length; i++) {
-                books[i] = Book.builder()
-                        .id(LongId.instance(i))
-                        .title("Book " + i)
-                        .publisher("NXB ABC")
-                        .publishedDate(System.currentTimeMillis())
-                        .pages(100)
-                        .authors(listOfAuthors("Author " + i))
-                        .rating(rand.nextFloat() * 5f)
-                        .build();
-            }
-            return listOfBooks(books);
-        }).delay(1000, TimeUnit.MILLISECONDS);
+    public Observable<List<BookSuggest>> suggestBooksWithoutLogin() {
+        MZDebug.i("____________________________ suggestBooksWithoutLogin ________________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<ResultInfoList<BookSuggest>>>> responseObservable;
+        responseObservable = api.suggestWithoutLogin();
+
+        return responseObservable.map( response -> {
+            List<BookSuggest> list = response.body().data().getResultInfo();
+            return list;
+        });
     }
 
+    @Override
+    public Observable<List<BookSuggest>> suggestBooksAfterLogin() {
+        MZDebug.i("____________________________ suggestBooksAfterLogin __________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<ResultInfoList<BookSuggest>>>> responseObservable;
+        responseObservable = api.suggestAfterLogin();
+
+        return responseObservable.map( response -> {
+            List<BookSuggest> list = response.body().data().getResultInfo();
+            return list;
+        });
+    }
 }

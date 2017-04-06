@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.gat.R;
-import com.gat.repository.entity.Book;
-
+import com.gat.data.response.BookResponse;
+import com.gat.data.response.impl.BookSuggest;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -25,12 +25,12 @@ import butterknife.ButterKnife;
 
 public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.BookSuggestHolder> {
 
-    private List<Book> mListBooks;
+    private List<BookSuggest> mListBookSuggest;
     private Context mContext;
 
-    public BookSuggestAdapter(Context context, List<Book> listBooks) {
+    public BookSuggestAdapter(Context context, List<BookSuggest> listBookSuggest) {
         this.mContext = context;
-        this.mListBooks = listBooks;
+        this.mListBookSuggest = listBookSuggest;
     }
 
     @Override
@@ -43,10 +43,13 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
 
     @Override
     public void onBindViewHolder(BookSuggestHolder holder, int position) {
-        Book item = getItem(position);
+        BookResponse item = getItem(position);
 
-        holder.textViewBookName.setText(item.title());
-        holder.ratingBar.setRating(item.rating());
+        holder.textViewBookName.setText(item.getTitle());
+        holder.ratingBar.setRating(item.getRateAvg());
+        Glide.with(mContext).
+                load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
+                        + item.getImageId() + "?size=t").into(holder.ivBooksCoverList);
 
         LayerDrawable stars = (LayerDrawable) holder.ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
@@ -54,15 +57,17 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
 
     @Override
     public int getItemCount() {
-        return mListBooks.isEmpty() ? 0 : mListBooks.size();
+        if (null == this.mListBookSuggest)
+            return 0;
+        return this.mListBookSuggest.size();
     }
 
-    public Book getItem(int position) {
-        return mListBooks.get(position);
+    public BookResponse getItem(int position) {
+        return mListBookSuggest.get(position);
     }
 
     //inner class ViewHolder
-    public class BookSuggestHolder extends RecyclerView.ViewHolder {
+    protected class BookSuggestHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.text_view_book_name)
         TextView textViewBookName;

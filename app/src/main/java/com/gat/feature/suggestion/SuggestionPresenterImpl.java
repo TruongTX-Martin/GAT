@@ -2,6 +2,8 @@ package com.gat.feature.suggestion;
 
 import android.util.Log;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.impl.BookMostBorrowing;
+import com.gat.data.response.impl.BookSuggest;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
@@ -23,9 +25,11 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
 
-    private UseCase<List<Book>> suggestionUseCase;
-    private final Subject<List<Book>> resultMostBorrowingSubject;
-    private final Subject<List<Book>> resultBooksSuggestSubject;
+    private UseCase<List<BookMostBorrowing>> useCaseMostBorrowing;
+    private final Subject<List<BookMostBorrowing>> resultMostBorrowingSubject;
+
+    private UseCase<List<BookSuggest>> useCaseBookSuggest;
+    private final Subject<List<BookSuggest>> resultBooksSuggestSubject;
 
     private UseCase<List<UserNearByDistance>> userNearByDistance;
     private final Subject<List<UserNearByDistance>> resultListUserNearByDistance;
@@ -56,8 +60,8 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
 
     @Override
     public void suggestMostBorrowing() {
-        suggestionUseCase = useCaseFactory.suggestMostBorrowing();
-        suggestionUseCase.executeOn(schedulerFactory.io())
+        useCaseMostBorrowing = useCaseFactory.suggestMostBorrowing();
+        useCaseMostBorrowing.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(listBook -> {
                     resultMostBorrowingSubject.onNext(listBook);
@@ -69,14 +73,14 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     }
 
     @Override
-    public Observable<List<Book>> onTopBorrowingSuccess() {
+    public Observable<List<BookMostBorrowing>> onTopBorrowingSuccess() {
         return resultMostBorrowingSubject.subscribeOn(schedulerFactory.main());
     }
 
     @Override
     public void suggestBooks() {
-        suggestionUseCase = useCaseFactory.suggestBooks();
-        suggestionUseCase.executeOn(schedulerFactory.io())
+        useCaseBookSuggest = useCaseFactory.suggestBooks();
+        useCaseBookSuggest.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(listBook -> {
                     resultBooksSuggestSubject.onNext(listBook);
@@ -88,7 +92,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     }
 
     @Override
-    public Observable<List<Book>> onBookSuggestSuccess() {
+    public Observable<List<BookSuggest>> onBookSuggestSuccess() {
         return resultBooksSuggestSubject.subscribeOn(schedulerFactory.main());
     }
 

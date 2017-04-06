@@ -59,7 +59,7 @@
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
         android:paddingTop="3dp"
-        android:text="2"
+        android:text="0"
         android:textColor="@android:color/white"
         android:textSize="@dimen/small_text_view_size" />
 
@@ -87,7 +87,7 @@
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
         android:paddingTop="3dp"
-        android:text="2"
+        android:text="0"
         android:textColor="@android:color/white"
         android:textSize="@dimen/small_text_view_size" />
 

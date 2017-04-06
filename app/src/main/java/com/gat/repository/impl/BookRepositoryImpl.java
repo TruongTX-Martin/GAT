@@ -1,6 +1,8 @@
 package com.gat.repository.impl;
 
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.impl.BookMostBorrowing;
+import com.gat.data.response.impl.BookSuggest;
 import com.gat.repository.BookRepository;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Book;
@@ -35,13 +37,18 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Observable<List<Book>> suggestMostBorrowing() {
+    public Observable<List<BookMostBorrowing>> suggestMostBorrowing() {
         return Observable.defer(()-> networkDataSourceLazy.get().suggestMostBorrowing());
     }
 
     @Override
-    public Observable<List<Book>> suggestBooks() {
-        return Observable.defer(()-> networkDataSourceLazy.get().suggestBooks());
+    public Observable<List<BookSuggest>> suggestBooksWithoutLogin() {
+        return Observable.defer(() -> networkDataSourceLazy.get().suggestBooksWithoutLogin());
+    }
+
+    @Override
+    public Observable<List<BookSuggest>> suggestBooksAfterLogin() {
+        return Observable.defer(()-> networkDataSourceLazy.get().suggestBooksAfterLogin());
     }
 
 }

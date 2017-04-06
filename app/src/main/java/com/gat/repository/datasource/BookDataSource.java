@@ -1,6 +1,8 @@
 package com.gat.repository.datasource;
 
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.impl.BookMostBorrowing;
+import com.gat.data.response.impl.BookSuggest;
 import com.gat.repository.entity.Book;
 
 import java.util.List;
@@ -18,7 +20,9 @@ public interface BookDataSource {
 
     Observable<Book> searchBookByIsbn(String isbn);
 
-    Observable<List<Book>> suggestMostBorrowing();
+    Observable<List<BookMostBorrowing>> suggestMostBorrowing();
 
-    Observable<List<Book>> suggestBooks();
+    Observable<List<BookSuggest>> suggestBooksWithoutLogin();
+
+    Observable<List<BookSuggest>> suggestBooksAfterLogin();
 }
