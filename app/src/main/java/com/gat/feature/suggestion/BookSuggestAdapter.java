@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gat.R;
 import com.gat.data.response.BookResponse;
-import com.gat.data.response.impl.BookSuggest;
+
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,10 +25,10 @@ import butterknife.ButterKnife;
 
 public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.BookSuggestHolder> {
 
-    private List<BookSuggest> mListBookSuggest;
+    private List<BookResponse> mListBookSuggest;
     private Context mContext;
 
-    public BookSuggestAdapter(Context context, List<BookSuggest> listBookSuggest) {
+    public BookSuggestAdapter(Context context, List<BookResponse> listBookSuggest) {
         this.mContext = context;
         this.mListBookSuggest = listBookSuggest;
     }

@@ -3,10 +3,9 @@ package com.gat.data;
 import com.gat.common.util.MZDebug;
 import com.gat.data.api.GatApi;
 import com.gat.data.id.LongId;
+import com.gat.data.response.BookResponse;
 import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.BookMostBorrowing;
-import com.gat.data.response.impl.BookSuggest;
 import com.gat.dependency.DataComponent;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Author;
@@ -21,9 +20,8 @@ import java.util.concurrent.TimeUnit;
 //import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Observable;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 //import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * Created by Rey on 2/14/2017.
@@ -97,14 +95,14 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<List<BookMostBorrowing>> suggestMostBorrowing() {
+    public Observable<List<BookResponse>> suggestMostBorrowing() {
         MZDebug.i("_____________________________________ suggestMostBorrowing ___________________");
 
         GatApi api = dataComponent.getPublicGatApi();
-        Observable<Response<ServerResponse<ResultInfoList<BookMostBorrowing>>>> responseObservable;
+        Observable<Response<ServerResponse<ResultInfoList<BookResponse>>>> responseObservable;
         responseObservable = api.suggestMostBorrowing();
         return responseObservable.map(response -> {
-            List<BookMostBorrowing> list = response.body().data().getResultInfo();
+            List<BookResponse> list = response.body().data().getResultInfo();
 
             MZDebug.i("__list most borrowing size: " + list.size());
 
@@ -116,29 +114,29 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<List<BookSuggest>> suggestBooksWithoutLogin() {
+    public Observable<List<BookResponse>> suggestBooksWithoutLogin() {
         MZDebug.i("____________________________ suggestBooksWithoutLogin ________________________");
 
         GatApi api = dataComponent.getPublicGatApi();
-        Observable<Response<ServerResponse<ResultInfoList<BookSuggest>>>> responseObservable;
+        Observable<Response<ServerResponse<ResultInfoList<BookResponse>>>> responseObservable;
         responseObservable = api.suggestWithoutLogin();
 
         return responseObservable.map( response -> {
-            List<BookSuggest> list = response.body().data().getResultInfo();
+            List<BookResponse> list = response.body().data().getResultInfo();
             return list;
         });
     }
 
     @Override
-    public Observable<List<BookSuggest>> suggestBooksAfterLogin() {
+    public Observable<List<BookResponse>> suggestBooksAfterLogin() {
         MZDebug.i("____________________________ suggestBooksAfterLogin __________________________");
 
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<ResultInfoList<BookSuggest>>>> responseObservable;
+        Observable<Response<ServerResponse<ResultInfoList<BookResponse>>>> responseObservable;
         responseObservable = api.suggestAfterLogin();
 
         return responseObservable.map( response -> {
-            List<BookSuggest> list = response.body().data().getResultInfo();
+            List<BookResponse> list = response.body().data().getResultInfo();
             return list;
         });
     }

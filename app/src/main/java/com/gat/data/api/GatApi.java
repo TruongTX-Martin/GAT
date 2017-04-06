@@ -1,8 +1,7 @@
 package com.gat.data.api;
 
+import com.gat.data.response.BookResponse;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.BookMostBorrowing;
-import com.gat.data.response.impl.BookSuggest;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
@@ -104,15 +103,15 @@ public interface GatApi {
     );
 
     @GET("suggestion/most_borrowing")
-    Observable<Response<ServerResponse<ResultInfoList<BookMostBorrowing>>>> suggestMostBorrowing (
+    Observable<Response<ServerResponse<ResultInfoList<BookResponse>>>> suggestMostBorrowing (
     );
 
     @GET("suggestion/book_without_login")
-    Observable<Response<ServerResponse<ResultInfoList<BookSuggest>>>> suggestWithoutLogin (
+    Observable<Response<ServerResponse<ResultInfoList<BookResponse>>>> suggestWithoutLogin (
     );
 
     @GET("suggestion/book_after_login")
-    Observable<Response<ServerResponse<ResultInfoList<BookSuggest>>>> suggestAfterLogin (
+    Observable<Response<ServerResponse<ResultInfoList<BookResponse>>>> suggestAfterLogin (
     );
 
 

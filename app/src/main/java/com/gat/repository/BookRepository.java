@@ -1,7 +1,6 @@
 package com.gat.repository;
 
-import com.gat.data.response.impl.BookMostBorrowing;
-import com.gat.data.response.impl.BookSuggest;
+import com.gat.data.response.BookResponse;
 import com.gat.repository.entity.Book;
 import java.util.List;
 import io.reactivex.Observable;
@@ -14,8 +13,8 @@ public interface BookRepository {
 
     Observable<List<Book>> searchBookByKeyword(String keyword, int page, int sizeOfPage);
     Observable<Book> searchBookByIsbn(String isbn);
-    Observable<List<BookMostBorrowing>> suggestMostBorrowing();
-    Observable<List<BookSuggest>> suggestBooksWithoutLogin();
-    Observable<List<BookSuggest>> suggestBooksAfterLogin();
+    Observable<List<BookResponse>> suggestMostBorrowing();
+    Observable<List<BookResponse>> suggestBooksWithoutLogin();
+    Observable<List<BookResponse>> suggestBooksAfterLogin();
 
 }

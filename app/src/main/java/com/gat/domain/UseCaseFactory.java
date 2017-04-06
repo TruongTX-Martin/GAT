@@ -2,13 +2,8 @@ package com.gat.domain;
 
 import android.support.annotation.Nullable;
 
+import com.gat.data.response.BookResponse;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.BookMostBorrowing;
-import com.gat.data.response.impl.BookSuggest;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.ResetPasswordResponseData;
-import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.LoginData;
@@ -53,9 +48,9 @@ public interface UseCaseFactory {
 
     <T> UseCase<T> doWork(Callable<T> callable);
 
-    UseCase<List<BookMostBorrowing>> suggestMostBorrowing();
+    UseCase<List<BookResponse>> suggestMostBorrowing();
 
-    UseCase<List<BookSuggest>> suggestBooks();
+    UseCase<List<BookResponse>> suggestBooks();
 
     UseCase<List<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
 }

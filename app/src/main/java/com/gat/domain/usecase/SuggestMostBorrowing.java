@@ -1,7 +1,6 @@
 package com.gat.domain.usecase;
 
-import com.gat.data.response.impl.BookMostBorrowing;
-import com.gat.data.response.impl.BookSuggest;
+import com.gat.data.response.BookResponse;
 import com.gat.repository.BookRepository;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import io.reactivex.Observable;
  * Created by mryit on 3/26/2017.
  */
 
-public class SuggestMostBorrowing extends UseCase<List<BookMostBorrowing>> {
+public class SuggestMostBorrowing extends UseCase<List<BookResponse>> {
 
     private final BookRepository repository;
 
@@ -21,7 +20,7 @@ public class SuggestMostBorrowing extends UseCase<List<BookMostBorrowing>> {
     }
 
     @Override
-    protected Observable<List<BookMostBorrowing>> createObservable() {
+    protected Observable<List<BookResponse>> createObservable() {
         return this.repository.suggestMostBorrowing();
     }
 

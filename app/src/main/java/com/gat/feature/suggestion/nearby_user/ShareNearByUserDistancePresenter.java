@@ -12,7 +12,7 @@ import io.reactivex.Observable;
 
 public interface ShareNearByUserDistancePresenter extends Presenter {
 
-    void requetUserNearOnTheMap(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
+    void requestUserNearOnTheMap(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
     Observable<List<UserNearByDistance>> onPeopleNearByUserSuccess();
 
     Observable<String> onError();

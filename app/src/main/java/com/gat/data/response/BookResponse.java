@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by mryit on 4/6/2017.
  */
 
-public class BookResponse{
+public class BookResponse {
 
     @SerializedName("editionId")
     public long editionId;
@@ -24,6 +24,12 @@ public class BookResponse{
 
     @SerializedName("rateAvg")
     public float rateAvg;
+
+    @SerializedName("borrowingCount")
+    public int borrowingCount;
+
+    @SerializedName("sharingCount")
+    public int sharingCount;
 
     public long getEditionId() {
         return editionId;
@@ -49,6 +55,14 @@ public class BookResponse{
         return rateAvg;
     }
 
+    public int getBorrowingCount() {
+        return borrowingCount;
+    }
+
+    public int getSharingCount() {
+        return sharingCount;
+    }
+
     @Override
     public String toString() {
         return "BookResponse{" +
@@ -58,6 +72,8 @@ public class BookResponse{
                 ", imageId='" + imageId + '\'' +
                 ", author='" + author + '\'' +
                 ", rateAvg=" + rateAvg +
+                ", borrowingCount=" + borrowingCount +
+                ", sharingCount=" + sharingCount +
                 '}';
     }
 }

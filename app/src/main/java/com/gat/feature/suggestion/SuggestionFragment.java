@@ -24,12 +24,7 @@ import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.TrackGPS;
 import com.gat.data.response.BookResponse;
-import com.gat.data.response.impl.BookMostBorrowing;
-import com.gat.data.response.impl.BookSuggest;
-import com.gat.feature.main.MainActivity;
-import com.gat.feature.register.update.location.AddLocationActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceActivity;
-import com.gat.repository.entity.Book;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -202,7 +197,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         }
     }
 
-    void onTopBorrowingSuccess(List<BookMostBorrowing> list) {
+    void onTopBorrowingSuccess(List<BookResponse> list) {
         // setup adapter
         if (list == null) {
             MZDebug.w("LIST onTopBorrowingSuccess = NULL");
@@ -212,7 +207,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 //        mRecyclerViewMostBorrowing.setAdapter(mMostBorrowingAdapter);
     }
 
-    void onSuggestBooksSuccess(List<BookSuggest> list) {
+    void onSuggestBooksSuccess(List<BookResponse> list) {
         // setup adapter
         mBookSuggestAdapter = new BookSuggestAdapter(getActivity(), list);
         mRecyclerViewSuggestBooks.setAdapter(mBookSuggestAdapter);

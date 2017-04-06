@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -57,7 +61,7 @@ public class ShareNearByUserDistanceActivity
     public static final String PASS_USER_LOCATION_LONGITUDE = "USER_LOCATION_LONGITUDE";
 
     @BindView(R.id.rv_users_near)
-    RecyclerView recyclerViewUsersNear;
+    RecyclerView mRecyclerViewUsersNear;
 
     private CompositeDisposable disposables;
     private ProgressDialog progressDialog;
@@ -73,6 +77,7 @@ public class ShareNearByUserDistanceActivity
     private Marker mCurrentLocationMaker;
     private int mReasonMapMoved;
     private ShareNearByUserDistanceAdapter adapter;
+    private List<UserNearByDistance> mListUsers;
 
     @Override
     protected int getLayoutResource() {
@@ -94,7 +99,10 @@ public class ShareNearByUserDistanceActivity
         super.onCreate(savedInstanceState);
 
         // composite presenter
-        disposables = new CompositeDisposable();
+        disposables = new CompositeDisposable(
+                getPresenter().onPeopleNearByUserSuccess().subscribe(this::onListUserNearComplete),
+                getPresenter().onError().subscribe(this::onError)
+        );
 
         progressDialog = new ProgressDialog(this);
 
@@ -128,6 +136,7 @@ public class ShareNearByUserDistanceActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        disposables.dispose();
     }
 
     @OnClick(R.id.tv_header)
@@ -233,13 +242,24 @@ public class ShareNearByUserDistanceActivity
         mGoogleApiClient.connect();
     }
 
-    private Marker addMaker (Location location, String title) {
+    private List<Marker> addListMarker (List<UserNearByDistance> listUsers) {
+        List<Marker> listMarkers = new ArrayList<>();
 
+        UserNearByDistance user;
+        for (int i=listUsers.size(); i>=0; i--) {
+            user = listUsers.get(i);
+            Marker marker = addMarker(new LatLng(user.getLatitude(), user.getLongitude()),user.getAddress());
+            listMarkers.add(marker);
+        }
+        return listMarkers;
+    }
+
+    private Marker addMarker (LatLng latLng, String title) {
         // add icon type book stop
         // add icon type user share book
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_user_near);
         MarkerOptions markerOptions = new MarkerOptions()
-                .position(new LatLng(location.getLatitude(), location.getLatitude()))
+                .position(latLng)
                 .title(title)
                 .icon(icon);
         return mMap.addMarker(markerOptions);
@@ -261,6 +281,7 @@ public class ShareNearByUserDistanceActivity
     public void onCameraIdle() {
 
         LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
+        mCurrentLatLng = new LatLng(curScreen.getCenter().latitude, curScreen.getCenter().longitude);
         mTopLeftLatLng = new LatLng(curScreen.southwest.latitude, curScreen.southwest.longitude);
         mBottomRightLatLng = new LatLng(curScreen.northeast.latitude, curScreen.northeast.longitude);
 
@@ -271,15 +292,19 @@ public class ShareNearByUserDistanceActivity
                 break;
             }
             case GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION: {
-                MZDebug.w("____The camera has stopped moving BY DEVELOPER______DO NOTHING________");
+                MZDebug.w("____The camera has stopped moving BY DEVELOPER_____ FIRST TIME _______");
 
                 MZDebug.w("TopLeft: lat= " + curScreen.southwest.latitude
                         + ", long= " + curScreen.southwest.longitude);
                 MZDebug.w("BottomRight: lat= " + curScreen.northeast.latitude
                         + ", long= " +curScreen.northeast.longitude );
+
+                getPresenter().requestUserNearOnTheMap(mCurrentLatLng, mTopLeftLatLng, mBottomRightLatLng);
                 break;
             }
         }
+
+        mCurrentLatLng = null;
         mTopLeftLatLng = null;
         mBottomRightLatLng = null;
     }
@@ -306,4 +331,30 @@ public class ShareNearByUserDistanceActivity
         }
         return true;
     }
+
+
+    private void onListUserNearComplete(List<UserNearByDistance> list) {
+        MZDebug.i("________________onListUserNearComplete________________________________________");
+        if (adapter == null) {
+            mListUsers = list;
+
+            adapter = new ShareNearByUserDistanceAdapter(getApplicationContext(), mListUsers);
+            mRecyclerViewUsersNear.setLayoutManager(
+                    new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+            mRecyclerViewUsersNear.setAdapter(adapter);
+
+            addListMarker(mListUsers);
+        }
+        // so sánh mListUsers và list
+        // nếu user nào ở list mà có mListUsers thì ko thêm
+        // nếu user nào ở list mà không có trong mListUser thì thêm vào mListUsers để add vào map
+        // update những user thêm được vào map
+        adapter.notifyDataSetChanged();
+    }
+
+    private void onError (String message) {
+        Toast.makeText(this,message, Toast.LENGTH_LONG).show();
+    }
+
+
 }
