@@ -18,9 +18,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class MessageViewHolder extends ItemViewHolder<MessageItem> {
-    @BindView(R.id.messenger_name)
-    TextView name;
-
     @BindView(R.id.message_text)
     TextView text;
 
@@ -36,8 +33,7 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
     public void onBindItem(MessageItem item) {
         super.onBindItem(item);
         Message message = item.message();
-        name.setText(message.sender);
-        text.setText(message.message);
+        text.setText(message.getMessage());
         userImage.setImageResource(R.drawable.steve_job);
     }
 }

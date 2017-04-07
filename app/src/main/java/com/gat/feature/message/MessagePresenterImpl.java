@@ -1,5 +1,6 @@
 package com.gat.feature.message;
 
+import android.support.design.widget.TabLayout;
 import android.util.Log;
 
 import com.gat.common.adapter.Item;
@@ -70,6 +71,7 @@ public class MessagePresenterImpl implements MessagePresenter {
     }
 
     private void getMessageList(int type, String groupId) {
+        Log.d(TAG, "getMessageList");
         loadingEventSubject.onNext(
                 LoadingEvent.builder()
                         .refresh(type == ACTION.MESSAGE_REFRESH ? true : false)
@@ -78,14 +80,16 @@ public class MessagePresenterImpl implements MessagePresenter {
         MessageItemBuilder itemBuilder = new MessageItemBuilder();
         UseCase<List<Message>> getMessageUseCase = useCaseFactory.getMessageList(groupId);
         ObservableTransformer<List<Message>, ItemResult> transformer =
-                upstream -> upstream.map(messages -> {
-                    List<Item> items = itemResultSubject.blockingFirst().items();
-                    ItemResult result = itemBuilder.addList(items, messages,
-                            (type == ACTION.MESSAGE_REFRESH) ? true : false,
-                            messages.size() >= GROUP_LIST_SIZE);
-                    itemResultSubject.onNext(result);
-                    return result;
-                });
+                upstream -> upstream
+                        .filter(list -> list.size() > 0)
+                        .map(messages -> {
+                            List<Item> items = itemResultSubject.blockingLatest().iterator().next().items();
+                            ItemResult result = itemBuilder.addList(items, messages,
+                                    (type == ACTION.MESSAGE_REFRESH) ? true : false,
+                                    messages.size() >= GROUP_LIST_SIZE);
+                            itemResultSubject.onNext(result);
+                            return result;
+                        });
 
         loadMessageUseCase = useCaseFactory.transform(getMessageUseCase, transformer,worker)
                 .executeOn(schedulerFactory.io())
@@ -101,13 +105,15 @@ public class MessagePresenterImpl implements MessagePresenter {
                     Timber.d(throwable, "Error loading message");
                 })
                 .onStop(() -> {
-                        UseCases.release(getMessageUseCase);
-                        loadMessageUseCase = UseCases.release(loadMessageUseCase);
+                    Log.d(TAG, "Message Stop");
+                    UseCases.release(getMessageUseCase);
+                    loadMessageUseCase = UseCases.release(loadMessageUseCase);
                 })
                 .execute();
     }
 
     private void getGroupList(Integer type) {
+        Log.d(TAG, "getGroupList");
         loadingEventSubject.onNext(
                 LoadingEvent.builder()
                         .refresh(type == ACTION.GROUP_REFRESH ? true : false)
@@ -119,15 +125,17 @@ public class MessagePresenterImpl implements MessagePresenter {
         getGroupUseCase = useCaseFactory.getGroupList();
         GroupItemBuilder itemBuilder = new GroupItemBuilder();
         ObservableTransformer<List<Group>, ItemResult> transformer =
-                upstream -> upstream.map(groups -> {
-                    List<Item> items = itemResultSubject.blockingFirst().items();
-                    Log.d(TAG, "ListSize:" + items.size());
-                    ItemResult result = itemBuilder.addList(items, groups,
-                            (type == ACTION.GROUP_REFRESH) ? true : false,
-                            groups.size() >= GROUP_LIST_SIZE);
-                    itemResultSubject.onNext(result);
-                    return result;
-                });
+                upstream -> upstream
+                        .filter(list -> list.size() > 0)
+                        .map(groups -> {
+                            List<Item> items = itemResultSubject.blockingLatest().iterator().next().items();
+                            Log.d(TAG, "ListSize:" + items.size());
+                            ItemResult result = itemBuilder.addList(items, groups,
+                                    (type == ACTION.GROUP_REFRESH) ? true : false,
+                                    groups.size() >= GROUP_LIST_SIZE);
+                            itemResultSubject.onNext(result);
+                            return result;
+                        });
 
         loadMessageUseCase = useCaseFactory.transform(getGroupUseCase, transformer,worker)
                 .executeOn(schedulerFactory.io())
@@ -144,6 +152,7 @@ public class MessagePresenterImpl implements MessagePresenter {
                     Timber.d(throwable, "Error loading message");
                 })
                 .onStop(() -> {
+                    Log.d(TAG, "OnStop");
                     getGroupUseCase = UseCases.release(getGroupUseCase);
                     loadMessageUseCase = UseCases.release(loadMessageUseCase);
                 })
@@ -204,6 +213,11 @@ public class MessagePresenterImpl implements MessagePresenter {
     public void loadMoreGroupList() {
         Log.d(TAG, "loadMoreGroupList");
         getGroupList(ACTION.GROUP_LOAD_MORE);
+    }
+
+    @Override
+    public Observable<ItemResult> hasNewItems() {
+        return null;
     }
 
     @Override

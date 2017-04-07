@@ -13,14 +13,7 @@ import io.reactivex.Observable;
  */
 
 public interface FirebaseService {
-    void login();
     Observable<List<Message>> getMessageList(String groupId);
-    Observable<List<String>> getGroupList();
-    //Observable<List<String>> getUserList(String groupId);
-
-    Observable<List<Group>> getGroupUserList(List<String> groupIds);
-
-    Observable<List<Group>> getGroupLastMessage(List<Group> groupList);
-
+    Observable<List<Group>> getGroupList();
     Observable<List<Group>> getGroupList(int page, int size);
 }

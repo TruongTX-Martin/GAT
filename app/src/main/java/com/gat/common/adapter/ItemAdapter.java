@@ -3,6 +3,7 @@ package com.gat.common.adapter;
 import android.support.annotation.CallSuper;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,6 @@ public abstract class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder>{
             notifyDataSetChanged();
         return !firstTime && ready;
     }
-
     /**
      * Mark adapter is ready to show items.
      */

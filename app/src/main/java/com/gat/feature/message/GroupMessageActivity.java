@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.gat.R;
@@ -26,6 +27,8 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessagePresenter> {
+    private final String TAG = GroupMessageActivity.class.getSimpleName();
+
     @BindView(R.id.message_refresh)
     SwipeRefreshLayout refreshLayout;
 
@@ -61,14 +64,16 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Item item = groupMessageAdapter.getItemAt(position);
-                if (!(item instanceof GroupItem))
-                    return;
-                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(((GroupItem)item).group().groupId()));
+
             }
 
             @Override
             public void onLongItemClick(View view, int position) {
+                Item item = groupMessageAdapter.getItemAt(position);
+                if (!(item instanceof GroupItem))
+                    return;
+                Log.d(TAG, "clicked:" + position);
+                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(((GroupItem)item).group().groupId()));
 
             }
         }));
@@ -82,6 +87,10 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
     private void onItemChanged(ItemResult result) {
         if (groupMessageAdapter.setItem(result.items()) && result.diffResult() != null)
             result.diffResult().dispatchUpdatesTo(groupMessageAdapter);
+    }
+
+    private void onHasNewItems(ItemResult result) {
+
     }
 
     private void onLoadingEvent(LoadingEvent event) {

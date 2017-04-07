@@ -9,6 +9,7 @@ import java.util.List;
 
 import dagger.Lazy;
 import io.reactivex.Observable;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by ducbtsn on 3/30/17.
@@ -17,6 +18,7 @@ import io.reactivex.Observable;
 public class MessageRepositoryImpl implements MessageRepository {
     private final Lazy<MessageDataSource> networkDataSource;
     private final Lazy<MessageDataSource> localDataSource;
+
 
     public MessageRepositoryImpl(Lazy<MessageDataSource> networkDataSource, Lazy<MessageDataSource> localDataSource) {
         this.networkDataSource = networkDataSource;

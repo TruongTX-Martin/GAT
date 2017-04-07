@@ -47,12 +47,7 @@ public class DebugMessageDataSource implements MessageDataSource {
 
     @Override
     public Observable<List<Group>> getGroupList() {
-        return firebaseService.getGroupList()
-                .flatMap(groups -> firebaseService.getGroupUserList(groups))
-                .flatMap(groupList -> {
-                    Log.d("FlatMap", "GroupSize" + groupList.size());
-                    return firebaseService.getGroupLastMessage(groupList);
-                });
+        return firebaseService.getGroupList();
         /*
         return Observable.fromCallable(() -> {
             Group[] groups = new Group[10];

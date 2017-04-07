@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -25,6 +26,8 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresenter> {
+    private final String TAG = MessageActivity.class.getSimpleName();
+
     private final String GROUP_ID = "group_id";
 
     @BindView(R.id.message_refresh)
@@ -54,6 +57,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         else
             groupId = savedInstanceState.getString(GROUP_ID);
 
+        Log.d(TAG, "create");
         compositeDisposable = new CompositeDisposable(
                 getPresenter().itemsChanged().subscribe(this::onItemChanged),
                 getPresenter().loadingEvents().subscribe(this::onLoadingEvent)
@@ -112,6 +116,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "destroy");
         recyclerView.clearOnScrollListeners();
         recyclerView.setAdapter(null);
         recyclerView.getRecycledViewPool().clear();
