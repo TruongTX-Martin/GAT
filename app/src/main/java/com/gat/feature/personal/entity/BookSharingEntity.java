@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by truongtechno on 30/03/2017.
  */
 
-public class BookEntity {
+public class BookSharingEntity {
 
     @SerializedName("instanceId")
     private int instanceId;
@@ -55,7 +55,7 @@ public class BookEntity {
     private int sharingCompletedCount;
 
 
-    public BookEntity() {
+    public BookSharingEntity() {
     }
 
 

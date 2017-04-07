@@ -36,7 +36,9 @@ public class UserInfo extends Object {
     private int requestCount;
 
 
-
+    public int getUserId() {
+        return userId;
+    }
 
     public String getName() {
         return name;

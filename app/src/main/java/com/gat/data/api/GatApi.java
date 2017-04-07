@@ -128,7 +128,7 @@ public interface GatApi {
     Observable<Response<ServerResponse<Data>>> getReadingBooks(
             @Query("userId") int userId,
             @Query("readingFilter") boolean readingFilter,
-            @Query("toReadFitler") boolean toReadFitler,
+            @Query("toReadFilter") boolean toReadFitler,
             @Query("readFilter") boolean readFilter,
             @Query("page") int page,
             @Query("per_page") int per_page

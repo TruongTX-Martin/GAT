@@ -22,8 +22,10 @@ import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.user.PaperUserDataSource;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
-import com.gat.feature.personal.entity.BookEntity;
+import com.gat.feature.personal.entity.BookReadingEntity;
+import com.gat.feature.personal.entity.BookSharingEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
@@ -73,6 +75,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     private TextView txtNumberReading;
     private TextView txtNumberRequest;
 
+    private UserInfo userInfo;
     @Override
     protected PersonalScreen getDefaultScreen() {
         return PersonalScreen.instance();
@@ -113,9 +116,6 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
 //        BookInstanceInput input = new BookInstanceInput(true, false, false);
 //        requestBookInstance(input);
         handleEvent();
-
-        BookReadingInput readingInput = new BookReadingInput(true,false,false);
-        requestReadingBooks(readingInput);
     }
 
     private void handleEvent(){
@@ -224,7 +224,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     //handle data personal return
     private void getUserInfoSuccess(Data data){
         if(data != null){
-                UserInfo userInfo = (UserInfo) data.getDataReturn(UserInfo.class);
+            userInfo = (UserInfo) data.getDataReturn(UserInfo.class);
             if (!Strings.isNullOrEmpty(userInfo.getName())) {
                 txtName.setText(userInfo.getName());
             }
@@ -234,6 +234,11 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
             if (!Strings.isNullOrEmpty(userInfo.getImageid())) {
                 String url = ClientUtils.getUrlImage(userInfo.getImageid(), Constance.IMAGE_SIZE_ORIGINAL);
                 ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
+            }
+            if(userInfo.getUserId() > 0) {
+                BookReadingInput readingInput = new BookReadingInput(true,false,false);
+                readingInput.setUserId(userInfo.getUserId());
+                requestReadingBooks(readingInput);
             }
         }
     }
@@ -254,7 +259,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
             txtNumberSharing.setText(totalSharing+"");
             int totalNotSharing = data.getTotalNotSharing();
             int lostTotal = data.getLostTotal();
-            List<BookEntity> listBook = data.getListDataReturn(BookEntity.class);
+            List<BookSharingEntity> listBook = data.getListDataReturn(BookSharingEntity.class);
             fragmentBookSharing.setListBook(listBook);
         }
     }
@@ -268,16 +273,23 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     }
 
     private void changeBookSharingStatusSuccess(Data data){
-        System.out.println("Data:" + data);
         if(data != null) {
+            System.out.println("Data:" + data);
         }
     }
     private void getReadingBooksSuccess(Data data) {
-        System.out.println(data);
+        if(data != null) {
+            int totalReading = data.getReadingTotal();
+            if(totalReading > 0) {
+                txtNumberReading.setText(totalReading + "");
+            }
+            List<BookReadingEntity> listReading = data.getListDataReturn(BookReadingEntity.class);
+            fragmentBookReading.setListBookReading(listReading);
+        }
     }
 
     //request reading book
     private void requestReadingBooks(BookReadingInput input){
-//        getPresenter().requestReadingBooks(input);
+        getPresenter().requestReadingBooks(input);
     }
 }

@@ -14,7 +14,7 @@ public class BookReadingInput {
     private int page = 1;
     private int per_page = 10;
     public BookReadingInput(boolean readingFilter, boolean toReadFilter, boolean readFilter) {
-        this.readFilter = readFilter;
+        this.readingFilter = readingFilter;
         this.toReadFilter = toReadFilter;
         this.readFilter = readFilter;
     }

@@ -1,12 +1,10 @@
 package com.gat.feature.personal.adapter;
 
 import android.content.Context;
-import android.support.annotation.Dimension;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Switch;
@@ -16,8 +14,7 @@ import com.gat.R;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
-import com.gat.feature.personal.entity.BookChangeStatusInput;
-import com.gat.feature.personal.entity.BookEntity;
+import com.gat.feature.personal.entity.BookSharingEntity;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 
 import java.util.List;
@@ -28,11 +25,11 @@ import java.util.List;
 
 public class BookSharingAdapter extends BaseAdapter {
 
-    private List<BookEntity> list;
+    private List<BookSharingEntity> list;
     private Context context;
     private FragmentBookSharing fragmentBookSharing;
 
-    public BookSharingAdapter(List<BookEntity> list, Context context, FragmentBookSharing bookSharing) {
+    public BookSharingAdapter(List<BookSharingEntity> list, Context context, FragmentBookSharing bookSharing) {
         this.list = list;
         this.context = context;
         this.fragmentBookSharing = bookSharing;
@@ -61,12 +58,11 @@ public class BookSharingAdapter extends BaseAdapter {
         TextView txtAuthor = (TextView) convertView.findViewById(R.id.txtAuthor);
         TextView txtBorrowFrom = (TextView) convertView.findViewById(R.id.txtBorrowFrom);
         TextView txtShared = (TextView) convertView.findViewById(R.id.txtShared);
-        TextView txtNameBorrowing = (TextView) convertView.findViewById(R.id.txtNameBorrowing);
         ImageView imgBook = (ImageView) convertView.findViewById(R.id.imgAvatar);
         ImageView imgExtend = (ImageView) convertView.findViewById(R.id.imgExtend);
         RatingBar ratingBar = (RatingBar) convertView.findViewById(R.id.ratingBar);
         Switch mySwitch = (Switch) convertView.findViewById(R.id.mySwitch);
-        BookEntity entity = (BookEntity) getItem(position);
+        BookSharingEntity entity = (BookSharingEntity) getItem(position);
         if (entity != null) {
             if (entity.getSharingStatus() == 2 || entity.getSharingStatus() == 1) {
                 imgExtend.setVisibility(View.VISIBLE);
@@ -88,7 +84,7 @@ public class BookSharingAdapter extends BaseAdapter {
                 txtAuthor.setText(entity.getAuthor());
             }
             if(!Strings.isNullOrEmpty(entity.getBorrowingUserName())){
-                txtBorrowFrom.setText(entity.getBorrowingUserName());
+                txtBorrowFrom.setText("Nguoi muon:"+entity.getBorrowingUserName());
             }
             ratingBar.setRating(entity.getRateCount());
             if (!Strings.isNullOrEmpty(entity.getImageId())) {

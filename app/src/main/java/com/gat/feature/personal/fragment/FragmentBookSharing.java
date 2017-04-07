@@ -19,7 +19,7 @@ import com.gat.R;
 import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
-import com.gat.feature.personal.entity.BookEntity;
+import com.gat.feature.personal.entity.BookSharingEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class FragmentBookSharing extends Fragment {
     private ImageView imgFilter;
     private TextView txtMessage;
     private BookSharingAdapter adapterBookSharing;
-    private List<BookEntity> listBook = new ArrayList<>();
+    private List<BookSharingEntity> listBook = new ArrayList<>();
     private PersonalActivity parrentActivity;
     private Context context;
     private View rootView;
@@ -49,7 +49,7 @@ public class FragmentBookSharing extends Fragment {
         this.parrentActivity = parrentActivity;
     }
 
-    public void setListBook(List<BookEntity> listBook) {
+    public void setListBook(List<BookSharingEntity> listBook) {
         if (listBook != null && listBook.size() > 0) {
             this.listBook.addAll(listBook);
         }
@@ -136,7 +136,7 @@ public class FragmentBookSharing extends Fragment {
     private void fakeData() {
         //fake data listbook sharing
         for (int i = 0; i < 10; i++) {
-            BookEntity info = new BookEntity();
+            BookSharingEntity info = new BookSharingEntity();
             info.setTitle("Cuộc đời, sự nghiệp Steve Jobs" + i);
             info.setAuthor("Frank Luca" + i);
             info.setRateCount(4);
@@ -244,7 +244,7 @@ public class FragmentBookSharing extends Fragment {
             listBook.clear();
         }
     }
-    public void changeStatusBook(BookEntity entity,int position){
+    public void changeStatusBook(BookSharingEntity entity, int position){
         if(entity.getSharingStatus() == 0){
             entity.setSharingStatus(1);
         }else{

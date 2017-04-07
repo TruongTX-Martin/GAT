@@ -147,7 +147,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<Data> getReadingBooks(BookReadingInput input) {
-        User user = localUserDataSourceLazy.get().loadUser().blockingFirst();
         return Observable.defer( () -> networkUserDataSourceLazy.get().getReadingBook(input));
     }
 

@@ -76,4 +76,18 @@ public class Data<T> {
     public String getMessage() {
         return message;
     }
+
+    //property for reading book
+    @SerializedName("toReadTotal")
+    private int toReadTotal;
+
+    @SerializedName("readTotal")
+    private int readTotal;
+
+    @SerializedName("readingTotal")
+    private int readingTotal;
+
+    public int getReadingTotal() {
+        return readingTotal;
+    }
 }
