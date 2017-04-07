@@ -7,7 +7,8 @@ import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.personal.entity.BookInstanceInput;
-import com.gat.feature.personal.entity.BookSharingInput;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.repository.entity.Data;
 
 import io.reactivex.Observable;
@@ -45,8 +46,15 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private CompositeDisposable changeBookSharingStatusDisposable;
     private UseCase<Data> changeBookSharingStatusUsecase;
     private Subject<Data> changeBookSharingStatusResultSubject;
-    private Subject<BookInstanceInput> changeBookSharingStatusInputSubject;
-    private  Subject<ServerResponse<ResponseData>> changeBookSharingStatusError;
+    private Subject<BookChangeStatusInput> changeBookSharingStatusInputSubject;
+    private Subject<ServerResponse<ResponseData>> changeBookSharingStatusError;
+
+    //get data readingbook
+    private CompositeDisposable readingBooksDisposable;
+    private UseCase<Data> readingBooksUsecase;
+    private Subject<Data> readingBookResultSubject;
+    private Subject<BookReadingInput> readingBookInputSubject;
+    private Subject<ServerResponse<ResponseData>> readingBookError;
 
 
     public PersonalPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
@@ -65,6 +73,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         this.changeBookSharingStatusError = PublishSubject.create();
         changeBookSharingStatusResultSubject = PublishSubject.create();
         changeBookSharingStatusInputSubject = BehaviorSubject.create();
+
+        this.readingBookError = PublishSubject.create();
+        readingBookResultSubject = PublishSubject.create();
+        readingBookInputSubject = BehaviorSubject.create();
     }
 
     @Override
@@ -74,6 +86,12 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         );
         bookInstanceDisposable = new CompositeDisposable(bookInstanceInputSubject.
                 observeOn(schedulerFactory.main()).subscribe(this::getBookInstance));
+
+        changeBookSharingStatusDisposable = new CompositeDisposable(changeBookSharingStatusInputSubject.
+                observeOn(schedulerFactory.main()).subscribe(this::changeBookSharingStatus));
+
+        readingBooksDisposable = new CompositeDisposable(readingBookInputSubject.
+                observeOn(schedulerFactory.main()).subscribe(this::getReadingBooks));
         //start get personal data
         personalInputSubject.onNext("");
     }
@@ -82,6 +100,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     public void onDestroy() {
         personalDisposable.dispose();
         bookInstanceDisposable.dispose();
+        changeBookSharingStatusDisposable.dispose();
     }
 
     @Override
@@ -110,17 +129,33 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public void requestChangeBookSharingStatus(BookSharingInput input) {
+    public void requestChangeBookSharingStatus(BookChangeStatusInput input) {
+        changeBookSharingStatusInputSubject.onNext(input);
     }
 
     @Override
     public Observable<Data> getResponseBookSharingStatus() {
-        return null;
+        return changeBookSharingStatusResultSubject.observeOn(schedulerFactory.main());
     }
 
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorBookSharingStatus() {
-        return null;
+        return changeBookSharingStatusError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestReadingBooks(BookReadingInput input) {
+        readingBookInputSubject.onNext(input);
+    }
+
+    @Override
+    public Observable<Data> getResponseReadingBooks() {
+        return readingBookResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<ServerResponse<ResponseData>> onErrorReadingBooks() {
+        return readingBookError.observeOn(schedulerFactory.main());
     }
 
     private void getPersonalData(String input) {
@@ -152,5 +187,37 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 }).onStop(
                 () -> getBookIntanceUsecase = UseCases.release(getBookIntanceUsecase)
         ).execute();
+    }
+
+    private void changeBookSharingStatus(BookChangeStatusInput input) {
+        changeBookSharingStatusUsecase = UseCases.release(changeBookSharingStatusUsecase);
+        changeBookSharingStatusUsecase = useCaseFactory.changeBookSharingStatus(input);
+        changeBookSharingStatusUsecase.executeOn(schedulerFactory.io()).returnOn(schedulerFactory.main()).
+                onNext(reponse -> {
+                    changeBookSharingStatusResultSubject.onNext(reponse);
+                })
+                .onError(throwableable -> {
+                    changeBookSharingStatusError.onError(throwableable);
+                })
+                .onStop(
+                        () -> changeBookSharingStatusUsecase = UseCases.release(changeBookSharingStatusUsecase)
+                )
+                .execute();
+    }
+
+    private void getReadingBooks(BookReadingInput input){
+        readingBooksUsecase = UseCases.release(readingBooksUsecase);
+        readingBooksUsecase = useCaseFactory.getReadingBooks(input);
+        readingBooksUsecase.executeOn(schedulerFactory.io()).returnOn(schedulerFactory.main()).
+                onNext(reponse -> {
+                    readingBookResultSubject.onNext(reponse);
+                })
+                .onError(throwableable -> {
+                    readingBookError.onError(throwableable);
+                })
+                .onStop(
+                        () -> readingBooksUsecase = UseCases.release(readingBooksUsecase)
+                )
+                .execute();
     }
 }

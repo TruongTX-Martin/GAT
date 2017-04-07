@@ -1,5 +1,6 @@
 package com.gat.repository.entity;
 
+import com.gat.common.util.Strings;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -47,10 +48,10 @@ public class Data<T> {
     }
 
     //property for book instance
-    @SerializedName("totalSharing")
+    @SerializedName("sharingTotal")
     private int totalSharing;
 
-    @SerializedName("totalNotSharing")
+    @SerializedName("notSharingTotal")
     private int totalNotSharing;
 
     @SerializedName("lostTotal")
@@ -68,4 +69,11 @@ public class Data<T> {
         return lostTotal;
     }
     //end property for book instances
+
+    @SerializedName("message")
+    private String message = Strings.EMPTY;
+
+    public String getMessage() {
+        return message;
+    }
 }

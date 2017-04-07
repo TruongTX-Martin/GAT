@@ -3,8 +3,11 @@ package com.gat.domain;
 import android.support.annotation.Nullable;
 
 import com.gat.data.response.ServerResponse;
+import com.gat.domain.impl.UseCaseFactoryImpl;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -51,4 +54,6 @@ public interface UseCaseFactory {
     UseCase<Data> getUserInfo();
 
     UseCase<Data> getBookInstance(BookInstanceInput input);
+    UseCase<Data> changeBookSharingStatus(BookChangeStatusInput input);
+    UseCase<Data> getReadingBooks(BookReadingInput input);
 }

@@ -117,4 +117,21 @@ public interface GatApi {
             @Query("per_page") int per_page
     );
 
+    @FormUrlEncoded
+    @POST("book/selfchange_instance_stt")
+    Observable<Response<ServerResponse<Data>>> changeBookSharingStatus(
+            @Field("instanceId") int instanceId,
+            @Field("sharingStatus") int sharingStatus
+    );
+
+    @GET("book/get_user_reading_editions")
+    Observable<Response<ServerResponse<Data>>> getReadingBooks(
+            @Query("userId") int userId,
+            @Query("readingFilter") boolean readingFilter,
+            @Query("toReadFitler") boolean toReadFitler,
+            @Query("readFilter") boolean readFilter,
+            @Query("page") int page,
+            @Query("per_page") int per_page
+    );
+
 }

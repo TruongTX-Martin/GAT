@@ -4,8 +4,10 @@ import android.support.annotation.Nullable;
 
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.UseCaseFactory;
+import com.gat.domain.usecase.ChangeBookSharingStatus;
 import com.gat.domain.usecase.GetBookInstance;
 import com.gat.domain.usecase.GetLoginData;
+import com.gat.domain.usecase.GetReadingBooks;
 import com.gat.domain.usecase.GetUser;
 import com.gat.domain.usecase.Login;
 import com.gat.domain.usecase.GetPersonalData;
@@ -20,7 +22,9 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
@@ -129,5 +133,15 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<Data> getBookInstance(BookInstanceInput input) {
         return new GetBookInstance(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return new ChangeBookSharingStatus(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<Data> getReadingBooks(BookReadingInput input) {
+        return new GetReadingBooks(userRepositoryLazy.get(),input);
     }
 }

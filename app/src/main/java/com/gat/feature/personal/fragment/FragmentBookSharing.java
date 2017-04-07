@@ -15,10 +15,10 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.gat.R;
 import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class FragmentBookSharing extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.layout_fragment_book_loan, container, false);
         context = getActivity().getApplicationContext();
-        adapterBookSharing = new BookSharingAdapter(listBook, getActivity().getApplicationContext());
+        adapterBookSharing = new BookSharingAdapter(listBook, getActivity().getApplicationContext(),this);
         lvBookSharing = (ListView) rootView.findViewById(R.id.lvBookSharing);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         progressLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
@@ -243,6 +243,17 @@ public class FragmentBookSharing extends Fragment {
             showLoading();
             listBook.clear();
         }
+    }
+    public void changeStatusBook(BookEntity entity,int position){
+        if(entity.getSharingStatus() == 0){
+            entity.setSharingStatus(1);
+        }else{
+            entity.setSharingStatus(0);
+        }
+        BookChangeStatusInput input = new BookChangeStatusInput(entity.getInstanceId(),entity.getSharingStatus());
+        parrentActivity.requestChangeStatusBook(input);
+        listBook.remove(position);
+        listBook.add(position,entity);
     }
 
 }

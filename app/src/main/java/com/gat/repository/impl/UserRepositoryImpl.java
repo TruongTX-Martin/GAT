@@ -5,7 +5,9 @@ import android.location.Address;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
@@ -136,6 +138,17 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<Data> getBookInstance(BookInstanceInput input) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().getBookInstance(input));
+    }
+
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().changeBookSharingStatus(input));
+    }
+
+    @Override
+    public Observable<Data> getReadingBooks(BookReadingInput input) {
+        User user = localUserDataSourceLazy.get().loadUser().blockingFirst();
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getReadingBook(input));
     }
 
 }

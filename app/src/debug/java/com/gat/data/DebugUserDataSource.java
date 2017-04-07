@@ -13,7 +13,9 @@ import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.dependency.DataComponent;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -246,6 +248,34 @@ public class DebugUserDataSource implements UserDataSource {
     public Observable<Data> getBookInstance(BookInstanceInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter(),input.getPage(),input.getPer_page());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.changeBookSharingStatus(input.getInstanceId(),input.getSharingStatus());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<Data> getReadingBook(BookReadingInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getReadingBooks(input.getUserId(),input.isReadingFilter(),input.isToReadFilter(),input.isReadFilter(),input.getPage(),input.getPer_page());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = response.body();
             if (serverResponse == null) {

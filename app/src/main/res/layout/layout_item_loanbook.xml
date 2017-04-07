@@ -39,9 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:thumb="@drawable/switch_custom_selector"
-                android:track="@drawable/switch_custom_track" />
-
-
+                android:track="@drawable/switch_custom_track"
+                />
             <TextView
                 android:id="@+id/txtShared"
                 android:layout_width="match_parent"
@@ -49,7 +48,6 @@
                 android:textColor="#000000"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="5dp"
-                android:visibility="gone"
                 android:text="Cho mượn"
                 />
         </LinearLayout>
@@ -90,9 +88,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/mySwitch"
                 android:layout_below="@+id/txtName"
-                android:numStars="5"
-                />
+                android:numStars="5" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/txtNameBorrowing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutRating"
+            android:layout_toLeftOf="@+id/layoutRight"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:text="Người mượn"
+            android:textColor="#000000" />
 
         <TextView
             android:id="@+id/txtBorrowFrom"

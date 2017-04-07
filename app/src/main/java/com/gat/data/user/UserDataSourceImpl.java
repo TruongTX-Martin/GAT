@@ -6,7 +6,9 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -119,12 +121,21 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<Data> getPersonalInfo() {
-        System.out.println("Get user data sort");
         return null;
     }
 
     @Override
     public Observable<Data> getBookInstance(BookInstanceInput input) {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> getReadingBook(BookReadingInput input) {
         return null;
     }
 }

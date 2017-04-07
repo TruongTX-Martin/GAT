@@ -22,8 +22,10 @@ import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
@@ -60,6 +62,8 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
 
     private CompositeDisposable disposablesPersonal;
     private CompositeDisposable disposablesBookInstance;
+    private CompositeDisposable disposablesChangeBookSharingStatus;
+    private CompositeDisposable disposablesReadingBooks;
 
     //init fragment
     private FragmentBookSharing fragmentBookSharing;
@@ -93,6 +97,14 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
 
         disposablesBookInstance = new CompositeDisposable(getPresenter().getResponseBookInstance().subscribe(this::getBookInstanceSuccess),
                 getPresenter().onErrorBookInstance().subscribe(this::getBookInstanceError));
+
+
+        disposablesChangeBookSharingStatus = new CompositeDisposable(getPresenter().getResponseBookSharingStatus().subscribe(this::changeBookSharingStatusSuccess),
+                getPresenter().onErrorBookSharingStatus().subscribe(this::getBookInstanceError));
+
+        disposablesReadingBooks = new CompositeDisposable(getPresenter().getResponseReadingBooks().subscribe(this::getReadingBooksSuccess),
+                getPresenter().onErrorReadingBooks().subscribe(this::getBookInstanceError));
+
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
@@ -101,6 +113,9 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
 //        BookInstanceInput input = new BookInstanceInput(true, false, false);
 //        requestBookInstance(input);
         handleEvent();
+
+        BookReadingInput readingInput = new BookReadingInput(true,false,false);
+        requestReadingBooks(readingInput);
     }
 
     private void handleEvent(){
@@ -227,6 +242,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     }
 
 
+    //get book instance
     public void requestBookInstance(BookInstanceInput input) {
         getPresenter().requestBookInstance(input);
     }
@@ -246,18 +262,22 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
     }
 
-    private void fakeData(){
-        //fake data listbook sharing
-        List<BookEntity> list = new ArrayList<>();
-        for (int i=0; i< 10; i++) {
-            BookEntity info = new BookEntity();
-            info.setTitle("Cuộc đời, sự nghiệp Steve Jobs"+i);
-            info.setAuthor("Frank Luca" + i);
-            info.setRateCount(4);
-            info.setBorrowingUserName("Trần Duy Hưng "+i);
-            list.add(info);
-        }
-//        fragmentBookSharing.setListBook(list);
+    //change status book
+    public  void requestChangeStatusBook(BookChangeStatusInput input){
+        getPresenter().requestChangeBookSharingStatus(input);
+    }
 
+    private void changeBookSharingStatusSuccess(Data data){
+        System.out.println("Data:" + data);
+        if(data != null) {
+        }
+    }
+    private void getReadingBooksSuccess(Data data) {
+        System.out.println(data);
+    }
+
+    //request reading book
+    private void requestReadingBooks(BookReadingInput input){
+//        getPresenter().requestReadingBooks(input);
     }
 }
