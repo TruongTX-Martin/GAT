@@ -28,7 +28,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresenter> {
     private final String TAG = MessageActivity.class.getSimpleName();
 
-    private final String GROUP_ID = "group_id";
+    private final String USER_ID = "user_id";
 
     @BindView(R.id.message_refresh)
     SwipeRefreshLayout refreshLayout;
@@ -47,15 +47,13 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     private CompositeDisposable compositeDisposable;
 
-    private String groupId;
+    private String userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null)
-            groupId = getScreen().groupId();
-        else
-            groupId = savedInstanceState.getString(GROUP_ID);
+
+        userId = getScreen().userId();
 
         Log.d(TAG, "create");
         compositeDisposable = new CompositeDisposable(
@@ -67,24 +65,23 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         recyclerView.setAdapter(messageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        loadMoreScrollListener = new LoadMoreScrollListener(3, true, () -> {
+        loadMoreScrollListener = new LoadMoreScrollListener(3, false, () -> {
             if (messageAdapter.hasLoadMoreItem())
-                getPresenter().loadMoreMessageList(groupId);
+                getPresenter().loadMoreMessageList(userId);
         });
         recyclerView.addOnScrollListener(loadMoreScrollListener);
 
-        getPresenter().refreshMessageList(groupId);
+        getPresenter().refreshMessageList(userId);
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent);
         refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
-        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(groupId));
+        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(userId));
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putString(GROUP_ID, groupId);
+        messageSendBtn.setOnClickListener(view -> {
+            if (!Strings.isNullOrEmpty(messageEdit.getText().toString())) {
+                getPresenter().sendMessage(messageEdit.getText().toString());
+            }
+        });
     }
 
     private void onItemChanged(ItemResult result) {
@@ -100,7 +97,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
                 refreshLayout.setEnabled(!event.refresh() && messageAdapter.getItemCount() > 1);
                 break;
             case LoadingEvent.Status.DONE:
-                loadMoreScrollListener.setEnable(messageAdapter.hasLoadMoreItem());
+                loadMoreScrollListener.setEnable(/*messageAdapter.hasLoadMoreItem()*/false);
                 refreshLayout.setRefreshing(false);
                 refreshLayout.setEnabled(true);
                 if (event.refresh())

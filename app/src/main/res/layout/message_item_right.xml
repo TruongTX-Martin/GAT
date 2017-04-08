@@ -19,6 +19,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.8"
             android:layout_marginStart="@dimen/margin_message_left"
+            android:background="@drawable/message_shape"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/messenger_image"

@@ -9,8 +9,8 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class MessageScreen implements Screen {
-    public abstract String groupId();
-    public static MessageScreen instance(String groupId) {
-        return new AutoValue_MessageScreen(groupId);
+    public abstract String userId();
+    public static MessageScreen instance(String userId) {
+        return new AutoValue_MessageScreen(userId);
     }
 }

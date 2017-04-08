@@ -20,12 +20,22 @@ public class DebugLocalMessageDataSource implements MessageDataSource {
         groupList = new ArrayList<>();
     }
     @Override
-    public Observable<List<Message>> getMessageList(String groupId) {
+    public Observable<List<Message>> getMessageList(String userId) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Observable<List<Group>> getGroupList() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<List<Group>> loadMoreGroup() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<List<Message>> loadMoreMessage() {
         throw new UnsupportedOperationException();
     }
 

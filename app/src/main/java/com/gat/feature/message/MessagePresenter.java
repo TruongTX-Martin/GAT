@@ -11,19 +11,19 @@ import io.reactivex.Observable;
  */
 
 public interface MessagePresenter extends Presenter{
-    void loadMoreMessageList(String groupId);
+    void loadMoreMessageList(String userId);
 
-    void refreshMessageList(String groupId);
+    void refreshMessageList(String userId);
 
     void refreshGroupList();
 
     void loadMoreGroupList();
 
-    Observable<ItemResult> hasNewItems();
-
     Observable<LoadingEvent> loadingEvents();
 
     Observable<ItemResult> itemsChanged();
 
+    void sendMessage(String message);
 
+    Observable<Boolean> sendMessageResult();
 }

@@ -79,7 +79,7 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof MessageScreen) {
             MessageScreen messageScreen = (MessageScreen) screen;
-            dest.writeString(messageScreen.groupId());
+            dest.writeString(messageScreen.userId());
         }
 
         else

@@ -25,8 +25,8 @@ public class MessageRepositoryImpl implements MessageRepository {
         this.localDataSource = localDataSource;
     }
     @Override
-    public Observable<List<Message>> getMessageList(String groupId) {
-        return Observable.defer(() -> networkDataSource.get().getMessageList(groupId));
+    public Observable<List<Message>> getMessageList(String userId) {
+        return Observable.defer(() -> networkDataSource.get().getMessageList(userId));
     }
 
     @Override
@@ -36,7 +36,17 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Observable<Boolean> sendMessage(String groupId, String message) {
-        return Observable.defer(() -> networkDataSource.get().sendMessage(groupId, message));
+    public Observable<List<Group>> loadMoreGroup() {
+        return Observable.defer(() -> networkDataSource.get().loadMoreGroup());
+    }
+
+    @Override
+    public Observable<List<Message>> loadMoreMessage() {
+        return Observable.defer(() -> networkDataSource.get().loadMoreMessage());
+    }
+
+    @Override
+    public Observable<Boolean> sendMessage(String toUserId, String message) {
+        return Observable.defer(() -> networkDataSource.get().sendMessage(toUserId, message));
     }
 }

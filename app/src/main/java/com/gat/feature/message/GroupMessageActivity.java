@@ -18,6 +18,7 @@ import com.gat.common.util.Strings;
 import com.gat.feature.message.adapter.GroupMessageAdapter;
 import com.gat.feature.message.event.RecyclerItemClickListener;
 import com.gat.feature.message.item.GroupItem;
+import com.gat.repository.entity.Group;
 
 import butterknife.BindView;
 import io.reactivex.disposables.CompositeDisposable;
@@ -52,14 +53,14 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
         recyclerView.setAdapter(groupMessageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        // Get group list
-        getPresenter().refreshGroupList();
-
-        loadMoreScrollListener = new LoadMoreScrollListener(3, true, () -> {
+        loadMoreScrollListener = new LoadMoreScrollListener(3, false, () -> {
             if (groupMessageAdapter.hasLoadMoreItem())
                 getPresenter().loadMoreGroupList();
         });
         recyclerView.addOnScrollListener(loadMoreScrollListener);
+
+        // Get group list
+        getPresenter().refreshGroupList();
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -73,7 +74,7 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
                 if (!(item instanceof GroupItem))
                     return;
                 Log.d(TAG, "clicked:" + position);
-                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(((GroupItem)item).group().groupId()));
+                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(((GroupItem)item).group().users().get(0)));
 
             }
         }));
@@ -89,10 +90,6 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
             result.diffResult().dispatchUpdatesTo(groupMessageAdapter);
     }
 
-    private void onHasNewItems(ItemResult result) {
-
-    }
-
     private void onLoadingEvent(LoadingEvent event) {
         switch (event.status()) {
             case LoadingEvent.Status.BEGIN:
@@ -101,7 +98,7 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
                 refreshLayout.setEnabled(!event.refresh() && groupMessageAdapter.getItemCount() > 1);
                 break;
             case LoadingEvent.Status.DONE:
-                loadMoreScrollListener.setEnable(groupMessageAdapter.hasLoadMoreItem());
+                loadMoreScrollListener.setEnable(/*groupMessageAdapter.hasLoadMoreItem()*/false);
                 refreshLayout.setRefreshing(false);
                 refreshLayout.setEnabled(true);
                 if (event.refresh())

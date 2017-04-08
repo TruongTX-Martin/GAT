@@ -13,13 +13,13 @@ import io.reactivex.Observable;
 
 public class GetMessageList extends UseCase<List<Message>> {
     private final MessageRepository repository;
-    private final String groupId;
-    public GetMessageList(MessageRepository repository, String groupId) {
+    private final String userId;
+    public GetMessageList(MessageRepository repository, String userId) {
         this.repository = repository;
-        this.groupId = groupId;
+        this.userId = userId;
     }
     @Override
     protected Observable<List<Message>> createObservable() {
-        return repository.getMessageList(groupId);
+        return repository.getMessageList(userId);
     }
 }

@@ -12,11 +12,14 @@ import com.gat.domain.usecase.GetGroupList;
 import com.gat.domain.usecase.GetLoginData;
 import com.gat.domain.usecase.GetMessageList;
 import com.gat.domain.usecase.GetUser;
+import com.gat.domain.usecase.LoadMoreGroup;
+import com.gat.domain.usecase.LoadMoreMessage;
 import com.gat.domain.usecase.Login;
 import com.gat.domain.usecase.Register;
 import com.gat.domain.usecase.ResetPassword;
 import com.gat.domain.usecase.SearchBookByIsbn;
 import com.gat.domain.usecase.SearchBookByKeyword;
+import com.gat.domain.usecase.SendMessage;
 import com.gat.domain.usecase.SendRequestResetPassword;
 import com.gat.domain.usecase.TransformUseCase;
 import com.gat.domain.usecase.UpdateCategory;
@@ -70,13 +73,28 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Message>> getMessageList(String groupId) {
-        return new GetMessageList(messageRepositoryLazy.get(), groupId);
+    public UseCase<List<Message>> getMessageList(String userId) {
+        return new GetMessageList(messageRepositoryLazy.get(), userId);
     }
 
     @Override
     public UseCase<List<Group>> getGroupList() {
         return new GetGroupList(messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<Group>> loadMoreGroup() {
+        return new LoadMoreGroup(messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<Message>> loadMoreMessage() {
+        return new LoadMoreMessage(messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Boolean> sendMessage(String toUserId, String message) {
+        return new SendMessage(messageRepositoryLazy.get(), message, toUserId);
     }
 
     @Override
