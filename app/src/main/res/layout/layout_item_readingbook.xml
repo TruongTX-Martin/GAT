@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#f7f7f7">
+
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="55dp"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/twitter_btn" />
+
+        <LinearLayout
+            android:id="@+id/layoutRight"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            >
+
+            <ImageView
+                android:id="@+id/imgExtend"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_extend"
+                android:layout_gravity="center_horizontal"
+                />
+            <Switch
+                android:id="@+id/mySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:thumb="@drawable/switch_custom_selector"
+                android:track="@drawable/switch_custom_track"
+                />
+            <TextView
+                android:id="@+id/txtShared"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:text="Cho mượn"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/layoutRight"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:text="name"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/txtAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtName"
+            android:layout_toLeftOf="@+id/layoutRight"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:text="author"
+            android:textColor="#000000" />
+
+        <LinearLayout
+            android:id="@+id/layoutRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtAuthor"
+            android:layout_toLeftOf="@+id/layoutRight"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:orientation="horizontal">
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/CustomRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/mySwitch"
+                android:layout_below="@+id/txtName"
+                android:numStars="5" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/txtBorrowFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutRating"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:textColor="#000000" />
+    </RelativeLayout>
+
+</RelativeLayout>

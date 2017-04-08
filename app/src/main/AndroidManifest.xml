@@ -51,6 +51,7 @@
         </activity>
         <activity android:name=".feature.login.ForgotPassword.VerifyResetTokenActivity" >
         </activity>
+        <activity android:name=".feature.personal.PersonalActivity"/>
         <activity android:name=".feature.scanbarcode.ScanBarcodeActivity">
 
         </activity>
