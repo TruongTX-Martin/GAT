@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gat.R;
+import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.repository.entity.UserNearByDistance;
 import java.util.List;
 import butterknife.BindView;
@@ -21,12 +22,15 @@ import butterknife.ButterKnife;
 public class ShareNearByUserDistanceAdapter
         extends RecyclerView.Adapter<ShareNearByUserDistanceAdapter.UserSharingNearViewHolder> {
 
-    List<UserNearByDistance> listItems;
+    private List<UserNearByDistance> listItems;
     private Context mContext;
+    private IRecyclerViewItemClickListener mListener;
 
-    public ShareNearByUserDistanceAdapter (Context context, List<UserNearByDistance> list) {
+    public ShareNearByUserDistanceAdapter (Context context, List<UserNearByDistance> list,
+                                           IRecyclerViewItemClickListener listener) {
         listItems = list;
         mContext = context;
+        mListener = listener;
     }
 
     @Override
@@ -34,19 +38,29 @@ public class ShareNearByUserDistanceAdapter
         View viewItem = LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.item_user_near_on_map, parent, false);
         UserSharingNearViewHolder holder = new UserSharingNearViewHolder(viewItem);
+
+        viewItem.setOnClickListener(view
+                -> mListener.onItemClickListener(view, holder.getAdapterPosition()));
+
         return holder;
     }
 
     @Override
     public void onBindViewHolder(UserSharingNearViewHolder holder, int position) {
         UserNearByDistance user = getItem(position);
-        Glide.with(mContext).
-                load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                        + user.getImageId() + "?size=t").into(holder.imageViewUserAvatar);
+        if ( null != user.getImageId() && ! user.getImageId().isEmpty()) {
+            Glide.with(mContext).
+                    load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
+                            + user.getImageId() + "?size=t").into(holder.imageViewUserAvatar);
+        }
+
         holder.textViewDistance.setText(String.valueOf(user.getDistance()));
         holder.textViewFullName.setText(user.getName());
         holder.textViewSharingCount.setText(String.valueOf(user.getSharingCount()));
         holder.textViewReadingCount.setText(String.valueOf(user.getReadCount()));
+        if (position == (getItemCount() - 1)) {
+            holder.viewDivider.setVisibility(View.GONE);
+        }
     }
 
 
@@ -76,6 +90,10 @@ public class ShareNearByUserDistanceAdapter
 
         @BindView(R.id.tv_reading_count)
         TextView textViewReadingCount;
+
+        @BindView(R.id.view_divider)
+        View viewDivider;
+
 
         public UserSharingNearViewHolder(View itemView) {
             super(itemView);

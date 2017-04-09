@@ -82,6 +82,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");

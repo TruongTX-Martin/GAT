@@ -74,6 +74,15 @@
         android:orientation="horizontal"
         android:weightSum="5">
 
+        <Button
+            android:id="@+id/button_go_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="Go Setting -> Enable Location permission"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextViewGray"/>
+
     </LinearLayout>
 
 

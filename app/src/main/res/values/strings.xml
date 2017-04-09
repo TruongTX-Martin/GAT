@@ -116,4 +116,9 @@
     <string name="book_lend">Sách cho mượn</string>
     <string name="book_reading">Sách đang đọc</string>
 
+    <string name="cancel">Cancel</string>
+
+
+    <string name="msg_allow_location">To see all of users sharing book around of you. You need enable location permission!</string>
+    <string name="msg_no_user_near">Không có người chia sẻ gần bạn, nhấp xem thêm để hiển thị nhiều hơn. </string>
 </resources>

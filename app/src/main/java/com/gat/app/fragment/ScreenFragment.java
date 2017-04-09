@@ -21,6 +21,8 @@ import butterknife.Unbinder;
 
 public abstract class ScreenFragment<S extends Screen, P extends Presenter> extends MvpFragment<P> {
 
+    protected static final String EXTRA_SCREEN = "screen";
+
     private Unbinder unbinder;
     private volatile S screen;
     protected View mView;

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height"
+        android:background="@color/backgroundApp"
+        android:paddingLeft="@dimen/paddingLarge"
+        android:paddingRight="@dimen/paddingSmall"
+        android:paddingTop="@dimen/paddingLarge">
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/edit_text_search"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toStartOf="@+id/button_cancel"
+            android:background="@color/colorBlueDark"
+            android:drawableEnd="@drawable/ic_search_scan"
+            android:drawableStart="@drawable/ic_search_draw"
+            android:drawablePadding="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="@android:color/white"
+            android:textCursorDrawable="@null"
+            android:paddingRight="5dp" />
+
+    </RelativeLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        style="@style/TabLayoutSubViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

@@ -19,12 +19,14 @@
     <color name="colorTextViewGray">#919191</color>
 
     <color name="divider">#BDBDBD</color>
+    <color name="dividerDark">#A1A1A1</color>
 
     <color name="background_login">#8EC3DF</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlue">#5396B9</color>
     <color name="colorGray">#919191</color>
     <color name="colorGrayLight">#F1F1F1</color>
+    <color name="colorBlueDark">#4392bb</color>
 
     <color name="backgroundApp">#8EC3DF</color>
     <color name="coolBlue">#5396b9</color>
