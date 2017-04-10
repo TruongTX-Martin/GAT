@@ -2,6 +2,7 @@ package com.gat.feature.suggestion;
 
 import android.util.Log;
 
+import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
@@ -62,7 +63,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                     resultMostBorrowingSubject.onNext(listBook);
                 })
                 .onError(throwable -> {
-                    errorSubject.onNext(Log.getStackTraceString(throwable));
+//                    errorSubject.onNext(Log.getStackTraceString(throwable));
                 })
                 .execute();
     }
@@ -81,7 +82,8 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                     resultBooksSuggestSubject.onNext(listBook);
                 })
                 .onError(throwable -> {
-                    errorSubject.onNext(Log.getStackTraceString(throwable));
+                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________" + throwable.getCause().getMessage());
+//                    errorSubject.onNext(Log.getStackTraceString(throwable));
                 })
                 .execute();
     }
@@ -101,7 +103,9 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                     resultListUserNearByDistance.onNext(listUser);
                 })
                 .onError(throwable -> {
-                    errorSubject.onNext(Log.getStackTraceString(throwable));
+
+                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________" + throwable.getCause().getMessage());
+//                    errorSubject.onNext(Log.getStackTraceString(throwable));
                 }).execute();
     }
 

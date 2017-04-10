@@ -369,8 +369,10 @@ public class ShareNearByUserDistanceActivity
     }
 
     private void moveCameraToNewLatLng(LatLng latLng) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
-        mMap.animateCamera(cameraUpdate);
+        if (null != latLng) {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
+            mMap.animateCamera(cameraUpdate);
+        }
     }
 
     @Override

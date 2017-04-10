@@ -7,6 +7,7 @@ import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -19,6 +20,10 @@ import io.reactivex.subjects.Subject;
 
 public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDistancePresenter {
 
+    private static final int TOTAL_PER_PAGE = 10;
+    private int mCurrentPage;
+    private boolean isCanLoadMore;
+    private List<UserNearByDistance> mListUsers;
 
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
@@ -27,7 +32,6 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
     Subject<List<UserNearByDistance>> resultUserNearSubject;
 
     private final Subject<String> errorSubject;
-
 
     public ShareNearByUserDistancePresenterImpl (
             UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
@@ -40,7 +44,10 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
     }
 
     @Override
-    public void onCreate() {}
+    public void onCreate() {
+        mCurrentPage = 1;
+        mListUsers = new ArrayList<>();
+    }
 
     @Override
     public void onDestroy() {}
@@ -54,7 +61,7 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
                     resultUserNearSubject.onNext(listUser);
                 })
                 .onError(throwable -> {
-                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
+                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________\n\r" + throwable.getCause().getMessage());
                 }).execute();
     }
 

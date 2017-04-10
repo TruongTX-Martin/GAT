@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/paddingLarge">
+
+    <ImageView
+        android:id="@+id/image_view_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_search_history_author"
+        android:background="@android:color/transparent" />
+
+    <TextView
+        android:id="@+id/text_view_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/colorTextViewGray"
+        android:textSize="@dimen/normal_text_view_size"
+        android:text="Jenifer" android:layout_marginStart="30dp"/>
+
+</LinearLayout>
