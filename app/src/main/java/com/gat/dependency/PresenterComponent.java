@@ -30,4 +30,6 @@ public interface PresenterComponent {
     SuggestionPresenter getSuggestionPresenter();
     MainPresenter getMainPresenter();
     ShareNearByUserDistancePresenter getShareNearByUserDistancePresenter();
+    SuggestSearchPresenter getSuggestSearchPresenter();
+
 }

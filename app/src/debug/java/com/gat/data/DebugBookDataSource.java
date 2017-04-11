@@ -4,6 +4,7 @@ import com.gat.common.util.MZDebug;
 import com.gat.data.api.GatApi;
 import com.gat.data.id.LongId;
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.ServerResponse;
 import com.gat.dependency.DataComponent;
@@ -137,6 +138,64 @@ public class DebugBookDataSource implements BookDataSource {
 
         return responseObservable.map( response -> {
             List<BookResponse> list = response.body().data().getResultInfo();
+            return list;
+        });
+    }
+
+    @Override
+    public Observable<DataResultListResponse<BookResponse>> searchBookByTitle
+            (String title, long userId, int page, int sizeOfPage) {
+        MZDebug.i("____________________________ searchBookByTitle _______________________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> responseObservable;
+        responseObservable = api.searchBookByTitle(title, userId, page, sizeOfPage);
+
+        return responseObservable.map( response -> {
+            DataResultListResponse<BookResponse> data = response.body().data();
+            return data;
+        });
+    }
+
+    @Override
+    public Observable<DataResultListResponse<BookResponse>> searchBookByAuthor
+            (String author, long userId, int page, int sizeOfPage) {
+        MZDebug.i("____________________________ searchBookByAuthor ______________________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> responseObservable;
+        responseObservable = api.searchBookByAuthor(author, userId, page, sizeOfPage);
+
+        return responseObservable.map( response -> {
+            DataResultListResponse<BookResponse> data = response.body().data();
+            return data;
+        });
+    }
+
+    @Override
+    public Observable<List<String>> getBooksSearchedKeyword() {
+        MZDebug.i("________________________ getBooksSearchedKeyword _____________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
+        responseObservable = api.getBooksSearchedKeyword();
+
+        return responseObservable.map( response -> {
+            List<String> list = response.body().data().getResultInfo();
+            return list;
+        });
+    }
+
+    @Override
+    public Observable<List<String>> getAuthorsSearchedKeyword() {
+        MZDebug.i("________________________ getAuthorsSearchedKeyword ___________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
+        responseObservable = api.getAuthorsSearchedKeyword();
+
+        return responseObservable.map( response -> {
+            List<String> list = response.body().data().getResultInfo();
             return list;
         });
     }

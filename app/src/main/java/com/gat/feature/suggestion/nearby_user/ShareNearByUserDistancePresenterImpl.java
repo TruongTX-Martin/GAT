@@ -61,7 +61,7 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
                     resultUserNearSubject.onNext(listUser);
                 })
                 .onError(throwable -> {
-                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________\n\r" + throwable.getCause().getMessage());
+                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
                 }).execute();
     }
 

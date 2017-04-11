@@ -38,8 +38,9 @@
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:textCursorDrawable="@null"
-                android:imeOptions="actionDone"
-                android:imeActionLabel="Done"
+                android:imeActionLabel="Search"
+                android:imeOptions="actionUnspecified"
+                android:inputType="text"
                 android:maxLines="1"
                 android:layout_marginRight="45dp" />
 

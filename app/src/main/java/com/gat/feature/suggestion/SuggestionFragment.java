@@ -301,11 +301,11 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     private void processUserNearByDistance() {
         double longitude = gps.getLongitude();
         double latitude = gps.getLatitude();
-        MZDebug.i("longitude: " + longitude + ", longitude: " + latitude);
+        MZDebug.i("longitude: " + longitude + ", lat: " + latitude);
         currentLatLng = new LatLng(latitude, longitude);
 
-        LatLng neLocation = new LatLng(latitude - 20, longitude - 20);
-        LatLng wsLocation = new LatLng(latitude + 20, longitude + 20);
+        LatLng neLocation = new LatLng(latitude +1, longitude +1);
+        LatLng wsLocation = new LatLng(latitude -1, longitude -1);
 
         getPresenter().getPeopleNearByUser(currentLatLng, neLocation, wsLocation);
     }

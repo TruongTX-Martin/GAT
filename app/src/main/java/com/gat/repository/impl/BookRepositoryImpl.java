@@ -1,6 +1,7 @@
 package com.gat.repository.impl;
 
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.repository.BookRepository;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Book;
@@ -47,6 +48,26 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public Observable<List<BookResponse>> suggestBooksAfterLogin() {
         return Observable.defer(()-> networkDataSourceLazy.get().suggestBooksAfterLogin());
+    }
+
+    @Override
+    public Observable<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage) {
+        return Observable.defer(()-> networkDataSourceLazy.get().searchBookByTitle(title, userId, page, sizeOfPage));
+    }
+
+    @Override
+    public Observable<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage) {
+        return Observable.defer(()->networkDataSourceLazy.get().searchBookByAuthor(author, userId, page, sizeOfPage));
+    }
+
+    @Override
+    public Observable<List<String>> getBooksSearchedKeyword() {
+        return Observable.defer(()->networkDataSourceLazy.get().getBooksSearchedKeyword());
+    }
+
+    @Override
+    public Observable<List<String>> getAuthorsSearchedKeyword() {
+        return Observable.defer(()->networkDataSourceLazy.get().getAuthorsSearchedKeyword());
     }
 
 }

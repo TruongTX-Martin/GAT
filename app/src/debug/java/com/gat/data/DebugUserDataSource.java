@@ -6,7 +6,10 @@ import com.gat.common.util.MZDebug;
 import com.gat.data.api.GatApi;
 import com.gat.data.exception.LoginException;
 import com.gat.data.id.LongId;
+import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
@@ -241,6 +244,36 @@ public class DebugUserDataSource implements UserDataSource {
 
         return responseObservable.map(response -> {
             List<UserNearByDistance> list = response.body().data().getResultInfo();
+            return list;
+        });
+    }
+
+
+    @Override
+    public Observable<DataResultListResponse<UserResponse>> searchUser
+            (String name, int page, int sizeOfPage) {
+        MZDebug.i("_____________________________________ searchUser _____________________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> responseObservable;
+        responseObservable = api.searchUser(name, page, sizeOfPage);
+
+        return responseObservable.map( response -> {
+            DataResultListResponse<UserResponse> data = response.body().data();
+            return data;
+        });
+    }
+
+    @Override
+    public Observable<List<String>> getUsersSearchedKeyword() {
+        MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
+        responseObservable = api.getUsersSearchedKeyword();
+
+        return responseObservable.map( response -> {
+            List<String> list = response.body().data().getResultInfo();
             return list;
         });
     }

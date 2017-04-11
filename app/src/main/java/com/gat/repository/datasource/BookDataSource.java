@@ -1,6 +1,7 @@
 package com.gat.repository.datasource;
 
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.repository.entity.Book;
 
 import java.util.List;
@@ -22,4 +23,14 @@ public interface BookDataSource {
     Observable<List<BookResponse>> suggestBooksWithoutLogin();
 
     Observable<List<BookResponse>> suggestBooksAfterLogin();
+
+    Observable<DataResultListResponse<BookResponse>> searchBookByTitle
+            (String title, long userId, int page, int sizeOfPage);
+
+    Observable<DataResultListResponse<BookResponse>> searchBookByAuthor
+            (String author, long userId, int page, int sizeOfPage);
+
+    Observable<List<String>> getBooksSearchedKeyword();
+
+    Observable<List<String>> getAuthorsSearchedKeyword();
 }

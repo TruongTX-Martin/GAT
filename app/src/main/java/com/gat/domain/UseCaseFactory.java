@@ -3,7 +3,9 @@ package com.gat.domain;
 import android.support.annotation.Nullable;
 
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.LoginData;
@@ -53,4 +55,17 @@ public interface UseCaseFactory {
     UseCase<List<BookResponse>> suggestBooks();
 
     UseCase<List<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
+
+    UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage);
+
+    UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage);
+
+    UseCase<DataResultListResponse<UserResponse>> searchUser (String name, int page, int sizeOfPage);
+
+    UseCase<List<String>> getBooksSearchedKeyword();
+
+    UseCase<List<String>> getAuthorsSearchedKeyword();
+
+    UseCase<List<String>> getUsersSearchedKeyword();
+
 }

@@ -75,8 +75,8 @@ public class ShareNearByUserDistanceActivity
     private double mCurrentLatitude;
     private LatLng mCurrentLatLng;
     private LatLng mCenterLatLng;
-    private LatLng mTopLeftLatLng;
-    private LatLng mBottomRightLatLng;
+    private LatLng mWSLatLng;
+    private LatLng mNELatLng;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Marker mCurrentLocationMaker;
@@ -269,8 +269,8 @@ public class ShareNearByUserDistanceActivity
 
         LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
         mCenterLatLng = new LatLng(curScreen.getCenter().latitude, curScreen.getCenter().longitude);
-        mTopLeftLatLng = new LatLng(curScreen.southwest.latitude, curScreen.southwest.longitude);
-        mBottomRightLatLng = new LatLng(curScreen.northeast.latitude, curScreen.northeast.longitude);
+        mWSLatLng = new LatLng(curScreen.southwest.latitude, curScreen.southwest.longitude);
+        mNELatLng = new LatLng(curScreen.northeast.latitude, curScreen.northeast.longitude);
 
         switch (mReasonMapMoved) {
             case GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE: {
@@ -284,11 +284,11 @@ public class ShareNearByUserDistanceActivity
             case GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION: {
                 MZDebug.w("____The camera has stopped moving BY DEVELOPER_____ FIRST TIME _______");
 
-                MZDebug.w("TopLeft: lat= " + curScreen.southwest.latitude
+                MZDebug.w("southwest: lat= " + curScreen.southwest.latitude
                         + ", long= " + curScreen.southwest.longitude);
-                MZDebug.w("BottomRight: lat= " + curScreen.northeast.latitude
+                MZDebug.w("northeast: lat= " + curScreen.northeast.latitude
                         + ", long= " +curScreen.northeast.longitude );
-                getPresenter().requestUserNearOnTheMap(mCenterLatLng, mTopLeftLatLng, mBottomRightLatLng);
+                getPresenter().requestUserNearOnTheMap(mCenterLatLng, mNELatLng, mWSLatLng);
                 break;
             }
         }

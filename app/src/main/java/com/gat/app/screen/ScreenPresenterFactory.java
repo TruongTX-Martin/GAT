@@ -44,6 +44,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getMainPresenter();
         else if (key instanceof ShareNearByUserDistanceScreen)
             return (P) presenterComponent.getShareNearByUserDistancePresenter();
+        else if (key instanceof SuggestSearchScreen)
+            return (P) presenterComponent.getSuggestSearchPresenter();
 
         throw new IllegalArgumentException("Not support key " + key);
     }

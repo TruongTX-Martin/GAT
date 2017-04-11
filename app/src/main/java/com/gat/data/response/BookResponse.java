@@ -8,28 +8,42 @@ import com.google.gson.annotations.SerializedName;
 public class BookResponse {
 
     @SerializedName("editionId")
-    public long editionId;
+    private long editionId;
 
     @SerializedName("bookId")
-    public long bookId;
+    private long bookId;
 
     @SerializedName("title")
-    public String title;
+    private String title;
 
     @SerializedName("imageId")
-    public String imageId;
+    private String imageId;
 
     @SerializedName("author")
-    public String author;
+    private String author;
 
     @SerializedName("rateAvg")
-    public float rateAvg;
+    private float rateAvg;
 
     @SerializedName("borrowingCount")
-    public int borrowingCount;
+    private int borrowingCount;
 
     @SerializedName("sharingCount")
-    public int sharingCount;
+    private int sharingCount;
+
+    @SerializedName("rateCount")
+    private int rateCount;
+
+    @SerializedName("reviewCount")
+    private int reviewCount;
+
+    public int getRateCount() {
+        return rateCount;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
 
     public long getEditionId() {
         return editionId;

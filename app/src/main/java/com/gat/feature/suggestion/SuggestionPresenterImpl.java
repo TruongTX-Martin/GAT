@@ -82,7 +82,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                     resultBooksSuggestSubject.onNext(listBook);
                 })
                 .onError(throwable -> {
-                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________" + throwable.getCause().getMessage());
+                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
 //                    errorSubject.onNext(Log.getStackTraceString(throwable));
                 })
                 .execute();
@@ -104,7 +104,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                 })
                 .onError(throwable -> {
 
-                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________" + throwable.getCause().getMessage());
+                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
 //                    errorSubject.onNext(Log.getStackTraceString(throwable));
                 }).execute();
     }

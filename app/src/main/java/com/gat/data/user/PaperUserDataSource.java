@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.gat.common.util.Strings;
 import com.gat.data.id.LongId;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
@@ -154,5 +156,15 @@ public class PaperUserDataSource implements UserDataSource {
     @Override
     public Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance(float currentLongitude, float currentLatitude, float neLongitude, float neLatitude, float wsLongitude, float wsLatitude) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<String>> getUsersSearchedKeyword() {
+        return null;
     }
 }
