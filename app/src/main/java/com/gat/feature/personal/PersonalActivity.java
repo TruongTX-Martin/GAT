@@ -175,6 +175,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         }
         if(fragmentBookReading == null) {
             fragmentBookReading = new FragmentReadingBook();
+            fragmentBookReading.setParrentActivity(this);
         }
         if (fragmentBookRequest == null) {
             fragmentBookRequest = new FragmentBookRequest();

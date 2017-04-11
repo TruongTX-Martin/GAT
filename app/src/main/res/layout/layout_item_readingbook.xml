@@ -17,40 +17,15 @@
             android:layout_margin="10dp"
             android:src="@drawable/twitter_btn" />
 
-        <LinearLayout
-            android:id="@+id/layoutRight"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:orientation="vertical"
-            android:paddingTop="20dp"
-            >
-
             <ImageView
                 android:id="@+id/imgExtend"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:src="@drawable/ic_extend"
-                android:layout_gravity="center_horizontal"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
                 />
-            <Switch
-                android:id="@+id/mySwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:thumb="@drawable/switch_custom_selector"
-                android:track="@drawable/switch_custom_track"
-                />
-            <TextView
-                android:id="@+id/txtShared"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:text="Cho mượn"
-                />
-        </LinearLayout>
 
         <TextView
             android:id="@+id/txtName"

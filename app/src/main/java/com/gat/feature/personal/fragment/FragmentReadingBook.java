@@ -1,16 +1,23 @@
 package com.gat.feature.personal.fragment;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.gat.R;
+import com.gat.common.util.ClientUtils;
+import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookReadingAdapter;
 import com.gat.feature.personal.entity.BookReadingEntity;
 
@@ -29,9 +36,13 @@ public class FragmentReadingBook extends Fragment {
     private List<BookReadingEntity> listBookReading = new ArrayList<>();
     private Context context;
     private BookReadingAdapter adapter;
+    private RelativeLayout layoutBottom;
+    private PersonalActivity parrentActivity;
 
 
-
+    public void setParrentActivity(PersonalActivity parrentActivity) {
+        this.parrentActivity = parrentActivity;
+    }
     public void setListBookReading(List<BookReadingEntity> listBookReading) {
         if(listBookReading.size() >0 ) {
             this.listBookReading.clear();
@@ -45,6 +56,12 @@ public class FragmentReadingBook extends Fragment {
                              Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
         rootView = inflater.inflate(R.layout.layout_fragment_book_reading, container, false);
+        initView();
+        handleEvent();
+        return rootView;
+    }
+
+    private void initView(){
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerReading);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(context);
@@ -52,6 +69,57 @@ public class FragmentReadingBook extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         adapter = new BookReadingAdapter(context,listBookReading);
         recyclerView.setAdapter(adapter);
-        return rootView;
+
+        layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
+    }
+
+    private void handleEvent() {
+        layoutBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogFilter();
+            }
+        });
+    }
+
+    private void showDialogFilter() {
+        LayoutInflater inflater = LayoutInflater.from(parrentActivity);
+        View customView = inflater.inflate(R.layout.layout_popup_book_reading_filter, null);
+        PopupWindow popupWindow = new PopupWindow(customView,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setOutsideTouchable(true);
+        ImageView imgClose = (ImageView) customView.findViewById(R.id.imgClose);
+        RelativeLayout layoutReadedBorder = (RelativeLayout) customView.findViewById(R.id.layoutReadedBorder);
+        RelativeLayout layoutReadedOverlay = (RelativeLayout) customView.findViewById(R.id.layoutReadedOverlay);
+        RelativeLayout layoutReadingBorder = (RelativeLayout) customView.findViewById(R.id.layoutReadingBorder);
+        RelativeLayout layoutReadingOverlay = (RelativeLayout) customView.findViewById(R.id.layoutReadingOverLay);
+        RelativeLayout layoutToReadBorder = (RelativeLayout) customView.findViewById(R.id.layoutToReadBorder);
+        RelativeLayout layoutToReadOverlay = (RelativeLayout) customView.findViewById(R.id.layoutToReadOverlay);
+        layoutReadedBorder.setOnClickListener(v -> {
+
+        });
+        layoutReadedOverlay.setOnClickListener(v -> {
+
+        });
+        layoutReadingBorder.setOnClickListener(v -> {
+
+        });
+        layoutReadingOverlay.setOnClickListener(v -> {
+
+        });
+        layoutToReadBorder.setOnClickListener(v -> {
+
+        });
+        layoutToReadOverlay.setOnClickListener(v -> {
+
+        });
+        imgClose.setOnClickListener(v -> {
+            popupWindow.dismiss();
+        });
+        popupWindow.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
+
     }
 }
