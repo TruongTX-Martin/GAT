@@ -2,24 +2,34 @@ package com.gat.feature.personal.fragment;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.style.EndlessRecyclerViewScrollListener;
+import com.gat.common.style.EndlessScrollListener;
 import com.gat.common.util.ClientUtils;
 import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookReadingAdapter;
+import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingEntity;
+import com.gat.feature.personal.entity.BookReadingInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,23 +42,36 @@ public class FragmentReadingBook extends Fragment {
 
 
     private RecyclerView recyclerView;
+//    private RecyclerView.LayoutManager layoutManager;
+    LinearLayoutManager layoutManager;
     private View rootView;
     private List<BookReadingEntity> listBookReading = new ArrayList<>();
     private Context context;
     private BookReadingAdapter adapter;
     private RelativeLayout layoutBottom;
     private PersonalActivity parrentActivity;
-
+    private BookReadingInput currentInput;
+    private boolean isReaded,isReading,isToRead;
+    private boolean isRequesting = false;
+    private TextView txtMessage;
+    private ProgressBar progressBar;
 
     public void setParrentActivity(PersonalActivity parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
+
+    public void setCurrentInput(BookReadingInput currentInput) {
+        this.currentInput = currentInput;
+    }
+
     public void setListBookReading(List<BookReadingEntity> listBookReading) {
         if(listBookReading.size() >0 ) {
             this.listBookReading.clear();
             this.listBookReading.addAll(listBookReading);
-            adapter.notifyDataSetChanged();
         }
+        isRequesting = false;
+        hideLoading();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -64,25 +87,82 @@ public class FragmentReadingBook extends Fragment {
     private void initView(){
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerReading);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(mLayoutManager1);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        layoutManager = new GridLayoutManager(getActivity(), 1);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         adapter = new BookReadingAdapter(context,listBookReading);
         recyclerView.setAdapter(adapter);
 
         layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
+        txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
     }
 
+    private int visibleThreshold = 5;
+    private int lastVisibleItem, totalItemCount;
+
     private void handleEvent() {
-        layoutBottom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialogFilter();
-            }
-        });
+        layoutBottom.setOnClickListener(v -> showDialogFilter());
+//        recyclerView.setOnScrollListener((new RecyclerView.OnScrollListener() {
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                visibleItemCount = recyclerView.getChildCount();
+//                totalItemCount = layoutManager.getItemCount();
+//                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+//
+//                if (isRequesting) {
+//                    if (totalItemCount > previousTotal) {
+//                        previousTotal = totalItemCount;
+//                    }
+//                }
+//                if (!isRequesting && (totalItemCount - visibleItemCount)
+//                        <= (firstVisibleItem + visibleThreshold)) {
+//                    ClientUtils.showToast("Load more");
+//                }
+//            }
+//        }));
+        recyclerView
+                .addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView,
+                                           int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+
+                        totalItemCount = layoutManager.getItemCount();
+                        lastVisibleItem = layoutManager
+                                .findLastVisibleItemPosition();
+                        if (!loading
+                                && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                            // End has been reached
+                            // Do something
+                            if (onLoadMoreListener != null) {
+                                onLoadMoreListener.onLoadMore();
+                            }
+                            loading = true;
+                        }
+                    }
+                });
+    }
+
+    private void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+    }
+
+    private void hideLoading() {
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     private void showDialogFilter() {
+        if(currentInput == null){
+            return;
+        }
+        isReaded = currentInput.isReadFilter();isReading = currentInput.isReadingFilter();isToRead = currentInput.isToReadFilter();
         LayoutInflater inflater = LayoutInflater.from(parrentActivity);
         View customView = inflater.inflate(R.layout.layout_popup_book_reading_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
@@ -99,27 +179,81 @@ public class FragmentReadingBook extends Fragment {
         RelativeLayout layoutToReadBorder = (RelativeLayout) customView.findViewById(R.id.layoutToReadBorder);
         RelativeLayout layoutToReadOverlay = (RelativeLayout) customView.findViewById(R.id.layoutToReadOverlay);
         layoutReadedBorder.setOnClickListener(v -> {
-
+            layoutReadedBorder.setVisibility(View.GONE);
+            layoutReadedOverlay.setVisibility(View.VISIBLE);
+            isReaded = false;
         });
         layoutReadedOverlay.setOnClickListener(v -> {
-
+            layoutReadedOverlay.setVisibility(View.GONE);
+            layoutReadedBorder.setVisibility(View.VISIBLE);
+            isReaded = true;
         });
         layoutReadingBorder.setOnClickListener(v -> {
-
+            layoutReadingOverlay.setVisibility(View.VISIBLE);
+            layoutReadingBorder.setVisibility(View.GONE);
+            isReading = false;
         });
         layoutReadingOverlay.setOnClickListener(v -> {
-
+            layoutReadingOverlay.setVisibility(View.GONE);
+            layoutReadingBorder.setVisibility(View.VISIBLE);
+            isReading = true;
         });
         layoutToReadBorder.setOnClickListener(v -> {
-
+            layoutToReadBorder.setVisibility(View.GONE);
+            layoutToReadOverlay.setVisibility(View.VISIBLE);
+            isToRead = false;
         });
         layoutToReadOverlay.setOnClickListener(v -> {
-
+            layoutToReadOverlay.setVisibility(View.GONE);
+            layoutToReadBorder.setVisibility(View.VISIBLE);
+            isToRead = true;
         });
         imgClose.setOnClickListener(v -> {
+            if (currentInput.isReadFilter() == isReaded && currentInput.isReadingFilter() == isReading
+                    && currentInput.isToReadFilter() == isToRead){
+                //do nothing
+            }else{
+                currentInput.setReadingFilter(isReading);
+                currentInput.setReadFilter(isReaded);
+                currentInput.setToReadFilter(isToRead);
+                currentInput.setPage(1);
+                searchBook(currentInput);
+            }
             popupWindow.dismiss();
         });
-        popupWindow.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
+        if(currentInput.isReadFilter()){
+            layoutReadedBorder.setVisibility(View.VISIBLE);
+            layoutReadedOverlay.setVisibility(View.GONE);
+        }else{
+            layoutReadedBorder.setVisibility(View.GONE);
+            layoutReadedOverlay.setVisibility(View.VISIBLE);
+        }
+        if(currentInput.isReadingFilter()){
+            layoutReadingBorder.setVisibility(View.VISIBLE);
+            layoutReadingOverlay.setVisibility(View.GONE);
+        }else{
+            layoutReadingBorder.setVisibility(View.GONE);
+            layoutReadingOverlay.setVisibility(View.VISIBLE);
+        }
+        if(currentInput.isToReadFilter()){
+            layoutToReadBorder.setVisibility(View.VISIBLE);
+            layoutToReadOverlay.setVisibility(View.GONE);
+        }else{
+            layoutToReadBorder.setVisibility(View.GONE);
+            layoutToReadOverlay.setVisibility(View.VISIBLE);
+        }
 
+        popupWindow.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
     }
+
+    private void searchBook(BookReadingInput input) {
+        isRequesting = true;
+        parrentActivity.requestReadingBooks(input);
+        if(input.getPage() == 1){
+            txtMessage.setVisibility(View.GONE);
+            showLoading();
+            listBookReading.clear();
+        }
+    }
+
 }

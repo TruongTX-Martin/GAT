@@ -290,7 +290,8 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     }
 
     //request reading book
-    private void requestReadingBooks(BookReadingInput input){
+    public void requestReadingBooks(BookReadingInput input){
         getPresenter().requestReadingBooks(input);
+        fragmentBookReading.setCurrentInput(input);
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.util.ClientUtils;
 import com.gat.feature.personal.entity.BookReadingEntity;
 
 import java.util.List;
@@ -39,6 +40,9 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
             if (entity != null) {
                 holder.txtName.setText(entity.getTitle());
                 holder.txtAuthor.setText(entity.getAuthor());
+            }
+            if(position == (getItemCount() -1)){
+                ClientUtils.showToast("Load more");
             }
     }
 
