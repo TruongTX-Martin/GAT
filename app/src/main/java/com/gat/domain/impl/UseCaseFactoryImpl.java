@@ -2,7 +2,10 @@ package com.gat.domain.impl;
 
 import android.support.annotation.Nullable;
 
+import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.*;
 import com.gat.repository.BookRepository;
@@ -106,18 +109,48 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Book>> suggestMostBorrowing() {
+    public UseCase<List<BookResponse>> suggestMostBorrowing() {
         return new SuggestMostBorrowing(bookRepositoryLazy.get());
     }
 
     @Override
-    public UseCase<List<Book>> suggestBooks() {
+    public UseCase<List<BookResponse>> suggestBooks() {
         return new SuggestBooks(bookRepositoryLazy.get());
     }
 
     @Override
     public UseCase<List<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation) {
         return new PeopleNearByUser(userRepositoryLazy.get(), userLocation, neLocation, wsLocation);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage) {
+        return new SearchBookByTitle(bookRepositoryLazy.get(), title, userId, page, sizeOfPage);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage) {
+        return new SearchBookByAuthor(bookRepositoryLazy.get(), author, userId, page, sizeOfPage);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        return new SearchUser(userRepositoryLazy.get(), name, page, sizeOfPage);
+    }
+
+    @Override
+    public UseCase<List<String>> getBooksSearchedKeyword() {
+        return new GetBooksSearchedKeyword(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<String>> getAuthorsSearchedKeyword() {
+        return new GetAuthorsSearchedKeyword(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<String>> getUsersSearchedKeyword() {
+        return new GetUsersSearchedKeyword(userRepositoryLazy.get());
     }
 
 }

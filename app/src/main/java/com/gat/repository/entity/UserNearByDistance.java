@@ -3,11 +3,6 @@ package com.gat.repository.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.gat.common.util.Strings;
-import com.google.auto.value.AutoValue;
-import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
-
 /**
  * Created by mozaa on 01/04/2017.
  */
@@ -21,6 +16,9 @@ public class UserNearByDistance implements Parcelable{
     private float latitude;
     private float longitude;
     private float distance;
+    private long sharingCount;
+    private long readCount;
+
 
     public long getUserId() {
         return userId;
@@ -54,18 +52,12 @@ public class UserNearByDistance implements Parcelable{
         return distance;
     }
 
-    @Override
-    public String toString() {
-        return "UserNearByDistance{" +
-                "userId=" + userId +
-                ", name='" + name + '\'' +
-                ", imageId='" + imageId + '\'' +
-                ", address='" + address + '\'' +
-                ", locationType=" + locationType +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", distance=" + distance +
-                '}';
+    public long getSharingCount() {
+        return sharingCount;
+    }
+
+    public long getReadCount() {
+        return readCount;
     }
 
 
@@ -79,6 +71,8 @@ public class UserNearByDistance implements Parcelable{
         latitude = in.readFloat();
         longitude = in.readFloat();
         distance = in.readFloat();
+        sharingCount = in.readLong();
+        readCount = in.readLong();
     }
 
     @Override
@@ -96,7 +90,10 @@ public class UserNearByDistance implements Parcelable{
         dest.writeFloat(latitude);
         dest.writeFloat(longitude);
         dest.writeFloat(distance);
+        dest.writeLong(sharingCount);
+        dest.writeLong(readCount);
     }
+
     // Creator
     public static final Parcelable.Creator
             CREATOR = new Parcelable.Creator() {
@@ -108,4 +105,21 @@ public class UserNearByDistance implements Parcelable{
             return new UserNearByDistance[size];
         }
     };
+
+
+    @Override
+    public String toString() {
+        return "UserNearByDistance{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", imageId='" + imageId + '\'' +
+                ", address='" + address + '\'' +
+                ", locationType=" + locationType +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", distance=" + distance +
+                ", sharingCount=" + sharingCount +
+                ", readCount=" + readCount +
+                '}';
+    }
 }

@@ -4,7 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,10 +23,12 @@ import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.TrackGPS;
+import com.gat.data.response.BookResponse;
 import com.gat.feature.main.MainActivity;
-import com.gat.feature.register.update.location.AddLocationActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceActivity;
-import com.gat.repository.entity.Book;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
+import com.gat.feature.suggestion.search.SuggestSearchActivity;
+import com.gat.feature.suggestion.search.SuggestSearchScreen;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -62,6 +64,8 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     private CompositeDisposable disposables;
     private BookSuggestAdapter mMostBorrowingAdapter;
     private BookSuggestAdapter mBookSuggestAdapter;
+    private List<BookResponse> mListBookMostBorrowing;
+    private List<BookResponse> mListBookSuggest;
 
     private TrackGPS gps;
     private List<UserNearByDistance> mListUserDistance;
@@ -85,6 +89,8 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListBookMostBorrowing = new ArrayList<>();
+        mListBookSuggest = new ArrayList<>();
     }
 
     @Nullable
@@ -120,8 +126,13 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     public void onStart() {
         super.onStart();
 
-        getPresenter().suggestMostBorrowing();
-        getPresenter().suggestBooks();
+        if (mListBookMostBorrowing.isEmpty()) {
+            getPresenter().suggestMostBorrowing();
+        }
+        if (mListBookSuggest.isEmpty()) {
+            getPresenter().suggestBooks();
+        }
+
         processLocationToUpdateUserShareNearByDistance();
     }
 
@@ -141,28 +152,52 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         disposables.dispose();
     }
 
+    @OnClick(R.id.button_go_setting)
+    void onButtonGoSettingToEnablePermissionTap() {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
+    }
 
     @OnClick(R.id.image_button_search)
     void onSearchButtonTap() {
-        // TODO start search activity
+        MainActivity.start(mContext, SuggestSearchActivity.class, SuggestSearchScreen.instance());
     }
 
     @OnClick(R.id.button_more_sharing_near)
     void onMoreSharingNearTap() {
-        Intent intent = new Intent(mContext, ShareNearByUserDistanceActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(ShareNearByUserDistanceActivity.PASS_LIST_USER_DISTANCE,
-                (ArrayList<? extends Parcelable>) mListUserDistance);
-        bundle.putDouble(ShareNearByUserDistanceActivity.PASS_USER_LOCATION_LATITUDE, currentLatLng.latitude);
-        bundle.putDouble(ShareNearByUserDistanceActivity.PASS_USER_LOCATION_LONGITUDE, currentLatLng.longitude);
-        intent.putExtras(bundle);
-        startActivity(intent);
+
+        MainActivity.start(mContext, ShareNearByUserDistanceActivity.class, ShareNearByUserDistanceScreen.instance());
+
+//        getActivity().finish();
+//
+//        Intent intent = new Intent(mContext, ShareNearByUserDistanceActivity.class);
+//        Bundle bundle = new Bundle();
+//
+//        intent.putExtra(EXTRA_SCREEN, new ParcelableScreen(ShareNearByUserDistanceScreen.instance()))
+//                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//        bundle.putParcelableArrayList(ShareNearByUserDistanceActivity.PASS_LIST_USER_DISTANCE,
+//                (ArrayList<? extends Parcelable>) mListUserDistance);
+//        bundle.putDouble(ShareNearByUserDistanceActivity.PASS_USER_LOCATION_LATITUDE, currentLatLng.latitude);
+//        bundle.putDouble(ShareNearByUserDistanceActivity.PASS_USER_LOCATION_LONGITUDE, currentLatLng.longitude);
+//        intent.putExtras(bundle);
+//        startActivity(intent);
     }
 
     void onPeopleNearByUserByDistanceSuccess(List<UserNearByDistance> list) {
-        MZDebug.d("onPeopleNearByUserByDistance Success");
-
+        MZDebug.i("_________________________________________ onPeopleNearByUserByDistance Success");
         if (llUserNearSuggest.getChildCount() > 0) {
+            return;
+        }
+
+        if (null == list || list.isEmpty()) {
+            TextView textView = new TextView(mContext);
+            textView.setText(mContext.getResources().getString(R.string.msg_no_user_near));
+            textView.setWidth(llUserNearSuggest.getWidth());
+            textView.setHeight(llUserNearSuggest.getHeight());
+
+            llUserNearSuggest.addView(textView);
             return;
         }
 
@@ -181,7 +216,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             TextView textViewName = (TextView) viewItem.findViewById(R.id.tv_people_near_suggest_name);
 
             // set data
-            if ( ! userItem.getImageId().isEmpty()) {
+            if ( null != userItem.getImageId() && ! userItem.getImageId().isEmpty()) {
                 Glide.with(getActivity()).
                         load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
                                 + userItem.getImageId() + "?size=t").into(imageViewAvatar);
@@ -199,25 +234,28 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         }
     }
 
-    void onTopBorrowingSuccess(List<Book> list) {
-        // setup adapter
-        if (list == null) {
-            MZDebug.w("LIST onTopBorrowingSuccess = NULL");
+    void onTopBorrowingSuccess(List<BookResponse> list) {
+        mListBookMostBorrowing.addAll(list);
+        if (null == mMostBorrowingAdapter) {
+            mMostBorrowingAdapter = new BookSuggestAdapter(mContext, mListBookMostBorrowing);
+            mRecyclerViewMostBorrowing.setAdapter(mMostBorrowingAdapter);
             return;
         }
-
-        mMostBorrowingAdapter = new BookSuggestAdapter(mContext, list);
-        mRecyclerViewMostBorrowing.setAdapter(mMostBorrowingAdapter);
+        mMostBorrowingAdapter.notifyDataSetChanged();
     }
 
-    void onSuggestBooksSuccess(List<Book> list) {
-        // setup adapter
-        mBookSuggestAdapter = new BookSuggestAdapter(getActivity(), list);
-        mRecyclerViewSuggestBooks.setAdapter(mBookSuggestAdapter);
+    void onSuggestBooksSuccess(List<BookResponse> list) {
+        mListBookSuggest.addAll(list);
+        if (null == mBookSuggestAdapter) {
+            mBookSuggestAdapter = new BookSuggestAdapter(getActivity(), mListBookSuggest);
+            mRecyclerViewSuggestBooks.setAdapter(mBookSuggestAdapter);
+            return;
+        }
+        mBookSuggestAdapter.notifyDataSetChanged();
     }
 
     void onError(String message) {
-        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        MZDebug.e(message);
     }
 
     @Override
@@ -229,13 +267,23 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
     @AfterPermissionGranted(PERMISSION_ACCESS_COARSE_LOCATION)
     private void processLocationToUpdateUserShareNearByDistance() {
-        MZDebug.w("processLocationToUpdateUserShareNearByDistance");
+        MZDebug.i("_______________________________ processLocationToUpdateUserShareNearByDistance");
         if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            // Have permission, do the thing!
-            processUserNearByDistance();
+
+            MZDebug.w("onPermissionsDenied -_- ");
+            if (gps == null) {
+                gps = new TrackGPS(getActivity());
+            }
+            if (gps.isGPSAvailable()) {
+                // Have permission, remove button request permission
+                llUserNearSuggest.removeAllViews();
+
+                // request list user near
+                processUserNearByDistance();
+            }
         } else {
             // Request one permission
-            EasyPermissions.requestPermissions(this, "Location permission is required! Ops! Ops!",
+            EasyPermissions.requestPermissions(this, mContext.getResources().getString(R.string.msg_allow_location),
                     PERMISSION_ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
         }
     }
@@ -247,25 +295,17 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        MZDebug.w("onPermissionsDenied");
+
     }
 
     private void processUserNearByDistance() {
-        if (gps == null) {
-            gps = new TrackGPS(getActivity());
-        }
-        if (!gps.canGetLocation()) {
-            Toast.makeText(mContext, "Please, Enable location.", Toast.LENGTH_SHORT).show();
-            MZDebug.w("gps can not get location");
-            return;
-        }
         double longitude = gps.getLongitude();
         double latitude = gps.getLatitude();
-        MZDebug.i("longitude: " + longitude + ", longitude: " + latitude);
+        MZDebug.i("longitude: " + longitude + ", lat: " + latitude);
         currentLatLng = new LatLng(latitude, longitude);
 
-        LatLng neLocation = new LatLng(latitude - 20, longitude - 20);
-        LatLng wsLocation = new LatLng(latitude + 20, longitude + 20);
+        LatLng neLocation = new LatLng(latitude +1, longitude +1);
+        LatLng wsLocation = new LatLng(latitude -1, longitude -1);
 
         getPresenter().getPeopleNearByUser(currentLatLng, neLocation, wsLocation);
     }

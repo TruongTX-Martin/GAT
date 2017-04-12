@@ -2,7 +2,9 @@ package com.gat.repository.impl;
 
 import android.location.Address;
 
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
@@ -131,6 +133,16 @@ public class UserRepositoryImpl implements UserRepository {
                         (float) userLocation.longitude, (float) userLocation.latitude,
                         (float) neLocation.longitude, (float) neLocation.latitude,
                         (float) wsLocation.longitude, (float) wsLocation.latitude));
+    }
+
+    @Override
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        return Observable.defer(()->networkUserDataSourceLazy.get().searchUser(name,page,sizeOfPage));
+    }
+
+    @Override
+    public Observable<List<String>> getUsersSearchedKeyword() {
+        return Observable.defer(()->networkUserDataSourceLazy.get().getUsersSearchedKeyword());
     }
 
 }

@@ -9,6 +9,7 @@ import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
+import com.gat.feature.suggestion.search.SuggestSearchScreen;
 import com.rey.mvp2.Presenter;
 import com.rey.mvp2.PresenterFactory;
 
@@ -43,6 +44,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getMainPresenter();
         else if (key instanceof ShareNearByUserDistanceScreen)
             return (P) presenterComponent.getShareNearByUserDistancePresenter();
+        else if (key instanceof SuggestSearchScreen)
+            return (P) presenterComponent.getSuggestSearchPresenter();
 
         throw new IllegalArgumentException("Not support key " + key);
     }

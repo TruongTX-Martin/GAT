@@ -70,6 +70,9 @@
         <activity android:name=".feature.suggestion.nearby_user.ShareNearByUserDistanceActivity" >
         </activity>
 
+        <activity android:name=".feature.suggestion.search.SuggestSearchActivity" >
+        </activity>
+
 
         <service
             android:name=".data.service.FetchAddressIntentService"

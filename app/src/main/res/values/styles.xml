@@ -31,6 +31,17 @@
         <item name="tabGravity">fill</item>
     </style>
 
+
+    <style name="TabLayoutSubViewStyle" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorBlueDark</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabTextAppearance">@style/TabTextAppearanceSubViewStyle</item>
+    </style>
+
+    <style name="TabTextAppearanceSubViewStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">8sp</item>
         <item name="android:textColor">@android:color/black</item>

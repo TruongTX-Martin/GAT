@@ -2,8 +2,10 @@ package com.gat.repository.datasource;
 
 import android.location.Address;
 
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
@@ -59,6 +61,10 @@ public interface UserDataSource {
              float neLongitude, float neLatitude,
              float wsLongitude, float wsLatitude);
 
+    Observable<DataResultListResponse<UserResponse>>
+    searchUser (String name, int page, int sizeOfPage);
+
+    Observable<List<String>> getUsersSearchedKeyword();
 
 
 }

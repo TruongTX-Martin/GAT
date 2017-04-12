@@ -7,15 +7,21 @@
 
     <dimen name="sizeLoadingHeight">96dp</dimen>
 
+    <dimen name="margin_top_bottom_small">5dp</dimen>
+    <dimen name="margin_top_bottom_normal">10dp</dimen>
+    <dimen name="margin_top_bottom_large">15dp</dimen>
+
     <dimen name="margin_left_right">50dp</dimen>
 
+    <dimen name="smaller_textsize">10sp</dimen>
+    <dimen name="small_textsize">13sp</dimen>
+    <dimen name="normal_textsize">18sp</dimen>
+
+    <dimen name="smaller_text_view_size">10sp</dimen>
     <dimen name="small_text_view_size">12sp</dimen>
     <dimen name="normal_text_view_size">14sp</dimen>
     <dimen name="large_text_view_size">16sp</dimen>
-
-    <dimen name="small_textsize">13sp</dimen>
-
-    <dimen name="normal_textsize">18sp</dimen>
+    <dimen name="larger_text_view_size">18sp</dimen>
 
     <dimen name="header_textsize">24sp</dimen>
 
@@ -30,7 +36,6 @@
     <dimen name="category_width">100dp</dimen>
     <dimen name="header_height">80dp</dimen>
 
-
     <dimen name="navigation_header_height">72dp</dimen>
     <dimen name="navigation_main_height">60dp</dimen>
 
@@ -38,9 +43,9 @@
     <dimen name="rating_bar_height">12dp</dimen>
     <dimen name="item_sharing_near_height">100dp</dimen>
     <dimen name="item_book_suggest_width">100dp</dimen>
-    <dimen name="item_book_suggest_height">180dp</dimen>
     <dimen name="btn_margin_lr">20dp</dimen>
     <dimen name="btn_margin_bt">20dp</dimen>
+    <dimen name="item_book_suggest_height">160dp</dimen>
 
 
 </resources>
