@@ -54,7 +54,7 @@ public class FragmentReadingBook extends Fragment {
     private boolean isReaded,isReading,isToRead;
     private boolean isRequesting = false;
     private TextView txtMessage;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar,progressBarLoadMore;
 
     public void setParrentActivity(PersonalActivity parrentActivity) {
         this.parrentActivity = parrentActivity;
@@ -91,7 +91,7 @@ public class FragmentReadingBook extends Fragment {
         layoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new BookReadingAdapter(context,listBookReading);
+        adapter = new BookReadingAdapter(context,listBookReading,this);
         recyclerView.setAdapter(adapter);
 
         layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
@@ -99,53 +99,15 @@ public class FragmentReadingBook extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
     }
 
-    private int visibleThreshold = 5;
-    private int lastVisibleItem, totalItemCount;
 
     private void handleEvent() {
         layoutBottom.setOnClickListener(v -> showDialogFilter());
-//        recyclerView.setOnScrollListener((new RecyclerView.OnScrollListener() {
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//
-//                visibleItemCount = recyclerView.getChildCount();
-//                totalItemCount = layoutManager.getItemCount();
-//                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-//
-//                if (isRequesting) {
-//                    if (totalItemCount > previousTotal) {
-//                        previousTotal = totalItemCount;
-//                    }
-//                }
-//                if (!isRequesting && (totalItemCount - visibleItemCount)
-//                        <= (firstVisibleItem + visibleThreshold)) {
-//                    ClientUtils.showToast("Load more");
-//                }
-//            }
-//        }));
-        recyclerView
-                .addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(RecyclerView recyclerView,
-                                           int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-
-                        totalItemCount = layoutManager.getItemCount();
-                        lastVisibleItem = layoutManager
-                                .findLastVisibleItemPosition();
-                        if (!loading
-                                && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                            // End has been reached
-                            // Do something
-                            if (onLoadMoreListener != null) {
-                                onLoadMoreListener.onLoadMore();
-                            }
-                            loading = true;
-                        }
-                    }
-                });
+    }
+    public  void loadMore(){
+        if(isRequesting == false) {
+            currentInput.setPage(currentInput.getPage()+1);
+            searchBook(currentInput);
+        }
     }
 
     private void showLoading() {
@@ -158,6 +120,13 @@ public class FragmentReadingBook extends Fragment {
         recyclerView.setVisibility(View.VISIBLE);
     }
 
+    private void showLoadMore(){
+
+    }
+
+    private void hideLoadMore() {
+
+    }
     private void showDialogFilter() {
         if(currentInput == null){
             return;

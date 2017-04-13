@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.util.ClientUtils;
 import com.gat.feature.personal.entity.BookReadingEntity;
+import com.gat.feature.personal.fragment.FragmentReadingBook;
 
 import java.util.List;
 
@@ -22,9 +23,11 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
     private Context context;
     private List<BookReadingEntity> listBookReading;
     private LayoutInflater inflate;
-    public BookReadingAdapter(Context context, List<BookReadingEntity> list) {
+    private FragmentReadingBook fragment;
+    public BookReadingAdapter(Context context, List<BookReadingEntity> list, FragmentReadingBook readingBook) {
         this.context = context;
         this.listBookReading = list;
+        this.fragment = readingBook;
         inflate = LayoutInflater.from(context);
     }
 
@@ -41,8 +44,8 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
                 holder.txtName.setText(entity.getTitle());
                 holder.txtAuthor.setText(entity.getAuthor());
             }
-            if(position == (getItemCount() -1)){
-                ClientUtils.showToast("Load more");
+            if(position == (getItemCount() -2)){
+                fragment.loadMore();
             }
     }
 
