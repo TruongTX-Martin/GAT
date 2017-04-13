@@ -38,10 +38,10 @@
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:textCursorDrawable="@null"
-                android:imeActionLabel="Search"
-                android:imeOptions="actionUnspecified"
+                android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
+                android:lines="1"
                 android:layout_marginRight="45dp" />
 
             <ImageButton

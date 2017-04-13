@@ -116,16 +116,6 @@ public interface GatApi {
     Observable<Response<ServerResponse<ResultInfoList<BookResponse>>>> suggestAfterLogin (
     );
 
-
-    // api v1
-    @GET("search/nearby_user_by_distance")
-    Observable<Response<ServerResponse<ResultInfoList<UserNearByDistance>>>> getPeopleNearByUserV1 (
-            @Query("longitude") float currentLongitude,
-            @Query("latitude") float currentLatitude
-
-    );
-
-    // api v2
     @GET("search/nearby_user")
     Observable<Response<ServerResponse<ResultInfoList<UserNearByDistance>>>> getPeopleNearByUser (
             @Query("currentLat") float currentLatitude,
@@ -136,15 +126,16 @@ public interface GatApi {
             @Query("wsLong") float wsLongitude
     );
 
+    @FormUrlEncoded
     @POST("search/book_by_title")
     Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> searchBookByTitle (
             @Field("title") String title,
             @Field("userId") long userId,
-            @Query("page") int page,
-            @Query("per_page") int perPage
+            @Field("page") int page,
+            @Field("per_page") int perPage
     );
 
-
+    @FormUrlEncoded
     @POST("search/book_by_author")
     Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> searchBookByAuthor (
             @Field("authorName") String author,
@@ -153,8 +144,8 @@ public interface GatApi {
             @Query("per_page") int perPage
     );
 
-
-    @POST("search/book_by_user")
+    @FormUrlEncoded
+    @POST("search/user")
     Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> searchUser (
             @Field("name") String title,
             @Query("page") int page,

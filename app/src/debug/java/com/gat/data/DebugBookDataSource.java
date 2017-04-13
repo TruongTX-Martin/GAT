@@ -147,7 +147,7 @@ public class DebugBookDataSource implements BookDataSource {
             (String title, long userId, int page, int sizeOfPage) {
         MZDebug.i("____________________________ searchBookByTitle _______________________________");
 
-        GatApi api = dataComponent.getPublicGatApi();
+        GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> responseObservable;
         responseObservable = api.searchBookByTitle(title, userId, page, sizeOfPage);
 

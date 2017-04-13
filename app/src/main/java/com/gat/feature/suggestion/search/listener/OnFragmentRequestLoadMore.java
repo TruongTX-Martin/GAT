@@ -6,10 +6,6 @@ package com.gat.feature.suggestion.search.listener;
 
 public interface OnFragmentRequestLoadMore {
 
-    void requestLoadMoreBookSearchByTitle();
-
-    void requestLoadMoreBookSearchByAuthor();
-
-    void requestLoadMoreUserSearchByName();
+    void requestLoadMoreSearchResult();
 
 }

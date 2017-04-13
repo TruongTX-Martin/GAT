@@ -5,24 +5,37 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.MZDebug;
+import com.gat.data.response.BookResponse;
+import com.gat.data.response.UserResponse;
 import com.gat.feature.suggestion.search.listener.OnFragmentRequestLoadMore;
+import com.gat.feature.suggestion.search.listener.OnLoadHistorySuccess;
+import com.gat.feature.suggestion.search.listener.OnSearchBookResult;
+import com.gat.feature.suggestion.search.listener.OnSearchUserResult;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.disposables.CompositeDisposable;
+import android.support.design.widget.TabLayout.OnTabSelectedListener;
 
 /**
  * Created by mryit on 4/9/2017.
  */
 
 public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, SuggestSearchPresenter>
-        implements OnFragmentRequestLoadMore{
+        implements OnFragmentRequestLoadMore, EditText.OnEditorActionListener{
 
     @BindView(R.id.tab_layout)
     TabLayout mTabLayout;
@@ -33,7 +46,6 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     @BindView(R.id.edit_text_search)
     EditText editTextSearch;
 
-
     @Retention(RetentionPolicy.SOURCE)
     public @interface TAB_POS {
         int TAB_BOOK    = 0;
@@ -43,6 +55,13 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     private int mCurrentTab = 0;
     private ProgressDialog progressDialog;
+    private CompositeDisposable disposables;
+    private OnLoadHistorySuccess onSearchBookHistorySuccess;
+    private OnLoadHistorySuccess onSearchAuthorHistorySuccess;
+    private OnLoadHistorySuccess onSearchUserHistorySuccess;
+    private OnSearchBookResult onSearchBookResult;
+    private OnSearchBookResult onSearchAuthorResult;
+    private OnSearchUserResult onSearchUserResult;
 
     @Override
     protected int getLayoutResource() {
@@ -59,60 +78,36 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         return SuggestSearchScreen.instance();
     }
 
-    @OnClick(R.id.button_cancel)
-    void onButtonCancelTap () {
-        finish();
-        overridePendingTransition( R.anim.no_change, R.anim.push_down );
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        disposables = new CompositeDisposable(
+                getPresenter().onLoadHistorySearchBookSuccess().subscribe(this::onLoadHistorySearchBookSuccess),
+                getPresenter().onLoadHistorySearchAuthorSuccess().subscribe(this::onLoadHistorySearchAuthorSuccess),
+                getPresenter().onLoadHistorySearchUserSuccess().subscribe(this::onLoadHistorySearchUserSuccess),
+                getPresenter().onSearchBookWithTitleSuccess().subscribe(this::onSearchBookWithTitleSuccess),
+                getPresenter().onSearchBookWithAuthorSuccess().subscribe(this::onSearchBookWithAuthorSuccess),
+                getPresenter().onSearchUserWithNameSuccess().subscribe(this::onSearchUserWithNameSuccess)
+        );
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading..");
 
         setupViewPager(mViewPager);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mCurrentTab = tab.getPosition();
-            }
+        mTabLayout.addOnTabSelectedListener(onTabSelectedListener);
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+        // listen whenever user tap on search button
+        editTextSearch.setOnEditorActionListener(this);
+    }
 
-            }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        editTextSearch.setOnEditorActionListener((view, actionId, event) -> {
-            if (actionId != EditorInfo.IME_ACTION_UNSPECIFIED) {
-                MZDebug.w("ACTION IS NOT IME_ACTION_SEARCH. ");
-                return true;
-            }
-
-            switch (mCurrentTab) {
-                case TAB_POS.TAB_AUTHOR:
-                    MZDebug.w("TAB_AUTHOR: " + editTextSearch.getText().toString());
-                    break;
-
-                case TAB_POS.TAB_BOOK:
-                    MZDebug.w("TAB_BOOK: " + editTextSearch.getText().toString());
-                    break;
-
-                case TAB_POS.TAB_USER:
-                    MZDebug.w("TAB_USER: " + editTextSearch.getText().toString());
-                    break;
-            }
-
-            return true;
-        });
+        // request list history search book by title
+        getPresenter().loadHistorySearchBook();
     }
 
     @Override
@@ -122,24 +117,129 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new SearchBookFragment(this), "Tên sách");
-        adapter.addFragment(new SearchAuthorFragment(), "Tác giả");
-        adapter.addFragment(new SearchUserFragment(), "Người dùng");
+
+        SearchResultFragment searchResultFragment = new SearchResultFragment(TAB_POS.TAB_BOOK, this);
+        adapter.addFragment(searchResultFragment, getResources().getString(R.string.tab_book_name));
+        onSearchBookHistorySuccess = searchResultFragment;
+        onSearchBookResult = searchResultFragment;
+
+        SearchResultFragment searchAuthorFragment = new SearchResultFragment(TAB_POS.TAB_AUTHOR, this);
+        adapter.addFragment(searchAuthorFragment,  getResources().getString(R.string.tab_book_author));
+        onSearchAuthorHistorySuccess = searchAuthorFragment;
+        onSearchAuthorResult = searchAuthorFragment;
+
+        SearchResultFragment searchUserFragment = new SearchResultFragment(TAB_POS.TAB_USER, this);
+        adapter.addFragment(searchUserFragment,  getResources().getString(R.string.tab_user_name));
+        onSearchUserHistorySuccess = searchUserFragment;
+        onSearchUserResult = searchUserFragment;
+
         viewPager.setAdapter(adapter);
     }
 
+    @OnClick(R.id.button_cancel)
+    void onButtonCancelTap () {
+        finish();
+        overridePendingTransition( R.anim.no_change, R.anim.push_down );
+    }
+
+    OnTabSelectedListener onTabSelectedListener = new OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            mCurrentTab = tab.getPosition();
+
+            switch (mCurrentTab) {
+                case TAB_POS.TAB_BOOK:
+                    MZDebug.w("_______________________________ Request list history BOOK");
+                    getPresenter().loadHistorySearchBook();
+                    break;
+                case TAB_POS.TAB_AUTHOR:
+                    MZDebug.w("________________________________ Request list history AUTHOR");
+                    getPresenter().loadHistorySearchAuthor();
+                    break;
+                case TAB_POS.TAB_USER:
+                    MZDebug.w("_______________________________ Request list history USER");
+                    getPresenter().loadHistorySearchUser();
+                    break;
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
+
     @Override
-    public void requestLoadMoreBookSearchByTitle() {
-        MZDebug.e("requestLoadMoreBookSearchByTitle TAP");
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId != EditorInfo.IME_ACTION_SEARCH) {
+            MZDebug.w("ACTION IS NOT IME_ACTION_SEARCH. ");
+            return true;
+        }
+
+        switch (mCurrentTab) {
+            case TAB_POS.TAB_BOOK:
+                MZDebug.w("_____________________ TAB_BOOK: " + editTextSearch.getText().toString());
+                getPresenter().searchBookWithTitle(editTextSearch.getText().toString());
+                break;
+
+            case TAB_POS.TAB_AUTHOR:
+                MZDebug.w("___________________ TAB_AUTHOR: " + editTextSearch.getText().toString());
+                getPresenter().searchBookWithAuthor(editTextSearch.getText().toString());
+                break;
+
+            case TAB_POS.TAB_USER:
+                MZDebug.w("_____________________ TAB_USER: " + editTextSearch.getText().toString());
+                getPresenter().searchUserWithName(editTextSearch.getText().toString());
+                break;
+        }
+
+        return true;
     }
 
     @Override
-    public void requestLoadMoreBookSearchByAuthor() {
+    public void requestLoadMoreSearchResult() {
+        switch (mCurrentTab) {
+            case TAB_POS.TAB_BOOK:
+                getPresenter().loadMoreBookWithTitle();
+                break;
 
+            case TAB_POS.TAB_AUTHOR:
+                getPresenter().loadMoreBookWithAuthor();
+                break;
+
+            case TAB_POS.TAB_USER:
+                getPresenter().loadMoreUserWithName();
+                break;
+        }
     }
 
-    @Override
-    public void requestLoadMoreUserSearchByName() {
-
+    private void onLoadHistorySearchBookSuccess (List<String> list) {
+        onSearchBookHistorySuccess.onLoadHistoryResult(new ArrayList<>());
     }
+
+    private void onLoadHistorySearchAuthorSuccess (List<String> list) {
+        onSearchAuthorHistorySuccess.onLoadHistoryResult(new ArrayList<>());
+    }
+
+    private void onLoadHistorySearchUserSuccess (List<String> list) {
+        onSearchUserHistorySuccess.onLoadHistoryResult(new ArrayList<>());
+    }
+
+    private void onSearchBookWithTitleSuccess (List<BookResponse> list) {
+        onSearchBookResult.onSearchBookResult(list);
+    }
+
+    private void onSearchBookWithAuthorSuccess (List<BookResponse> list) {
+        onSearchAuthorResult.onSearchBookResult(list);
+    }
+
+    private void onSearchUserWithNameSuccess (List<UserResponse> list) {
+        onSearchUserResult.onSearchUserResult(list);
+    }
+
 }

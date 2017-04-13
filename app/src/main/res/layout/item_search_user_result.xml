@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/paddingLarge">
+
+    <com.gat.common.customview.CircleImage
+        android:id="@+id/image_view_user"
+        android:src="@drawable/demo_book_cover"
+        android:layout_width="60dp"
+        android:layout_marginRight="@dimen/margin_horizontal_large"
+        android:layout_height="60dp" />
+    
+    <TextView
+        android:id="@+id/text_view_user_name"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/margin_top_bottom_normal"
+        android:text="Steve Job"
+        android:layout_toEndOf="@+id/image_view_user"
+        android:maxLines="1"
+        android:textColor="@color/colorTextViewDark"
+        android:textSize="@dimen/larger_text_view_size"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_view_address"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/margin_top_bottom_normal"
+        android:text="Steve Job"
+        android:layout_toEndOf="@+id/image_view_user"
+        android:textColor="@color/colorTextViewGray"
+        android:maxLines="1"
+        android:layout_below="@+id/text_view_user_name"
+        android:textSize="@dimen/large_text_view_size"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>
