@@ -16,6 +16,7 @@ import com.gat.dependency.DataComponent;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -248,6 +249,20 @@ public class DebugUserDataSource implements UserDataSource {
     public Observable<Data> getBookInstance(BookInstanceInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter(),input.getPage(),input.getPer_page());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<Data> getBookRequest(BookRequestInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookRequest(input.getParamSharing(),input.getParamBorrow(),input.getPage(),input.getPer_page());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = response.body();
             if (serverResponse == null) {

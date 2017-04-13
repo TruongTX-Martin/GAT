@@ -6,6 +6,7 @@ import com.gat.data.response.ServerResponse;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.ChangeBookSharingStatus;
 import com.gat.domain.usecase.GetBookInstance;
+import com.gat.domain.usecase.GetBookRequest;
 import com.gat.domain.usecase.GetLoginData;
 import com.gat.domain.usecase.GetReadingBooks;
 import com.gat.domain.usecase.GetUser;
@@ -25,6 +26,7 @@ import com.gat.domain.usecase.WorkUseCase;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
@@ -143,5 +145,10 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<Data> getReadingBooks(BookReadingInput input) {
         return new GetReadingBooks(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<Data> getBookRequest(BookRequestInput input) {
+        return new GetBookRequest(userRepositoryLazy.get(),input);
     }
 }

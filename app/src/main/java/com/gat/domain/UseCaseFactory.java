@@ -8,6 +8,7 @@ import com.gat.domain.usecase.UseCase;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -56,4 +57,5 @@ public interface UseCaseFactory {
     UseCase<Data> getBookInstance(BookInstanceInput input);
     UseCase<Data> changeBookSharingStatus(BookChangeStatusInput input);
     UseCase<Data> getReadingBooks(BookReadingInput input);
+    UseCase<Data> getBookRequest(BookRequestInput input);
 }

@@ -10,6 +10,7 @@ import com.gat.domain.usecase.UseCase;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.Data;
 
 import io.reactivex.Observable;
@@ -57,6 +58,12 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private Subject<BookReadingInput> readingBookInputSubject;
     private Subject<ServerResponse<ResponseData>> readingBookError;
 
+    //get data book request
+    private CompositeDisposable requestBooksDisposable;
+    private UseCase<Data> requestBooksUsecase;
+    private Subject<Data> requestBookResultSubject;
+    private Subject<BookRequestInput> requestBookInputSubject;
+    private Subject<ServerResponse<ResponseData>> requestBookError;
 
     public PersonalPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
@@ -78,6 +85,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         this.readingBookError = PublishSubject.create();
         readingBookResultSubject = PublishSubject.create();
         readingBookInputSubject = BehaviorSubject.create();
+
+        this.requestBookError = PublishSubject.create();
+        requestBookResultSubject = PublishSubject.create();
+        requestBookInputSubject =  BehaviorSubject.create();
     }
 
     @Override
@@ -93,6 +104,9 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
         readingBooksDisposable = new CompositeDisposable(readingBookInputSubject.
                 observeOn(schedulerFactory.main()).subscribe(this::getReadingBooks));
+
+        requestBooksDisposable = new CompositeDisposable(requestBookInputSubject.
+                observeOn(schedulerFactory.main()).subscribe(this::getRequestBookData));
         //start get personal data
         personalInputSubject.onNext("");
     }
@@ -102,6 +116,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         personalDisposable.dispose();
         bookInstanceDisposable.dispose();
         changeBookSharingStatusDisposable.dispose();
+        requestBooksDisposable.dispose();
     }
 
     @Override
@@ -157,6 +172,38 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorReadingBooks() {
         return readingBookError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestBookRequests(BookRequestInput input) {
+        requestBookInputSubject.onNext(input);
+    }
+
+    @Override
+    public Observable<Data> getResponseBookRequest() {
+        return requestBookResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<ServerResponse<ResponseData>> onErrorBookRequest() {
+        return requestBookError.observeOn(schedulerFactory.main());
+    }
+
+    private void getRequestBookData(BookRequestInput input) {
+        requestBooksUsecase = UseCases.release(requestBooksUsecase);
+        requestBooksUsecase = useCaseFactory.getBookRequest(input);
+        requestBooksUsecase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(response -> {
+                    requestBookResultSubject.onNext(response);
+                })
+                .onError(throwable -> {
+                    requestBookError.onError(throwable);
+                })
+                .onStop(
+                        () -> requestBooksUsecase = UseCases.release(requestBooksUsecase)
+                )
+                .execute();
     }
 
     private void getPersonalData(String input) {

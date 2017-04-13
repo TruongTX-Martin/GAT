@@ -5,10 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.util.Constance;
+import com.gat.common.util.Strings;
 import com.gat.feature.personal.entity.BookReadingEntity;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
 
@@ -43,8 +46,11 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
             if (entity != null) {
                 holder.txtName.setText(entity.getTitle());
                 holder.txtAuthor.setText(entity.getAuthor());
+                if(!Strings.isNullOrEmpty(entity.getEditionImageId())){
+                    ClientUtils.setImage(holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getEditionImageId(), Constance.IMAGE_SIZE_SMALL));
+                }
             }
-            if(position == (getItemCount() -2)){
+            if(getItemCount() > 9 && position == (getItemCount() -1)){
                 fragment.loadMore();
             }
     }
@@ -57,10 +63,12 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
 
     public class  BookReadingViewHolder extends RecyclerView.ViewHolder{
         TextView txtName,txtAuthor;
+        ImageView imgAvatar;
         public BookReadingViewHolder(View itemView) {
             super(itemView);
             txtName = (TextView) itemView.findViewById(R.id.txtName);
             txtAuthor = (TextView) itemView.findViewById(R.id.txtAuthor);
+            imgAvatar = (ImageView) itemView.findViewById(R.id.imgAvatar);
         }
     }
 }

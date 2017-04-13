@@ -90,4 +90,18 @@ public class Data<T> {
     public int getReadingTotal() {
         return readingTotal;
     }
+
+    //property for request book
+    @SerializedName("borrowingTotal")
+    private int borrowingTotal;
+
+    @SerializedName("waitingTotal")
+    private int waitingTotal;
+
+    @SerializedName("sharingTotal")
+    private int sharingTotal;
+
+    public int getBorrowingTotal() {
+        return borrowingTotal;
+    }
 }

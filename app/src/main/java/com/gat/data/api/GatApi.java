@@ -117,6 +117,15 @@ public interface GatApi {
             @Query("per_page") int per_page
     );
 
+    @GET("share/get_book_request")
+    Observable<Response<ServerResponse<Data>>> getBookRequest(
+            @Query("sharingFilter") String sharingFilter,
+            @Query("borrowingFilter") String borrowingFilter,
+            @Query("page") int page,
+            @Query("per_page") int per_page
+    );
+
+
     @FormUrlEncoded
     @POST("book/selfchange_instance_stt")
     Observable<Response<ServerResponse<Data>>> changeBookSharingStatus(

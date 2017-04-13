@@ -25,6 +25,7 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.user.PaperUserDataSource;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingEntity;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.BookSharingEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
@@ -45,9 +46,9 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by truongtechno on 23/03/2017.
  */
 
-public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPresenter> {
+public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPresenter> {
 
-//    @BindView(R.id.imgAvatar)
+    //    @BindView(R.id.imgAvatar)
     CircleImageView imgAvatar;
 
     @BindView(R.id.txtName)
@@ -66,6 +67,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     private CompositeDisposable disposablesBookInstance;
     private CompositeDisposable disposablesChangeBookSharingStatus;
     private CompositeDisposable disposablesReadingBooks;
+    private CompositeDisposable disposablesBooksRequest;
 
     //init fragment
     private FragmentBookSharing fragmentBookSharing;
@@ -76,6 +78,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     private TextView txtNumberRequest;
 
     private UserInfo userInfo;
+
     @Override
     protected PersonalScreen getDefaultScreen() {
         return PersonalScreen.instance();
@@ -90,6 +93,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     protected Class<PersonalPresenter> getPresenterClass() {
         return PersonalPresenter.class;
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +112,9 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         disposablesReadingBooks = new CompositeDisposable(getPresenter().getResponseReadingBooks().subscribe(this::getReadingBooksSuccess),
                 getPresenter().onErrorReadingBooks().subscribe(this::getBookInstanceError));
 
+        disposablesBooksRequest = new CompositeDisposable(getPresenter().getResponseBookRequest().subscribe(this::getBookRequestSuccess),
+                getPresenter().onErrorBookRequest().subscribe(this::getBookInstanceError));
+
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
@@ -116,9 +123,11 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
 //        BookInstanceInput input = new BookInstanceInput(true, false, false);
 //        requestBookInstance(input);
         handleEvent();
+//        BookRequestInput input = new BookRequestInput(true,true,true,true);
+//        requestBookRequest(input);
     }
 
-    private void handleEvent(){
+    private void handleEvent() {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -136,9 +145,10 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
             }
         });
     }
+
     private void setupTabIcons() {
 
-        View tabOne =  LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
+        View tabOne = LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabOne = (ImageView) tabOne.findViewById(R.id.imgCircle);
         imgTabOne.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_loanbook));
         txtNumberSharing = (TextView) tabOne.findViewById(R.id.txtNumber);
@@ -147,7 +157,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         txtTitleOne.setText("Sách cho mượn");
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
-        View tabTwo =  LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
+        View tabTwo = LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabTwo = (ImageView) tabTwo.findViewById(R.id.imgCircle);
         imgTabTwo.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_readingbook));
         txtNumberReading = (TextView) tabTwo.findViewById(R.id.txtNumber);
@@ -156,7 +166,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         txtTitleTwo.setText("Sách đang đọc");
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 //
-        View tabThree =  LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
+        View tabThree = LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabThree = (ImageView) tabThree.findViewById(R.id.imgCircle);
         imgTabThree.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_requestbook));
         txtNumberRequest = (TextView) tabThree.findViewById(R.id.txtNumber);
@@ -169,11 +179,11 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        if(fragmentBookSharing == null){
+        if (fragmentBookSharing == null) {
             fragmentBookSharing = new FragmentBookSharing();
             fragmentBookSharing.setParrentActivity(this);
         }
-        if(fragmentBookReading == null) {
+        if (fragmentBookReading == null) {
             fragmentBookReading = new FragmentReadingBook();
             fragmentBookReading.setParrentActivity(this);
         }
@@ -223,8 +233,8 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
     }
 
     //handle data personal return
-    private void getUserInfoSuccess(Data data){
-        if(data != null){
+    private void getUserInfoSuccess(Data data) {
+        if (data != null) {
             userInfo = (UserInfo) data.getDataReturn(UserInfo.class);
             if (!Strings.isNullOrEmpty(userInfo.getName())) {
                 txtName.setText(userInfo.getName());
@@ -236,13 +246,14 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
                 String url = ClientUtils.getUrlImage(userInfo.getImageid(), Constance.IMAGE_SIZE_ORIGINAL);
                 ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
             }
-            if(userInfo.getUserId() > 0) {
-                BookReadingInput readingInput = new BookReadingInput(true,false,false);
+            if (userInfo.getUserId() > 0) {
+                BookReadingInput readingInput = new BookReadingInput(true, false, false);
                 readingInput.setUserId(userInfo.getUserId());
                 requestReadingBooks(readingInput);
             }
         }
     }
+
     private void getUserInfoError(ServerResponse<ResponseData> error) {
         Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
     }
@@ -253,35 +264,49 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         getPresenter().requestBookInstance(input);
     }
 
+    //change status book
+    public void requestChangeStatusBook(BookChangeStatusInput input) {
+        getPresenter().requestChangeBookSharingStatus(input);
+    }
+
+    //request reading book
+    public void requestReadingBooks(BookReadingInput input) {
+        getPresenter().requestReadingBooks(input);
+        fragmentBookReading.setCurrentInput(input);
+    }
+
+    //request bookrequest
+    public  void requestBookRequest(BookRequestInput input){
+        getPresenter().requestBookRequests(input);
+    }
+
     //handle get bookInstance return
-    private void getBookInstanceSuccess(Data data){
-        if(data != null) {
+    private void getBookInstanceSuccess(Data data) {
+        if (data != null) {
             int totalSharing = data.getTotalSharing();
-            txtNumberSharing.setText(totalSharing+"");
+            txtNumberSharing.setText(totalSharing + "");
             int totalNotSharing = data.getTotalNotSharing();
             int lostTotal = data.getLostTotal();
             List<BookSharingEntity> listBook = data.getListDataReturn(BookSharingEntity.class);
             fragmentBookSharing.setListBook(listBook);
         }
     }
-    private void getBookInstanceError(ServerResponse<ResponseData> error){
+
+    private void getBookInstanceError(ServerResponse<ResponseData> error) {
         Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
     }
 
-    //change status book
-    public  void requestChangeStatusBook(BookChangeStatusInput input){
-        getPresenter().requestChangeBookSharingStatus(input);
-    }
 
-    private void changeBookSharingStatusSuccess(Data data){
-        if(data != null) {
+    private void changeBookSharingStatusSuccess(Data data) {
+        if (data != null) {
             System.out.println("Data:" + data);
         }
     }
+
     private void getReadingBooksSuccess(Data data) {
-        if(data != null) {
+        if (data != null) {
             int totalReading = data.getReadingTotal();
-            if(totalReading > 0) {
+            if (totalReading > 0) {
                 txtNumberReading.setText(totalReading + "");
             }
             List<BookReadingEntity> listReading = data.getListDataReturn(BookReadingEntity.class);
@@ -289,9 +314,9 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen,PersonalPres
         }
     }
 
-    //request reading book
-    public void requestReadingBooks(BookReadingInput input){
-        getPresenter().requestReadingBooks(input);
-        fragmentBookReading.setCurrentInput(input);
+    private void getBookRequestSuccess(Data data) {
+        System.out.println(data);
     }
+
+
 }

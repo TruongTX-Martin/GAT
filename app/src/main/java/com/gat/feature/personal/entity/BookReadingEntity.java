@@ -63,6 +63,10 @@ public class BookReadingEntity {
         return author;
     }
 
+    public String getEditionImageId() {
+        return editionImageId;
+    }
+
     public String getBorrowFromUserName() {
         return borrowFromUserName;
     }

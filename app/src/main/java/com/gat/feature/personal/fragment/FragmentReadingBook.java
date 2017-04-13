@@ -2,15 +2,12 @@ package com.gat.feature.personal.fragment;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
-import com.gat.common.style.EndlessRecyclerViewScrollListener;
-import com.gat.common.style.EndlessScrollListener;
-import com.gat.common.util.ClientUtils;
 import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookReadingAdapter;
-import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingEntity;
 import com.gat.feature.personal.entity.BookReadingInput;
 
@@ -65,12 +58,13 @@ public class FragmentReadingBook extends Fragment {
     }
 
     public void setListBookReading(List<BookReadingEntity> listBookReading) {
-        if(listBookReading.size() >0 ) {
+        if(currentInput.getPage() == 1){
             this.listBookReading.clear();
-            this.listBookReading.addAll(listBookReading);
         }
+        this.listBookReading.addAll(listBookReading);
         isRequesting = false;
         hideLoading();
+        hideLoadMore();
         adapter.notifyDataSetChanged();
     }
 
@@ -97,6 +91,7 @@ public class FragmentReadingBook extends Fragment {
         layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
         txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressBarLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
     }
 
 
@@ -107,6 +102,7 @@ public class FragmentReadingBook extends Fragment {
         if(isRequesting == false) {
             currentInput.setPage(currentInput.getPage()+1);
             searchBook(currentInput);
+            showLoadMore();
         }
     }
 
@@ -121,11 +117,11 @@ public class FragmentReadingBook extends Fragment {
     }
 
     private void showLoadMore(){
-
+        progressBarLoadMore.setVisibility(View.VISIBLE);
     }
 
     private void hideLoadMore() {
-
+        progressBarLoadMore.setVisibility(View.GONE);
     }
     private void showDialogFilter() {
         if(currentInput == null){
