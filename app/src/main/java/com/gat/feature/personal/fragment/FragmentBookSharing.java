@@ -45,6 +45,7 @@ public class FragmentBookSharing extends Fragment {
     private int firstVisibleItem, visibleItemCount,totalItemCount;
     private boolean isRequesting = false;
 
+    private RelativeLayout layoutBottom;
     public void setParrentActivity(PersonalActivity parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
@@ -80,6 +81,7 @@ public class FragmentBookSharing extends Fragment {
         progressLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
         imgFilter = (ImageView) rootView.findViewById(R.id.imgFilter);
         txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
+        layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
         lvBookSharing.setAdapter(adapterBookSharing);
         handleEvent();
         showLoading();
@@ -89,7 +91,7 @@ public class FragmentBookSharing extends Fragment {
     }
 
     private void handleEvent() {
-        imgFilter.setOnClickListener(v -> {
+        layoutBottom.setOnClickListener(v -> {
             showDialogFilter();
         });
         lvBookSharing.setOnScrollListener(new AbsListView.OnScrollListener() {

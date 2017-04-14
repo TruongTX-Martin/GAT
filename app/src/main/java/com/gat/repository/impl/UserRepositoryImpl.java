@@ -5,9 +5,10 @@ import android.location.Address;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.LoginData;
@@ -137,7 +138,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
-        return Observable.defer(()->networkUserDataSourceLazy.get().searchUser(name,page,sizeOfPage));
+        return Observable.defer(() -> networkUserDataSourceLazy.get().searchUser(name, page, sizeOfPage));
+    }
+    @Override
+    public Observable<Data> getBookRequest(BookRequestInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookRequest(input));
+    }
+
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().changeBookSharingStatus(input));
     }
 
     @Override

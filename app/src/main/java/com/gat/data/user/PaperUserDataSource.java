@@ -4,27 +4,25 @@ import android.location.Address;
 import android.util.Log;
 
 import com.gat.common.util.Strings;
-import com.gat.data.id.LongId;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 
 import java.util.List;
 
 import io.paperdb.Book;
 import io.paperdb.Paper;
 import io.reactivex.Observable;
-import okhttp3.Response;
 
 /**
  * Created by Rey on 2/23/2017.
@@ -39,7 +37,6 @@ public class PaperUserDataSource implements UserDataSource {
     private static final String KEY_RESET_TOKEN = "resetToken";
     private static final String KEY_VERIFY_TOKEN = "verifiedToken";
     private static final String KEY_LOGIN_TOKEN = "loginToken";
-
     private final Book book = Paper.book(BOOK);
 
     @Override
@@ -160,6 +157,15 @@ public class PaperUserDataSource implements UserDataSource {
 
     @Override
     public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+
+    }
+    @Override
+    public Observable<Data> getBookRequest(BookRequestInput instanceInput) {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
         return null;
     }
 

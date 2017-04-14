@@ -5,6 +5,7 @@ import com.gat.data.response.ServerResponse;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.Data;
 import com.rey.mvp2.Presenter;
 
@@ -31,4 +32,8 @@ public interface PersonalPresenter extends Presenter{
     void requestReadingBooks(BookReadingInput input);
     Observable<Data> getResponseReadingBooks();
     Observable<ServerResponse<ResponseData>> onErrorReadingBooks();
+
+    void requestBookRequests(BookRequestInput input);
+    Observable<Data> getResponseBookRequest();
+    Observable<ServerResponse<ResponseData>> onErrorBookRequest();
 }

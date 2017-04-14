@@ -8,6 +8,29 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.*;
+import com.gat.domain.usecase.ChangeBookSharingStatus;
+import com.gat.domain.usecase.GetBookInstance;
+import com.gat.domain.usecase.GetBookRequest;
+import com.gat.domain.usecase.GetLoginData;
+import com.gat.domain.usecase.GetReadingBooks;
+import com.gat.domain.usecase.GetUser;
+import com.gat.domain.usecase.Login;
+import com.gat.domain.usecase.GetPersonalData;
+import com.gat.domain.usecase.Register;
+import com.gat.domain.usecase.ResetPassword;
+import com.gat.domain.usecase.SearchBookByIsbn;
+import com.gat.domain.usecase.SearchBookByKeyword;
+import com.gat.domain.usecase.SendRequestResetPassword;
+import com.gat.domain.usecase.TransformUseCase;
+import com.gat.domain.usecase.UpdateCategory;
+import com.gat.domain.usecase.UpdateLocation;
+import com.gat.domain.usecase.UseCase;
+import com.gat.domain.usecase.VerifyResetToken;
+import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
@@ -33,7 +56,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     private final Lazy<UserRepository> userRepositoryLazy;
 
     public UseCaseFactoryImpl(Lazy<BookRepository> bookRepositoryLazy,
-                              Lazy<UserRepository> userRepositoryLazy){
+                              Lazy<UserRepository> userRepositoryLazy) {
         this.bookRepositoryLazy = bookRepositoryLazy;
         this.userRepositoryLazy = userRepositoryLazy;
     }
@@ -94,11 +117,10 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
 
-
     @Override
     public <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler) {
         TransformUseCase transformUseCase = new TransformUseCase<>(useCase, transformer);
-        if(transformScheduler != null)
+        if (transformScheduler != null)
             transformUseCase.transformOn(transformScheduler);
         return transformUseCase;
     }
@@ -152,5 +174,8 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     public UseCase<List<String>> getUsersSearchedKeyword() {
         return new GetUsersSearchedKeyword(userRepositoryLazy.get());
     }
-
+    @Override
+    public UseCase<Data> getBookRequest(BookRequestInput input) {
+        return new GetBookRequest(userRepositoryLazy.get(), input);
+    }
 }
