@@ -98,8 +98,6 @@ public class Data<T> {
     @SerializedName("waitingTotal")
     private int waitingTotal;
 
-    @SerializedName("sharingTotal")
-    private int sharingTotal;
 
     public int getBorrowingTotal() {
         return borrowingTotal;

@@ -117,7 +117,7 @@ public interface GatApi {
             @Query("per_page") int per_page
     );
 
-    @GET("share/get_book_request")
+    @GET("share/get_book_record")
     Observable<Response<ServerResponse<Data>>> getBookRequest(
             @Query("sharingFilter") String sharingFilter,
             @Query("borrowingFilter") String borrowingFilter,

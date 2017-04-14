@@ -25,6 +25,7 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.user.PaperUserDataSource;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingEntity;
+import com.gat.feature.personal.entity.BookRequestEntity;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.BookSharingEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -123,8 +124,6 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
 //        BookInstanceInput input = new BookInstanceInput(true, false, false);
 //        requestBookInstance(input);
         handleEvent();
-//        BookRequestInput input = new BookRequestInput(true,true,true,true);
-//        requestBookRequest(input);
     }
 
     private void handleEvent() {
@@ -189,6 +188,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
         }
         if (fragmentBookRequest == null) {
             fragmentBookRequest = new FragmentBookRequest();
+            fragmentBookRequest.setParrentActivity(this);
         }
         adapter.addFrag(fragmentBookSharing, "");
         adapter.addFrag(fragmentBookReading, "");
@@ -312,10 +312,18 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
             List<BookReadingEntity> listReading = data.getListDataReturn(BookReadingEntity.class);
             fragmentBookReading.setListBookReading(listReading);
         }
+        BookRequestInput input = new BookRequestInput(true,true,true,true);
+        requestBookRequest(input);
     }
 
     private void getBookRequestSuccess(Data data) {
         System.out.println(data);
+        if(data != null) {
+            int totalBrowing = data.getBorrowingTotal();
+            txtNumberRequest.setText(totalBrowing+"");
+            List<BookRequestEntity> listBookRequest = data.getListDataReturn(BookRequestEntity.class);
+            fragmentBookRequest.setListBookRequest(listBookRequest);
+        }
     }
 
 

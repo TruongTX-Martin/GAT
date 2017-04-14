@@ -45,7 +45,8 @@ public class FragmentReadingBook extends Fragment {
     private PersonalActivity parrentActivity;
     private BookReadingInput currentInput;
     private boolean isReaded,isReading,isToRead;
-    private boolean isRequesting = false;
+    private boolean isRequesting;
+    private boolean isContinueMore = true;
     private TextView txtMessage;
     private ProgressBar progressBar,progressBarLoadMore;
 
@@ -60,6 +61,9 @@ public class FragmentReadingBook extends Fragment {
     public void setListBookReading(List<BookReadingEntity> listBookReading) {
         if(currentInput.getPage() == 1){
             this.listBookReading.clear();
+        }
+        if(currentInput.getPage() > 1 && listBookReading.size() ==0){
+            isContinueMore = false;
         }
         this.listBookReading.addAll(listBookReading);
         isRequesting = false;
@@ -81,7 +85,6 @@ public class FragmentReadingBook extends Fragment {
     private void initView(){
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerReading);
         recyclerView.setHasFixedSize(true);
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -99,7 +102,7 @@ public class FragmentReadingBook extends Fragment {
         layoutBottom.setOnClickListener(v -> showDialogFilter());
     }
     public  void loadMore(){
-        if(isRequesting == false) {
+        if(isRequesting == false && isContinueMore) {
             currentInput.setPage(currentInput.getPage()+1);
             searchBook(currentInput);
             showLoadMore();
@@ -182,6 +185,7 @@ public class FragmentReadingBook extends Fragment {
                 currentInput.setReadFilter(isReaded);
                 currentInput.setToReadFilter(isToRead);
                 currentInput.setPage(1);
+                isContinueMore = true;
                 searchBook(currentInput);
             }
             popupWindow.dismiss();
