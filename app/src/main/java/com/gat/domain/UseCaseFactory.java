@@ -60,6 +60,8 @@ public interface UseCaseFactory {
 
     UseCase<List<BookResponse>> suggestBooks();
 
+    UseCase<List<BookResponse>> suggestBooksAfterLogin();
+
     UseCase<List<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
 
     UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage);

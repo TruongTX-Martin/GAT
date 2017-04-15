@@ -10,9 +10,11 @@ import com.gat.domain.usecase.UseCase;
 
 import java.util.List;
 
+import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
@@ -63,7 +65,8 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                     resultMostBorrowingSubject.onNext(listBook);
                 })
                 .onError(throwable -> {
-//                    errorSubject.onNext(Log.getStackTraceString(throwable));
+                    MZDebug.e("ERROR: suggestMostBorrowing : _______________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
                 })
                 .execute();
     }
@@ -75,6 +78,43 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
 
     @Override
     public void suggestBooks() {
+
+        // get user login data
+        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
+        loginData.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(result -> {
+                    MZDebug.w("local login: " + result.toString());
+                    if (result.equals(LoginData.EMPTY)) {
+                        doSuggestBookWithoutLogin();
+                    } else {
+                        doSuggestBookAfterLogin();
+                    }
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
+    }
+
+    private void doSuggestBookAfterLogin () {
+        MZDebug.i("______________________________________________________doSuggestBookAfterLogin ");
+        useCaseBookSuggest = useCaseFactory.suggestBooksAfterLogin();
+        useCaseBookSuggest.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(listBook -> {
+                    resultBooksSuggestSubject.onNext(listBook);
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: doSuggestBookAfterLogin ______________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
+    }
+
+    private void doSuggestBookWithoutLogin() {
+        MZDebug.i("___________________________________________________ doSuggestBookWithoutLogin ");
         useCaseBookSuggest = useCaseFactory.suggestBooks();
         useCaseBookSuggest.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
@@ -82,11 +122,12 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                     resultBooksSuggestSubject.onNext(listBook);
                 })
                 .onError(throwable -> {
-                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
-//                    errorSubject.onNext(Log.getStackTraceString(throwable));
+                    MZDebug.e("ERROR: doSuggestBookWithoutLogin ____________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
                 })
                 .execute();
     }
+
 
     @Override
     public Observable<List<BookResponse>> onBookSuggestSuccess() {
@@ -103,8 +144,8 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                     resultListUserNearByDistance.onNext(listUser);
                 })
                 .onError(throwable -> {
-
-                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
+                    MZDebug.e("ERROR: getPeopleNearByUser __________________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
 //                    errorSubject.onNext(Log.getStackTraceString(throwable));
                 }).execute();
     }

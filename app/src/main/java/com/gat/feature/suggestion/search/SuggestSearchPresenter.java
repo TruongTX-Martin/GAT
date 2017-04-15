@@ -3,9 +3,7 @@ package com.gat.feature.suggestion.search;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
 import com.rey.mvp2.Presenter;
-
 import java.util.List;
-
 import io.reactivex.Observable;
 
 /**
@@ -14,23 +12,29 @@ import io.reactivex.Observable;
 
 public interface SuggestSearchPresenter extends Presenter {
 
-    void searchBookWithTitle (String book_title);
-    void loadMoreBookWithTitle(String book_title);
-    Observable<List<BookResponse>> onSearchBookWithTitleSuccess ();
+    void loadHistorySearchBook();
+    Observable<List<String>> onLoadHistorySearchBookSuccess();
 
+    void searchBookWithTitle (String book_title);
+    void loadMoreBookWithTitle();
+    Observable<List<BookResponse>> onSearchBookWithTitleSuccess();
+
+
+    void loadHistorySearchAuthor();
+    Observable<List<String>> onLoadHistorySearchAuthorSuccess();
 
     void searchBookWithAuthor (String author);
-    void loadMoreBookWithAuthor(String author);
-    Observable<List<BookResponse>> onSearchBookWithAuthorSuccess ();
+    void loadMoreBookWithAuthor();
+    Observable<List<BookResponse>> onSearchBookWithAuthorSuccess();
 
+
+    void loadHistorySearchUser();
+    Observable<List<String>> onLoadHistorySearchUserSuccess();
 
     void searchUserWithName (String name);
-    void loadMoreUserWithName (String name);
-    Observable<List<UserResponse>> onSearchUserWithNameSuccess ();
+    void loadMoreUserWithName ();
+    Observable<List<UserResponse>> onSearchUserWithNameSuccess();
 
+    Observable<String> onError();
 
 }
-
-
-
-

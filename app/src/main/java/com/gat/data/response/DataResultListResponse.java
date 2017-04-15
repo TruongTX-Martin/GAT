@@ -10,10 +10,7 @@ import java.util.List;
 
 public class DataResultListResponse<T> {
 
-    @SerializedName("totalResult")
-    private int totalResult;
-
-    @SerializedName("resultInfo")
+    int totalResult;
     List<T> resultInfo;
 
     public int getTotalResult() {

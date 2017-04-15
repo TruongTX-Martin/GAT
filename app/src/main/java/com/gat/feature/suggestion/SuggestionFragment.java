@@ -31,10 +31,8 @@ import com.gat.feature.suggestion.search.SuggestSearchActivity;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;

@@ -29,6 +29,7 @@ import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -297,8 +298,6 @@ public class DebugUserDataSource implements UserDataSource {
             });
         }
 
-
-
     @Override
         public Observable<List<String>> getUsersSearchedKeyword () {
             MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
@@ -307,8 +306,15 @@ public class DebugUserDataSource implements UserDataSource {
             Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
             responseObservable = api.getUsersSearchedKeyword();
 
-            return responseObservable.map(response -> {
-                List<String> list = response.body().data().getResultInfo();
+            List<String> list = new ArrayList<String>();
+            list.add("user 1");
+            list.add("user 2");
+            list.add("user 3");
+            list.add("user 4");
+            list.add("user 5");
+
+            return responseObservable.map( response -> {
+            //            List<String> list = response.body().data().getResultInfo();
                 return list;
             });
         }

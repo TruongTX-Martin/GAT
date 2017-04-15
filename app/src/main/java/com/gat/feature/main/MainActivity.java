@@ -55,6 +55,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     }
 
     @Override
+    protected Object getPresenterKey() {
+        return MainScreen.instance();
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

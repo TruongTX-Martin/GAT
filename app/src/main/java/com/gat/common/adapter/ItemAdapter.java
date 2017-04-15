@@ -75,4 +75,7 @@ public abstract class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder>{
         super.onDetachedFromRecyclerView(recyclerView);
         this.recyclerView = null;
     }
+
+
+
 }

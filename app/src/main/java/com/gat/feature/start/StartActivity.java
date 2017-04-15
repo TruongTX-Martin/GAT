@@ -121,8 +121,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
 
         skip.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), MainActivity.class, MainScreen.instance());
         });
 
         loginBtn.setOnClickListener(view -> {

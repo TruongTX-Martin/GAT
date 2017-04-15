@@ -7,9 +7,13 @@
 
     <dimen name="sizeLoadingHeight">96dp</dimen>
 
-    <dimen name="margin_top_bottom_small">5dp</dimen>
-    <dimen name="margin_top_bottom_normal">10dp</dimen>
-    <dimen name="margin_top_bottom_large">15dp</dimen>
+    <dimen name="margin_top_bottom_small">4dp</dimen>
+    <dimen name="margin_top_bottom_normal">8dp</dimen>
+    <dimen name="margin_top_bottom_large">16dp</dimen>
+
+    <dimen name="margin_horizontal_small">4dp</dimen>
+    <dimen name="margin_horizontal_normal">8dp</dimen>
+    <dimen name="margin_horizontal_large">16dp</dimen>
 
     <dimen name="margin_left_right">50dp</dimen>
 
