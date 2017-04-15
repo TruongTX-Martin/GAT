@@ -9,8 +9,11 @@ import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -140,7 +143,22 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
+    public Observable<Data> getReadingBook(BookReadingInput input) {
+        return null;
+    }
+
+    @Override
     public Observable<List<String>> getUsersSearchedKeyword() {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> getPersonalInfo() {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> getBookInstance(BookInstanceInput instanceInput) {
         return null;
     }
 }

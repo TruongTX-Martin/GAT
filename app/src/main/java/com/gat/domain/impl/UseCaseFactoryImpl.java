@@ -34,6 +34,7 @@ import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -174,8 +175,29 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     public UseCase<List<String>> getUsersSearchedKeyword() {
         return new GetUsersSearchedKeyword(userRepositoryLazy.get());
     }
+
+    @Override
+    public UseCase<Data> getBookInstance(BookInstanceInput input) {
+        return new GetBookInstance(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return new ChangeBookSharingStatus(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> getReadingBooks(BookReadingInput input) {
+        return new GetReadingBooks(userRepositoryLazy.get(), input);
+    }
+
     @Override
     public UseCase<Data> getBookRequest(BookRequestInput input) {
         return new GetBookRequest(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> getUserInfo() {
+        return new GetPersonalData(userRepositoryLazy.get());
     }
 }

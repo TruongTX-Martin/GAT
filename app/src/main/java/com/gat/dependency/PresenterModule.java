@@ -6,6 +6,8 @@ import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.main.MainPresenterImpl;
+import com.gat.feature.personal.PersonalPresenter;
+import com.gat.feature.personal.PersonalPresenterImpl;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.RegisterPresenterImpl;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
@@ -93,5 +95,10 @@ public class PresenterModule {
     SuggestSearchPresenter provideSuggestSearchPresenter(UseCaseFactory useCaseFactory,
                                                          SchedulerFactory schedulerFactory) {
         return new SuggestSearchPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+    @Provides
+    PersonalPresenter providePersonalPresenter(UseCaseFactory useCaseFactory,
+                                               SchedulerFactory schedulerFactory){
+        return  new PersonalPresenterImpl(useCaseFactory,schedulerFactory);
     }
 }

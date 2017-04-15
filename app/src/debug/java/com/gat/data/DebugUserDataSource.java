@@ -18,14 +18,12 @@ import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.dependency.DataComponent;
-<<<<<<<HEAD
-        =======
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
->>>>>>>features/user_page
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -266,10 +264,11 @@ public class DebugUserDataSource implements UserDataSource {
         Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> responseObservable;
         responseObservable = api.searchUser(name, page, sizeOfPage);
 
-        return responseObservable.map(response -> {
-                    DataResultListResponse<UserResponse> data = response.body().data();
-                }
-//            return data;
+        return responseObservable.map( response -> {
+            DataResultListResponse<UserResponse> data = response.body().data();
+            return data;
+        });
+    }
         @Override
         public Observable<Data> getBookRequest (BookRequestInput input){
             GatApi api = dataComponent.getPrivateGatApi();
@@ -298,7 +297,9 @@ public class DebugUserDataSource implements UserDataSource {
             });
         }
 
-        @Override
+
+
+    @Override
         public Observable<List<String>> getUsersSearchedKeyword () {
             MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
 
@@ -312,8 +313,51 @@ public class DebugUserDataSource implements UserDataSource {
             });
         }
 
+    @Override
+    public Observable<Data> getPersonalInfo() {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getPersonalInformation();
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
 
-        @Override
+    @Override
+    public Observable<Data> getBookInstance(BookInstanceInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter(),input.getPage(),input.getPer_page());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<Data> getReadingBook(BookReadingInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getReadingBooks(input.getUserId(),input.isReadingFilter(),input.isToReadFilter(),input.isReadFilter(),input.getPage(),input.getPer_page());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+
+    }
+
+
+    @Override
         public void storeLoginToken (String token){
             throw new UnsupportedOperationException();
         }

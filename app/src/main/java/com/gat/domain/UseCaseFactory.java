@@ -12,6 +12,7 @@ import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Scheduler;
 
@@ -79,4 +81,7 @@ public interface UseCaseFactory {
     UseCase<Data> getReadingBooks(BookReadingInput input);
 
     UseCase<Data> getBookRequest(BookRequestInput input);
+
+    UseCase<Data> getUserInfo();
+
 }

@@ -2,6 +2,7 @@ package com.gat.dependency;
 
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
+import com.gat.feature.personal.PersonalPresenter;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
 import com.gat.feature.register.update.location.AddLocationPresenter;
@@ -31,5 +32,6 @@ public interface PresenterComponent {
     MainPresenter getMainPresenter();
     ShareNearByUserDistancePresenter getShareNearByUserDistancePresenter();
     SuggestSearchPresenter getSuggestSearchPresenter();
+    PersonalPresenter getPersonalPresenter();
 
 }

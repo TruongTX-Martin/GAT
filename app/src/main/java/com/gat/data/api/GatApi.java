@@ -9,6 +9,7 @@ import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 
@@ -158,6 +159,8 @@ public interface GatApi {
     @POST("search/book_by_user")
     Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> searchUser(
             @Field("name") String title,
+            @Query("page") int page,
+            @Query("per_page") int per_page
             );
 
     @GET("share/get_book_record")
@@ -198,5 +201,15 @@ public interface GatApi {
     Observable<Response<ServerResponse<ResultInfoList<String>>>> getUsersSearchedKeyword(
     );
 
+    @GET("user/get_user_private_info")
+    Observable<Response<ServerResponse<Data>>> getPersonalInformation();
 
+    @GET("book/selfget_book_instance")
+    Observable<Response<ServerResponse<Data>>> getBookInstance(
+            @Query("sharingFilter") boolean sharingFilter,
+            @Query("notSharingFilter") boolean notSharingFilter,
+            @Query("lostFilter") boolean lostFilter,
+            @Query("page") int page,
+            @Query("per_page") int per_page
+    );
 }

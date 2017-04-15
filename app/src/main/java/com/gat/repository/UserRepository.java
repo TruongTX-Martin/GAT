@@ -6,6 +6,7 @@ import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.Data;
@@ -53,7 +54,9 @@ public interface UserRepository {
 
     Observable<List<String>> getUsersSearchedKeyword();
 
+    Observable<Data> getPersonalData();
     Observable<Data> getBookRequest(BookRequestInput input);
     Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getReadingBooks(BookReadingInput input);
+    Observable<Data> getBookInstance(BookInstanceInput input);
 }
