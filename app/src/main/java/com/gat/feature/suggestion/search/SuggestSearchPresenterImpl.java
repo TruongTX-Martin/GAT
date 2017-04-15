@@ -2,6 +2,8 @@ package com.gat.feature.suggestion.search;
 
 import android.util.Log;
 
+import com.gat.common.adapter.Item;
+import com.gat.common.adapter.ItemResult;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
@@ -9,10 +11,12 @@ import com.gat.data.response.UserResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
+import com.gat.repository.entity.LoginData;
 
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
@@ -30,6 +34,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     private boolean isCanLoadHistoryAuthor = true;
     private boolean isCanLoadHistoryUser = true;
     private String mKeyword = "";
+    private int mUserId = 0;
 
     private DataResultListResponse<BookResponse> dataSearchBookByTitle;
     private DataResultListResponse<BookResponse> dataSearchBookByAuthor;
@@ -90,10 +95,27 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     @Override
     public void loadHistorySearchBook() {
         if ( ! isCanLoadHistoryBook) {
+            MZDebug.e("____________________________________________ loadHistorySearchBook = false");
             return;
         }
-        // check authentication -> return
+        // check authentication -> doLoadHistorySearchBook
+        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
+        loginData.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(result -> {
+                    if (result.equals(LoginData.EMPTY)) {
+                        return;
+                    }
+                    doLoadHistorySearchBook();
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: loadHistorySearchBook : authentication _______________E: \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
+    }
 
+    private void doLoadHistorySearchBook () {
         useCaseHistorySearchBook = useCaseFactory.getBooksSearchedKeyword();
         useCaseHistorySearchBook.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
@@ -107,6 +129,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 }).execute();
     }
 
+
     @Override
     public Observable<List<String>> onLoadHistorySearchBookSuccess() {
         return resultHistorySearchBookSubject.subscribeOn(schedulerFactory.main());
@@ -119,8 +142,27 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         mKeyword = book_title;
 
         // get current user -> user id # 0
+        // mUserId = ? éo biết lấy ở đâu
 
-        useCaseSearchBookByTitle = useCaseFactory.searchBookByTitle(book_title, 0, mPageBook, SIZE_OF_PAGE)
+        doSearchBookWithTitle (mKeyword, mUserId, mPageBook, SIZE_OF_PAGE);
+    }
+
+    @Override
+    public void loadMoreBookWithTitle() {
+        // load more -> check listBook.size() < total result
+        if (dataSearchBookByTitle.getTotalResult() <= (mPageBook * SIZE_OF_PAGE)) {
+            return;
+        }
+
+        // thi page +1 va load tiep
+        mPageBook += 1;
+
+        // load more
+        doSearchBookWithTitle (mKeyword, mUserId, mPageBook, SIZE_OF_PAGE);
+    }
+
+    private void doSearchBookWithTitle (String keyword, int user_id, int page, int size_of_page) {
+        useCaseSearchBookByTitle = useCaseFactory.searchBookByTitle(keyword, user_id, page, size_of_page)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
@@ -135,13 +177,6 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .execute();
     }
 
-    @Override
-    public void loadMoreBookWithTitle() {
-        // load more -> check listBook.size() < total result
-        // thi page +1 va load tiep
-        // if can not load more -> return list empty
-
-    }
 
     @Override
     public Observable<List<BookResponse>> onSearchBookWithTitleSuccess() {
@@ -151,10 +186,28 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     @Override
     public void loadHistorySearchAuthor() {
         if ( ! isCanLoadHistoryAuthor) {
+            MZDebug.e("__________________________________________ loadHistorySearchAuthor = false");
             return;
         }
-        // check authentication -> return
+        // check authentication -> loadHistorySearchAuthor
+        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
+        loginData.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(result -> {
+                    if (result.equals(LoginData.EMPTY)) {
+                        return;
+                    }
+                    doLoadHistorySearchAuthor();
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: loadHistorySearchAuthor : authentication _____________E: \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
 
+    }
+
+    private void doLoadHistorySearchAuthor () {
         useCaseHistorySearchAuthor = useCaseFactory.getAuthorsSearchedKeyword();
         useCaseHistorySearchAuthor.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
@@ -163,9 +216,11 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                     resultHistorySearchAuthorSubject.onNext(list);
                 })
                 .onError( throwable -> {
-                    MZDebug.e("ERROR: loadHistorySearchAuthor ____________________________________E");
+                    MZDebug.e("ERROR: loadHistorySearchAuthor ______________________________E: \n\r"
+                            + Log.getStackTraceString(throwable));
                 }).execute();
     }
+
 
     @Override
     public Observable<List<String>> onLoadHistorySearchAuthorSuccess() {
@@ -180,8 +235,27 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         mKeyword = author;
 
         // get current user -> user id # 0
+        // mUserId = ? éo biết lấy ở đâu
 
-        useCaseSearchBookByAuthor = useCaseFactory.searchBookByAuthor(author, 0, mPageAuthor, SIZE_OF_PAGE)
+        doSearchBookWithAuthor();
+    }
+
+    @Override
+    public void loadMoreBookWithAuthor() {
+
+        // load more -> check listBook.size() < total result
+        if (dataSearchBookByTitle.getTotalResult() <= (mPageBook * SIZE_OF_PAGE)) {
+            return;
+        }
+
+        // tang page len 1
+        mPageAuthor += 1;
+
+        doSearchBookWithAuthor();
+    }
+
+    private void doSearchBookWithAuthor () {
+        useCaseSearchBookByAuthor = useCaseFactory.searchBookByAuthor(mKeyword, mUserId, mPageAuthor, SIZE_OF_PAGE)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
@@ -196,11 +270,6 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     }
 
     @Override
-    public void loadMoreBookWithAuthor() {
-
-    }
-
-    @Override
     public Observable<List<BookResponse>> onSearchBookWithAuthorSuccess() {
         return resultSearchBookByAuthorSubject.subscribeOn(schedulerFactory.main());
     }
@@ -208,19 +277,37 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     @Override
     public void loadHistorySearchUser() {
         if ( ! isCanLoadHistoryUser) {
+            MZDebug.e("_____________________________________________ isCanLoadHistoryUser = false");
             return;
         }
-        // check authentication -> return
+        // check authentication -> doLoadHistorySearchUser
+        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
+        loginData.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(result -> {
+                    if (result.equals(LoginData.EMPTY)) {
+                        return;
+                    }
+                    doLoadHistorySearchUser();
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: doLoadHistorySearchUser : authentication _____________E: \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
+    }
 
-        useCaseHistorySearchUser = useCaseFactory.getAuthorsSearchedKeyword();
+    private void doLoadHistorySearchUser () {
+        useCaseHistorySearchUser = useCaseFactory.getUsersSearchedKeyword();
         useCaseHistorySearchUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(list -> {
                     isCanLoadHistoryUser = false;
-                    resultHistorySearchAuthorSubject.onNext(list);
+                    resultHistorySearchUserSubject.onNext(list);
                 })
                 .onError( throwable -> {
-                    MZDebug.e("ERROR: loadHistorySearchUser ____________________________________E");
+                    MZDebug.e("ERROR: doLoadHistorySearchUser : ____________________________E: \n\r"
+                            + Log.getStackTraceString(throwable));
                 }).execute();
     }
 
@@ -229,7 +316,6 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         return resultHistorySearchUserSubject.subscribeOn(schedulerFactory.main());
     }
 
-
     @Override
     public void searchUserWithName(String name) {
         // user press 'search' -> page = 1 && keyword = new keyword
@@ -237,8 +323,27 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         mKeyword = name;
 
         // get current user -> user id # 0
+        // userId = ?
 
-        useCaseSearchUserByName = useCaseFactory.searchUser(name, mPageUser, SIZE_OF_PAGE)
+        doSearchUserWithName();
+    }
+
+    @Override
+    public void loadMoreUserWithName() {
+
+        // load more -> check listBook.size() < total result
+        if (dataSearchBookByTitle.getTotalResult() <= (mPageBook * SIZE_OF_PAGE)) {
+            return;
+        }
+
+        mPageUser += 1;
+
+        doSearchUserWithName();
+    }
+
+    private void doSearchUserWithName () {
+
+        useCaseSearchUserByName = useCaseFactory.searchUser(mKeyword, mPageUser, SIZE_OF_PAGE)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
@@ -253,11 +358,6 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     }
 
     @Override
-    public void loadMoreUserWithName() {
-
-    }
-
-    @Override
     public Observable<List<UserResponse>> onSearchUserWithNameSuccess() {
         return resultSearchUserByNameSubject.subscribeOn(schedulerFactory.main());
     }
@@ -267,4 +367,3 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         return errorSubject.subscribeOn(schedulerFactory.main());
     }
 }
-

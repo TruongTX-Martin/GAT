@@ -82,12 +82,14 @@ public class DebugBookDataSource implements BookDataSource {
 
     @Override
     public Observable<Book> searchBookByIsbn(String isbn) {
+        MZDebug.w("______________ searchBookByIsbn______________________________________________");
         GatApi gatApi = dataComponent.getPublicGatApi();
 
         Observable<Response<ServerResponse<Book>>> bookResponse = gatApi.getBookByIsbn(isbn);
         return bookResponse.map(response -> {
             ServerResponse<Book> serverResponse = response.body();
             if (serverResponse != null) {
+                MZDebug.w("____________________________________________________ searchBookByIsbn");
                 return serverResponse.data();
             } else {
                 throw new RuntimeException();
@@ -180,8 +182,15 @@ public class DebugBookDataSource implements BookDataSource {
         Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
         responseObservable = api.getBooksSearchedKeyword();
 
+        List<String> list = new ArrayList<String>();
+        list.add("book 1");
+        list.add("book 2");
+        list.add("book 3");
+        list.add("book 4");
+        list.add("book 5");
+
         return responseObservable.map( response -> {
-            List<String> list = response.body().data().getResultInfo();
+//            List<String> list = response.body().data().getResultInfo();
             return list;
         });
     }
@@ -194,8 +203,15 @@ public class DebugBookDataSource implements BookDataSource {
         Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
         responseObservable = api.getAuthorsSearchedKeyword();
 
+        List<String> list = new ArrayList<String>();
+        list.add("author 1");
+        list.add("author 2");
+        list.add("author 3");
+        list.add("author 4");
+        list.add("author 5");
+
         return responseObservable.map( response -> {
-            List<String> list = response.body().data().getResultInfo();
+//            List<String> list = response.body().data().getResultInfo();
             return list;
         });
     }

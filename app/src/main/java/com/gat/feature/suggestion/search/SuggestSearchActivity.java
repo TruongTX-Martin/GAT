@@ -13,12 +13,16 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.MZDebug;
+import com.gat.common.util.Strings;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.feature.search.SearchActivity;
+import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.search.listener.OnFragmentRequestLoadMore;
 import com.gat.feature.suggestion.search.listener.OnLoadHistorySuccess;
 import com.gat.feature.suggestion.search.listener.OnSearchBookResult;
 import com.gat.feature.suggestion.search.listener.OnSearchUserResult;
+import com.gat.feature.suggestion.search.listener.OnUserTapOnKeyword;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -35,7 +39,8 @@ import android.support.design.widget.TabLayout.OnTabSelectedListener;
  */
 
 public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, SuggestSearchPresenter>
-        implements OnFragmentRequestLoadMore, EditText.OnEditorActionListener{
+        implements OnFragmentRequestLoadMore, EditText.OnEditorActionListener,
+        OnUserTapOnKeyword{
 
     @BindView(R.id.tab_layout)
     TabLayout mTabLayout;
@@ -118,22 +123,28 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        SearchResultFragment searchResultFragment = new SearchResultFragment(TAB_POS.TAB_BOOK, this);
+        SearchResultFragment searchResultFragment = new SearchResultFragment(TAB_POS.TAB_BOOK, this, this);
         adapter.addFragment(searchResultFragment, getResources().getString(R.string.tab_book_name));
         onSearchBookHistorySuccess = searchResultFragment;
         onSearchBookResult = searchResultFragment;
 
-        SearchResultFragment searchAuthorFragment = new SearchResultFragment(TAB_POS.TAB_AUTHOR, this);
+        SearchResultFragment searchAuthorFragment = new SearchResultFragment(TAB_POS.TAB_AUTHOR, this, this);
         adapter.addFragment(searchAuthorFragment,  getResources().getString(R.string.tab_book_author));
         onSearchAuthorHistorySuccess = searchAuthorFragment;
         onSearchAuthorResult = searchAuthorFragment;
 
-        SearchResultFragment searchUserFragment = new SearchResultFragment(TAB_POS.TAB_USER, this);
+        SearchResultFragment searchUserFragment = new SearchResultFragment(TAB_POS.TAB_USER, this, this);
         adapter.addFragment(searchUserFragment,  getResources().getString(R.string.tab_user_name));
         onSearchUserHistorySuccess = searchUserFragment;
         onSearchUserResult = searchUserFragment;
 
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
+    }
+
+    @OnClick(R.id.image_button_search_scan)
+    void onButtonSearchScanTap () {
+        start(getApplicationContext(), SearchActivity.class, SearchScreen.instance("he"));
     }
 
     @OnClick(R.id.button_cancel)
@@ -202,6 +213,11 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     }
 
     @Override
+    public void onUserTapOnHistoryKeyword(String keyword) {
+        editTextSearch.setText(keyword);
+    }
+
+    @Override
     public void requestLoadMoreSearchResult() {
         switch (mCurrentTab) {
             case TAB_POS.TAB_BOOK:
@@ -219,15 +235,15 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     }
 
     private void onLoadHistorySearchBookSuccess (List<String> list) {
-        onSearchBookHistorySuccess.onLoadHistoryResult(new ArrayList<>());
+        onSearchBookHistorySuccess.onLoadHistoryResult(list);
     }
 
     private void onLoadHistorySearchAuthorSuccess (List<String> list) {
-        onSearchAuthorHistorySuccess.onLoadHistoryResult(new ArrayList<>());
+        onSearchAuthorHistorySuccess.onLoadHistoryResult(list);
     }
 
     private void onLoadHistorySearchUserSuccess (List<String> list) {
-        onSearchUserHistorySuccess.onLoadHistoryResult(new ArrayList<>());
+        onSearchUserHistorySuccess.onLoadHistoryResult(list);
     }
 
     private void onSearchBookWithTitleSuccess (List<BookResponse> list) {

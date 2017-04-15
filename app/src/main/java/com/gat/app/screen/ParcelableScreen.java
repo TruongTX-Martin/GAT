@@ -22,7 +22,6 @@ public class ParcelableScreen implements Parcelable {
 
     private Screen screen;
 
-    private static final int MAIN = 0;
     private static final int SEARCH = 1;
     private static final int LOGIN = 2;
     private static final int REGISTER = 3;
@@ -31,6 +30,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int SUGGESTION = 6;
     private static final int SHARE_NEAR_BY_USER_DISTANCE = 7;
     private static final int SUGGESTION_SEARCH = 8;
+    private static final int MAIN = 9;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -129,8 +129,9 @@ public class ParcelableScreen implements Parcelable {
             case SUGGESTION_SEARCH:
                 screen = SuggestSearchScreen.instance();
                 break;
+            case MAIN:
+                screen = MainScreen.instance();
             default:
-                MZDebug.e("______________________________Not implement deserialization for type 0");
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);
         }
     }
