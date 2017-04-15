@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#f7f7f7">
+
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="55dp"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/twitter_btn" />
+
+        <ImageView
+            android:id="@+id/imgExtend"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_extend" />
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/imgExtend"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:text="name"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/txtAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtName"
+            android:layout_toLeftOf="@+id/imgExtend"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:text="author"
+            android:textColor="#000000" />
+
+        <LinearLayout
+            android:id="@+id/layoutRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtAuthor"
+            android:layout_toLeftOf="@+id/imgExtend"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:orientation="horizontal">
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/CustomRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/mySwitch"
+                android:layout_below="@+id/txtName"
+                android:numStars="5" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtBorrowFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutRating"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:textColor="#000000" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CACACA"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -7,7 +7,12 @@ import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -16,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Scheduler;
 
@@ -62,12 +68,22 @@ public interface UseCaseFactory {
 
     UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage);
 
-    UseCase<DataResultListResponse<UserResponse>> searchUser (String name, int page, int sizeOfPage);
+    UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage);
 
     UseCase<List<String>> getBooksSearchedKeyword();
 
     UseCase<List<String>> getAuthorsSearchedKeyword();
 
     UseCase<List<String>> getUsersSearchedKeyword();
+
+    UseCase<Data> getBookInstance(BookInstanceInput input);
+
+    UseCase<Data> changeBookSharingStatus(BookChangeStatusInput input);
+
+    UseCase<Data> getReadingBooks(BookReadingInput input);
+
+    UseCase<Data> getBookRequest(BookRequestInput input);
+
+    UseCase<Data> getUserInfo();
 
 }

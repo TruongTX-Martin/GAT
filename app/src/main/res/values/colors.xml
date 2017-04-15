@@ -21,7 +21,7 @@
     <color name="divider">#BDBDBD</color>
     <color name="dividerDark">#A1A1A1</color>
 
-    <color name="background_login">#8EC3DF</color>
+    <color name="background_header_blue">#8EC3DF</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlue">#5396B9</color>
     <color name="colorGray">#919191</color>

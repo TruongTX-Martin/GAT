@@ -2,6 +2,7 @@ package com.gat.data;
 
 import android.location.Address;
 import android.util.Log;
+
 import com.gat.common.util.MZDebug;
 import com.gat.data.api.GatApi;
 import com.gat.data.exception.LoginException;
@@ -17,7 +18,12 @@ import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.dependency.DataComponent;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -63,10 +69,10 @@ public class DebugUserDataSource implements UserDataSource {
         if (data == LoginData.EMPTY || data == null) {
             throw new LoginException(ServerResponse.NO_LOGIN);
         } else if (data.type() == LoginData.Type.EMAIL) {
-            EmailLoginData emailLoginData = (EmailLoginData)data;
+            EmailLoginData emailLoginData = (EmailLoginData) data;
             response = api.loginByEmail(emailLoginData.email(), emailLoginData.password());
         } else {
-            SocialLoginData socialLoginData = (SocialLoginData)data;
+            SocialLoginData socialLoginData = (SocialLoginData) data;
             response = api.loginBySocial(socialLoginData.socialID(), Integer.toString(socialLoginData.type()));
         }
         return response.map(result -> {
@@ -80,8 +86,8 @@ public class DebugUserDataSource implements UserDataSource {
                 sr.code(result.code());
                 throw new LoginException(sr);
             } else {
-                Log.d(TAG,sr.message());
-                Log.d(TAG,sr.data().loginToken());
+                Log.d(TAG, sr.message());
+                Log.d(TAG, sr.data().loginToken());
                 sr.code(result.code());
                 if (!sr.isOk())
                     throw new LoginException(sr);
@@ -96,11 +102,11 @@ public class DebugUserDataSource implements UserDataSource {
 
         Observable<Response<ServerResponse<LoginResponseData>>> response;
         if (loginData.type() == LoginData.Type.EMAIL) {
-            EmailLoginData emailLoginData = (EmailLoginData)loginData;
-            Log.d(TAG,emailLoginData.email()+","+emailLoginData.password()+","+emailLoginData.name());
+            EmailLoginData emailLoginData = (EmailLoginData) loginData;
+            Log.d(TAG, emailLoginData.email() + "," + emailLoginData.password() + "," + emailLoginData.name());
             response = api.registerByEmail(emailLoginData.email(), emailLoginData.password(), emailLoginData.name());
         } else {
-            SocialLoginData socialLoginData = (SocialLoginData)loginData;
+            SocialLoginData socialLoginData = (SocialLoginData) loginData;
             try {
                 response = api.registerBySocial(
                         socialLoginData.socialID(),
@@ -116,7 +122,7 @@ public class DebugUserDataSource implements UserDataSource {
         }
         ObservableTransformer<Response<ServerResponse<LoginResponseData>>, ServerResponse<LoginResponseData>> transformer =
                 upstream -> upstream.map(result -> {
-                        ServerResponse<LoginResponseData> sr = result.body();
+                    ServerResponse<LoginResponseData> sr = result.body();
                     if (sr == null) {
                         Log.d(TAG, result.toString());
                         Log.d(TAG, result.raw().toString());
@@ -126,8 +132,8 @@ public class DebugUserDataSource implements UserDataSource {
                         sr.code(result.code());
                         throw new LoginException(sr);
                     } else {
-                        Log.d(TAG,sr.message());
-                        Log.d(TAG,sr.data().loginToken());
+                        Log.d(TAG, sr.message());
+                        Log.d(TAG, sr.data().loginToken());
                         sr.code(result.code());
                         if (!sr.isOk())
                             throw new LoginException(sr);
@@ -163,7 +169,7 @@ public class DebugUserDataSource implements UserDataSource {
         Observable<Response<ServerResponse<VerifyTokenResponseData>>> responseObservable;
         responseObservable = api.verifyResetToken(code, tokenReset);
 
-        Log.d(TAG, "code:" + code + ",token:"+tokenReset);
+        Log.d(TAG, "code:" + code + ",token:" + tokenReset);
 
         return responseObservable.map(response -> {
             ServerResponse<VerifyTokenResponseData> serverResponse = response.body();
@@ -185,7 +191,7 @@ public class DebugUserDataSource implements UserDataSource {
 
         responseObservable = api.resetPassword(password, tokenVerified);
 
-        Log.d(TAG, "password:"+password+",token:"+tokenVerified);
+        Log.d(TAG, "password:" + password + ",token:" + tokenVerified);
 
         return responseObservable.map(response -> {
             ServerResponse<LoginResponseData> serverResponse = response.body();
@@ -200,7 +206,7 @@ public class DebugUserDataSource implements UserDataSource {
 
     @Override
     public Observable<ServerResponse> updateLocation(String address, float longitude, float latitude) {
-        Log.d(TAG, "updateLocation:"+ address + "," + longitude + "," + latitude );
+        Log.d(TAG, "updateLocation:" + address + "," + longitude + "," + latitude);
         GatApi api = dataComponent.getPrivateGatApi();
 
         Observable<Response<ServerResponse>> responseObservable;
@@ -264,80 +270,152 @@ public class DebugUserDataSource implements UserDataSource {
             return data;
         });
     }
+        @Override
+        public Observable<Data> getBookRequest (BookRequestInput input){
+            GatApi api = dataComponent.getPrivateGatApi();
+            Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookRequest(input.getParamSharing(), input.getParamBorrow(), input.getPage(), input.getPer_page());
+            return responseObservable.map(response -> {
+                ServerResponse<Data> serverResponse = response.body();
+                if (serverResponse == null) {
+                    serverResponse = ServerResponse.BAD_RESPONSE;
+                }
+                serverResponse.code(response.code());
+                return serverResponse.data();
+            });
+        }
+
+        @Override
+        public Observable<Data> changeBookSharingStatus (BookChangeStatusInput input){
+            GatApi api = dataComponent.getPrivateGatApi();
+            Observable<Response<ServerResponse<Data>>> responseObservable = api.changeBookSharingStatus(input.getInstanceId(), input.getSharingStatus());
+            return responseObservable.map(response -> {
+                ServerResponse<Data> serverResponse = response.body();
+                if (serverResponse == null) {
+                    serverResponse = ServerResponse.BAD_RESPONSE;
+                }
+                serverResponse.code(response.code());
+                return serverResponse.data();
+            });
+        }
 
     @Override
-    public Observable<List<String>> getUsersSearchedKeyword() {
-        MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
+        public Observable<List<String>> getUsersSearchedKeyword () {
+            MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
 
+            GatApi api = dataComponent.getPrivateGatApi();
+            Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
+            responseObservable = api.getUsersSearchedKeyword();
+
+            List<String> list = new ArrayList<String>();
+            list.add("user 1");
+            list.add("user 2");
+            list.add("user 3");
+            list.add("user 4");
+            list.add("user 5");
+
+            return responseObservable.map( response -> {
+            //            List<String> list = response.body().data().getResultInfo();
+                return list;
+            });
+        }
+
+    @Override
+    public Observable<Data> getPersonalInfo() {
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
-        responseObservable = api.getUsersSearchedKeyword();
-
-        List<String> list = new ArrayList<String>();
-        list.add("user 1");
-        list.add("user 2");
-        list.add("user 3");
-        list.add("user 4");
-        list.add("user 5");
-
-        return responseObservable.map( response -> {
-//            List<String> list = response.body().data().getResultInfo();
-            return list;
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getPersonalInformation();
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
         });
     }
 
-
     @Override
-    public void storeLoginToken(String token) {
-        throw new UnsupportedOperationException();
+    public Observable<Data> getBookInstance(BookInstanceInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter(),input.getPage(),input.getPer_page());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
     }
 
     @Override
-    public Observable<String> getLoginToken() {
-        throw new UnsupportedOperationException();
+    public Observable<Data> getReadingBook(BookReadingInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getReadingBooks(input.getUserId(),input.isReadingFilter(),input.isToReadFilter(),input.isReadFilter(),input.getPage(),input.getPer_page());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+
     }
 
-    @Override
-    public Observable<LoginData> loadLoginData() {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
-    public void saveLoginData(LoginData loginData) {
-        throw new UnsupportedOperationException();
-    }
-    @Override
-    public Observable<User> loadUser() {
-        throw new UnsupportedOperationException();
-    }
+        public void storeLoginToken (String token){
+            throw new UnsupportedOperationException();
+        }
 
-    @Override
-    public Observable<User> persitUser(User user) {
-        throw new UnsupportedOperationException();
-    }
-    @Override
-    public Observable<ServerResponse<VerifyTokenResponseData>> storeVerifyToken(ServerResponse<VerifyTokenResponseData> data) {
-        throw new UnsupportedOperationException();
-    }
+        @Override
+        public Observable<String> getLoginToken () {
+            throw new UnsupportedOperationException();
+        }
 
-    @Override
-    public Observable<ServerResponse<VerifyTokenResponseData>> getVerifyToken() {
-        throw new UnsupportedOperationException();
-    }
+        @Override
+        public Observable<LoginData> loadLoginData () {
+            throw new UnsupportedOperationException();
+        }
 
-    @Override
-    public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken(ServerResponse<ResetPasswordResponseData> data) {
-        throw new UnsupportedOperationException();
-    }
+        @Override
+        public void saveLoginData (LoginData loginData){
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Observable<User> loadUser () {
+            throw new UnsupportedOperationException();
+        }
 
-    @Override
-    public Observable<ServerResponse<ResetPasswordResponseData>> getResetToken() {
-        throw new UnsupportedOperationException();
-    }
+        @Override
+        public Observable<User> persitUser (User user){
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Observable<ServerResponse<VerifyTokenResponseData>> storeVerifyToken
+        (ServerResponse < VerifyTokenResponseData > data) {
+            throw new UnsupportedOperationException();
+        }
 
-    @Override
-    public Observable<List<Address>> getAddress(LatLng location) {
-        // TODO
-        throw new UnsupportedOperationException();
+        @Override
+        public Observable<ServerResponse<VerifyTokenResponseData>> getVerifyToken () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken
+        (ServerResponse < ResetPasswordResponseData > data) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Observable<ServerResponse<ResetPasswordResponseData>> getResetToken () {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Observable<List<Address>> getAddress (LatLng location){
+            // TODO
+            throw new UnsupportedOperationException();
+        }
     }
-}

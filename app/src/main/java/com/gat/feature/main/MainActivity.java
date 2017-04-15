@@ -1,5 +1,6 @@
 package com.gat.feature.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -8,6 +9,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.Strings;
+import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.scanbarcode.ScanBarcodeActivity;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.search.SearchScreen;
@@ -85,6 +87,8 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
 
             }
         });
+        //to personal info
+//        startActivity(new Intent(this,PersonalActivity.class));
     }
 
     @Override
