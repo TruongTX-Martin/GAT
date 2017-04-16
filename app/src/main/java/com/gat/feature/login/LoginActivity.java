@@ -1,11 +1,9 @@
 package com.gat.feature.login;
-import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,9 +19,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.facebook.FacebookSdk;
 import com.gat.common.util.CommonCheck;
-import com.gat.common.util.Objects;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
@@ -31,7 +27,6 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.feature.login.ForgotPassword.ForgotPasswordActivity;
-import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 import com.gat.repository.entity.LoginData;
@@ -43,8 +38,6 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**

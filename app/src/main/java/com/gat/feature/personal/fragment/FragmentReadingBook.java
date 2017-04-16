@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookReadingAdapter;
-import com.gat.feature.personal.entity.BookReadingEntity;
+import com.gat.repository.entity.book.BookReadingEntity;
 import com.gat.feature.personal.entity.BookReadingInput;
 
 import java.util.ArrayList;

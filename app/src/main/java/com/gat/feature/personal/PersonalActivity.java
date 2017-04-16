@@ -22,19 +22,18 @@ import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.user.PaperUserDataSource;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
-import com.gat.feature.personal.entity.BookReadingEntity;
-import com.gat.feature.personal.entity.BookRequestEntity;
+import com.gat.repository.entity.book.BookReadingEntity;
+import com.gat.repository.entity.book.BookRequestEntity;
 import com.gat.feature.personal.entity.BookRequestInput;
-import com.gat.feature.personal.entity.BookSharingEntity;
+import com.gat.repository.entity.book.BookSharingEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
 import com.gat.repository.entity.Data;
-import com.gat.feature.personal.entity.UserInfo;
+import com.gat.repository.entity.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +76,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
     private TextView txtNumberSharing;
     private TextView txtNumberReading;
     private TextView txtNumberRequest;
+    private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
 
     private UserInfo userInfo;
 
@@ -312,8 +312,9 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
             List<BookReadingEntity> listReading = data.getListDataReturn(BookReadingEntity.class);
             fragmentBookReading.setListBookReading(listReading);
         }
-        BookRequestInput input = new BookRequestInput(true,true,true,true);
-        requestBookRequest(input);
+
+        requestBookRequest(bookRequestInput);
+        fragmentBookRequest.setCurrentInput(bookRequestInput);
     }
 
     private void getBookRequestSuccess(Data data) {
@@ -326,5 +327,13 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposablesPersonal.dispose();
+        disposablesBookInstance.dispose();
+        disposablesChangeBookSharingStatus.dispose();
+        disposablesReadingBooks.dispose();
+        disposablesBooksRequest.dispose();
+    }
 }
