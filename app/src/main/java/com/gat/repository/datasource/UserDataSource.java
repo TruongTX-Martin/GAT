@@ -59,7 +59,8 @@ public interface UserDataSource {
     Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance
             (float currentLongitude, float currentLatitude,
              float neLongitude, float neLatitude,
-             float wsLongitude, float wsLatitude);
+             float wsLongitude, float wsLatitude,
+             int page, int sizeOfPage);
 
     Observable<DataResultListResponse<UserResponse>>
     searchUser (String name, int page, int sizeOfPage);

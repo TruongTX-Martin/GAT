@@ -135,7 +135,7 @@ public class SearchResultFragment extends Fragment
             onUserTapOnKeyword.onUserTapOnHistoryKeyword(historyItem.keyword());
         } else if (item instanceof SearchBookResultItem) {
             SearchBookResultItem bookItem = (SearchBookResultItem) item;
-            Toast.makeText(getActivity(), "Book id: " + bookItem.bookResponse().getBookId(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Book id: " + bookItem.bookResponse().getBookId() + ", EditionId: " + bookItem.bookResponse().getEditionId(), Toast.LENGTH_SHORT).show();
         } else if (item instanceof SearchUserResultItem) {
             SearchUserResultItem userItem = (SearchUserResultItem) item;
             Toast.makeText(getActivity(), "User id: " + userItem.userResponse().getUserId(), Toast.LENGTH_SHORT).show();

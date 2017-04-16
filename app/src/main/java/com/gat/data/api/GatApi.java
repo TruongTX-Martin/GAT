@@ -123,7 +123,9 @@ public interface GatApi {
             @Query("neLat") float neLatitude,
             @Query("neLong") float neLongitude,
             @Query("wsLat") float wsLatitude,
-            @Query("wsLong") float wsLongitude
+            @Query("wsLong") float wsLongitude,
+            @Query("page") int page,
+            @Query("per_page") int perPage
     );
 
     @FormUrlEncoded

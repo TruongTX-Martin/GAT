@@ -38,6 +38,9 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
 
     private final Subject<String> errorSubject;
 
+    private int mPage;
+    private static int SIZE_OF_PAGE;
+
 
     public SuggestionPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
@@ -50,7 +53,10 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     }
 
     @Override
-    public void onCreate() {}
+    public void onCreate() {
+        mPage = 1;
+        SIZE_OF_PAGE = 5;
+    }
 
     @Override
     public void onDestroy() {}
@@ -137,7 +143,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
 
     @Override
     public void getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation) {
-        userNearByDistance = useCaseFactory.peopleNearByUser(userLocation, neLocation, wsLocation);
+        userNearByDistance = useCaseFactory.peopleNearByUser(userLocation, neLocation, wsLocation, mPage, SIZE_OF_PAGE);
         userNearByDistance.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(listUser-> {

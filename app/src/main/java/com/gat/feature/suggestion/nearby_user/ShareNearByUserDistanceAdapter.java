@@ -11,6 +11,8 @@ import com.bumptech.glide.Glide;
 import com.gat.R;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.repository.entity.UserNearByDistance;
+
+import java.util.Collections;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +33,18 @@ public class ShareNearByUserDistanceAdapter
         listItems = list;
         mContext = context;
         mListener = listener;
+    }
+
+    protected void setListItems (List<UserNearByDistance> list) {
+        this.listItems = list;
+        notifyDataSetChanged();
+    }
+
+    protected void addListItems (List<UserNearByDistance> list) {
+        this.listItems.addAll(list);
+        Collections.sort(this.listItems, new UserNearByDistanceComparator());
+
+        notifyDataSetChanged();
     }
 
     @Override
