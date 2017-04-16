@@ -20,10 +20,11 @@ import io.reactivex.subjects.Subject;
 
 public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDistancePresenter {
 
-    private static final int TOTAL_PER_PAGE = 10;
+    private static final int SIZE_OF_PAGE = 10;
     private int mCurrentPage;
     private boolean isCanLoadMore;
     private List<UserNearByDistance> mListUsers;
+
 
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
@@ -54,7 +55,7 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
 
     @Override
     public void requestUserNearOnTheMap(LatLng userLocation, LatLng neLocation, LatLng wsLocation) {
-        useCaseUserNear = useCaseFactory.peopleNearByUser(userLocation, neLocation, wsLocation);
+        useCaseUserNear = useCaseFactory.peopleNearByUser(userLocation, neLocation, wsLocation, mCurrentPage, SIZE_OF_PAGE);
         useCaseUserNear.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(listUser -> {

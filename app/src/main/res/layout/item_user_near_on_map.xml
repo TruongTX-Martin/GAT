@@ -91,6 +91,7 @@
         android:paddingTop="3dp"
         android:text="0"
         android:textColor="@android:color/white"
+        android:layout_marginBottom="@dimen/margin_top_bottom_large"
         android:textSize="@dimen/small_text_view_size" />
 
     <TextView
@@ -109,7 +110,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/tv_reading_count"
-        android:layout_marginTop="@dimen/margin_top_bottom_large"
         android:background="@color/divider"/>
 
 
