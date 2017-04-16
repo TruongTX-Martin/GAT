@@ -1,11 +1,9 @@
 package com.gat.feature.login;
-import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,9 +19,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.facebook.FacebookSdk;
 import com.gat.common.util.CommonCheck;
-import com.gat.common.util.Objects;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
@@ -31,8 +27,8 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.feature.login.ForgotPassword.ForgotPasswordActivity;
-import com.gat.feature.search.SearchActivity;
-import com.gat.feature.search.SearchScreen;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.main.MainScreen;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 
@@ -42,8 +38,6 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -77,6 +71,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     // For facebook login
     private CallbackManager mCallbackManager;
+
     @Override
     protected int getLayoutResource() {
         return R.layout.login_activity;
@@ -91,7 +86,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        progressDialog =  new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
 
         disposables = new CompositeDisposable(
                 getPresenter().loginResult().subscribe(this::onLoginResult),
@@ -99,8 +94,9 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                 getPresenter().loadLocalLoginData().
                         filter(loginData -> loginData != LoginData.EMPTY)
                         .subscribe(loginData -> {
-                        onLogging(true);
-                        getPresenter().setIdentity(loginData);})
+                            onLogging(true);
+                            getPresenter().setIdentity(loginData);
+                        })
         );
 
         // login button
@@ -144,14 +140,14 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
         // Forgot password page
         forgotTextView.setOnClickListener(view -> {
-            start(getApplicationContext(),ForgotPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
+            start(getApplicationContext(), ForgotPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
             finish();
         });
     }
 
     private void onLoginResult(User user) {
         onLogging(false);
-        start(this, SearchActivity.class, SearchScreen.instance(Strings.EMPTY));
+        start(this, MainActivity.class, MainScreen.instance());
         finish();
     }
 
@@ -200,6 +196,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                         request.executeAsync();
 
                     }
+
                     @Override
                     public void onCancel() {
                         Toast.makeText(getApplicationContext(), getString(R.string.login_social_cancel), Toast.LENGTH_SHORT).show();
@@ -225,6 +222,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
             progressDialog.dismiss();
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

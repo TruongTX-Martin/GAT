@@ -2,19 +2,24 @@ package com.gat.domain.impl;
 
 import android.support.annotation.Nullable;
 
+import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.ResetPasswordResponseData;
-import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.data.response.UserResponse;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetGroupList;
+import com.gat.domain.usecase.*;
+import com.gat.domain.usecase.ChangeBookSharingStatus;
+import com.gat.domain.usecase.GetBookInstance;
+import com.gat.domain.usecase.GetBookRequest;
 import com.gat.domain.usecase.GetLoginData;
 import com.gat.domain.usecase.GetMessageList;
+import com.gat.domain.usecase.GetReadingBooks;
 import com.gat.domain.usecase.GetUser;
 import com.gat.domain.usecase.LoadMoreGroup;
 import com.gat.domain.usecase.LoadMoreMessage;
 import com.gat.domain.usecase.Login;
+import com.gat.domain.usecase.GetPersonalData;
 import com.gat.domain.usecase.Register;
 import com.gat.domain.usecase.ResetPassword;
 import com.gat.domain.usecase.SearchBookByIsbn;
@@ -27,14 +32,20 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Group;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.Message;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -143,11 +154,10 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
 
-
     @Override
     public <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler) {
         TransformUseCase transformUseCase = new TransformUseCase<>(useCase, transformer);
-        if(transformScheduler != null)
+        if (transformScheduler != null)
             transformUseCase.transformOn(transformScheduler);
         return transformUseCase;
     }
@@ -155,5 +165,80 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public <T> UseCase<T> doWork(Callable<T> callable) {
         return new WorkUseCase<>(callable);
+    }
+
+    @Override
+    public UseCase<List<BookResponse>> suggestMostBorrowing() {
+        return new SuggestMostBorrowing(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<BookResponse>> suggestBooks() {
+        return new SuggestBooks(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<BookResponse>> suggestBooksAfterLogin() {
+        return new SuggestBooksAfterLogin(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage) {
+        return new PeopleNearByUser(userRepositoryLazy.get(), userLocation, neLocation, wsLocation, page, sizeOfPage);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage) {
+        return new SearchBookByTitle(bookRepositoryLazy.get(), title, userId, page, sizeOfPage);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage) {
+        return new SearchBookByAuthor(bookRepositoryLazy.get(), author, userId, page, sizeOfPage);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        return new SearchUser(userRepositoryLazy.get(), name, page, sizeOfPage);
+    }
+
+    @Override
+    public UseCase<List<String>> getBooksSearchedKeyword() {
+        return new GetBooksSearchedKeyword(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<String>> getAuthorsSearchedKeyword() {
+        return new GetAuthorsSearchedKeyword(bookRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<List<String>> getUsersSearchedKeyword() {
+        return new GetUsersSearchedKeyword(userRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Data> getBookInstance(BookInstanceInput input) {
+        return new GetBookInstance(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return new ChangeBookSharingStatus(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> getReadingBooks(BookReadingInput input) {
+        return new GetReadingBooks(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> getBookRequest(BookRequestInput input) {
+        return new GetBookRequest(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> getUserInfo() {
+        return new GetPersonalData(userRepositoryLazy.get());
     }
 }

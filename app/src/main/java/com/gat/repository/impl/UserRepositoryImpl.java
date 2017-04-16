@@ -2,14 +2,21 @@ package com.gat.repository.impl;
 
 import android.location.Address;
 
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -121,6 +128,49 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<ServerResponse> updateCategories(List<Integer> categories) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().updateCategories(categories));
+    }
+
+    @Override
+    public Observable<List<UserNearByDistance>> getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage) {
+        return Observable.defer(()
+                -> networkUserDataSourceLazy.get().getPeopleNearByUserByDistance(
+                        (float) userLocation.longitude, (float) userLocation.latitude,
+                        (float) neLocation.longitude, (float) neLocation.latitude,
+                        (float) wsLocation.longitude, (float) wsLocation.latitude, page, sizeOfPage));
+    }
+
+    @Override
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().searchUser(name, page, sizeOfPage));
+    }
+    @Override
+    public Observable<Data> getBookRequest(BookRequestInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookRequest(input));
+    }
+
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().changeBookSharingStatus(input));
+    }
+
+    @Override
+    public Observable<Data> getReadingBooks(BookReadingInput input) {
+        return Observable.defer(()->networkUserDataSourceLazy.get().getReadingBook(input));
+    }
+
+    @Override
+    public Observable<Data> getBookInstance(BookInstanceInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookInstance(input));
+    }
+
+    @Override
+    public Observable<List<String>> getUsersSearchedKeyword() {
+        return Observable.defer(()->networkUserDataSourceLazy.get().getUsersSearchedKeyword());
+    }
+
+    @Override
+    public Observable<Data> getPersonalData() {
+        return Observable.defer(()->networkUserDataSourceLazy.get().getPersonalInfo());
     }
 
 }

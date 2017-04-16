@@ -224,6 +224,13 @@ dependencies {
     androidTestCompile      "${library.mockito}"
     androidTestCompile      "${library.dexmaker}"
     androidTestCompile      "${library.dexmaker_mockito}"
+
+    // easy permission
+    compile 'pub.devrel:easypermissions:0.3.0'
+
+    // autovalue + gson
+    apt 'com.ryanharter.auto.value:auto-value-gson:0.3.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

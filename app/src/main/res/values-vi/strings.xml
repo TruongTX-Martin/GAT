@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tab_home">Trang Chủ</string>
+
+    <!-- suggession text -->
+    <string name="share_near_me">Chia sẻ sách gần bạn</string>
+    <string name="cover_content_description">Book Image Cover</string>
+    <string name="most_search_by_user">Sách tìm kiếm nhiều nhất</string>
+    <string name="suggest">Đề xuất</string>
+    <string name="view_more">Xem thêm </string>
+    <string name="book_lend">Sách cho mượn</string>
+    <string name="book_reading">Sách đang đọc</string>
+
+    <string name="cancel">Hủy</string>
+
+    <string name="msg_allow_location">Để thấy được người chia sẻ sách ở gần, ứng dụng cần bạn cho phép truy cập vị trí.</string>
+    <string name="msg_no_user_near">Không có người chia sẻ gần bạn, nhấp xem thêm để hiển thị nhiều hơn. </string>
+
+    <string name="total_comments">Lượt nhận xét</string>
+    <string name="history">Lịch sử</string>
+    <string name="show_count_search_result">Hiển thị %1$s kết quả tìm kiếm</string>
+    <string name="tab_book_name">Tên sách</string>
+    <string name="tab_book_author">Tác giả</string>
+    <string name="tab_user_name">Người dùng</string>
+
+
+
+</resources>

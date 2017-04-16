@@ -2,14 +2,21 @@ package com.gat.data.user;
 
 import android.location.Address;
 
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -113,6 +120,45 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<ServerResponse> updateCategories(List<Integer> categories) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance(float currentLongitude, float currentLatitude, float neLongitude, float neLatitude, float wsLongitude, float wsLatitude, int page, int size_of_page) {
+        return null;
+    }
+
+    @Override
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        return null;
+    }
+    @Override
+    public Observable<Data> getBookRequest(BookRequestInput instanceInput) {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> getReadingBook(BookReadingInput input) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<String>> getUsersSearchedKeyword() {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> getPersonalInfo() {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> getBookInstance(BookInstanceInput instanceInput) {
         return null;
     }
 }

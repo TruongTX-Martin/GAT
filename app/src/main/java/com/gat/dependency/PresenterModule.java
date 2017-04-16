@@ -4,6 +4,10 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
+import com.gat.feature.main.MainPresenter;
+import com.gat.feature.main.MainPresenterImpl;
+import com.gat.feature.personal.PersonalPresenter;
+import com.gat.feature.personal.PersonalPresenterImpl;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessagePresenterImpl;
 import com.gat.feature.register.RegisterPresenter;
@@ -17,6 +21,10 @@ import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.search.SearchPresenterImpl;
 import com.gat.feature.suggestion.SuggestionPresenter;
 import com.gat.feature.suggestion.SuggestionPresenterImpl;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenterImpl;
+import com.gat.feature.suggestion.search.SuggestSearchPresenter;
+import com.gat.feature.suggestion.search.SuggestSearchPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;
@@ -76,5 +84,30 @@ public class PresenterModule {
                                              SchedulerFactory schedulerFactory){
         return new MessagePresenterImpl(useCaseFactory, schedulerFactory) {
         };
+    }
+
+    @Provides
+    MainPresenter provideMainPresenter(UseCaseFactory useCaseFactory,
+                                       SchedulerFactory schedulerFactory){
+        return new MainPresenterImpl(useCaseFactory, schedulerFactory) {
+        };
+    }
+
+    @Provides
+    ShareNearByUserDistancePresenter provideShareNearByUserDistance(UseCaseFactory useCaseFactory,
+                                                                    SchedulerFactory schedulerFactory){
+        return new ShareNearByUserDistancePresenterImpl(useCaseFactory, schedulerFactory) {
+        };
+    }
+
+    @Provides
+    SuggestSearchPresenter provideSuggestSearchPresenter(UseCaseFactory useCaseFactory,
+                                                         SchedulerFactory schedulerFactory) {
+        return new SuggestSearchPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+    @Provides
+    PersonalPresenter providePersonalPresenter(UseCaseFactory useCaseFactory,
+                                               SchedulerFactory schedulerFactory){
+        return  new PersonalPresenterImpl(useCaseFactory,schedulerFactory);
     }
 }

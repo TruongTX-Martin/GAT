@@ -35,11 +35,8 @@
         </activity>
 
         <activity android:name=".feature.search.SearchActivity">
-
         </activity>
-        <activity android:name=".feature.suggestion.SuggestionActivity">
 
-        </activity>
         <activity android:name=".feature.login.LoginActivity">
         </activity>
         <activity android:name=".feature.register.update.location.AddLocationActivity">
@@ -62,16 +59,26 @@
         </activity>
         <activity android:name=".feature.login.ForgotPassword.VerifyResetTokenActivity" >
         </activity>
-        <activity android:name=".feature.scanbarcode.ScanBarcodeActivity">
+        <activity android:name=".feature.personal.PersonalActivity"/>
 
-        </activity>
         <activity android:name=".feature.start.StartActivity"
-            android:theme="@style/DefaultScreenTheme">
+            android:theme="@style/DefaultScreenTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".feature.main.MainActivity" >
+        </activity>
+
+        <activity android:name=".feature.suggestion.nearby_user.ShareNearByUserDistanceActivity" >
+        </activity>
+
+        <activity android:name=".feature.suggestion.search.SuggestSearchActivity" >
+        </activity>
+
 
         <service
             android:name=".data.service.FetchAddressIntentService"

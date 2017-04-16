@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tv_header"
+        style="@style/TextViewHeaderTop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height"
+        android:layout_gravity="center_vertical"
+        android:background="@color/backgroundApp"
+        android:drawableStart="@drawable/ic_back_left"
+        android:gravity="center"
+        android:paddingLeft="@dimen/paddingNormal"
+        android:text="@string/share_near_me" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_header"
+        android:orientation="vertical">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:background="@android:color/white" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_users_near"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="6">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+    <com.gat.common.customview.CircleImage
+        android:id="@+id/iv_back_to_current_location"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tv_header"
+        android:alpha="0.6"
+        android:clickable="true"
+        android:padding="@dimen/paddingNormal"
+        android:src="@drawable/ic_current_location" />
+
+</RelativeLayout>

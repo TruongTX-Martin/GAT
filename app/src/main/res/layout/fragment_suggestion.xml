@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundApp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height"
+        android:gravity="center_vertical"
+        android:paddingEnd="@dimen/paddingNormal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/ic_chat_description"
+            android:src="@drawable/ic_chat" />
+
+        <ImageButton
+            android:id="@+id/image_button_search"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/cover_content_description"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_search_white" />
+
+        <TextView
+            android:id="@+id/text_view_suggestion_title"
+            style="@style/TextViewHeaderTop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_toStartOf="@+id/image_button_search"
+            android:gravity="center"
+            android:text="@string/tab_home" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/paddingLarge">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView"
+                    style="@style/TextViewHeaderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/share_near_me" />
+
+
+                <Button
+                    android:id="@+id/button_more_sharing_near"
+                    style="@style/TextViewHeaderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="end"
+                    android:drawableEnd="@drawable/ic_see_more"
+                    android:text="@string/view_more" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_user_near_suggest"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_sharing_near_height"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <Button
+                    android:id="@+id/button_go_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Go Setting -> Enable Location permission"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorTextViewGray" />
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/TextViewHeaderTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/most_search_by_user" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_most_borrowing"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_book_suggest_height"
+                android:orientation="horizontal" />
+
+            <TextView
+                style="@style/TextViewHeaderTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/suggest" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_suggest_books"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_book_suggest_height"
+                android:orientation="horizontal" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

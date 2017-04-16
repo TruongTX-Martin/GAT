@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/paddingLarge"
+    android:paddingRight="@dimen/paddingLarge"
+    android:paddingTop="@dimen/paddingLarge">
+
+    <com.gat.common.customview.CircleImage
+        android:id="@+id/iv_user_avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/paddingLarge"
+        android:src="@drawable/demo_people_near" />
+
+    <TextView
+        android:id="@+id/tv_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="100m"
+        android:textColor="@color/colorTextViewGray"
+        android:textSize="@dimen/small_text_view_size" />
+
+    <TextView
+        android:id="@+id/tv_full_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/iv_user_avatar"
+        android:layout_toStartOf="@+id/tv_distance"
+        android:maxLines="1"
+        android:text="Andy pham"
+        android:textColor="@color/colorTextViewDark"
+        android:textSize="@dimen/large_text_view_size" />
+
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_full_name"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/iv_user_avatar"
+        android:layout_toStartOf="@+id/tv_distance"
+        android:maxLines="1"
+        android:text="23 Nguyễn Lương Bằng, Đống Đa, Hà Nội"
+        android:textColor="@color/colorTextViewGray"
+        android:textSize="@dimen/small_text_view_size" />
+
+    <TextView
+        android:id="@+id/tv_lend_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_address"
+        android:layout_toEndOf="@+id/iv_user_avatar"
+        android:background="@drawable/text_circle_green"
+        android:gravity="center"
+        android:paddingBottom="3dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="3dp"
+        android:text="0"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/small_text_view_size" />
+
+    <TextView
+        android:id="@+id/tv_lend_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_lend_count"
+        android:layout_below="@+id/tv_address"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="5dp"
+        android:layout_toEndOf="@+id/tv_lend_count"
+        android:text="@string/book_lend"
+        android:textSize="@dimen/small_text_view_size" />
+
+    <TextView
+        android:id="@+id/tv_reading_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_address"
+        android:layout_toEndOf="@+id/tv_lend_string"
+        android:background="@drawable/text_circle_red"
+        android:gravity="center"
+        android:paddingBottom="3dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="3dp"
+        android:text="0"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="@dimen/margin_top_bottom_large"
+        android:textSize="@dimen/small_text_view_size" />
+
+    <TextView
+        android:id="@+id/tv_reading_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_lend_count"
+        android:layout_below="@+id/tv_address"
+        android:layout_marginLeft="3dp"
+        android:layout_toEndOf="@+id/tv_reading_count"
+        android:text="@string/book_reading"
+        android:textSize="@dimen/small_text_view_size" />
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_reading_count"
+        android:background="@color/divider"/>
+
+
+</RelativeLayout>

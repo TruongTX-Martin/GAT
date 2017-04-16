@@ -4,11 +4,15 @@ import com.gat.dependency.PresenterComponent;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessageScreen;
+import com.gat.feature.main.MainScreen;
+import com.gat.feature.personal.PersonalScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
+import com.gat.feature.suggestion.search.SuggestSearchScreen;
 import com.rey.mvp2.Presenter;
 import com.rey.mvp2.PresenterFactory;
 
@@ -41,6 +45,15 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getSuggestionPresenter();
         else if (key instanceof MessageScreen)
             return (P) presenterComponent.getMessagePresenter();
+        else if (key instanceof MainScreen)
+            return (P) presenterComponent.getMainPresenter();
+        else if (key instanceof ShareNearByUserDistanceScreen)
+            return (P) presenterComponent.getShareNearByUserDistancePresenter();
+        else if (key instanceof SuggestSearchScreen)
+            return (P) presenterComponent.getSuggestSearchPresenter();
+        else if (key instanceof PersonalScreen){
+            return (P) presenterComponent.getPersonalPresenter();
+        }
 
         throw new IllegalArgumentException("Not support key " + key);
     }

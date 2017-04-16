@@ -4,14 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.gat.common.util.Strings;
+import com.gat.common.util.MZDebug;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessageScreen;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
+import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
+import com.gat.feature.suggestion.search.SuggestSearchScreen;
 
 /**
  * Created by Rey on 2/14/2017.
@@ -27,7 +31,10 @@ public class ParcelableScreen implements Parcelable {
     private static final int ADD_LOCATION = 4;
     private static final int ADD_CATEGORY = 5;
     private static final int SUGGESTION = 6;
-    private static final int MESSAGER = 7;
+    private static final int SHARE_NEAR_BY_USER_DISTANCE = 7;
+    private static final int SUGGESTION_SEARCH = 8;
+    private static final int MAIN = 9;
+    private static final int MESSAGER = 10;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -55,6 +62,13 @@ public class ParcelableScreen implements Parcelable {
             return ADD_CATEGORY;
         if (screen instanceof SuggestionScreen)
             return SUGGESTION;
+        if (screen instanceof MainScreen)
+            return MAIN;
+        if (screen instanceof ShareNearByUserDistanceScreen)
+            return SHARE_NEAR_BY_USER_DISTANCE;
+        if (screen instanceof SuggestSearchScreen)
+            return SUGGESTION_SEARCH;
+
         if (screen instanceof MessageScreen)
             return MESSAGER;
         throw new IllegalArgumentException("Not support screen " + screen);
@@ -80,14 +94,25 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof MessageScreen) {
             MessageScreen messageScreen = (MessageScreen) screen;
             dest.writeString(messageScreen.userId());
+        } else if (screen instanceof MainScreen) {
+
+        } else if (screen instanceof ShareNearByUserDistanceScreen) {
+
+        } else if (screen instanceof SuggestSearchScreen) {
+
         }
 
-        else
+        else {
             throw new IllegalArgumentException("Not implement serialization for " + screen);
+        }
+
+        MZDebug.e("____________________________________ writeToParcel : " + getScreenType());
     }
 
     ParcelableScreen(Parcel in) {
         int type = in.readInt();
+
+        MZDebug.e("____________________________________ read : " + type);
         switch (type){
             case SEARCH:
                 screen = SearchScreen.instance(in.readString());
@@ -106,6 +131,15 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case SUGGESTION:
                 screen = SuggestionScreen.instance();
+                break;
+            case SHARE_NEAR_BY_USER_DISTANCE:
+                screen = ShareNearByUserDistanceScreen.instance();
+                break;
+            case SUGGESTION_SEARCH:
+                screen = SuggestSearchScreen.instance();
+                break;
+            case MAIN:
+                screen = MainScreen.instance();
                 break;
             case MESSAGER:
                 screen = MessageScreen.instance(in.readString());

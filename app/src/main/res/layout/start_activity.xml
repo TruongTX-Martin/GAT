@@ -10,10 +10,12 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".50"
-        android:layout_marginStart="@dimen/margin_left_right"
-        android:layout_marginEnd="@dimen/margin_left_right"
-        android:layout_marginTop="@dimen/logo_margin_top" />
+        android:layout_weight="0.6"
+        android:background="@drawable/layout_rounded"
+        android:layout_marginStart="@dimen/slider_margin_left_right"
+        android:layout_marginEnd="@dimen/slider_margin_left_right"
+        android:layout_marginTop="@dimen/slider_margin_top"
+        android:layout_marginBottom="@dimen/btn_margin_bt"/>
 
     <!-- layout dots: contain dots for each page-->
     <LinearLayout
@@ -22,8 +24,7 @@
         android:layout_height="@dimen/dots_height"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dots_margin_bottom"></LinearLayout>
+        android:layout_marginBottom="@dimen/btn_margin_bt"></LinearLayout>
 
     <TextView
         android:id="@+id/skip"
@@ -32,7 +33,7 @@
         android:text="@string/app_tour"
         android:textColor="@color/colorWhite"
         android:gravity="center"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="@dimen/btn_margin_bt"/>
 
     <!-- a view for a line border-->
     <View
@@ -46,17 +47,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentStart="true">
+        android:layout_marginTop="@dimen/btn_margin_bt"
+        android:layout_marginBottom="@dimen/btn_margin_bt">
         <Button
             android:id="@+id/btn_register"
             android:text="@string/start_register_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".50"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="@dimen/margin_left_right"
-            android:layout_marginRight="@dimen/margin_left_right"
+            android:layout_marginLeft="@dimen/btn_margin_lr"
+            android:layout_marginRight="@dimen/btn_margin_lr"
+            style="?android:attr/buttonBarButtonStyle"
             android:background="@drawable/bg_rounded_cool_blue"
             android:textColor="@color/colorWhite"/>
 
@@ -66,10 +67,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".50"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="@dimen/margin_left_right"
-            android:layout_marginRight="@dimen/margin_left_right"
+            android:layout_marginLeft="@dimen/btn_margin_lr"
+            android:layout_marginRight="@dimen/btn_margin_lr"
+            style="?android:attr/buttonBarButtonStyle"
             android:background="@drawable/bg_rounded_cool_blue"
             android:textColor="@color/colorWhite"/>
     </LinearLayout>
