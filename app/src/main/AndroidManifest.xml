@@ -73,6 +73,8 @@
         <activity android:name=".feature.suggestion.search.SuggestSearchActivity" >
         </activity>
 
+        <activity android:name=".feature.book_detail.BookDetailActivity" >
+        </activity>
 
         <service
             android:name=".data.service.FetchAddressIntentService"

@@ -1,5 +1,6 @@
 package com.gat.dependency;
 
+import com.gat.feature.book_detail.BookDetailPresenter;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.personal.PersonalPresenter;
@@ -33,5 +34,6 @@ public interface PresenterComponent {
     ShareNearByUserDistancePresenter getShareNearByUserDistancePresenter();
     SuggestSearchPresenter getSuggestSearchPresenter();
     PersonalPresenter getPersonalPresenter();
+    BookDetailPresenter getBookDetailPresenter();
 
 }

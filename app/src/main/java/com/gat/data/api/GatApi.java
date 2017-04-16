@@ -3,6 +3,7 @@ package com.gat.data.api;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
@@ -205,4 +206,11 @@ public interface GatApi {
             @Query("page") int page,
             @Query("per_page") int per_page
     );
+
+    @GET("book/get_edition_evaluation")
+    Observable<Response<ServerResponse<DataResultListResponse<EvaluationItemResponse>>>> getBookEditionEvaluation (
+            @Query("editionId") long editionId
+    );
+
+
 }

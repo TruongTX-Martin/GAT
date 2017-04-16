@@ -17,6 +17,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gat.R;
+import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.data.response.BookResponse;
 
 import java.util.List;
@@ -31,16 +32,22 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
 
     private List<BookResponse> mListBookSuggest;
     private Context mContext;
+    private IRecyclerViewItemClickListener clickListener;
 
-    public BookSuggestAdapter(Context context, List<BookResponse> listBookSuggest) {
+    public BookSuggestAdapter(Context context, List<BookResponse> listBookSuggest, IRecyclerViewItemClickListener listener) {
         this.mContext = context;
         this.mListBookSuggest = listBookSuggest;
+        this.clickListener = listener;
     }
 
     @Override
     public BookSuggestHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_suggest, parent, false);
         final BookSuggestHolder mViewHolder = new BookSuggestHolder(itemView);
+
+        itemView.setOnClickListener(view -> {
+            clickListener.onItemClickListener(view, mViewHolder.getAdapterPosition());
+        });
 
         return mViewHolder;
     }

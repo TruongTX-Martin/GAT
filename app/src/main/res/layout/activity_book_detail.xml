@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_gradient_book_detail"
+            android:paddingBottom="@dimen/paddingLarge"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:paddingRight="@dimen/paddingLarge">
+
+            <FrameLayout
+                android:id="@+id/fl_header"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/navigation_header_height">
+
+                <ImageButton
+                    android:id="@+id/image_button_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/iv_back_description"
+                    android:paddingEnd="30dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/narrow_back_white" />
+
+                <TextView
+                    style="@style/TextViewHeaderTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/book_detail" />
+
+                <ImageButton
+                    android:id="@+id/image_button_go_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="30dp"
+                    android:contentDescription="@string/iv_share_description"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_go_share" />
+
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/image_view_book_cover"
+                android:layout_width="120dp"
+                android:layout_height="180dp"
+                android:layout_below="@+id/fl_header"
+                android:layout_marginRight="@dimen/margin_horizontal_large"
+                android:scaleType="centerCrop"
+                android:src="@drawable/demo_book_detail_cover" />
+
+            <TextView
+                android:id="@+id/text_view_book_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fl_header"
+                android:layout_toEndOf="@+id/image_view_book_cover"
+                android:text="Steve Jobs - Thiên tài gàn dở và câu chuyện thần kỳ về quả táo"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/large_text_view_size" />
+
+            <TextView
+                android:id="@+id/text_view_book_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_book_name"
+                android:layout_marginBottom="@dimen/margin_top_bottom_normal"
+                android:layout_marginTop="@dimen/margin_top_bottom_normal"
+                android:layout_toEndOf="@+id/image_view_book_cover"
+                android:text="Tác giả: Leander Kahney"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/normal_text_view_size" />
+
+            <RatingBar
+                android:id="@+id/rating_bar_book"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_book_author"
+                android:layout_marginBottom="@dimen/margin_top_bottom_normal"
+                android:layout_toEndOf="@+id/image_view_book_cover"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="4.5"
+                android:stepSize="0.5" />
+
+            <TextView
+                android:id="@+id/text_view_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_book_author"
+                android:layout_toEndOf="@+id/rating_bar_book"
+                android:text="4.5"
+                android:textColor="@android:color/white" />
+
+            <ImageButton
+                android:id="@+id/image_button_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@+id/image_view_book_cover"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_button_plus_in_circle" />
+
+            <Button
+                android:id="@+id/button_reading_state"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="@dimen/margin_horizontal_large"
+                android:layout_toEndOf="@+id/image_button_plus"
+                android:background="@drawable/bg_reading_state_button"
+                android:drawableEnd="@drawable/arrow_down_white"
+                android:paddingStart="@dimen/paddingLarge"
+                android:paddingEnd="@dimen/paddingNormal"
+                android:text="@string/none"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/normal_text_view_size" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:paddingRight="@dimen/paddingNormal">
+
+            <TextView
+                android:id="@+id/text_view_sharing_count"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="15" />
+
+            <Button
+                android:id="@+id/button_view_list"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_rounded_cool_blue"
+                android:paddingLeft="@dimen/paddingLarge"
+                android:paddingRight="@dimen/paddingLarge"
+                android:text="Xem danh sách"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/text_view_sharing_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/text_view_sharing_count"
+                android:layout_toStartOf="@+id/button_view_list"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="người đang cho mượn quyển sách này"
+                android:textSize="@dimen/small_text_view_size" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:paddingRight="@dimen/paddingLarge"
+            android:paddingTop="@dimen/paddingLarge">
+
+            <RatingBar
+                android:id="@+id/rating_bar_user_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="0.5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/margin_top_bottom_normal"
+                android:layout_marginTop="@dimen/margin_top_bottom_normal"
+                android:lines="1"
+                android:text="&quot; Sách này hay lắm mọi người đừng đọc.&quot;"
+                android:textColor="@color/colorTextViewDark" />
+
+            <Button
+                android:id="@+id/button_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/margin_top_bottom_large"
+                android:background="@drawable/bg_rounded_cool_blue"
+                android:paddingLeft="@dimen/paddingLarge"
+                android:paddingRight="@dimen/paddingLarge"
+                android:text="Viết bình luận"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGray" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_horizontal_large"
+            android:text="@string/book_description"
+            android:textColor="@color/colorTextViewDark"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/text_view_book_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_horizontal_large"
+            android:layout_marginRight="@dimen/margin_horizontal_large"
+            android:maxLines="5"
+            android:text="@string/book_description"
+            android:textColor="@color/colorTextViewDark" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_horizontal_large"
+            android:text="@string/comment"
+            android:textColor="@color/colorTextViewDark"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_comments"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_marginLeft="@dimen/margin_horizontal_large"
+            android:layout_marginRight="@dimen/margin_horizontal_large" />
+
+
+    </LinearLayout>
+</ScrollView>

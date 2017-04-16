@@ -1,6 +1,7 @@
 package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
+import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.personal.PersonalScreen;
@@ -47,9 +48,11 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getShareNearByUserDistancePresenter();
         else if (key instanceof SuggestSearchScreen)
             return (P) presenterComponent.getSuggestSearchPresenter();
-        else if (key instanceof PersonalScreen){
+        else if (key instanceof PersonalScreen)
             return (P) presenterComponent.getPersonalPresenter();
-        }
+        else if (key instanceof BookDetailScreen)
+            return (P) presenterComponent.getBookDetailPresenter();
+
 
         throw new IllegalArgumentException("Not support key " + key);
     }

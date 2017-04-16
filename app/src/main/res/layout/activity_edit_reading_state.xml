@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height">
+
+
+        <ImageView
+            android:id="@+id/image_view_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/narrow_back_black" />
+
+        <TextView
+            style="@style/TextViewHeaderTop"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="@string/add_to_list_reading_book"
+            android:textColor="@color/colorTextViewDark"
+            android:textSize="@dimen/larger_text_view_size" />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_check_green" />
+
+    </FrameLayout>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/paddingLarge">
+
+        <RadioButton
+            android:id="@+id/radio_want_to_read"
+            style="@style/RadioButtonStyle"
+            android:layout_width="match_parent"
+            android:checked="true"
+            android:text="@string/want_to_read" />
+
+        <RadioButton
+            android:id="@+id/radio_reading_book"
+            style="@style/RadioButtonStyle"
+            android:layout_width="match_parent"
+            android:text="@string/reading_book" />
+
+        <RadioButton
+            android:id="@+id/radio_red_book"
+            style="@style/RadioButtonStyle"
+            android:layout_width="match_parent"
+            android:text="@string/red_book" />
+
+
+    </RadioGroup>
+
+
+</LinearLayout>
