@@ -19,6 +19,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.MZDebug;
+import com.gat.feature.suggestion.CompareListUtil;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -83,6 +84,7 @@ public class ShareNearByUserDistanceActivity
     private int mReasonMapMoved;
     private ShareNearByUserDistanceAdapter adapter;
     private List<UserNearByDistance> mListUsers;
+    private List<Marker> mListMarker;
 
     @Override
     protected int getLayoutResource() {
@@ -278,11 +280,12 @@ public class ShareNearByUserDistanceActivity
                 // kiểm tra nếu (top-left bottom-right) vẫn nằm trong khung map mà suggest fragment pass sang
                 // thì không request lấy thêm làm gì cả
                 // nếu khung màn hình map user kéo ra ngoài, thì mới request lấy list user near
+                getPresenter().requestUserNearOnTheMap(mCenterLatLng, mNELatLng, mWSLatLng);
 
                 break;
             }
             case GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION: {
-                MZDebug.w("____The camera has stopped moving BY DEVELOPER_____ FIRST TIME _______");
+                MZDebug.w("___________________________The camera has stopped moving BY DEVELOPER_");
 
                 MZDebug.w("southwest: lat= " + curScreen.southwest.latitude
                         + ", long= " + curScreen.southwest.longitude);
@@ -318,15 +321,19 @@ public class ShareNearByUserDistanceActivity
                     new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
             mRecyclerViewUsersNear.setAdapter(adapter);
 
-            addListMarker(mListUsers);
+            mListMarker = addListMarker(mListUsers);
             return;
         }
 
         // so sánh mListUsers và list
-        // nếu user nào ở list mà có mListUsers thì ko thêm
+        // nếu user nào ở list mà có trong mListUsers thì ko thêm
         // nếu user nào ở list mà không có trong mListUser thì thêm vào mListUsers để add vào map
         // update những user thêm được vào map
-        adapter.notifyDataSetChanged();
+        List<UserNearByDistance> listDestination = CompareListUtil.destinationListUserNear(mListUsers, list);
+        MZDebug.w("List destination size = " + listDestination.size());
+        adapter.addListItems(listDestination);
+
+        mListMarker.addAll(addListMarker(listDestination));
     }
 
     // request list user near failed
@@ -379,5 +386,6 @@ public class ShareNearByUserDistanceActivity
     public void onItemClickListener(View v, int position) {
         moveCameraToNewLatLng(new LatLng(mListUsers.get(position).getLatitude(),
                 mListUsers.get(position).getLongitude()));
+        Toast.makeText(this, "user id: " + mListUsers.get(position).getUserId(), Toast.LENGTH_SHORT).show();
     }
 }

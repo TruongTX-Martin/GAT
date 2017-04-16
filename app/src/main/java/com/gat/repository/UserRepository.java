@@ -47,7 +47,7 @@ public interface UserRepository {
     Observable<ServerResponse> updateCategories(List<Integer> categories);
 
     Observable<List<UserNearByDistance>>
-            getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
+            getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage);
 
     Observable<DataResultListResponse<UserResponse>>
             searchUser (String name, int page, int sizeOfPage);
