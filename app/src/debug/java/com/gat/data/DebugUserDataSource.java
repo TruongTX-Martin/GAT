@@ -106,19 +106,14 @@ public class DebugUserDataSource implements UserDataSource {
             Log.d(TAG, emailLoginData.email() + "," + emailLoginData.password() + "," + emailLoginData.name());
             response = api.registerByEmail(emailLoginData.email(), emailLoginData.password(), emailLoginData.name());
         } else {
-            SocialLoginData socialLoginData = (SocialLoginData) loginData;
-            try {
-                response = api.registerBySocial(
+            SocialLoginData socialLoginData = (SocialLoginData)loginData;
+            response = api.registerBySocial(
                         socialLoginData.socialID(),
                         Integer.toString(socialLoginData.type()),
                         socialLoginData.name(),
                         socialLoginData.email(),
                         socialLoginData.password()/*,
                         image*/);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new LoginException(ServerResponse.EXCEPTION);
-            }
         }
         ObservableTransformer<Response<ServerResponse<LoginResponseData>>, ServerResponse<LoginResponseData>> transformer =
                 upstream -> upstream.map(result -> {

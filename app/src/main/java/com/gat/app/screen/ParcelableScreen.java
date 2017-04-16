@@ -131,6 +131,7 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case MAIN:
                 screen = MainScreen.instance();
+                break;
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);
         }

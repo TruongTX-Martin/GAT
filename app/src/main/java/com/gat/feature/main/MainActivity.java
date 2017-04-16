@@ -100,7 +100,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
         adapter.addFragment(new ScanFragment(), "PERSONAL");
-        adapter.addFragment(new ScanFragment(), "SCAN");
+        adapter.addFragment(new ScanBarcodeActivity(), "SCAN");
         adapter.addFragment(new ScanFragment(), "NOTICE");
         adapter.addFragment(new ScanFragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
