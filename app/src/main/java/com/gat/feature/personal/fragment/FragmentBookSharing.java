@@ -4,23 +4,27 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.gat.R;
 import com.gat.feature.personal.PersonalActivity;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
-import com.gat.feature.personal.entity.BookSharingEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.repository.entity.book.BookSharingEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +34,9 @@ import java.util.List;
 
 public class FragmentBookSharing extends Fragment {
 
-    private ListView lvBookSharing;
     private ProgressBar progressBar,progressLoadMore;
     private ImageView imgFilter;
     private TextView txtMessage;
-    private BookSharingAdapter adapterBookSharing;
     private List<BookSharingEntity> listBook = new ArrayList<>();
     private PersonalActivity parrentActivity;
     private Context context;
@@ -46,6 +48,9 @@ public class FragmentBookSharing extends Fragment {
     private boolean isRequesting = false;
 
     private RelativeLayout layoutBottom;
+
+    private RecyclerView recyclerView;
+    private BookSharingAdapter adapterBookSharing;
     public void setParrentActivity(PersonalActivity parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
@@ -56,10 +61,10 @@ public class FragmentBookSharing extends Fragment {
         }
         if(currentInput.getPage() == 1){
             if(listBook.size() == 0){
-                lvBookSharing.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
                 txtMessage.setVisibility(View.VISIBLE);
             }else{
-                lvBookSharing.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
                 txtMessage.setVisibility(View.GONE);
             }
         }
@@ -75,14 +80,7 @@ public class FragmentBookSharing extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.layout_fragment_book_loan, container, false);
         context = getActivity().getApplicationContext();
-        adapterBookSharing = new BookSharingAdapter(listBook, getActivity().getApplicationContext(),this);
-        lvBookSharing = (ListView) rootView.findViewById(R.id.lvBookSharing);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        progressLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
-        imgFilter = (ImageView) rootView.findViewById(R.id.imgFilter);
-        txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
-        layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
-        lvBookSharing.setAdapter(adapterBookSharing);
+        initView();
         handleEvent();
         showLoading();
         currentInput = new BookInstanceInput(true,false,false);
@@ -90,42 +88,36 @@ public class FragmentBookSharing extends Fragment {
         return rootView;
     }
 
+    private void initView(){
+        adapterBookSharing = new BookSharingAdapter(listBook, getActivity().getApplicationContext(),this);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerRequest);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
+        imgFilter = (ImageView) rootView.findViewById(R.id.imgFilter);
+        txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
+        layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
+        recyclerView.setAdapter(adapterBookSharing);
+    }
     private void handleEvent() {
         layoutBottom.setOnClickListener(v -> {
             showDialogFilter();
         });
-        lvBookSharing.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                try {
-                    final int lastItem = firstVisibleItem + visibleItemCount;
-                    if (lastItem == totalItemCount && scrollState == SCROLL_STATE_IDLE) {
-                        if(isRequesting == false) {
-                            showLoadMore();
-                            currentInput.setPage(currentInput.getPage()+1);
-                            searchBook(currentInput);
-                        }
-                    }
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstItem, int visibleCount, int totalCount) {
-                firstVisibleItem = firstItem;
-                visibleItemCount = visibleCount;
-                totalItemCount = totalCount;
-            }
-        });
-
+    }
+    public void loadMore(){
+        showLoadMore();
+        currentInput.setPage(currentInput.getPage()+1);
+        searchBook(currentInput);
     }
     private void showLoading(){
-        lvBookSharing.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
     }
     private void hideLoading(){
-        lvBookSharing.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
     }
     private void showLoadMore(){

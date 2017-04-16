@@ -1,4 +1,4 @@
-package com.gat.feature.personal.entity;
+package com.gat.repository.entity.book;
 
 import com.gat.common.util.Strings;
 import com.google.gson.annotations.SerializedName;
