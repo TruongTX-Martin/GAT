@@ -139,15 +139,20 @@
     <string name="borrow_book">Mượn sách</string>
     <string name="wait_to_borrow">Đợi mượn</string>
     <string name="add_to_list_reading_book">Thêm vào danh sách đọc</string>
+    <string name="want_to_read">Muốn đọc</string>
+    <string name="reading_book">Đang đọc</string>
+    <string name="red_book">Đã đọc</string>
     <string name="add_to_bookcase">Thêm vào tủ sách</string>
     <string name="total_book_in_bookcase">Số lượng sách có trong tủ</string>
     <string name="let_people_borrow_book">Cho mọi người mượn sách</string>
     <string name="your_comment">Bình luận của bạn</string>
     <string name="your_comment_hint">Bình luận của bạn về cuốn sách này</string>
+    <string name="post_your_comment">ĐĂNG BÌNH LUẬN</string>
     <string name="share">Chia sẻ</string>
     <string name="comment_for_share">Viết chia sẻ cho sách</string>
     <string name="enable_for_share_facebook">Đăng chia sẻ qua Facebook</string>
     <string name="post_the_share">ĐĂNG CHIA SẺ</string>
+    <string name="remove_from_reading_list">Xóa khỏi danh sách đọc</string>
 
 
 </resources>
