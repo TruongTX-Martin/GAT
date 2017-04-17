@@ -23,6 +23,7 @@ import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.repository.entity.User;
 import com.gat.repository.entity.book.BookReadingEntity;
 import com.gat.repository.entity.book.BookRequestEntity;
 import com.gat.feature.personal.entity.BookRequestInput;
@@ -33,7 +34,7 @@ import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
 import com.gat.repository.entity.Data;
-import com.gat.repository.entity.UserInfo;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
     private TextView txtNumberRequest;
     private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
 
-    private UserInfo userInfo;
+    private User userInfo;
 
     @Override
     protected PersonalScreen getDefaultScreen() {
@@ -235,20 +236,22 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
     //handle data personal return
     private void getUserInfoSuccess(Data data) {
         if (data != null) {
-            userInfo = (UserInfo) data.getDataReturn(UserInfo.class);
-            if (!Strings.isNullOrEmpty(userInfo.getName())) {
-                txtName.setText(userInfo.getName());
+            userInfo = (User) data.getDataReturn(User.typeAdapter(new Gson()));
+            if (userInfo == null)
+                userInfo = User.NONE;
+            if (!Strings.isNullOrEmpty(userInfo.name())) {
+                txtName.setText(userInfo.name());
             }
-            if (!Strings.isNullOrEmpty(userInfo.getEmail())) {
-                txtAddress.setText(userInfo.getEmail());
+            if (!Strings.isNullOrEmpty(userInfo.email())) {
+                txtAddress.setText(userInfo.email());
             }
-            if (!Strings.isNullOrEmpty(userInfo.getImageid())) {
-                String url = ClientUtils.getUrlImage(userInfo.getImageid(), Constance.IMAGE_SIZE_ORIGINAL);
+            if (!Strings.isNullOrEmpty(userInfo.imageId())) {
+                String url = ClientUtils.getUrlImage(userInfo.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
                 ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
             }
-            if (userInfo.getUserId() > 0) {
+            if (/*userInfo.userId() > 0*/userInfo.isValid()) {
                 BookReadingInput readingInput = new BookReadingInput(true, false, false);
-                readingInput.setUserId(userInfo.getUserId());
+                readingInput.setUserId(userInfo.userId());
                 requestReadingBooks(readingInput);
             }
         }

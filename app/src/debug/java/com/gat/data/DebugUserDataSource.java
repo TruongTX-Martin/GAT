@@ -53,11 +53,9 @@ public class DebugUserDataSource implements UserDataSource {
     public Observable<User> getUserInformation() {
         // TODO
         return Observable.just(User.builder()
-                .id(LongId.instance(1))
-                .address("asdf")
+                .userId(1)
                 .name("ducdt")
-                .phoneNumber("1234567890")
-                .avatar("qwertyuiop")
+                .email("duongduc.vn@gmail.com")
                 .build());
     }
 

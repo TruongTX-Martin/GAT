@@ -2,10 +2,12 @@ package com.gat.repository.entity;
 
 import com.gat.common.util.Strings;
 import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONArray;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,17 @@ public class Data<T> {
     public T getDataReturn(Class<T> t){
         String json = new Gson().toJson(resultInfo);
         T t1 = new Gson().fromJson(json, t);
+        return t1;
+    }
+
+    public T getDataReturn(TypeAdapter<T> t){
+        String json = new Gson().toJson(resultInfo);
+        T t1 = null;
+        try {
+            t1 = t.fromJson(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return t1;
     }
 
