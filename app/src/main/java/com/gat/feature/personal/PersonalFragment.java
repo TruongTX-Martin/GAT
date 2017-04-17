@@ -1,7 +1,7 @@
 package com.gat.feature.personal;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,59 +9,55 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gat.R;
-
-import com.gat.app.activity.ScreenActivity;
+import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
-import com.gat.repository.entity.User;
-import com.gat.repository.entity.book.BookReadingEntity;
-import com.gat.repository.entity.book.BookRequestEntity;
-import com.gat.feature.personal.entity.BookRequestInput;
-import com.gat.repository.entity.book.BookSharingEntity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.User;
+import com.gat.repository.entity.book.BookReadingEntity;
+import com.gat.repository.entity.book.BookRequestEntity;
+import com.gat.repository.entity.book.BookSharingEntity;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
- * Created by truongtechno on 23/03/2017.
+ * Created by root on 17/04/2017.
  */
 
-public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPresenter> {
+public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPresenter> {
 
-    //    @BindView(R.id.imgAvatar)
+
+
     CircleImageView imgAvatar;
 
-    @BindView(R.id.txtName)
     TextView txtName;
 
-    @BindView(R.id.txtAddress)
     TextView txtAddress;
 
-    @BindView(R.id.tabLayout)
     TabLayout tabLayout;
 
-    @BindView(R.id.viewpager)
     NonSwipeableViewPager viewPager;
 
     private CompositeDisposable disposablesPersonal;
@@ -80,12 +76,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
     private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
 
     private User userInfo;
-
-    @Override
-    protected PersonalScreen getDefaultScreen() {
-        return PersonalScreen.instance();
-    }
-
+    private Context context;
     @Override
     protected int getLayoutResource() {
         return R.layout.layout_personal_activity;
@@ -96,11 +87,26 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
         return PersonalPresenter.class;
     }
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ClientUtils.context = getApplicationContext();
-        imgAvatar = (CircleImageView) findViewById(R.id.imgAvatar);
+    protected PersonalScreen getDefaultScreen() {
+        return PersonalScreen.instance();
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        imgAvatar = (CircleImageView) findViewById(R.id.imgAvatar);
+        context = getActivity().getApplicationContext();
+        View rootView = inflater.inflate(R.layout.layout_personal_activity,
+                container, false);
+        viewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
+        imgAvatar = (CircleImageView) rootView.findViewById(R.id.imgAvatar);
+        txtName = (TextView) rootView.findViewById(R.id.txtName);
+        txtAddress = (TextView) rootView.findViewById(R.id.txtAddress);
+
+
         disposablesPersonal = new CompositeDisposable(getPresenter().getResponsePersonal().subscribe(this::getUserInfoSuccess),
                 getPresenter().onErrorPersonal().subscribe(this::getUserInfoError));
 
@@ -121,10 +127,8 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
-        //default request book
-//        BookInstanceInput input = new BookInstanceInput(true, false, false);
-//        requestBookInstance(input);
         handleEvent();
+        return rootView;
     }
 
     private void handleEvent() {
@@ -148,7 +152,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
 
     private void setupTabIcons() {
 
-        View tabOne = LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
+        View tabOne = LayoutInflater.from(context).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabOne = (ImageView) tabOne.findViewById(R.id.imgCircle);
         imgTabOne.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_loanbook));
         txtNumberSharing = (TextView) tabOne.findViewById(R.id.txtNumber);
@@ -157,7 +161,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
         txtTitleOne.setText("Sách cho mượn");
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
-        View tabTwo = LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
+        View tabTwo = LayoutInflater.from(context).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabTwo = (ImageView) tabTwo.findViewById(R.id.imgCircle);
         imgTabTwo.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_readingbook));
         txtNumberReading = (TextView) tabTwo.findViewById(R.id.txtNumber);
@@ -166,7 +170,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
         txtTitleTwo.setText("Sách đang đọc");
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 //
-        View tabThree = LayoutInflater.from(this).inflate(R.layout.layout_tab_book, null);
+        View tabThree = LayoutInflater.from(context).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabThree = (ImageView) tabThree.findViewById(R.id.imgCircle);
         imgTabThree.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_requestbook));
         txtNumberRequest = (TextView) tabThree.findViewById(R.id.txtNumber);
@@ -178,7 +182,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
 
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(MainActivity.instance.getSupportFragmentManager());
         if (fragmentBookSharing == null) {
             fragmentBookSharing = new FragmentBookSharing();
             fragmentBookSharing.setParrentActivity(this);
@@ -227,11 +231,6 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        System.out.println("On Back");
-    }
 
     //handle data personal return
     private void getUserInfoSuccess(Data data) {
@@ -258,7 +257,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
     }
 
     private void getUserInfoError(ServerResponse<ResponseData> error) {
-        Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
+        ClientUtils.showToast(error.message());
     }
 
 
@@ -296,7 +295,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
     }
 
     private void getBookInstanceError(ServerResponse<ResponseData> error) {
-        Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
+        ClientUtils.showToast(error.message());
     }
 
 
@@ -331,12 +330,7 @@ public class PersonalActivity extends ScreenActivity<PersonalScreen, PersonalPre
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        disposablesPersonal.dispose();
-        disposablesBookInstance.dispose();
-        disposablesChangeBookSharingStatus.dispose();
-        disposablesReadingBooks.dispose();
-        disposablesBooksRequest.dispose();
     }
 }

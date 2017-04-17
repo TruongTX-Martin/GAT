@@ -19,10 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
-import com.gat.feature.personal.PersonalActivity;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookReadingAdapter;
-import com.gat.repository.entity.book.BookReadingEntity;
 import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.repository.entity.book.BookReadingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class FragmentReadingBook extends Fragment {
     private Context context;
     private BookReadingAdapter adapter;
     private RelativeLayout layoutBottom;
-    private PersonalActivity parrentActivity;
+    private PersonalFragment parrentActivity;
     private BookReadingInput currentInput;
     private boolean isReaded,isReading,isToRead;
     private boolean isRequesting;
@@ -50,7 +51,7 @@ public class FragmentReadingBook extends Fragment {
     private TextView txtMessage;
     private ProgressBar progressBar,progressBarLoadMore;
 
-    public void setParrentActivity(PersonalActivity parrentActivity) {
+    public void setParrentActivity(PersonalFragment parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
 
@@ -131,7 +132,7 @@ public class FragmentReadingBook extends Fragment {
             return;
         }
         isReaded = currentInput.isReadFilter();isReading = currentInput.isReadingFilter();isToRead = currentInput.isToReadFilter();
-        LayoutInflater inflater = LayoutInflater.from(parrentActivity);
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.instance);
         View customView = inflater.inflate(R.layout.layout_popup_book_reading_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
                 ViewGroup.LayoutParams.MATCH_PARENT,
