@@ -19,10 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
-import com.gat.feature.personal.PersonalActivity;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookRequestAdapter;
-import com.gat.repository.entity.book.BookRequestEntity;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.repository.entity.book.BookRequestEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class FragmentBookRequest extends Fragment {
     private RelativeLayout layoutFilter;
     private List<BookRequestEntity> listBookRequest = new ArrayList<>();
     private BookRequestAdapter adapter;
-    private PersonalActivity parrentActivity;
+    private PersonalFragment parrentActivity;
     private BookRequestInput currentInput;
 
 
@@ -85,7 +86,7 @@ public class FragmentBookRequest extends Fragment {
         isRequesting = false;
     }
 
-    public void setParrentActivity(PersonalActivity parrentActivity) {
+    public void setParrentActivity(PersonalFragment parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
 
@@ -157,7 +158,7 @@ public class FragmentBookRequest extends Fragment {
         sharingBorrowing = currentInput.isSharingBorrowing();sharingOther = currentInput.isSharingOther();
         borrowingWaitToConfirm = currentInput.isBorrowWaitConfirm(); borrowingContacting = currentInput.isBorrowBorrowing();
         borrowingBorrowing = currentInput.isBorrowBorrowing(); borrowingOther = currentInput.isBorrowOther();
-        LayoutInflater inflater = LayoutInflater.from(parrentActivity);
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.instance);
         View customView = inflater.inflate(R.layout.layout_popup_book_request_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
                 ViewGroup.LayoutParams.MATCH_PARENT,

@@ -54,7 +54,7 @@ public interface UserRepository {
 
     Observable<List<String>> getUsersSearchedKeyword();
 
-    Observable<Data> getPersonalData();
+    Observable<Data<User>> getPersonalData();
     Observable<Data> getBookRequest(BookRequestInput input);
     Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getReadingBooks(BookReadingInput input);

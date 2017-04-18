@@ -19,7 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
-import com.gat.feature.personal.PersonalActivity;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -38,7 +39,7 @@ public class FragmentBookSharing extends Fragment {
     private ImageView imgFilter;
     private TextView txtMessage;
     private List<BookSharingEntity> listBook = new ArrayList<>();
-    private PersonalActivity parrentActivity;
+    private PersonalFragment parrentActivity;
     private Context context;
     private View rootView;
     private BookInstanceInput currentInput;
@@ -51,7 +52,7 @@ public class FragmentBookSharing extends Fragment {
 
     private RecyclerView recyclerView;
     private BookSharingAdapter adapterBookSharing;
-    public void setParrentActivity(PersonalActivity parrentActivity) {
+    public void setParrentActivity(PersonalFragment parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
 
@@ -142,7 +143,7 @@ public class FragmentBookSharing extends Fragment {
 
     private void showDialogFilter() {
         isSharing = currentInput.isSharingFilter();isNotSharing = currentInput.isNotSharingFilter(); isLost = currentInput.isLostFilter();
-        LayoutInflater inflater = LayoutInflater.from(parrentActivity);
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.instance);
         View customView = inflater.inflate(R.layout.layout_popup_book_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
                 ViewGroup.LayoutParams.MATCH_PARENT,

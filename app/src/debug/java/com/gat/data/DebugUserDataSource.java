@@ -53,11 +53,9 @@ public class DebugUserDataSource implements UserDataSource {
     public Observable<User> getUserInformation() {
         // TODO
         return Observable.just(User.builder()
-                .id(LongId.instance(1))
-                .address("asdf")
+                .userId(1)
                 .name("ducdt")
-                .phoneNumber("1234567890")
-                .avatar("qwertyuiop")
+                .email("duongduc.vn@gmail.com")
                 .build());
     }
 
@@ -315,11 +313,11 @@ public class DebugUserDataSource implements UserDataSource {
         }
 
     @Override
-    public Observable<Data> getPersonalInfo() {
+    public Observable<Data<User>> getPersonalInfo() {
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<Data>>> responseObservable = api.getPersonalInformation();
+        Observable<Response<ServerResponse<Data<User>>>> responseObservable = api.getPersonalInformation();
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
+            ServerResponse<Data<User>> serverResponse = response.body();
             if (serverResponse == null) {
                 serverResponse = ServerResponse.BAD_RESPONSE;
             }
