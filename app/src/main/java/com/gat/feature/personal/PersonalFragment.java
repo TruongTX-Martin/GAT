@@ -1,6 +1,7 @@
 package com.gat.feature.personal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -21,6 +23,7 @@ import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.editinfo.EditInfoActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -36,6 +39,7 @@ import com.gat.repository.entity.book.BookRequestEntity;
 import com.gat.repository.entity.book.BookSharingEntity;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,15 +54,12 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
 
 
-    CircleImageView imgAvatar;
-
-    TextView txtName;
-
-    TextView txtAddress;
-
-    TabLayout tabLayout;
-
-    NonSwipeableViewPager viewPager;
+    private CircleImageView imgAvatar;
+    private TextView txtName;
+    private TextView txtAddress;
+    private TabLayout tabLayout;
+    private NonSwipeableViewPager viewPager;
+    private RelativeLayout layoutInfo;
 
     private CompositeDisposable disposablesPersonal;
     private CompositeDisposable disposablesBookInstance;
@@ -105,6 +106,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         imgAvatar = (CircleImageView) rootView.findViewById(R.id.imgAvatar);
         txtName = (TextView) rootView.findViewById(R.id.txtName);
         txtAddress = (TextView) rootView.findViewById(R.id.txtAddress);
+        layoutInfo = (RelativeLayout) rootView.findViewById(R.id.layoutEdit);
 
 
         disposablesPersonal = new CompositeDisposable(getPresenter().getResponsePersonal().subscribe(this::getUserInfoSuccess),
@@ -147,6 +149,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             public void onPageScrollStateChanged(int state) {
 
             }
+        });
+        layoutInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.instance, EditInfoActivity.class);
+            intent.putExtra("UserInfo",  userInfo);
+            MainActivity.instance.startActivity(intent);
         });
     }
 
