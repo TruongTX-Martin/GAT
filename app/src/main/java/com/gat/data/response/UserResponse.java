@@ -26,6 +26,24 @@ public class UserResponse {
     @SerializedName("address")
     private String address;
 
+    @SerializedName("editionId")
+    private long editionId;
+
+    @SerializedName("sharingCount")
+    private int sharingCount;
+
+    @SerializedName("availableStatus")
+    private int availableStatus;
+
+    @SerializedName("requestingStatus")
+    private int requestingStatus;
+
+    @SerializedName("recordId")
+    private long recordId;
+
+    @SerializedName("recordStatus")
+    private int recordStatus;
+
     @SerializedName("deleteFlag")
     private int deleteFlag;
 
@@ -55,5 +73,29 @@ public class UserResponse {
 
     public int getDeleteFlag() {
         return deleteFlag;
+    }
+
+    public long getEditionId() {
+        return editionId;
+    }
+
+    public int getSharingCount() {
+        return sharingCount;
+    }
+
+    public int getAvailableStatus() {
+        return availableStatus;
+    }
+
+    public int getRequestingStatus() {
+        return requestingStatus;
+    }
+
+    public long getRecordId() {
+        return recordId;
+    }
+
+    public int getRecordStatus() {
+        return recordStatus;
     }
 }

@@ -6,6 +6,10 @@ import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.*;
 import com.gat.domain.usecase.ChangeBookSharingStatus;
@@ -204,5 +208,45 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<Data> getUserInfo() {
         return new GetPersonalData(userRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<BookInfo> getBookInfo(int editionId) {
+        return new GetBookInfo(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<List<EvaluationItemResponse>> getBookEditionEvaluation(int editionId) {
+        return new GetBookEditionEvaluation(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<BookReadingInfo> getReadingStatus(int editionId) {
+        return new GetReadingStatus(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<EvaluationItemResponse> getBookEvaluationByUser(int editionId) {
+        return new GetBookEvaluationByUser(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<List<UserResponse>> getEditionSharingUser(int editionId) {
+        return new GetEditionSharingUser(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler) {
+        return new PostComment(bookRepositoryLazy.get(), editionId, value, review, spoiler);
+    }
+
+    @Override
+    public UseCase<BookInstanceInfo> getSelfInstanceInfo(int editionId) {
+        return new GetSelfInstanceInfo(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<ServerResponse> selfAddInstance(int editionId, int sharingStatus, String numberOfBook) {
+        return new SelfAddInstance(bookRepositoryLazy.get(), editionId, sharingStatus, numberOfBook);
     }
 }

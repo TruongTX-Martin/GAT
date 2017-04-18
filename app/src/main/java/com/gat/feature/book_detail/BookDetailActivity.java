@@ -26,9 +26,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     ScrollView scrollView;
 
 
-
-
-
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_book_detail;

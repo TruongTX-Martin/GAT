@@ -6,6 +6,10 @@ import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -85,5 +89,21 @@ public interface UseCaseFactory {
     UseCase<Data> getBookRequest(BookRequestInput input);
 
     UseCase<Data> getUserInfo();
+
+    UseCase<BookInfo> getBookInfo (int editionId);
+
+    UseCase<List<EvaluationItemResponse>> getBookEditionEvaluation (int editionId);
+
+    UseCase<BookReadingInfo> getReadingStatus(int editionId);
+
+    UseCase<EvaluationItemResponse> getBookEvaluationByUser (int editionId);
+
+    UseCase<List<UserResponse>> getEditionSharingUser (int editionId);
+
+    UseCase<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler);
+
+    UseCase <BookInstanceInfo> getSelfInstanceInfo (int editionId);
+
+    UseCase<ServerResponse> selfAddInstance (int editionId, int sharingStatus, String numberOfBook);
 
 }
