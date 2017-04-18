@@ -202,7 +202,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Data> getUserInfo() {
+    public UseCase<Data<User>> getUserInfo() {
         return new GetPersonalData(userRepositoryLazy.get());
     }
 }

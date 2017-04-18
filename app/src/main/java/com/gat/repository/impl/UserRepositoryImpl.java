@@ -18,6 +18,7 @@ import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -56,8 +57,9 @@ public class UserRepositoryImpl implements UserRepository {
                 .flatMap(response -> {
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
                     localUserDataSourceLazy.get().saveLoginData(data);
-                    return networkUserDataSourceLazy.get().getUserInformation();
+                    return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
+                .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
                 .flatMap(user -> localUserDataSourceLazy.get().persitUser(user))
                 .doOnNext(userSubject::onNext));
     }
@@ -66,7 +68,8 @@ public class UserRepositoryImpl implements UserRepository {
     public Observable<User> login() {
         return Observable.defer(() -> localUserDataSourceLazy.get().loadLoginData()
                 .flatMap(loginData -> networkUserDataSourceLazy.get().login(loginData))
-                .flatMap(response -> networkUserDataSourceLazy.get().getUserInformation())
+                .flatMap(response -> networkUserDataSourceLazy.get().getPersonalInfo())
+                .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
                 .doOnNext(userSubject::onNext));
     }
 
@@ -82,8 +85,9 @@ public class UserRepositoryImpl implements UserRepository {
                 .flatMap(response -> {
                     localUserDataSourceLazy.get().saveLoginData(data);
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
-                    return networkUserDataSourceLazy.get().getUserInformation();
+                    return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
+                .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
                 .flatMap(user -> localUserDataSourceLazy.get().persitUser(user))
                 .doOnNext(userSubject::onNext)
         );
@@ -169,7 +173,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<Data> getPersonalData() {
+    public Observable<Data<User>> getPersonalData() {
         return Observable.defer(()->networkUserDataSourceLazy.get().getPersonalInfo());
     }
 

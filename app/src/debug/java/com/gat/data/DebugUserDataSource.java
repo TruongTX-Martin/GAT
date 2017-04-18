@@ -313,11 +313,11 @@ public class DebugUserDataSource implements UserDataSource {
         }
 
     @Override
-    public Observable<Data> getPersonalInfo() {
+    public Observable<Data<User>> getPersonalInfo() {
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<Data>>> responseObservable = api.getPersonalInformation();
+        Observable<Response<ServerResponse<Data<User>>>> responseObservable = api.getPersonalInformation();
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
+            ServerResponse<Data<User>> serverResponse = response.body();
             if (serverResponse == null) {
                 serverResponse = ServerResponse.BAD_RESPONSE;
             }

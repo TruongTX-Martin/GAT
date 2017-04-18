@@ -12,6 +12,7 @@ import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.User;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,7 +35,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private final Subject<Data> personalResultSubject;
     private final Subject<String> personalInputSubject;
     private final Subject<ServerResponse<ResponseData>> personalError;
-    private UseCase<Data> getPersonalUsecase;
+    private UseCase<Data<User>> getPersonalUsecase;
 
     //get book instance
     private CompositeDisposable bookInstanceDisposable;

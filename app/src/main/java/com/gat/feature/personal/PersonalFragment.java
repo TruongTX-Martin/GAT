@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -48,16 +49,19 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPresenter> {
 
-
-
+    @BindView(R.id.imgAvatar)
     CircleImageView imgAvatar;
 
+    @BindView(R.id.txtName)
     TextView txtName;
 
+    @BindView(R.id.txtAddress)
     TextView txtAddress;
 
+    @BindView(R.id.tabLayout)
     TabLayout tabLayout;
 
+    @BindView(R.id.viewpager)
     NonSwipeableViewPager viewPager;
 
     private CompositeDisposable disposablesPersonal;
@@ -76,7 +80,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
 
     private User userInfo;
-    private Context context;
+    //private Context context;
     @Override
     protected int getLayoutResource() {
         return R.layout.layout_personal_activity;
@@ -96,15 +100,14 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
 //        imgAvatar = (CircleImageView) findViewById(R.id.imgAvatar);
-        context = getActivity().getApplicationContext();
-        View rootView = inflater.inflate(R.layout.layout_personal_activity,
-                container, false);
-        viewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.viewpager);
-        tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
-        imgAvatar = (CircleImageView) rootView.findViewById(R.id.imgAvatar);
-        txtName = (TextView) rootView.findViewById(R.id.txtName);
-        txtAddress = (TextView) rootView.findViewById(R.id.txtAddress);
+        //context = getActivity().getApplicationContext();
+        //viewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.viewpager);
+        //tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
+        //imgAvatar = (CircleImageView) rootView.findViewById(R.id.imgAvatar);
+        //txtName = (TextView) rootView.findViewById(R.id.txtName);
+        //txtAddress = (TextView) rootView.findViewById(R.id.txtAddress);
 
 
         disposablesPersonal = new CompositeDisposable(getPresenter().getResponsePersonal().subscribe(this::getUserInfoSuccess),
@@ -152,7 +155,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void setupTabIcons() {
 
-        View tabOne = LayoutInflater.from(context).inflate(R.layout.layout_tab_book, null);
+        View tabOne = LayoutInflater.from(mContext).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabOne = (ImageView) tabOne.findViewById(R.id.imgCircle);
         imgTabOne.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_loanbook));
         txtNumberSharing = (TextView) tabOne.findViewById(R.id.txtNumber);
@@ -161,7 +164,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         txtTitleOne.setText("Sách cho mượn");
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
-        View tabTwo = LayoutInflater.from(context).inflate(R.layout.layout_tab_book, null);
+        View tabTwo = LayoutInflater.from(mContext).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabTwo = (ImageView) tabTwo.findViewById(R.id.imgCircle);
         imgTabTwo.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_readingbook));
         txtNumberReading = (TextView) tabTwo.findViewById(R.id.txtNumber);
@@ -170,7 +173,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         txtTitleTwo.setText("Sách đang đọc");
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 //
-        View tabThree = LayoutInflater.from(context).inflate(R.layout.layout_tab_book, null);
+        View tabThree = LayoutInflater.from(mContext).inflate(R.layout.layout_tab_book, null);
         ImageView imgTabThree = (ImageView) tabThree.findViewById(R.id.imgCircle);
         imgTabThree.setImageDrawable(getResources().getDrawable(R.drawable.ic_circle_requestbook));
         txtNumberRequest = (TextView) tabThree.findViewById(R.id.txtNumber);
@@ -233,9 +236,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
 
     //handle data personal return
-    private void getUserInfoSuccess(Data data) {
+    private void getUserInfoSuccess(Data<User> data) {
         if (data != null) {
-            userInfo = (User) data.getDataReturn(User.typeAdapter(new Gson()));
+            userInfo = data.getDataReturn(User.typeAdapter(new Gson()));
             if (userInfo == null)
                 userInfo = User.NONE;
             if (!Strings.isNullOrEmpty(userInfo.name())) {
