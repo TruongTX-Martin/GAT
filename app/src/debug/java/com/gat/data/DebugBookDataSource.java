@@ -226,18 +226,22 @@ public class DebugBookDataSource implements BookDataSource {
     public Observable<BookInfo> getBookInfo(int editionId) {
         MZDebug.w("_____________________________________ getBookInfo ____________________________");
 
-        GatApi api = dataComponent.getPrivateGatApi();
+        GatApi api = dataComponent.getPublicGatApi();
         Observable<Response<ServerResponse<ResultInfoObject<BookInfo>>>> responseObservable;
         responseObservable = api.getBookInfo(editionId);
 
-        return responseObservable.map( response -> response.body().data().getResultInfo());
+        return responseObservable.map( response -> {
+            MZDebug.w("book info response: " + response.body().toString());
+
+            return  response.body().data().getResultInfo();
+        });
     }
 
     @Override
     public Observable<List<EvaluationItemResponse>> getBookEditionEvaluation(int editionId) {
         MZDebug.w("________________________ getBookEditionEvaluation ____________________________");
 
-        GatApi api = dataComponent.getPrivateGatApi();
+        GatApi api = dataComponent.getPublicGatApi();
         Observable<Response<ServerResponse<DataResultListResponse<EvaluationItemResponse>>>> responseObservable;
         responseObservable = api.getBookEditionEvaluation(editionId);
 
@@ -273,7 +277,7 @@ public class DebugBookDataSource implements BookDataSource {
     public Observable<List<UserResponse>> getEditionSharingUser(int editionId) {
         MZDebug.w("____________________________ getEditionSharingUser ___________________________");
 
-        GatApi api = dataComponent.getPrivateGatApi();
+        GatApi api = dataComponent.getPublicGatApi();
         Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> responseObservable;
         responseObservable = api.getEditionSharingUser(editionId);
 

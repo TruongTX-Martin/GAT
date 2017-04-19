@@ -3,10 +3,16 @@ package com.gat.feature.book_detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.MZDebug;
+import com.gat.data.response.impl.BookInfo;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseActivity;
 import com.gat.feature.book_detail.comment.CommentActivity;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookActivity;
@@ -15,6 +21,7 @@ import com.gat.feature.book_detail.share_book.ShareBookActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by mryit on 4/16/2017.
@@ -25,6 +32,35 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     @BindView(R.id.scroll_view)
     ScrollView scrollView;
 
+    @BindView(R.id.text_view_book_name)
+    TextView textViewBookName;
+
+    @BindView(R.id.text_view_book_author)
+    TextView textViewBookAuthor;
+
+    @BindView(R.id.text_view_rating)
+    TextView textViewRating;
+
+    @BindView(R.id.rating_bar_book)
+    RatingBar ratingBarBook;
+
+    @BindView(R.id.button_reading_state)
+    Button buttonReadingState;
+
+    @BindView(R.id.text_view_comment_by_user)
+    TextView textViewCommentByUser;
+
+    @BindView(R.id.button_comment)
+    Button buttonComment;
+
+    @BindView(R.id.text_view_book_description)
+    TextView textViewBookDescription;
+
+    @BindView(R.id.text_view_sharing_book)
+    TextView textViewSharingBook;
+
+
+    private CompositeDisposable disposables;
 
     @Override
     protected int getLayoutResource() {
@@ -38,12 +74,28 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @Override
     protected Object getPresenterKey() {
-        return BookDetailScreen.instance();
+        return BookDetailScreen.instance(getScreen().editionId());
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getPresenter().setEditionId(getScreen().editionId());
+
+
+        disposables = new CompositeDisposable(
+                getPresenter().onGetBookInfoSuccess().subscribe(this::onGetBookInfoSuccess)
+        );
+
+        getPresenter().getBookInfo();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        scrollView.smoothScrollBy(0,0);
     }
 
     @Override
@@ -85,6 +137,20 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         Intent intent = new Intent(getApplicationContext(), ListUserSharingBookActivity.class);
         startActivity(intent);
     }
+
+
+    private void onGetBookInfoSuccess (BookInfo book) {
+        MZDebug.w(" onGetBookInfoSuccess: " + book.toString());
+
+        textViewBookName.setText(book.getTitle());
+        textViewBookAuthor.setText(book.getAuthor().get(0).getAuthorName());
+        textViewRating.setText(String.valueOf(book.getRateAvg()));
+        ratingBarBook.setRating(book.getRateAvg());
+        textViewSharingBook.setText(String.valueOf(book.getSharingCount()));
+        textViewBookDescription.setText(book.getDescription());
+    }
+
+
 
 
 }

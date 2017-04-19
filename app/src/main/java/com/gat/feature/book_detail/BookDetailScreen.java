@@ -10,8 +10,10 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class BookDetailScreen implements Screen {
 
-    public static BookDetailScreen instance () {
-        return new AutoValue_BookDetailScreen();
+    public static BookDetailScreen instance (int editionId) {
+        return new AutoValue_BookDetailScreen(editionId);
     }
+
+    public abstract int editionId();
 
 }

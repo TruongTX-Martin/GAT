@@ -96,7 +96,8 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof SuggestSearchScreen) {
 
         } else if (screen instanceof BookDetailScreen) {
-
+            BookDetailScreen bookDetailScreen = (BookDetailScreen) screen;
+            dest.writeInt(bookDetailScreen.editionId());
         }
 
         else {
@@ -139,7 +140,7 @@ public class ParcelableScreen implements Parcelable {
                 screen = MainScreen.instance();
                 break;
             case BOOK_DETAIL:
-                screen = BookDetailScreen.instance();
+                screen = BookDetailScreen.instance(in.readInt());
                 break;
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);

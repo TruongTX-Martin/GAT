@@ -68,9 +68,23 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/fl_header"
                 android:layout_toEndOf="@+id/image_view_book_cover"
-                android:text="Steve Jobs - Thiên tài gàn dở và câu chuyện thần kỳ về quả táo"
+                android:text="..."
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/large_text_view_size" />
+
+
+            <TextView
+                android:id="@+id/tv_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_book_name"
+                android:layout_marginBottom="@dimen/margin_top_bottom_normal"
+                android:layout_marginTop="@dimen/margin_top_bottom_normal"
+                android:layout_toEndOf="@+id/image_view_book_cover"
+                android:text="Tác giả: "
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/normal_text_view_size" />
+
 
             <TextView
                 android:id="@+id/text_view_book_author"
@@ -79,8 +93,8 @@
                 android:layout_below="@+id/text_view_book_name"
                 android:layout_marginBottom="@dimen/margin_top_bottom_normal"
                 android:layout_marginTop="@dimen/margin_top_bottom_normal"
-                android:layout_toEndOf="@+id/image_view_book_cover"
-                android:text="Tác giả: Leander Kahney"
+                android:layout_toEndOf="@+id/tv_author"
+                android:text="..."
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/normal_text_view_size" />
 
@@ -94,7 +108,6 @@
                 android:layout_toEndOf="@+id/image_view_book_cover"
                 android:isIndicator="true"
                 android:numStars="5"
-                android:rating="4.5"
                 android:stepSize="0.5" />
 
             <TextView
@@ -103,13 +116,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_view_book_author"
                 android:layout_toEndOf="@+id/rating_bar_book"
-                android:text="4.5"
+                android:text="..."
                 android:textColor="@android:color/white" />
 
             <ImageButton
                 android:id="@+id/image_button_plus"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
+                android:clickable="true"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@+id/image_view_book_cover"
                 android:background="@android:color/transparent"
@@ -141,11 +155,11 @@
             android:paddingRight="@dimen/paddingNormal">
 
             <TextView
-                android:id="@+id/text_view_sharing_count"
+                android:id="@+id/text_view_sharing_book"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="15" />
+                android:text="..." />
 
             <Button
                 android:id="@+id/button_view_list"
@@ -165,7 +179,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/text_view_sharing_count"
+                android:layout_toEndOf="@+id/text_view_sharing_book"
                 android:layout_toStartOf="@+id/button_view_list"
                 android:lines="1"
                 android:maxLines="1"
@@ -197,6 +211,7 @@
                 android:stepSize="0.5" />
 
             <TextView
+                android:id="@+id/text_view_comment_by_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -241,8 +256,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_horizontal_large"
             android:layout_marginRight="@dimen/margin_horizontal_large"
-            android:maxLines="5"
-            android:text="@string/book_description"
+            android:maxLines="6"
+            android:text="..."
             android:textColor="@color/colorTextViewDark" />
 
         <TextView

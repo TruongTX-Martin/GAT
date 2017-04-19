@@ -26,6 +26,7 @@ import com.gat.common.util.MZDebug;
 import com.gat.common.util.TrackGPS;
 import com.gat.data.response.BookResponse;
 import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
@@ -46,7 +47,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 
 public class SuggestionFragment extends ScreenFragment<SuggestionScreen, SuggestionPresenter>
-        implements EasyPermissions.PermissionCallbacks, IRecyclerViewItemClickListener {
+        implements EasyPermissions.PermissionCallbacks, BookSuggestAdapter.IBookSuggestItemClickListener{
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1986;
 
     @BindView(R.id.image_button_search)
@@ -311,8 +312,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     }
 
     @Override
-    public void onItemClickListener(View v, int position) {
-        Intent intent = new Intent(getActivity(),BookDetailActivity.class);
-        startActivity(intent);
+    public void onItemBookClickListener(View view, BookResponse book) {
+        MainActivity.start(getActivity(), BookDetailActivity.class, BookDetailScreen.instance( (int) book.getEditionId()));
     }
 }

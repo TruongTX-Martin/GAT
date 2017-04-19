@@ -2,6 +2,8 @@ package com.gat.common;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.gat.BuildConfig;
 import com.gat.dependency.AppComponent;
@@ -16,7 +18,7 @@ import timber.log.Timber;
 /**
  * Created by Rey on 1/9/2016.
  */
-public class BootstrapApplication extends Application implements HasComponent<AppComponent>{
+public class BootstrapApplication extends MultiDexApplication implements HasComponent<AppComponent>{
 
     private AppComponent mAppComponent;
 
@@ -27,15 +29,17 @@ public class BootstrapApplication extends Application implements HasComponent<Ap
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        if(BuildConfig.MULTI_DEX){
-            try {
-                Class<?> clazz = Class.forName("android.support.multidex.MultiDex");
-                Method method = clazz.getDeclaredMethod("install", Context.class);
-                method.invoke(null, this);
-            } catch (Exception e) {
-                Timber.e(e, "Error");
-            }
-        }
+//        if(BuildConfig.MULTI_DEX){
+//            try {
+//                Class<?> clazz = Class.forName("android.support.multidex.MultiDex");
+//                Method method = clazz.getDeclaredMethod("install", Context.class);
+//                method.invoke(null, this);
+//            } catch (Exception e) {
+//                Timber.e(e, "Error");
+//            }
+//        }
+
+        MultiDex.install(this);
     }
 
     @Override

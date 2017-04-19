@@ -32,9 +32,9 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
 
     private List<BookResponse> mListBookSuggest;
     private Context mContext;
-    private IRecyclerViewItemClickListener clickListener;
+    private IBookSuggestItemClickListener clickListener;
 
-    public BookSuggestAdapter(Context context, List<BookResponse> listBookSuggest, IRecyclerViewItemClickListener listener) {
+    public BookSuggestAdapter(Context context, List<BookResponse> listBookSuggest, IBookSuggestItemClickListener listener) {
         this.mContext = context;
         this.mListBookSuggest = listBookSuggest;
         this.clickListener = listener;
@@ -46,7 +46,7 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
         final BookSuggestHolder mViewHolder = new BookSuggestHolder(itemView);
 
         itemView.setOnClickListener(view -> {
-            clickListener.onItemClickListener(view, mViewHolder.getAdapterPosition());
+            clickListener.onItemBookClickListener(view, mListBookSuggest.get(mViewHolder.getAdapterPosition()));
         });
 
         return mViewHolder;
@@ -105,6 +105,10 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface IBookSuggestItemClickListener {
+        void onItemBookClickListener (View view, BookResponse book);
     }
 
 }

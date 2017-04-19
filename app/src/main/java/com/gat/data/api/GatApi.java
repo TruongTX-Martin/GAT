@@ -222,7 +222,7 @@ public interface GatApi {
             @Query("editionId") int editionId
     );
 
-    @GET("book/get_edition_evaluation")
+    @GET("book/selfget_reading_stt")
     Observable<Response<ServerResponse<ResultInfoObject<BookReadingInfo>>>> getReadingStatus (
             @Query("editionId") int editionId
     );
