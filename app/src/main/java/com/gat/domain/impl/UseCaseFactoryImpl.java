@@ -27,6 +27,7 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
@@ -204,5 +205,10 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<Data> getUserInfo() {
         return new GetPersonalData(userRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Data> updateInfo(EditInfoInput input) {
+        return new EditInfo(userRepositoryLazy.get(), input);
     }
 }

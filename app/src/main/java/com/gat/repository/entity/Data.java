@@ -18,6 +18,7 @@ import java.util.List;
 public class Data<T> {
 
 
+
     @SerializedName("resultInfo")
     private Object resultInfo;
 

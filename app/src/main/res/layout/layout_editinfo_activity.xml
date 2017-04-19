@@ -95,7 +95,7 @@
             android:src="@drawable/ic_account" />
 
         <ImageView
-            android:id="@+id/imgDelete"
+            android:id="@+id/imgChangeName"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
@@ -103,16 +103,19 @@
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_close" />
 
-        <TextView
-            android:id="@+id/txtName"
+        <EditText
+            android:id="@+id/edtName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/imgDelete"
+            android:layout_toLeftOf="@+id/imgChangeName"
             android:layout_toRightOf="@+id/imgAccount"
-            android:gravity="left"
-            android:text="Tran Xuan Truong"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
             android:textColor="#000000"
+            android:background="@drawable/round_edittext"
+            android:hint="Type your name"
             android:textSize="15dp" />
 
         <View

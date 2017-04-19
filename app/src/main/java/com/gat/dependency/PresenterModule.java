@@ -2,6 +2,8 @@ package com.gat.dependency;
 
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
+import com.gat.feature.editinfo.EditInfoPresenter;
+import com.gat.feature.editinfo.EditInfoPresenterImpl;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
 import com.gat.feature.main.MainPresenter;
@@ -100,5 +102,11 @@ public class PresenterModule {
     PersonalPresenter providePersonalPresenter(UseCaseFactory useCaseFactory,
                                                SchedulerFactory schedulerFactory){
         return  new PersonalPresenterImpl(useCaseFactory,schedulerFactory);
+    }
+
+    @Provides
+    EditInfoPresenter provideEditInfoPresenter(UseCaseFactory useCaseFactory,
+                                               SchedulerFactory schedulerFactory){
+        return  new EditInfoPresenterImpl(useCaseFactory,schedulerFactory);
     }
 }

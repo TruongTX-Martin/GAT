@@ -1,6 +1,7 @@
 package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
+import com.gat.feature.editinfo.EditInfoScreen;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.personal.PersonalScreen;
@@ -49,6 +50,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getSuggestSearchPresenter();
         else if (key instanceof PersonalScreen){
             return (P) presenterComponent.getPersonalPresenter();
+        }else if(key instanceof EditInfoScreen){
+            return (P) presenterComponent.getEditInfoPresenter();
         }
 
         throw new IllegalArgumentException("Not support key " + key);

@@ -5,6 +5,7 @@ import android.location.Address;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
@@ -59,4 +60,5 @@ public interface UserRepository {
     Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getReadingBooks(BookReadingInput input);
     Observable<Data> getBookInstance(BookInstanceInput input);
+    Observable<Data> updateUserInfo(EditInfoInput input);
 }

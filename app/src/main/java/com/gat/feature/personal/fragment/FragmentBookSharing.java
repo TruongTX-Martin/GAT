@@ -35,7 +35,7 @@ import java.util.List;
 
 public class FragmentBookSharing extends Fragment {
 
-    private ProgressBar progressBar,progressLoadMore;
+    private ProgressBar progressBar, progressLoadMore;
     private ImageView imgFilter;
     private TextView txtMessage;
     private List<BookSharingEntity> listBook = new ArrayList<>();
@@ -43,15 +43,15 @@ public class FragmentBookSharing extends Fragment {
     private Context context;
     private View rootView;
     private BookInstanceInput currentInput;
-    private boolean isSharing,isNotSharing,isLost;
+    private boolean isSharing, isNotSharing, isLost;
     //for loadmore listview
-    private int firstVisibleItem, visibleItemCount,totalItemCount;
-    private boolean isRequesting = false;
-
+    private boolean isRequesting;
+    private boolean isContinueMore = true;
     private RelativeLayout layoutBottom;
 
     private RecyclerView recyclerView;
     private BookSharingAdapter adapterBookSharing;
+
     public void setParrentActivity(PersonalFragment parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
@@ -60,14 +60,17 @@ public class FragmentBookSharing extends Fragment {
         if (listBook != null && listBook.size() > 0) {
             this.listBook.addAll(listBook);
         }
-        if(currentInput.getPage() == 1){
-            if(listBook.size() == 0){
+        if (currentInput.getPage() == 1) {
+            if (listBook.size() == 0) {
                 recyclerView.setVisibility(View.GONE);
                 txtMessage.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 recyclerView.setVisibility(View.VISIBLE);
                 txtMessage.setVisibility(View.GONE);
             }
+        }
+        if (currentInput.getPage() > 1 && listBook.size() == 0) {
+            isContinueMore = false;
         }
         hideLoading();
         hideLoadMore();
@@ -84,13 +87,13 @@ public class FragmentBookSharing extends Fragment {
         initView();
         handleEvent();
         showLoading();
-        currentInput = new BookInstanceInput(true,false,false);
+        currentInput = new BookInstanceInput(true, false, false);
         searchBook(currentInput);
         return rootView;
     }
 
-    private void initView(){
-        adapterBookSharing = new BookSharingAdapter(listBook, getActivity().getApplicationContext(),this);
+    private void initView() {
+        adapterBookSharing = new BookSharingAdapter(listBook, getActivity().getApplicationContext(), this);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerRequest);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
@@ -103,28 +106,36 @@ public class FragmentBookSharing extends Fragment {
         layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
         recyclerView.setAdapter(adapterBookSharing);
     }
+
     private void handleEvent() {
         layoutBottom.setOnClickListener(v -> {
             showDialogFilter();
         });
     }
-    public void loadMore(){
-        showLoadMore();
-        currentInput.setPage(currentInput.getPage()+1);
-        searchBook(currentInput);
+
+    public void loadMore() {
+        if (isRequesting == false && isContinueMore) {
+            showLoadMore();
+            currentInput.setPage(currentInput.getPage() + 1);
+            searchBook(currentInput);
+        }
     }
-    private void showLoading(){
+
+    private void showLoading() {
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
     }
-    private void hideLoading(){
+
+    private void hideLoading() {
         recyclerView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
     }
-    private void showLoadMore(){
+
+    private void showLoadMore() {
         progressLoadMore.setVisibility(View.VISIBLE);
     }
-    private void hideLoadMore(){
+
+    private void hideLoadMore() {
         progressLoadMore.setVisibility(View.GONE);
     }
 
@@ -142,7 +153,9 @@ public class FragmentBookSharing extends Fragment {
     }
 
     private void showDialogFilter() {
-        isSharing = currentInput.isSharingFilter();isNotSharing = currentInput.isNotSharingFilter(); isLost = currentInput.isLostFilter();
+        isSharing = currentInput.isSharingFilter();
+        isNotSharing = currentInput.isNotSharingFilter();
+        isLost = currentInput.isLostFilter();
         LayoutInflater inflater = LayoutInflater.from(MainActivity.instance);
         View customView = inflater.inflate(R.layout.layout_popup_book_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
@@ -160,13 +173,14 @@ public class FragmentBookSharing extends Fragment {
         RelativeLayout layoutLostOverlay = (RelativeLayout) customView.findViewById(R.id.layoutBookLostOverlay);
         imgClose.setOnClickListener(v -> {
             if (currentInput.isSharingFilter() == isSharing && currentInput.isNotSharingFilter() == isNotSharing
-                    && currentInput.isLostFilter() == isLost){
+                    && currentInput.isLostFilter() == isLost) {
                 //do nothing
-            }else{
+            } else {
                 currentInput.setSharingFilter(isSharing);
                 currentInput.setNotSharingFilter(isNotSharing);
                 currentInput.setLostFilter(isLost);
                 currentInput.setPage(1);
+                isContinueMore = true;
                 searchBook(currentInput);
             }
             currentInput.setSharingFilter(isSharing);
@@ -182,7 +196,7 @@ public class FragmentBookSharing extends Fragment {
         layoutSharingOverlay.setOnClickListener(v -> {
             layoutSharingBorder.setVisibility(View.VISIBLE);
             layoutSharingOverlay.setVisibility(View.GONE);
-           isSharing = true;
+            isSharing = true;
         });
         layoutNotSharingBorder.setOnClickListener(v -> {
             layoutNotSharingBorder.setVisibility(View.GONE);
@@ -204,24 +218,24 @@ public class FragmentBookSharing extends Fragment {
             layoutLostOverlay.setVisibility(View.GONE);
             isLost = true;
         });
-        if(currentInput.isSharingFilter()){
+        if (currentInput.isSharingFilter()) {
             layoutSharingBorder.setVisibility(View.VISIBLE);
             layoutSharingOverlay.setVisibility(View.GONE);
-        }else{
+        } else {
             layoutSharingBorder.setVisibility(View.GONE);
             layoutSharingOverlay.setVisibility(View.VISIBLE);
         }
-        if(currentInput.isNotSharingFilter()){
+        if (currentInput.isNotSharingFilter()) {
             layoutNotSharingBorder.setVisibility(View.VISIBLE);
             layoutNotSharingOverlay.setVisibility(View.GONE);
-        }else{
+        } else {
             layoutNotSharingBorder.setVisibility(View.GONE);
             layoutNotSharingOverlay.setVisibility(View.VISIBLE);
         }
-        if(currentInput.isLostFilter()){
+        if (currentInput.isLostFilter()) {
             layoutLostBorder.setVisibility(View.VISIBLE);
             layoutLostOverlay.setVisibility(View.GONE);
-        }else{
+        } else {
             layoutLostBorder.setVisibility(View.GONE);
             layoutLostOverlay.setVisibility(View.VISIBLE);
         }
@@ -231,24 +245,28 @@ public class FragmentBookSharing extends Fragment {
 
 
     private void searchBook(BookInstanceInput input) {
-        isRequesting = true;
-        parrentActivity.requestBookInstance(input);
-        if(input.getPage() == 1){
-            txtMessage.setVisibility(View.GONE);
-            showLoading();
-            listBook.clear();
+        try {
+            isRequesting = true;
+            parrentActivity.requestBookInstance(input);
+            if (input.getPage() == 1) {
+                txtMessage.setVisibility(View.GONE);
+                showLoading();
+                listBook.clear();
+            }
+        } catch (Exception e) {
         }
     }
-    public void changeStatusBook(BookSharingEntity entity, int position){
-        if(entity.getSharingStatus() == 0){
+
+    public void changeStatusBook(BookSharingEntity entity, int position) {
+        if (entity.getSharingStatus() == 0) {
             entity.setSharingStatus(1);
-        }else{
+        } else {
             entity.setSharingStatus(0);
         }
-        BookChangeStatusInput input = new BookChangeStatusInput(entity.getInstanceId(),entity.getSharingStatus());
+        BookChangeStatusInput input = new BookChangeStatusInput(entity.getInstanceId(), entity.getSharingStatus());
         parrentActivity.requestChangeStatusBook(input);
         listBook.remove(position);
-        listBook.add(position,entity);
+        listBook.add(position, entity);
     }
 
 }
