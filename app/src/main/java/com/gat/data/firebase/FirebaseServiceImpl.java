@@ -1,13 +1,14 @@
 package com.gat.data.firebase;
 
 import android.util.Log;
+import android.util.Pair;
 
-import com.gat.data.id.LongId;
+import com.gat.common.util.Strings;
+import com.gat.data.firebase.entity.MessageTable;
 import com.gat.domain.SchedulerFactory;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Group;
 import com.gat.repository.entity.Message;
-import com.gat.repository.entity.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -45,10 +46,14 @@ public class FirebaseServiceImpl implements FirebaseService{
 
     private final int GROUP_SIZE = 10;
     private final int MESSAGE_SIZE = 10;
+    private long mUserId = 0;
+    private String mGroupId = "";
 
-    private int groupPageCnt = 1;
-    private int mesPageCnt = 1;
-    private String groupId;
+    private int mGroupPage = 0;
+    private int mMessagePage = 0;
+
+    private long mGroupCnt = 0;
+    private long mMessageCnt = 0;
 
     private final Lazy<UserDataSource> userDataSourceLazy;
     private final SchedulerFactory schedulerFactory;
@@ -65,198 +70,207 @@ public class FirebaseServiceImpl implements FirebaseService{
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
+    /** For group list **/
+    private Subject<Long> userIdSubject;      // input to get group list
     // To emmit list of group
     private Subject<List<Group>> groupListSubject;
-    private Subject<List<Group>> loadMoreGroupListSubject;
+    private Subject<Group> updatedGroupSubject;
     // To store groups list
     private List<Group> groups;
+
+    /** For message list **/
+    private Subject<String> groupIdSubject;
     // To emmit list of message
     private Subject<List<Message>> messageListSubject;
-    private Subject<List<Message>> loadMoreMessageListSubject;
+    private Subject<Message> hasNewMessageSubject;
     // To store message list
     private List<Message> messages;
 
-    private Subject<String> groupIdSubject;
-
-    private Subject<Message> messageSubject;
-
-    private Subject<Message> groupMessageSubject;
-
-    private Subject<String> newGroupSubject;
+    /** send message **/
+    private Subject<Pair<String, MessageTable>> sendMessageSubject;
+    private Subject<Boolean> sendMessageResult;
 
     private CompositeDisposable compositeDisposable;
 
-    private Subject<Integer> loadMoreGroupSubject;
+    private ChildEventListener messageChildEventListener = null;
+    private ChildEventListener groupChildEventListener = null;
 
-    private Subject<Integer> loadMoreMessageSubject;
-
-    private ChildEventListener messageChildEventListener;
-    private ChildEventListener groupChildEventListener;
-
-
-    private static boolean isCalled = false;
     private void init() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
         if (firebaseUser == null) {
-            login();
+            // TODO
         }
 
+        /** Group **/
+        userIdSubject = BehaviorSubject.create();
         groupListSubject = BehaviorSubject.create();
-        loadMoreGroupListSubject = BehaviorSubject.create();
-        messageListSubject = BehaviorSubject.create();
-        loadMoreMessageListSubject = BehaviorSubject.create();
-        groupIdSubject = BehaviorSubject.create();
-        messageSubject = BehaviorSubject.create();
-        groupMessageSubject = BehaviorSubject.create();
-        newGroupSubject = BehaviorSubject.create();
-        loadMoreGroupSubject = BehaviorSubject.create();
-        loadMoreMessageSubject = BehaviorSubject.create();
-
+        updatedGroupSubject = BehaviorSubject.create();
         groups = new ArrayList<>();
 
-        groupListSubject.onNext(groups);
-
+        /** Message **/
+        groupIdSubject = BehaviorSubject.create();
+        messageListSubject = BehaviorSubject.create();
+        hasNewMessageSubject = BehaviorSubject.create();
         messages = new ArrayList<>();
 
-        messageListSubject.onNext(messages);
+        /** send message **/
+        sendMessageSubject = BehaviorSubject.create();
+        sendMessageResult = BehaviorSubject.create();
+
+        groupChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "GroupChild:Added");
+                if (dataSnapshot.exists())
+                    makeGroupList(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "GroupChild:Changed");
+                if (dataSnapshot.exists())
+                    makeGroupList(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "GroupChild:Removed");
+                //if (dataSnapshot.exists())
+                //    makeGroupList(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "GroupChild:Moved");
+                if (dataSnapshot.exists())
+                    makeGroupList(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "GroupChild:"+databaseError.getMessage());
+            }
+        };
+
+        messageChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+                    MessageTable messageTable = dataSnapshot.getValue(MessageTable.class);
+                    Message message = Message.builder()
+                            .userId(messageTable.getUserId())
+                            .message(messageTable.getMessage())
+                            .timeStamp(messageTable.getTimeStamp())
+                            .isRead(messageTable.isRead())
+                            .build();
+                    addMessage(message);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "MessageChild:"+databaseError.getMessage());
+            }
+        };
 
         compositeDisposable = new CompositeDisposable(
-                newGroupSubject.observeOn(schedulerFactory.io()).subscribe(this::hasNewGroup),
-                groupMessageSubject.observeOn(schedulerFactory.io()).subscribe(this::hasGroupMessage),
-                groupIdSubject.observeOn(schedulerFactory.io()).subscribe(this::getMessageInGroup),
-                messageSubject.observeOn(schedulerFactory.io()).subscribe(this::addMessage),
-                loadMoreGroupSubject.observeOn(schedulerFactory.io()).subscribe(this::loadGroup),
-                loadMoreMessageSubject.observeOn(schedulerFactory.io()).subscribe(this::loadMessage)
+                userIdSubject.observeOn(schedulerFactory.main()).subscribe(this::getGroupOfUser),
+                groupIdSubject.observeOn(schedulerFactory.main()).subscribe(this::getMessageInGroup),
+                sendMessageSubject.observeOn(schedulerFactory.main()).subscribe(this::sendMes)
         );
 
-        messageChildEventListener = getMessageList();
-        groupChildEventListener = getGroupList("123");
-    }
-
-    private void login() {
-        SignInFirebase signInFirebase = new SignInFirebaseImpl(userDataSourceLazy.get().loadLoginData().blockingFirst(), schedulerFactory);
-
-        signInFirebase.login();
-
-        // Initialize database
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
     }
 
     public void onDestroy() {
         compositeDisposable.dispose();
-        databaseReference.child(MESSAGE_LEVEL).removeEventListener(messageChildEventListener);
-        databaseReference.child(GROUP_LEVEL).child("123").removeEventListener(groupChildEventListener); // TODO
-    }
-
-    @Override
-    public Observable<List<Message>> getMessageList(String userId) {
-        String groupId = userId + userDataSourceLazy.get().loadUser().blockingFirst().id();    // TODO
-        groupIdSubject.onNext(groupId);
-        return messageListSubject.observeOn(schedulerFactory.io());
-    }
-
-
-    @Override
-    public Observable<List<Group>> getGroupList() {
-        return groupListSubject.observeOn(schedulerFactory.io());
-    }
-
-    @Override
-    public Observable<List<Group>> getGroupList(int page, int size) {
-
-        return null;
-    }
-
-    @Override
-    public Observable<List<Group>> loadMoreGroup() {
-        Log.d(TAG, "LoadMoreGroup");
-        loadMoreGroupSubject.onNext(groupPageCnt++);
-        return loadMoreGroupListSubject;
-    }
-
-    @Override
-    public Observable<List<Message>> loadMoreMessage() {
-        Log.d(TAG, "LoadMoreMessage");
-        loadMoreMessageSubject.onNext(mesPageCnt++);
-        return loadMoreMessageListSubject;
-    }
-
-    @Override
-    public Observable<Boolean> sendMessage(String userId, String message) {
-        Log.d(TAG, "sendMessage");
-        User user = userDataSourceLazy.get().loadUser().blockingFirst();
-        String groupId = userId + user.id(); // TODO
-        Message mes = new Message(123l, user.name(), message, user.avatar(), new Date().getTime());
-        databaseReference.child(GROUP_LEVEL).child(groupId).setValue(mes);
-        return Observable.just(true);
+        if (!Strings.isNullOrEmpty(mGroupId))
+            databaseReference.child(MESSAGE_LEVEL).child(mGroupId).removeEventListener(messageChildEventListener);
+        if (mUserId != 0)
+            databaseReference.child(GROUP_LEVEL).child(Long.toString(mUserId)).removeEventListener(groupChildEventListener);
     }
 
     /**
-     * Get group list from user id (with group id, user id that belong to that group)
+     *
+     * @param page
+     * @param size : no use
+     */
+    @Override
+    public void getGroupList(int page, int size) {
+        mGroupPage = page;
+        userDataSourceLazy.get().loadUser().subscribe(user -> {
+            userIdSubject.onNext((long)user.userId());
+        });
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Observable<List<Group>> groupList() {
+        return groupListSubject.observeOn(schedulerFactory.main());
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Observable<Group> groupUpdated() {
+        return updatedGroupSubject.observeOn(schedulerFactory.main());
+    }
+
+    /**
+     *
      * @param userId
      */
-    private ChildEventListener getGroupList(String userId) {
-        Log.d(TAG, "getGroupList");
-        return databaseReference.child(USER_LEVEL).child(userId).addChildEventListener(new ChildEventListener() {
+    private void getGroupOfUser(long userId) {
+        databaseReference.child(USER_LEVEL).child(Long.toString(userId)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                newGroupSubject.onNext(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    /**
-     * listen to new message from firebase to update last message
-     */
-    private ChildEventListener getMessageList() {
-        return databaseReference.child(MESSAGE_LEVEL).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String groupId = dataSnapshot.getKey();
-                Log.d(TAG, "hasAddedMessage" + groupId);
-                if (inGroup(groupId)) {
-                    DataSnapshot lastMessage = dataSnapshot.getChildren().iterator().next();
-                    Message message = lastMessage.getValue(Message.class);
-                    messageSubject.onNext(message);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mGroupCnt = dataSnapshot.getChildrenCount();
+                for (Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator(); iterator.hasNext();) {
+                    String groupId = iterator.next().getKey();
+                    makeGroupList(groupId);
                 }
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "USER_"+userId+":"+databaseError.getMessage());
             }
+        });
+    }
 
+    private void makeGroupList(String groupId) {
+        databaseReference.child(USER_LEVEL).child(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<String> users = new ArrayList<String>();
+                for (Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator(); iterator.hasNext();) {
+                    users.add(iterator.next().getKey());
+                }
+                Group group = Group.builder().groupId(groupId)
+                        .users(users)
+                        .build();
+                makeGroupList(group);
             }
 
             @Override
@@ -264,103 +278,118 @@ public class FirebaseServiceImpl implements FirebaseService{
 
             }
         });
+
+    }
+
+    private void makeGroupList(Group group) {
+        databaseReference.child(MESSAGE_LEVEL).child(group.groupId()).orderByChild("timeStamp").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    MessageTable messageTable = dataSnapshot.getValue(MessageTable.class);
+                    Group gr = Group.builder().groupId(group.groupId())
+                            .users(group.users())
+                            .lastMessage(messageTable.getMessage())
+                            .timeStamp(messageTable.getTimeStamp())
+                            .isRead(messageTable.isRead())
+                            .build();
+                    addGroup(gr);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void addGroupChildListener(long userId) {
+        if (userId == 0) {
+            this.mUserId = userId;
+            databaseReference.child(USER_LEVEL).child(Long.toString(userId)).addChildEventListener(groupChildEventListener);
+        } else if (userId != this.mUserId) {
+            databaseReference.child(USER_LEVEL).child(Long.toString(this.mUserId)).removeEventListener(groupChildEventListener);
+            databaseReference.child(USER_LEVEL).child(Long.toString(userId)).addChildEventListener(groupChildEventListener);
+            this.mUserId = userId;
+        }
     }
 
     /**
-     * get new message for specified group (for chat activity)
+     *
      * @param groupId
+     * @param page
+     * @param size : no use
      */
+    @Override
+    public void getMessageList(String groupId, int page, int size) {
+        mMessagePage = page;
+        groupIdSubject.onNext(groupId);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Observable<List<Message>> messageList() {
+        return messageListSubject.observeOn(schedulerFactory.main());
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Observable<Message> hasNewMessage() {
+        return hasNewMessageSubject.observeOn(schedulerFactory.main());
+    }
+
     private void getMessageInGroup(String groupId) {
-        this.groupId = groupId;
-        messages.clear();
-        Observable<Message> messageObservable = Observable.create(emitter -> {
-            databaseReference.child(MESSAGE_LEVEL).child(groupId).orderByChild("timeStamp").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Log.d(TAG, "hasAddedMessage" + groupId);
-                    Message message = dataSnapshot.getValue(Message.class);
-                    emitter.onNext(message);
+        databaseReference.child(MESSAGE_LEVEL).child(groupId).orderByChild("timeStamp").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator(); iterator.hasNext();) {
+                    MessageTable messageTable = iterator.next().getValue(MessageTable.class);
+                    Message message = Message.builder()
+                            .message(messageTable.getMessage())
+                            .userId(messageTable.getUserId())
+                            .timeStamp(messageTable.getTimeStamp())
+                            .isRead(messageTable.isRead())
+                            .build();
+                    addMessage(message);
                 }
+            }
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            }
         });
-        messageObservable.observeOn(schedulerFactory.io())
-                .subscribe(mes -> {
-                    messageSubject.onNext(mes);
-                    hasGroupMessage(mes);
-                });
+    }
+
+    @Override
+    public void sendMessage(long fromUserId, long toUserId, String message) {
+        Log.d(TAG, "sendMessage");
+        String groupId = (fromUserId < toUserId) ? (fromUserId + "" + toUserId) : (toUserId + "" + fromUserId);
+        MessageTable mes = new MessageTable(fromUserId, message, new Date().getTime(), false);
+        sendMessageSubject.onNext(new Pair<>(groupId, mes));
     }
 
     /**
-     * get information for new group and add to list
-     * @param groupId
+     *
+     * @return
      */
-    private void hasNewGroup(String groupId) {
-        Log.d(TAG, "hasNewGroup" + groupId);
-        Observable<Group> groupObservable = Observable.create(emiter -> {
-            databaseReference.child(GROUP_LEVEL).child(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    List<String> userList = new ArrayList<String>();
-                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                        if (snapshot != null)
-                            userList.add(snapshot.getKey());
-                    }
-                    Group group = Group.builder().groupId(groupId).users(userList).build();
-                    emiter.onNext(group);
-                }
+    @Override
+    public Observable<Boolean> sendResult() {
+        return sendMessageResult.observeOn(schedulerFactory.main());
+    }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }).flatMap(group -> Observable.create(emitter -> {
-            databaseReference.child(MESSAGE_LEVEL).child(groupId).orderByChild("timeStamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Message message = Message.NONE;
-                    if (dataSnapshot.getChildren().iterator().hasNext()) {
-                        DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
-                        message = firstChild.getValue(Message.class);
-
-                    }
-                    emitter.onNext(Group.builder()
-                            .groupId(((Group) group).groupId())
-                            .users(((Group) group).users())
-                            .lastMessage(message.getMessage())
-                            .timeStamp(message.getTimeStamp()).build());
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }));
-
-        groupObservable.subscribe(group -> {
-            addGroup(group);
-        });
+    private void sendMes(Pair<String, MessageTable> mes) {
+        databaseReference.child(GROUP_LEVEL).child(mes.first).setValue(mes.second)
+                .addOnCompleteListener(act -> sendMessageResult.onNext(true))
+                .addOnFailureListener(act -> sendMessageResult.onNext(false));
     }
 
     /**
@@ -370,10 +399,10 @@ public class FirebaseServiceImpl implements FirebaseService{
     private void hasGroupMessage(Message message) {
         Group updated = null;
         synchronized (groups) {
-            Log.d(TAG, "hasGroupMessage:" + message.getMessage());
+            Log.d(TAG, "hasGroupMessage:" + message.message());
             for (Iterator<Group> iterator = groups.iterator();  iterator.hasNext(); ) {
                 Group group = iterator.next();
-                if (group.groupId().equals(message.getGroupId())) {
+                if (group.groupId().equals(message.groupId())) {
                     updated = Group.instance(group);
                     iterator.remove();
                 }
@@ -421,8 +450,10 @@ public class FirebaseServiceImpl implements FirebaseService{
                 Log.i(TAG, "Over group size");
                 groups.remove(groups.size()-1);
             }
-            if (count < GROUP_SIZE) {
-                groupListSubject.onNext(makeEmitGroupList(groups, 1));
+            if (groups.size() >= mGroupCnt) {
+                // TODO put only 10 items
+                // TODO start listen update groups
+                groupListSubject.onNext(groups);
             }
         }
     }
@@ -438,7 +469,7 @@ public class FirebaseServiceImpl implements FirebaseService{
                 Message mes = iterator.next();
                 if (mes.equals(message)) {
                     return;
-                } else if (mes.getTimeStamp() > message.getTimeStamp()) {
+                } else if (mes.timeStamp() > message.timeStamp()) {
                     count++;
                 }
             }
@@ -451,16 +482,6 @@ public class FirebaseServiceImpl implements FirebaseService{
                 messageListSubject.onNext(makeEmitMessageList(messages, 1));
             }
         }
-    }
-
-    void loadGroup(int page) {
-        Log.d(TAG, "loadMoreGroup");
-        loadMoreGroupListSubject.onNext(makeEmitGroupList(groups, page));
-    }
-
-    void loadMessage(int page) {
-        Log.d(TAG, "loadMoreMessage");
-        loadMoreMessageListSubject.onNext(makeEmitMessageList(messages, page));
     }
 
     private List<Group> makeEmitGroupList(List<Group> srcList, int page) {

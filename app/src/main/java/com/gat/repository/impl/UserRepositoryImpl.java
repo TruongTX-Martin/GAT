@@ -2,6 +2,7 @@ package com.gat.repository.impl;
 
 import android.location.Address;
 
+import com.gat.data.firebase.SignInFirebase;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
@@ -35,12 +36,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final Lazy<UserDataSource> networkUserDataSourceLazy;
     private final Lazy<UserDataSource> localUserDataSourceLazy;
+    private final SignInFirebase signInFirebase;
 
     private final Subject<User> userSubject;
 
-    public UserRepositoryImpl(Lazy<UserDataSource> networkUserDataSourceLazy, Lazy<UserDataSource> localUserDataSourceLazy) {
+    public UserRepositoryImpl(Lazy<UserDataSource> networkUserDataSourceLazy, Lazy<UserDataSource> localUserDataSourceLazy, SignInFirebase signInFirebase) {
         this.networkUserDataSourceLazy = networkUserDataSourceLazy;
         this.localUserDataSourceLazy = localUserDataSourceLazy;
+        this.signInFirebase = signInFirebase;
         this.userSubject= PublishSubject.create();
     }
 
@@ -61,7 +64,9 @@ public class UserRepositoryImpl implements UserRepository {
                 })
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
                 .flatMap(user -> localUserDataSourceLazy.get().persitUser(user))
-                .doOnNext(userSubject::onNext));
+                .doOnNext(userSubject::onNext)
+                .doOnNext(user -> signInFirebase.login())
+        );
     }
 
     @Override
@@ -70,7 +75,9 @@ public class UserRepositoryImpl implements UserRepository {
                 .flatMap(loginData -> networkUserDataSourceLazy.get().login(loginData))
                 .flatMap(response -> networkUserDataSourceLazy.get().getPersonalInfo())
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
-                .doOnNext(userSubject::onNext));
+                .doOnNext(userSubject::onNext)
+                .doOnNext(user -> signInFirebase.login())
+        );
     }
 
     @Override
@@ -90,6 +97,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
                 .flatMap(user -> localUserDataSourceLazy.get().persitUser(user))
                 .doOnNext(userSubject::onNext)
+                .doOnNext(user -> signInFirebase.register())
         );
     }
 

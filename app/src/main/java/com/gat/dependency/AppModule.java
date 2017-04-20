@@ -5,6 +5,8 @@ import android.app.Application;
 import com.gat.app.screen.ScreenPresenterFactory;
 import com.gat.data.firebase.FirebaseService;
 import com.gat.data.firebase.FirebaseServiceImpl;
+import com.gat.data.firebase.SignInFirebase;
+import com.gat.data.firebase.SignInFirebaseImpl;
 import com.gat.data.user.PaperUserDataSource;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
@@ -92,6 +94,12 @@ public class AppModule {
     FirebaseService provideFirebaseService(@Named("local") Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
         return new FirebaseServiceImpl(userDataSourceLazy, schedulerFactory);
     }
+
+    @Provides
+    @Singleton
+    SignInFirebase provideSignInFirebase(@Named("local") Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
+        return new SignInFirebaseImpl(userDataSourceLazy, schedulerFactory);
+    }
     @Provides
     @Singleton
     @Named("network")
@@ -118,8 +126,9 @@ public class AppModule {
     @Provides
     @Singleton
     UserRepository provideUserRepository(@Named("network")Lazy<UserDataSource> networkDataSourceLazy,
-                                         @Named("local")Lazy<UserDataSource> localDataSourceLazy){
-        return new UserRepositoryImpl(networkDataSourceLazy, localDataSourceLazy);
+                                         @Named("local")Lazy<UserDataSource> localDataSourceLazy,
+                                         SignInFirebase signInFirebase){
+        return new UserRepositoryImpl(networkDataSourceLazy, localDataSourceLazy, signInFirebase);
     }
 
 

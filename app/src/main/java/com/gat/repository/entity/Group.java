@@ -17,6 +17,7 @@ public abstract class Group {
     public abstract String groupId();
     public abstract String lastMessage();
     public abstract Long timeStamp();
+    public abstract Boolean isRead();
     public abstract List<String> users();
 
     public static Group instance(Group group) {
@@ -24,6 +25,7 @@ public abstract class Group {
                 .groupId(group.groupId())
                 .lastMessage(group.lastMessage())
                 .users(group.users())
+                .isRead(group.isRead())
                 .timeStamp(group.timeStamp())
                 .build();
     }
@@ -33,6 +35,7 @@ public abstract class Group {
                 .groupId(Strings.EMPTY)
                 .lastMessage(Strings.EMPTY)
                 .timeStamp(new Date().getTime())
+                .isRead(false)
                 .users(new ArrayList<String>());
     }
 
@@ -41,6 +44,7 @@ public abstract class Group {
         public abstract Builder groupId(String groupId);
         public abstract Builder lastMessage(String message);
         public abstract Builder timeStamp(Long timeStamp);
+        public abstract Builder isRead(Boolean isRead);
         public abstract Builder users(List<String> users);
         public abstract Group build();
     }

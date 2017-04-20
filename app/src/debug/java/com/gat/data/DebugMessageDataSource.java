@@ -28,7 +28,8 @@ public class DebugMessageDataSource implements MessageDataSource {
     }
     @Override
     public Observable<List<Message>> getMessageList(String userId) {
-        return firebaseService.getMessageList(userId);
+        return null;
+        //return firebaseService.getMessageList(userId);
         /*return Observable.fromCallable(() -> {
             Message[] messages = new Message[10];
             for (int i = 0; i < messages.length; i++) {
@@ -47,7 +48,8 @@ public class DebugMessageDataSource implements MessageDataSource {
 
     @Override
     public Observable<List<Group>> getGroupList() {
-        return firebaseService.getGroupList();
+        return null;
+        //return firebaseService.getGroupList();
         /*
         return Observable.fromCallable(() -> {
             Group[] groups = new Group[10];
@@ -69,17 +71,17 @@ public class DebugMessageDataSource implements MessageDataSource {
 
     @Override
     public Observable<List<Group>> loadMoreGroup() {
-        return firebaseService.loadMoreGroup();
+        return null;
     }
 
     @Override
     public Observable<List<Message>> loadMoreMessage() {
-        return firebaseService.loadMoreMessage();
+        return null;
     }
 
     @Override
     public Observable<Boolean> sendMessage(String toUserId, String message) {
-        return firebaseService.sendMessage(toUserId, message);
+        return null;
     }
 
     @Override

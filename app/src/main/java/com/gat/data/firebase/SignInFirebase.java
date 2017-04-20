@@ -7,9 +7,11 @@ import io.reactivex.Observable;
  */
 
 public interface SignInFirebase {
-    public Observable<Boolean> login();
-    public Observable<Boolean> signOut();
-    public Observable<Boolean> register();
+    public void login();
+    public void signOut();
+    public void register();
+
+    public Observable<Boolean> getLoginResult();
 
     public void destroy();
 }

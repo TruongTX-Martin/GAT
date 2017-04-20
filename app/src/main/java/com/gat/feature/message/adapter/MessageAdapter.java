@@ -50,7 +50,7 @@ public class MessageAdapter extends ItemAdapter {
         if(item instanceof LoadingMessage)
             return Type.LOADING;
         if(item instanceof MessageItem)
-            if (((MessageItem)item).message().getSender().equals("ddt"))
+            if (((MessageItem)item).message().userId() == 1/*TODO*/)
                 return Type.MESSAGE_RIGHT;
             else
                 return Type.MESSAGE_LEFT;

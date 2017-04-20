@@ -1,83 +1,45 @@
 package com.gat.repository.entity;
 
 import com.gat.common.util.Strings;
+import com.google.auto.value.AutoValue;
 
 /**
  * Created by ducbtsn on 3/28/17.
  */
-public class Message {
-    private Long userId;
-    private String sender;
-    private String message;
-    private String imageId;
-    private Long timeStamp;
+@AutoValue
+public abstract class Message {
+    public abstract long userId();
+    public abstract String message();
+    public abstract long timeStamp();
+    public abstract boolean isRead();
+    public abstract String groupId();
 
-    public Long getUserId() {
-        return userId;
+    public static Builder builder() {
+        return new AutoValue_Message.Builder()
+                .userId(0l)
+                .message(Strings.EMPTY)
+                .timeStamp(0l)
+                .isRead(false)
+                .groupId(Strings.EMPTY);
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public static Message instance() {
+        return new AutoValue_Message.Builder()
+                .userId(0l)
+                .message(Strings.EMPTY)
+                .timeStamp(0l)
+                .isRead(false)
+                .groupId(Strings.EMPTY)
+                .build();
     }
 
-    public String getSender() {
-        return sender;
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder userId(long userId);
+        public abstract Builder message(String message);
+        public abstract Builder timeStamp(long timeStamp);
+        public abstract Builder isRead(boolean isRead);
+        public abstract Builder groupId(String groupId);
+        public abstract Message build();
     }
-
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
-    }
-
-    public Long getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(Long timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    private String groupId;
-
-    public Message() {
-
-    }
-    public Message(Long userId, String name, String message, String imageId, Long timeStamp) {
-        this.userId = userId;
-        this.sender = name;
-        this.message = message;
-        this.imageId = imageId;
-        this.timeStamp = timeStamp;
-    }
-
-    public static Message NONE = new Message(
-            0l,
-            Strings.EMPTY,
-            Strings.EMPTY,
-            Strings.EMPTY,
-            0l
-    );
 }

@@ -33,7 +33,7 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
     public void onBindItem(MessageItem item) {
         super.onBindItem(item);
         Message message = item.message();
-        text.setText(message.getMessage());
+        text.setText(message.message());
         userImage.setImageResource(R.drawable.steve_job);
     }
 }
