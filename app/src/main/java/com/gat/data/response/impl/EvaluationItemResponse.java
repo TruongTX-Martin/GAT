@@ -57,4 +57,19 @@ public class EvaluationItemResponse {
         return evaluationTime;
     }
 
+    @Override
+    public String toString() {
+        return "EvaluationItemResponse{" +
+                "evaluationId='" + evaluationId + '\'' +
+                ", userId=" + userId +
+                ", name='" + name + '\'' +
+                ", imageId='" + imageId + '\'' +
+                ", bookId=" + bookId +
+                ", editionId=" + editionId +
+                ", value=" + value +
+                ", review='" + review + '\'' +
+                ", spoiler=" + spoiler +
+                ", evaluationTime='" + evaluationTime + '\'' +
+                '}';
+    }
 }

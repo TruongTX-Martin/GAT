@@ -32,7 +32,6 @@ public interface BookDetailPresenter extends Presenter {
     Observable<EvaluationItemResponse> onGetBookEvaluationByUser ();
 
     Observable<String> onError ();
-
     Observable<String> onUserNotLoggedIn ();
 
 }

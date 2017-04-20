@@ -46,4 +46,18 @@ public class BookReadingInfo {
     public String getCompleteDate() {
         return completeDate;
     }
+
+    @Override
+    public String toString() {
+        return "BookReadingInfo{" +
+                "readingId=" + readingId +
+                ", userId=" + userId +
+                ", bookId=" + bookId +
+                ", editionId=" + editionId +
+                ", readingStatus=" + readingStatus +
+                ", followDate='" + followDate + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", completeDate='" + completeDate + '\'' +
+                '}';
+    }
 }

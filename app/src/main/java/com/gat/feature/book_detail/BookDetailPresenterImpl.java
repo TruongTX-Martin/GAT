@@ -46,6 +46,9 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     private UseCase<EvaluationItemResponse> useCaseGetBookEvaluationByUser;
     private final Subject<EvaluationItemResponse> subjectBookEvaluationByUser;
 
+    private final Subject<String> onError;
+    private final Subject<String> onUserNotLoggedIn;
+
     private int mEditionId;
 
 
@@ -60,6 +63,8 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
         subjectReadingStatus = PublishSubject.create();
         subjectEditionSharingUsers = PublishSubject.create();
         subjectBookEvaluationByUser = PublishSubject.create();
+        onUserNotLoggedIn = PublishSubject.create();
+        onError = PublishSubject.create();
     }
 
     @Override
@@ -192,11 +197,11 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
 
     @Override
     public Observable<String> onError() {
-        return null;
+        return onError.subscribeOn(schedulerFactory.main());
     }
 
     @Override
     public Observable<String> onUserNotLoggedIn() {
-        return null;
+        return onUserNotLoggedIn.subscribeOn(schedulerFactory.main());
     }
 }

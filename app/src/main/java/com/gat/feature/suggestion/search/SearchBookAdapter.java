@@ -49,7 +49,6 @@ public class SearchBookAdapter extends ItemAdapter {
         return super.setItem(items);
     }
 
-
     @Override
     public @Type int getItemViewType(int position) {
         Item item = getItemAt(position);
