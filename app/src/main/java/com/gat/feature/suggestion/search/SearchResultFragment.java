@@ -1,6 +1,7 @@
 package com.gat.feature.suggestion.search;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.gat.common.listener.LoadMoreScrollListener;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.suggestion.search.item.SearchBookResultItem;
 import com.gat.feature.suggestion.search.item.SearchBuilder;
 import com.gat.feature.suggestion.search.item.SearchHistoryItem;
@@ -138,7 +140,10 @@ public class SearchResultFragment extends Fragment
             Toast.makeText(getActivity(), "Book id: " + bookItem.bookResponse().getBookId() + ", EditionId: " + bookItem.bookResponse().getEditionId(), Toast.LENGTH_SHORT).show();
         } else if (item instanceof SearchUserResultItem) {
             SearchUserResultItem userItem = (SearchUserResultItem) item;
-            Toast.makeText(getActivity(), "User id: " + userItem.userResponse().getUserId(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "User id: " + userItem.userResponse().getUserId(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(SuggestSearchActivity.instance, PersonalUserActivity.class);
+            intent.putExtra("UserInfo",userItem.userResponse());
+            SuggestSearchActivity.instance.startActivity(intent);
         }
     }
 }

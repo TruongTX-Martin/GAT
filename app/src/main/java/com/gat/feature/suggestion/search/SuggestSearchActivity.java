@@ -67,6 +67,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     private OnSearchBookResult onSearchBookResult;
     private OnSearchBookResult onSearchAuthorResult;
     private OnSearchUserResult onSearchUserResult;
+    public static SuggestSearchActivity instance;
 
     @Override
     protected int getLayoutResource() {
@@ -86,7 +87,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        instance = this;
         disposables = new CompositeDisposable(
                 getPresenter().onLoadHistorySearchBookSuccess().subscribe(this::onLoadHistorySearchBookSuccess),
                 getPresenter().onLoadHistorySearchAuthorSuccess().subscribe(this::onLoadHistorySearchAuthorSuccess),

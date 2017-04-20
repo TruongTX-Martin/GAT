@@ -2,11 +2,13 @@ package com.gat.data.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by mozaa on 11/04/2017.
  */
 
-public class UserResponse {
+public class UserResponse implements Serializable {
 
     @SerializedName("userId")
     private long userId;

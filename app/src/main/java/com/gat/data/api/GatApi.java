@@ -217,4 +217,12 @@ public interface GatApi {
             @Field("image") String image,
             @Field("changeImageFlag") boolean changeImageFlag
     );
+
+    @GET("book/get_user_sharing_instance")
+    Observable<Response<ServerResponse<Data>>> getBookUserSharing(
+            @Query("userId") int userId,
+            @Query("ownerId") int ownerId,
+            @Query("page") int page,
+            @Query("per_page") int per_page
+    );
 }

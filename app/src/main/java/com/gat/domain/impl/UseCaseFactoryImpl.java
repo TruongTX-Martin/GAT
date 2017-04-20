@@ -32,6 +32,7 @@ import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
@@ -210,5 +211,10 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<Data> updateInfo(EditInfoInput input) {
         return new EditInfo(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> getBookUserSharing(BookSharingUserInput input) {
+        return new GetBookUserSharing(userRepositoryLazy.get(),input);
     }
 }

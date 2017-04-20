@@ -5,6 +5,7 @@ import com.gat.feature.editinfo.EditInfoScreen;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.personal.PersonalScreen;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
@@ -52,6 +53,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getPersonalPresenter();
         }else if(key instanceof EditInfoScreen){
             return (P) presenterComponent.getEditInfoPresenter();
+        }else if (key instanceof PersonalUserScreen){
+            return (P) presenterComponent.getPersonalUserPresenter();
         }
 
         throw new IllegalArgumentException("Not support key " + key);

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
@@ -202,40 +203,10 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             fragmentBookRequest = new FragmentBookRequest();
             fragmentBookRequest.setParrentActivity(this);
         }
-        adapter.addFrag(fragmentBookSharing, "");
-        adapter.addFrag(fragmentBookReading, "");
-        adapter.addFrag(fragmentBookRequest, "");
+        adapter.addFragment(fragmentBookSharing, "");
+        adapter.addFragment(fragmentBookReading, "");
+        adapter.addFragment(fragmentBookRequest, "");
         viewPager.setAdapter(adapter);
-    }
-
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
     }
 
 
@@ -340,4 +311,5 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     public void onDestroy() {
         super.onDestroy();
     }
+
 }

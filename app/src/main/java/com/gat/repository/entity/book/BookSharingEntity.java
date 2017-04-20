@@ -55,9 +55,32 @@ public class BookSharingEntity {
     private int sharingCompletedCount;
 
 
+    //property for user
+    @SerializedName("sharingCount")
+    private int sharingCount;
+
+    @SerializedName("availableStatus")
+    private int availableStatus;
+
+    @SerializedName("requestingStatus")
+    private int requestingStatus;
+
+
     public BookSharingEntity() {
     }
 
+
+    public int getSharingCount() {
+        return sharingCount;
+    }
+
+    public int getAvailableStatus() {
+        return availableStatus;
+    }
+
+    public int getRequestingStatus() {
+        return requestingStatus;
+    }
 
     public int getInstanceId() {
         return instanceId;

@@ -4,6 +4,7 @@ import com.gat.feature.editinfo.EditInfoPresenter;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.personal.PersonalPresenter;
+import com.gat.feature.personaluser.PersonalUserPresenter;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
 import com.gat.feature.register.update.location.AddLocationPresenter;
@@ -35,5 +36,6 @@ public interface PresenterComponent {
     SuggestSearchPresenter getSuggestSearchPresenter();
     PersonalPresenter getPersonalPresenter();
     EditInfoPresenter getEditInfoPresenter();
+    PersonalUserPresenter getPersonalUserPresenter();
 
 }

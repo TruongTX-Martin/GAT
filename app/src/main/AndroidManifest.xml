@@ -53,8 +53,8 @@
         <activity android:name=".feature.login.ForgotPassword.VerifyResetTokenActivity" >
         </activity>
 
-        <activity android:name="com.gat.feature.editinfo.EditInfoActivity" >
-        </activity>
+        <activity android:name="com.gat.feature.editinfo.EditInfoActivity" />
+        <activity android:name="com.gat.feature.personaluser.PersonalUserActivity" />
         <activity android:name=".feature.start.StartActivity"
             android:theme="@style/DefaultScreenTheme"
             android:screenOrientation="portrait">
