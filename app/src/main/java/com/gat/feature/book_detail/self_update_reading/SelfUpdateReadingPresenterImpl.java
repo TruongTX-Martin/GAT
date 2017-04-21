@@ -48,12 +48,15 @@ public class SelfUpdateReadingPresenterImpl implements SelfUpdateReadingPresente
 
     @Override
     public void setReadingInfo(BookReadingInfo bookReadingInfo) {
-
+        mBookReadingInfo = bookReadingInfo;
     }
 
     @Override
     public void updateReadingStatus(int state) {
-        MZDebug.i("__________ updateReadingStatus, editionId = " + mBookReadingInfo.getEditionId());
+        if (mBookReadingInfo == null) {
+            return;
+        }
+        MZDebug.i("__________ updateReadingStatus, reading status = " + state);
 
         useCaseUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(mBookReadingInfo.getEditionId(), state);
         useCaseUpdateReadingStatus.executeOn(schedulerFactory.io()).

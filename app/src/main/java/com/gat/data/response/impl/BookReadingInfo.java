@@ -1,10 +1,13 @@
 package com.gat.data.response.impl;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by mryit on 4/18/2017.
  */
 
-public class BookReadingInfo {
+public class BookReadingInfo implements Parcelable {
 
     private int readingId;
     private int userId;
@@ -14,6 +17,31 @@ public class BookReadingInfo {
     private String followDate;
     private String startDate;
     private String completeDate;
+
+    public BookReadingInfo(){}
+
+    public BookReadingInfo(Parcel in) {
+        readingId = in.readInt();
+        userId = in.readInt();
+        bookId = in.readInt();
+        editionId = in.readInt();
+        readingStatus = in.readInt();
+        followDate = in.readString();
+        startDate = in.readString();
+        completeDate = in.readString();
+    }
+
+    public static final Creator<BookReadingInfo> CREATOR = new Creator<BookReadingInfo>() {
+        @Override
+        public BookReadingInfo createFromParcel(Parcel in) {
+            return new BookReadingInfo(in);
+        }
+
+        @Override
+        public BookReadingInfo[] newArray(int size) {
+            return new BookReadingInfo[size];
+        }
+    };
 
     public void setReadingId(int readingId) {
         this.readingId = readingId;
@@ -92,4 +120,22 @@ public class BookReadingInfo {
                 ", completeDate='" + completeDate + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(readingId);
+        dest.writeInt(userId);
+        dest.writeInt(bookId);
+        dest.writeInt(editionId);
+        dest.writeInt(readingStatus);
+        dest.writeString(followDate);
+        dest.writeString(startDate);
+        dest.writeString(completeDate);
+    }
+
 }

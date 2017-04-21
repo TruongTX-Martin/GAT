@@ -153,6 +153,7 @@
     <string name="enable_for_share_facebook">Đăng chia sẻ qua Facebook</string>
     <string name="post_the_share">ĐĂNG CHIA SẺ</string>
     <string name="remove_from_reading_list">Xóa khỏi danh sách đọc</string>
+    <string name="ask_remove_from_reading_list">Bạn muốn xóa cuốn sách này khỏi danh sách sách đọc?</string>
 
 
 </resources>

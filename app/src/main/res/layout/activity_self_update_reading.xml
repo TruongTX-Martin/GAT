@@ -51,7 +51,6 @@
             android:id="@+id/radio_want_to_read"
             style="@style/RadioButtonStyle"
             android:layout_width="match_parent"
-            android:checked="true"
             android:text="@string/want_to_read" />
 
         <RadioButton
@@ -64,6 +63,7 @@
             android:id="@+id/radio_red_book"
             style="@style/RadioButtonStyle"
             android:layout_width="match_parent"
+            android:checked="true"
             android:text="@string/red_book" />
 
     </RadioGroup>

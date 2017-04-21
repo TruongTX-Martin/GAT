@@ -47,6 +47,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDetailPresenter>{
 
+    private static final int RC_UPDATE_READING_STATUS = 0x01;
+    public static final String KEY_UPDATE_READING_STATUS = "status";
+
     @BindView(R.id.scroll_view)
     ScrollView scrollView;
 
@@ -102,6 +105,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     }
 
     @Override
+    protected BookDetailScreen getDefaultScreen() {
+        return BookDetailScreen.instance(getScreen().editionId());
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -141,6 +149,19 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        disposables.dispose();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_UPDATE_READING_STATUS && resultCode == RESULT_OK) {
+            MZDebug.w("________________________ BookDetailActivity : onActivityResult : RESULT OK");
+            int statusResult = data.getIntExtra(KEY_UPDATE_READING_STATUS, ReadingState.REMOVE);
+            mBookReadingInfo.setReadingStatus(statusResult);
+            updateButtonReadingStatus(statusResult);
+        }
     }
 
     @OnClick(R.id.image_button_back)
@@ -169,10 +190,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // + 2: To read - sẽ đọc
         // khi nhấp vào thì sẽ gọi SelfUpdateReadingActivity
 
+        MZDebug.w("Book reading info: " + mBookReadingInfo.toString());
         if (mBookReadingInfo.getReadingStatus() == ReadingState.REMOVE) {
             getPresenter().updateReadingStatus();
         } else {
-            start(this, SelfUpdateReadingActivity.class, SelfUpdateReadingScreen.instance(mBookReadingInfo));
+            startForResult(BookDetailActivity.this, SelfUpdateReadingActivity.class, SelfUpdateReadingScreen.instance(mBookReadingInfo),RC_UPDATE_READING_STATUS);
         }
     }
 
@@ -193,15 +215,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         if (mListUserSharing == null) {
             return;
         }
+
+        MZDebug.e("++++++++++++++++++++++++++++ START activity ++++++++++++++++++++++++++++++++++");
         start(this, ListUserSharingBookActivity.class, ListUserSharingBookScreen.instance(mListUserSharing));
     }
 
     private void updateButtonReadingStatus (int status) {
-
+        MZDebug.w("__________ BookDetailActivity : updateButtonReadingStatus : status = " + status);
         switch (status) {
             case ReadingState.REMOVE:
                 buttonReadingState.setText(getResources().getString(R.string.want_to_read));
-
+                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down_white, 0);
                 break;
 
             case ReadingState.RED:
@@ -214,9 +238,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
             case ReadingState.TO_READ:
                 buttonReadingState.setText(getResources().getString(R.string.want_to_read));
+                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
                 break;
         }
-
     }
 
     private void setupRecyclerViewComments () {
@@ -230,12 +254,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private void onGetBookInfoSuccess (BookInfo book) {
         MZDebug.w(" onGetBookInfoSuccess: " + book.toString());
-
         textViewBookName.setText(book.getTitle());
         textViewBookAuthor.setText(book.getAuthor().get(0).getAuthorName());
         textViewRating.setText(String.valueOf(book.getRateAvg()));
         ratingBarBook.setRating(book.getRateAvg());
-        textViewSharingBook.setText(String.valueOf(book.getSharingCount()));
         textViewBookDescription.setText(book.getDescription());
     }
 
@@ -256,8 +278,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private List<UserResponse> mListUserSharing;
     private void onGetEditionSharingUsersSuccess (List<UserResponse> list) {
-        mListUserSharing = list;
         MZDebug.w("onGetEditionSharingUsersSuccess: " + list.size());
+
+        mListUserSharing = list;
+        textViewSharingBook.setText(String.valueOf(list.size()));
     }
 
     private EvaluationItemResponse mEvaluationByUser;
@@ -281,12 +305,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     }
 
     private void onUpdateReadingStatusSuccess (String message) {
-        mBookReadingInfo.setEditionId(ReadingState.TO_READ);
-        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_check_yellow, null);
-//        buttonReadingState.setCompoundDrawables(drawable, null, null, null);
-
+        mBookReadingInfo.setReadingStatus(ReadingState.TO_READ);
         buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
-
     }
 
 }
