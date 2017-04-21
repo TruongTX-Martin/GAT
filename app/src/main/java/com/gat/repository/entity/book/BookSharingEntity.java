@@ -31,7 +31,7 @@ public class BookSharingEntity {
     private String borrowingUserName;
 
     @SerializedName("rateAvg")
-    private int rateAvg;
+    private double rateAvg;
 
     @SerializedName("rateCount")
     private int rateCount;
@@ -138,7 +138,7 @@ public class BookSharingEntity {
         this.borrowingUserName = borrowingUserName;
     }
 
-    public int getRateAvg() {
+    public double getRateAvg() {
         return rateAvg;
     }
 

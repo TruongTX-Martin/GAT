@@ -19,6 +19,7 @@ import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.user.PaperUserDataSource;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
@@ -73,7 +74,6 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         disposablesBookUserSharing = new CompositeDisposable(getPresenter().getResponseBookUserSharing().subscribe(this::getBookUserSharingSuccess),
                 getPresenter().onErrorBookUserSharing().subscribe(this::getBookUserSharingError));
         initView();
-        requestBookUserSharing();
     }
 
     private void initView() {
@@ -112,10 +112,14 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(MainActivity.instance.getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         if (fragmentBookUserSharing == null) {
             fragmentBookUserSharing = new FragmentBookUserSharing();
             fragmentBookUserSharing.setParrentActivity(this);
+            BookSharingUserInput input = new BookSharingUserInput();
+            input.setOwnerId((int)userResponse.getUserId());
+            input.setUserId(56);
+            fragmentBookUserSharing.setCurrentInput(input);
         }
         if (fragmentBookUserReading == null) {
             fragmentBookUserReading = new FragmentBookUserReading();
@@ -125,16 +129,14 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         viewPager.setAdapter(adapter);
     }
 
-    public void requestBookUserSharing(){
-        BookSharingUserInput input = new BookSharingUserInput();
-        input.setOwnerId((int)userResponse.getUserId());
-        input.setUserId(56);
+    public void requestBookUserSharing(BookSharingUserInput input){
         getPresenter().requestBookUserSharing(input);
     }
 
     private void getBookUserSharingSuccess(Data data){
         if(data != null){
             List<BookSharingEntity> list = data.getListDataReturn(BookSharingEntity.class);
+            fragmentBookUserSharing.setListBook(list);
         }
     }
 
