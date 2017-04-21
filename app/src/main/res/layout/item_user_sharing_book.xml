@@ -6,7 +6,7 @@
 
 
     <com.gat.common.customview.CircleImage
-        android:id="@+id/image_view_book_cover"
+        android:id="@+id/image_view_avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginRight="@dimen/margin_horizontal_large"
@@ -27,17 +27,18 @@
             android:paddingRight="@dimen/paddingNormal"
             android:text="@string/borrow_book"
             android:textAllCaps="false"
+            android:visibility="gone"
             android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/text_view_wait_for_accept"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/paddingLarge"
             android:drawableRight="@drawable/narrow_right_gray"
             android:text="@string/wait_for_accept_borrow"
             android:textColor="@color/colorTextViewDarkNormal"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </FrameLayout>
 
@@ -45,7 +46,7 @@
         android:id="@+id/text_view_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/image_view_book_cover"
+        android:layout_toEndOf="@+id/image_view_avatar"
         android:layout_toStartOf="@+id/rl_book_state"
         android:text="War Rose Book Stop"
         android:textColor="@color/colorTextViewDark"
@@ -57,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_view_user_name"
         android:layout_marginTop="@dimen/margin_top_bottom_normal"
-        android:layout_toEndOf="@+id/image_view_book_cover"
+        android:layout_toEndOf="@+id/image_view_avatar"
         android:layout_toStartOf="@+id/rl_book_state"
         android:text="War Rose Book Stop"
         android:textColor="@color/colorTextViewGray"
@@ -69,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_view_user_address"
         android:layout_marginTop="@dimen/margin_top_bottom_normal"
-        android:layout_toEndOf="@+id/image_view_book_cover"
+        android:layout_toEndOf="@+id/image_view_avatar"
         android:text="@string/book_in_sharing"
         android:textColor="@color/colorTextViewDarkNormal" />
 

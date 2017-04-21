@@ -1,8 +1,11 @@
 package com.gat.feature.book_detail;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
@@ -26,7 +29,10 @@ import com.gat.feature.book_detail.adapter.EvaluationItemAdapter;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseActivity;
 import com.gat.feature.book_detail.comment.CommentActivity;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookActivity;
+import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
+import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
+import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.book_detail.share_book.ShareBookActivity;
 
 import java.util.List;
@@ -109,7 +115,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 getPresenter().onGetSelfReadingStatusSuccess().subscribe(this::onGetSelfReadingStatusSuccess),
                 getPresenter().onGetBookEditionEvaluationSuccess().subscribe(this::onGetBookEditionEvaluationSuccess),
                 getPresenter().onError().subscribe(this::onError),
-                getPresenter().onUserNotLoggedIn().subscribe(this::onUserNotLoggedIn)
+                getPresenter().onUserNotLoggedIn().subscribe(this::onUserNotLoggedIn),
+                getPresenter().onUpdateReadingStatusSuccess().subscribe(this::onUpdateReadingStatusSuccess)
         );
 
         getPresenter().getBookInfo();
@@ -118,6 +125,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         getPresenter().getSelfReadingStatus();
         getPresenter().getBookEditionEvaluation();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -145,9 +157,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     @OnClick(R.id.button_reading_state)
     void updateReadingState () {
 
-        Intent intent = new Intent(getApplicationContext(), SelfUpdateReadingActivity.class);
-        startActivity(intent);
-
+        if (null == mBookReadingInfo) {
+            return;
+        }
         // nếu readingStatus = -1 sẽ hiển thị là Muốn đọc
         // nhấn vào thì sẽ hiện dấu tích bên trái và gọi api update status;
 
@@ -157,6 +169,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // + 2: To read - sẽ đọc
         // khi nhấp vào thì sẽ gọi SelfUpdateReadingActivity
 
+        if (mBookReadingInfo.getReadingStatus() == ReadingState.REMOVE) {
+            getPresenter().updateReadingStatus();
+        } else {
+            start(this, SelfUpdateReadingActivity.class, SelfUpdateReadingScreen.instance(mBookReadingInfo));
+        }
     }
 
     @OnClick(R.id.button_comment)
@@ -173,8 +190,33 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.button_view_list)
     void onViewListSharingThisBook () {
-        Intent intent = new Intent(getApplicationContext(), ListUserSharingBookActivity.class);
-        startActivity(intent);
+        if (mListUserSharing == null) {
+            return;
+        }
+        start(this, ListUserSharingBookActivity.class, ListUserSharingBookScreen.instance(mListUserSharing));
+    }
+
+    private void updateButtonReadingStatus (int status) {
+
+        switch (status) {
+            case ReadingState.REMOVE:
+                buttonReadingState.setText(getResources().getString(R.string.want_to_read));
+
+                break;
+
+            case ReadingState.RED:
+                buttonReadingState.setText(getResources().getString(R.string.red_book));
+                break;
+
+            case ReadingState.READING:
+                buttonReadingState.setText(getResources().getString(R.string.reading_book));
+                break;
+
+            case ReadingState.TO_READ:
+                buttonReadingState.setText(getResources().getString(R.string.want_to_read));
+                break;
+        }
+
     }
 
     private void setupRecyclerViewComments () {
@@ -208,6 +250,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private void onGetSelfReadingStatusSuccess (BookReadingInfo bookReadingInfo) {
         mBookReadingInfo = bookReadingInfo;
         MZDebug.w("onGetSelfReadingStatusSuccess: " + bookReadingInfo.toString());
+
+        updateButtonReadingStatus(mBookReadingInfo.getReadingStatus());
     }
 
     private List<UserResponse> mListUserSharing;
@@ -234,6 +278,15 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // hide button comment, string comment
         textViewCommentByUser.setVisibility(View.GONE);
         buttonComment.setVisibility(View.GONE);
+    }
+
+    private void onUpdateReadingStatusSuccess (String message) {
+        mBookReadingInfo.setEditionId(ReadingState.TO_READ);
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_check_yellow, null);
+//        buttonReadingState.setCompoundDrawables(drawable, null, null, null);
+
+        buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
+
     }
 
 }

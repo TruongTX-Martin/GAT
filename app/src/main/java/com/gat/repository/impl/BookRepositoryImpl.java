@@ -116,4 +116,9 @@ public class BookRepositoryImpl implements BookRepository {
         return Observable.defer( ()->networkDataSourceLazy.get().selfAddInstance(editionId, sharingStatus, numberOfBook));
     }
 
+    @Override
+    public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
+        return Observable.defer( ()->networkDataSourceLazy.get().selfUpdateReadingStatus(editionId, readingStatus));
+    }
+
 }

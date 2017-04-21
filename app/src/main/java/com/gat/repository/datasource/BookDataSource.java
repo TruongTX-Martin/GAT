@@ -55,4 +55,8 @@ public interface BookDataSource {
     Observable <BookInstanceInfo> getSelfInstanceInfo (int editionId);
 
     Observable<ServerResponse> selfAddInstance (int editionId, int sharingStatus, String numberOfBook);
+
+    Observable<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
+
+
 }

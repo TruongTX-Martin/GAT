@@ -261,5 +261,12 @@ public interface GatApi {
     );
 
 
+    @FormUrlEncoded
+    @POST("book/selfupdate_reading_stt")
+    Observable<Response<ServerResponse>> selfUpdateReadingStatus (
+            @Field("editionId") int editionId,
+            @Field("readingStatus") int readingStatus
+    );
+
 
 }

@@ -31,6 +31,9 @@ public interface BookDetailPresenter extends Presenter {
     void getBookEvaluationByUser ();
     Observable<EvaluationItemResponse> onGetBookEvaluationByUser ();
 
+    void updateReadingStatus ();
+    Observable<String> onUpdateReadingStatusSuccess ();
+
     Observable<String> onError ();
     Observable<String> onUserNotLoggedIn ();
 

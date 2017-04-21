@@ -2,6 +2,8 @@ package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
 import com.gat.feature.book_detail.BookDetailScreen;
+import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
+import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.personal.PersonalScreen;
@@ -52,6 +54,10 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getPersonalPresenter();
         else if (key instanceof BookDetailScreen)
             return (P) presenterComponent.getBookDetailPresenter();
+        else if (key instanceof SelfUpdateReadingScreen)
+            return (P) presenterComponent.getSelfUpdateReadingPresenter();
+        else if (key instanceof ListUserSharingBookScreen)
+            return (P) presenterComponent.getListUserSharingBookPresenter();
 
 
         throw new IllegalArgumentException("Not support key " + key);

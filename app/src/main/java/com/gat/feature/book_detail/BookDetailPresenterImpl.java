@@ -3,6 +3,7 @@ package com.gat.feature.book_detail;
 import android.util.Log;
 
 import com.gat.common.util.MZDebug;
+import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
@@ -14,7 +15,9 @@ import com.gat.domain.usecase.GetBookEvaluationByUser;
 import com.gat.domain.usecase.GetBookInfo;
 import com.gat.domain.usecase.GetEditionSharingUser;
 import com.gat.domain.usecase.GetReadingStatus;
+import com.gat.domain.usecase.SelfUpdateReadingStatus;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.book_detail.self_update_reading.ReadingState;
 
 import java.util.List;
 
@@ -46,6 +49,9 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     private UseCase<EvaluationItemResponse> useCaseGetBookEvaluationByUser;
     private final Subject<EvaluationItemResponse> subjectBookEvaluationByUser;
 
+    private UseCase<ServerResponse> useCaseSelfUpdateReadingStatus;
+    private final Subject<String> subjectSelfUpdateReadingStatus;
+
     private final Subject<String> onError;
     private final Subject<String> onUserNotLoggedIn;
 
@@ -65,6 +71,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
         subjectBookEvaluationByUser = PublishSubject.create();
         onUserNotLoggedIn = PublishSubject.create();
         onError = PublishSubject.create();
+        subjectSelfUpdateReadingStatus = PublishSubject.create();
     }
 
     @Override
@@ -170,6 +177,28 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     @Override
     public Observable<EvaluationItemResponse> onGetBookEvaluationByUser() {
         return subjectBookEvaluationByUser.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void updateReadingStatus() {
+        MZDebug.i("_______________________________ updateReadingStatus, editionId = " + mEditionId);
+
+        useCaseSelfUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(mEditionId, ReadingState.TO_READ);
+        useCaseSelfUpdateReadingStatus.executeOn(schedulerFactory.io()).
+                returnOn(schedulerFactory.main()).
+                onNext(serverResponse -> {
+                    subjectSelfUpdateReadingStatus.onNext(serverResponse.message());
+                }).
+                onError(throwable -> {
+                    MZDebug.e("ERROR: getBookEvaluationByUser ______________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                }).execute();
+
+    }
+
+    @Override
+    public Observable<String> onUpdateReadingStatusSuccess() {
+        return subjectSelfUpdateReadingStatus.subscribeOn(schedulerFactory.main());
     }
 
 

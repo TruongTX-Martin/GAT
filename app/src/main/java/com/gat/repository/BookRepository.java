@@ -50,5 +50,6 @@ public interface BookRepository {
 
     Observable<ServerResponse> selfAddInstance (int editionId, int sharingStatus, String numberOfBook);
 
+    Observable<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
 
 }

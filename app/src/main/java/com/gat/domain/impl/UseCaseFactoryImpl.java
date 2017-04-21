@@ -249,4 +249,9 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     public UseCase<ServerResponse> selfAddInstance(int editionId, int sharingStatus, String numberOfBook) {
         return new SelfAddInstance(bookRepositoryLazy.get(), editionId, sharingStatus, numberOfBook);
     }
+
+    @Override
+    public UseCase<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
+        return new SelfUpdateReadingStatus(bookRepositoryLazy.get(), editionId, readingStatus);
+    }
 }

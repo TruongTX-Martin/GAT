@@ -15,6 +15,38 @@ public class BookReadingInfo {
     private String startDate;
     private String completeDate;
 
+    public void setReadingId(int readingId) {
+        this.readingId = readingId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
+
+    public void setEditionId(int editionId) {
+        this.editionId = editionId;
+    }
+
+    public void setReadingStatus(int readingStatus) {
+        this.readingStatus = readingStatus;
+    }
+
+    public void setFollowDate(String followDate) {
+        this.followDate = followDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setCompleteDate(String completeDate) {
+        this.completeDate = completeDate;
+    }
+
     public int getReadingId() {
         return readingId;
     }

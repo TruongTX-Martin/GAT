@@ -4,6 +4,10 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.feature.book_detail.BookDetailPresenter;
 import com.gat.feature.book_detail.BookDetailPresenterImpl;
+import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenter;
+import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenterImpl;
+import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenter;
+import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenterImpl;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
 import com.gat.feature.main.MainPresenter;
@@ -109,4 +113,17 @@ public class PresenterModule {
                                                    SchedulerFactory schedulerFactory){
         return  new BookDetailPresenterImpl(useCaseFactory,schedulerFactory);
     }
+
+    @Provides
+    SelfUpdateReadingPresenter provideSelfUpdateReadingPresenter(UseCaseFactory useCaseFactory,
+                                                                 SchedulerFactory schedulerFactory) {
+        return new SelfUpdateReadingPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    ListUserSharingBookPresenter provideListUserSharingBookPresenter(UseCaseFactory useCaseFactory,
+                                                                     SchedulerFactory schedulerFactory) {
+        return new ListUserSharingBookPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
 }

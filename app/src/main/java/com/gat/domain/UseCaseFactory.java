@@ -106,4 +106,6 @@ public interface UseCaseFactory {
 
     UseCase<ServerResponse> selfAddInstance (int editionId, int sharingStatus, String numberOfBook);
 
+    UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
+
 }

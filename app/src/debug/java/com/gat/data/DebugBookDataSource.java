@@ -255,11 +255,22 @@ public class DebugBookDataSource implements BookDataSource {
     public Observable<BookReadingInfo> getReadingStatus(int editionId) {
         MZDebug.w("________________________________ getReadingStatus ____________________________");
 
-        GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<ResultInfoObject<BookReadingInfo>>>> responseObservable;
-        responseObservable = api.getReadingStatus(editionId);
+        // TODO data test
 
-        return responseObservable.map(response -> response.body().data().getResultInfo());
+        BookReadingInfo bookReadingInfo = new BookReadingInfo();
+        bookReadingInfo.setReadingStatus(-1);
+        bookReadingInfo.setEditionId(12);
+
+        return Observable.fromCallable(() -> {
+            return bookReadingInfo;
+        }).delay(0, TimeUnit.MILLISECONDS);
+
+
+//        GatApi api = dataComponent.getPrivateGatApi();
+//        Observable<Response<ServerResponse<ResultInfoObject<BookReadingInfo>>>> responseObservable;
+//        responseObservable = api.getReadingStatus(editionId);
+//
+//        return responseObservable.map(response -> response.body().data().getResultInfo());
     }
 
     @Override
@@ -319,4 +330,25 @@ public class DebugBookDataSource implements BookDataSource {
 
         return responseObservable.map(response -> response.body());
     }
+
+    @Override
+    public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
+        MZDebug.w("______________________________________ selfUpdateReadingStatus _______________");
+
+
+        ServerResponse serverResponse = new ServerResponse("Success", 200, null);
+
+        return Observable.fromCallable(() -> {
+            return serverResponse;
+        }).delay(0, TimeUnit.MILLISECONDS);
+
+
+//        GatApi api = dataComponent.getPrivateGatApi();
+//        Observable<Response<ServerResponse>> responseObservable;
+//        responseObservable = api.selfUpdateReadingStatus(editionId, readingStatus);
+//
+//        return responseObservable.map(response -> response.body());
+    }
+
+
 }
