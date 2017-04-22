@@ -45,16 +45,16 @@ public @interface UserSharingType {
     // && recordStatus = 0 -> button text =  Đợi đồng ý
     int WAIT_FOR_ACCEPT = 4;
 
-    // && recordStatus = 2 -> button text =  Đợi đồng ý
+    // && recordStatus = 2 -> button text =  Đang liên lạc
     int WAIT_FOR_CONNECT = 5;
 
-    // && recordStatus = 3 -> button text =  Đợi đồng ý
+    // && recordStatus = 3 -> button text =  Đang mượn
     int IS_BORROWING = 6;
 
     /**
      * availbleStatus = 0 && requestingStatus = 1 && recordStatus = 1
      *
-     * -> info text = Được được mượn & button text = Đợi đến lượt
+     * -> info text = Đang được mượn & button text = Đợi đến lượt
      */
     int BORROW_IN_QUEUE = 7;
 

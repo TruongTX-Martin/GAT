@@ -13,9 +13,9 @@ public class SelfAddInstance extends UseCase<ServerResponse> {
     private final BookRepository repository;
     private final int editionId;
     private final int sharingStatus;
-    private final String numberOfBook;
+    private final int numberOfBook;
 
-    public SelfAddInstance(BookRepository repository, int editionId, int sharingStatus, String numberOfBook) {
+    public SelfAddInstance(BookRepository repository, int editionId, int sharingStatus, int numberOfBook) {
         this.repository = repository;
         this.editionId = editionId;
         this.sharingStatus = sharingStatus;

@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/paddingLarge">
 
-
     <com.gat.common.customview.CircleImage
         android:id="@+id/image_view_avatar"
         android:layout_width="48dp"
@@ -65,7 +64,7 @@
         android:textSize="@dimen/normal_text_view_size" />
 
     <TextView
-        android:id="@+id/text_view_book_in_sharing"
+        android:id="@+id/text_view_book_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_view_user_address"

@@ -14,6 +14,11 @@ import com.gat.dependency.AppModule;
 
 public class ClientUtils {
 
+    public final static String SIZE_DEFAULT = "o";
+    public final static String SIZE_THUMBNAIL = "t";
+    public final static String SIZE_SMALL = "s";
+    public final static String SIZE_LARGE = "q";
+
     public static Context context;
 
 

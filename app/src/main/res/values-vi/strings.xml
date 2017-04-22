@@ -30,6 +30,9 @@
     <string name="none">None</string>
     <string name="list_user_sharing_book">Danh sách người cho mượn</string>
     <string name="wait_for_accept_borrow">Đợi đồng ý</string>
+    <string name="is_connecting">Đang liên lạc</string>
+    <string name="is_borrowing">Đang mượn</string>
+    <string name="wait_your_turn">Đợi đến lượt</string>
     <string name="book_in_sharing">Đang được mượn</string>
     <string name="borrow_book">Mượn sách</string>
     <string name="wait_to_borrow">Đợi mượn</string>

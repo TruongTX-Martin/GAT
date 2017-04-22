@@ -7,6 +7,7 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.repository.BookRepository;
 import com.gat.repository.datasource.BookDataSource;
@@ -112,13 +113,18 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, String numberOfBook) {
+    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
         return Observable.defer( ()->networkDataSourceLazy.get().selfAddInstance(editionId, sharingStatus, numberOfBook));
     }
 
     @Override
     public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
         return Observable.defer( ()->networkDataSourceLazy.get().selfUpdateReadingStatus(editionId, readingStatus));
+    }
+
+    @Override
+    public Observable<BorrowResponse> requestBorrow(int editionId, int ownerId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().requestBorrow(editionId, ownerId));
     }
 
 }

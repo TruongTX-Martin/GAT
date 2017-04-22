@@ -7,6 +7,7 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
@@ -257,7 +258,7 @@ public interface GatApi {
     Observable<Response<ServerResponse>> selfAddInstance (
             @Field("editionId") int editionId,
             @Field("sharingStatus") int sharingStatus,
-            @Field("numberOfBook") String numberOfBook
+            @Field("numberOfBook") int numberOfBook
     );
 
 
@@ -266,6 +267,14 @@ public interface GatApi {
     Observable<Response<ServerResponse>> selfUpdateReadingStatus (
             @Field("editionId") int editionId,
             @Field("readingStatus") int readingStatus
+    );
+
+    @FormUrlEncoded
+    @POST("share/create_request")
+    Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>>
+            requestBorrow (
+            @Field("editionId") int editionId,
+            @Field("ownerId") int ownerId
     );
 
 

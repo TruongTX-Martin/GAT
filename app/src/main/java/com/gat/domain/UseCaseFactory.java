@@ -9,6 +9,7 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
@@ -104,8 +105,10 @@ public interface UseCaseFactory {
 
     UseCase <BookInstanceInfo> getSelfInstanceInfo (int editionId);
 
-    UseCase<ServerResponse> selfAddInstance (int editionId, int sharingStatus, String numberOfBook);
+    UseCase<ServerResponse> selfAddInstance (int editionId, int sharingStatus, int numberOfBook);
 
     UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
+
+    UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
 
 }

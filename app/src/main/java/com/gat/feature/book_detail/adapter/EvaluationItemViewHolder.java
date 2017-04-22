@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.DateTimeUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +46,9 @@ public class EvaluationItemViewHolder extends ItemViewHolder<EvaluationItem> {
     public void onBindItem(EvaluationItem item) {
         super.onBindItem(item);
 
-        textViewTimeAgo.setText(item.evaluation().getEvaluationTime());
+        textViewTimeAgo.setText(String.valueOf(
+                DateTimeUtil.calculateDayAgo(DateTimeUtil.FORMAT_TYPE_1, item.evaluation().getEvaluationTime())
+                ));
         textViewName.setText(item.evaluation().getName());
         //ratingBarComment.setRating(item.evaluation().get); TODO miss rating
         textViewCommentEvaluation.setText(item.evaluation().getReview());

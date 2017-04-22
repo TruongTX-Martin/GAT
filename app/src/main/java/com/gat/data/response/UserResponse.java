@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 public class UserResponse implements Parcelable {
 
     @SerializedName("userId")
-    private long userId;
+    private int userId;
 
     @SerializedName("name")
     private String name;
@@ -30,7 +30,7 @@ public class UserResponse implements Parcelable {
     private String address;
 
     @SerializedName("editionId")
-    private long editionId;
+    private int editionId;
 
     @SerializedName("sharingCount")
     private int sharingCount;
@@ -42,7 +42,7 @@ public class UserResponse implements Parcelable {
     private int requestingStatus;
 
     @SerializedName("recordId")
-    private long recordId;
+    private int recordId;
 
     @SerializedName("recordStatus")
     private int recordStatus;
@@ -51,17 +51,17 @@ public class UserResponse implements Parcelable {
     private int deleteFlag;
 
     protected UserResponse(Parcel in) {
-        userId = in.readLong();
+        userId = in.readInt();
         name = in.readString();
         email = in.readString();
         imageId = in.readString();
         userTypeFlag = in.readInt();
         address = in.readString();
-        editionId = in.readLong();
+        editionId = in.readInt();
         sharingCount = in.readInt();
         availableStatus = in.readInt();
         requestingStatus = in.readInt();
-        recordId = in.readLong();
+        recordId = in.readInt();
         recordStatus = in.readInt();
         deleteFlag = in.readInt();
     }
@@ -78,7 +78,7 @@ public class UserResponse implements Parcelable {
         }
     };
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
@@ -106,7 +106,7 @@ public class UserResponse implements Parcelable {
         return deleteFlag;
     }
 
-    public long getEditionId() {
+    public int getEditionId() {
         return editionId;
     }
 
@@ -122,7 +122,7 @@ public class UserResponse implements Parcelable {
         return requestingStatus;
     }
 
-    public long getRecordId() {
+    public int getRecordId() {
         return recordId;
     }
 

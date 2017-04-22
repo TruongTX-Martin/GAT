@@ -26,6 +26,7 @@
             android:textSize="@dimen/larger_text_view_size" />
 
         <ImageView
+            android:id="@+id/image_view_save"
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
@@ -58,6 +59,8 @@
             android:layout_toEndOf="@+id/image_view_book_cover"
             android:text="Steve Jobs - Thiên tài gàn dở và câu chuyện thần kỳ về quả táo"
             android:textColor="@color/colorTextViewDark"
+            android:maxLines="3"
+            android:ellipsize="end"
             android:textSize="@dimen/large_text_view_size" />
 
         <TextView
@@ -119,6 +122,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:clickable="true"
+            android:visibility="gone"
             android:src="@drawable/ic_minus_circle_gray"
             android:textColor="@android:color/white" />
 
@@ -128,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="2"
+            android:text="0"
             android:textColor="@color/colorTextViewDark"
             android:textSize="@dimen/larger_text_view_size" />
 
@@ -162,8 +166,6 @@
             android:layout_gravity="right"
             android:background="@drawable/bg_toggle_selector"
             android:button="@null"
-            android:drawableStart="@drawable/bg_toggle_icon_left"
-            android:drawableEnd="@drawable/bg_toggle_icon_right"
             android:checked="false"
             android:textOff=""
             android:textOn="" />

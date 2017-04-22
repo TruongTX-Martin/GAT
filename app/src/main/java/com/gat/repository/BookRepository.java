@@ -7,6 +7,7 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.repository.entity.Book;
 import java.util.List;
@@ -48,8 +49,10 @@ public interface BookRepository {
 
     Observable <BookInstanceInfo> getSelfInstanceInfo (int editionId);
 
-    Observable<ServerResponse> selfAddInstance (int editionId, int sharingStatus, String numberOfBook);
+    Observable<ServerResponse> selfAddInstance (int editionId, int sharingStatus, int numberOfBook);
 
     Observable<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
+
+    Observable<BorrowResponse> requestBorrow (int editionId, int ownerId);
 
 }

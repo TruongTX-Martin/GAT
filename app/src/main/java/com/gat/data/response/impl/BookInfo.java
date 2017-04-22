@@ -1,5 +1,8 @@
 package com.gat.data.response.impl;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
  * Created by mryit on 4/18/2017.
  */
 
-public class BookInfo {
+public class BookInfo implements Parcelable{
 
     @SerializedName("editionId")
     private int editionId;
@@ -66,6 +69,36 @@ public class BookInfo {
 
     @SerializedName("sharingCount")
     private int sharingCount;
+
+    protected BookInfo(Parcel in) {
+        editionId = in.readInt();
+        bookId = in.readInt();
+        isbn10 = in.readString();
+        isbn13 = in.readString();
+        title = in.readString();
+        imageId = in.readString();
+        publish = in.readString();
+        publisherId = in.readInt();
+        publisher = in.readString();
+        description = in.readString();
+        numberOfPage = in.readInt();
+        language = in.readInt();
+        formatId = in.readInt();
+        rateAvg = in.readFloat();
+        sharingCount = in.readInt();
+    }
+
+    public static final Creator<BookInfo> CREATOR = new Creator<BookInfo>() {
+        @Override
+        public BookInfo createFromParcel(Parcel in) {
+            return new BookInfo(in);
+        }
+
+        @Override
+        public BookInfo[] newArray(int size) {
+            return new BookInfo[size];
+        }
+    };
 
     public int getEditionId() {
         return editionId;
@@ -166,5 +199,29 @@ public class BookInfo {
                 ", rateAvg=" + rateAvg +
                 ", sharingCount=" + sharingCount +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(editionId);
+        dest.writeInt(bookId);
+        dest.writeString(isbn10);
+        dest.writeString(isbn13);
+        dest.writeString(title);
+        dest.writeString(imageId);
+        dest.writeString(publish);
+        dest.writeInt(publisherId);
+        dest.writeString(publisher);
+        dest.writeString(description);
+        dest.writeInt(numberOfPage);
+        dest.writeInt(language);
+        dest.writeInt(formatId);
+        dest.writeFloat(rateAvg);
+        dest.writeInt(sharingCount);
     }
 }

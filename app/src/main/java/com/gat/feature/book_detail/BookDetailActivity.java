@@ -3,6 +3,7 @@ package com.gat.feature.book_detail;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
@@ -17,8 +18,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
@@ -27,6 +36,7 @@ import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.feature.book_detail.adapter.EvaluationBuilder;
 import com.gat.feature.book_detail.adapter.EvaluationItemAdapter;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseActivity;
+import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
 import com.gat.feature.book_detail.comment.CommentActivity;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookActivity;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
@@ -162,6 +172,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             mBookReadingInfo.setReadingStatus(statusResult);
             updateButtonReadingStatus(statusResult);
         }
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @OnClick(R.id.image_button_back)
@@ -171,8 +183,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.image_button_go_share)
     void onGoShare () {
-        Intent intent = new Intent(getApplicationContext(), ShareBookActivity.class);
-        startActivity(intent);
+        showFacebookShareDialog();
     }
 
     @OnClick(R.id.button_reading_state)
@@ -206,8 +217,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.image_button_plus)
     void onAddToBookCase () {
-        Intent intent = new Intent(getApplicationContext(), AddToBookcaseActivity.class);
-        startActivity(intent);
+        if (null == mBookInfo) {
+            return;
+        }
+        start(this, AddToBookcaseActivity.class, AddToBookcaseScreen.instance(mBookInfo));
     }
 
     @OnClick(R.id.button_view_list)
@@ -252,7 +265,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         this.recyclerView.setAdapter(adapter);
     }
 
+    private BookInfo mBookInfo;
     private void onGetBookInfoSuccess (BookInfo book) {
+        mBookInfo = book;
         MZDebug.w(" onGetBookInfoSuccess: " + book.toString());
         textViewBookName.setText(book.getTitle());
         textViewBookAuthor.setText(book.getAuthor().get(0).getAuthorName());
@@ -309,4 +324,44 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
     }
 
+
+    private static CallbackManager callbackManager;
+    private void showFacebookShareDialog () {
+        callbackManager = CallbackManager.Factory.create();
+        ShareDialog shareDialog = new ShareDialog(this);
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+                MZDebug.d(BookDetailActivity.class.getSimpleName(), "shared successfully");
+                //add your code to handle successful sharing
+                Toast.makeText(BookDetailActivity.this, "share success", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+                MZDebug.d(BookDetailActivity.class.getSimpleName(), "sharing cancelled");
+                //add your code to handle cancelled sharing
+                Toast.makeText(BookDetailActivity.this, "share cancel", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                MZDebug.d(BookDetailActivity.class.getSimpleName(), "sharing error");
+                //add your code to handle sharing error
+                Toast.makeText(BookDetailActivity.this, "share error", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
+                    .setQuote(mBookInfo.getTitle())
+                    .setImageUrl(Uri.parse(ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_DEFAULT)))
+                    .setContentUrl(Uri.parse("https://github.com/MrKenitvnn"))
+                    .build();
+
+            shareDialog.show(shareLinkContent);
+        }
+    }
 }

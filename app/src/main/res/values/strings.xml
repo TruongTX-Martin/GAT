@@ -4,7 +4,11 @@
     <!-- facebook login strings for GatEx-->
     <!--<string name="facebook_app_id">1130625350393376</string>-->
 
-    <string name="facebook_app_id">213118392506307</string>
+    <!-- REAL -->
+    <!--<string name="facebook_app_id">213118392506307</string>-->
+
+    <!-- DEV -->
+    <string name="facebook_app_id">936889173084630</string>
 
     <string name="hintSearch">Search book</string>
 
@@ -135,6 +139,7 @@
     <string name="none">None</string>
     <string name="list_user_sharing_book">Danh sách người cho mượn</string>
     <string name="wait_for_accept_borrow">Đợi đồng ý</string>
+    <string name="wait_your_turn">Đợi đến lượt</string>
     <string name="book_in_sharing">Đang được mượn</string>
     <string name="borrow_book">Mượn sách</string>
     <string name="wait_to_borrow">Đợi mượn</string>

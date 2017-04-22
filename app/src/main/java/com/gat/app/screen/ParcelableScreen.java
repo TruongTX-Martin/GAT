@@ -5,8 +5,10 @@ import android.os.Parcelable;
 
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.feature.book_detail.BookDetailScreen;
+import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
@@ -43,6 +45,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int BOOK_DETAIL = 10;
     private static final int SELF_UPDATE_READING = 12;
     private static final int LIST_USER_SHARING_BOOK = 13;
+    private static final int ADD_TO_BOOKCASE = 14;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -82,6 +85,9 @@ public class ParcelableScreen implements Parcelable {
             return SELF_UPDATE_READING;
         if (screen instanceof ListUserSharingBookScreen)
             return LIST_USER_SHARING_BOOK;
+        if (screen instanceof AddToBookcaseScreen)
+            return ADD_TO_BOOKCASE;
+
 
         throw new IllegalArgumentException("Not support screen " + screen);
     }
@@ -115,9 +121,12 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof SelfUpdateReadingScreen) {
             SelfUpdateReadingScreen selfUpdateReadingScreen = (SelfUpdateReadingScreen) screen;
             dest.writeParcelable(selfUpdateReadingScreen.bookReadingInfo(), flags);
-        } else if (screen instanceof  ListUserSharingBookScreen) {
+        } else if (screen instanceof ListUserSharingBookScreen) {
             ListUserSharingBookScreen userSharingBookScreen = (ListUserSharingBookScreen) screen;
             dest.writeList(userSharingBookScreen.listUser());
+        } else if (screen instanceof AddToBookcaseScreen ) {
+            AddToBookcaseScreen addToBookcaseScreen = (AddToBookcaseScreen) screen;
+            dest.writeParcelable(addToBookcaseScreen.bookInfo(), flags);
         }
 
         else {
@@ -170,6 +179,10 @@ public class ParcelableScreen implements Parcelable {
                 myList = in.readArrayList(ListUserSharingBookScreen.class.getClassLoader());
                 screen = ListUserSharingBookScreen.instance(myList);
                 break;
+            case ADD_TO_BOOKCASE:
+                screen = AddToBookcaseScreen.instance(in.readParcelable(BookInfo.class.getClassLoader()));
+                break;
+
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);
         }

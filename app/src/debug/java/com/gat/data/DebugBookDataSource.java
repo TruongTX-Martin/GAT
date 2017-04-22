@@ -12,6 +12,7 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.dependency.DataComponent;
 import com.gat.repository.datasource.BookDataSource;
@@ -311,24 +312,40 @@ public class DebugBookDataSource implements BookDataSource {
 
     @Override
     public Observable<BookInstanceInfo> getSelfInstanceInfo(int editionId) {
-        MZDebug.w("______________________________ getSelfInstanceInfo ___________________________");
+        MZDebug.w("______________________________ getSelfInstanceInfo _________________ [ DEBUG ]");
 
-        GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<ResultInfoObject<BookInstanceInfo>>>> responseObservable;
-        responseObservable = api.getSelfInstanceInfo(editionId);
+        BookInstanceInfo bookInstanceInfo = new BookInstanceInfo();
+        bookInstanceInfo.setBorrowingTotal(2);
+        bookInstanceInfo.setLostTotal(2);
+        bookInstanceInfo.setNotSharingToal(0);
+        bookInstanceInfo.setSharingTotal(2);
 
-        return responseObservable.map( response -> response.body().data().getResultInfo());
+        return Observable.fromCallable(() -> {
+            return bookInstanceInfo;
+        }).delay(0, TimeUnit.MILLISECONDS);
+
+
+//        GatApi api = dataComponent.getPrivateGatApi();
+//        Observable<Response<ServerResponse<ResultInfoObject<BookInstanceInfo>>>> responseObservable;
+//        responseObservable = api.getSelfInstanceInfo(editionId);
+//
+//        return responseObservable.map( response -> response.body().data().getResultInfo());
     }
 
     @Override
-    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, String numberOfBook) {
-        MZDebug.w("______________________________________ selfAddInstance ___________________________");
+    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
+        MZDebug.w("______________________________________ selfAddInstance _____________ [ DEBUG ]");
 
-        GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse>> responseObservable;
-        responseObservable = api.selfAddInstance(editionId, sharingStatus, numberOfBook);
+        ServerResponse serverResponse = new ServerResponse("Success", 200, null);
+        return Observable.fromCallable(() -> {
+            return serverResponse;
+        }).delay(0, TimeUnit.MILLISECONDS);
 
-        return responseObservable.map(response -> response.body());
+//        GatApi api = dataComponent.getPrivateGatApi();
+//        Observable<Response<ServerResponse>> responseObservable;
+//        responseObservable = api.selfAddInstance(editionId, sharingStatus, numberOfBook);
+//
+//        return responseObservable.map(response -> response.body());
     }
 
     @Override
@@ -348,6 +365,25 @@ public class DebugBookDataSource implements BookDataSource {
 //        responseObservable = api.selfUpdateReadingStatus(editionId, readingStatus);
 //
 //        return responseObservable.map(response -> response.body());
+    }
+
+    @Override
+    public Observable<BorrowResponse> requestBorrow(int editionId, int ownerId) {
+        MZDebug.w("____________________________________ requestBorrow _________________ [ DEBUG ]");
+
+        BorrowResponse borrowResponse = new BorrowResponse();
+        borrowResponse.setRecordId(103);
+        borrowResponse.setBookId(150);
+        borrowResponse.setBorrowerId(156);
+        borrowResponse.setOwnerId(2);
+        borrowResponse.setRequestTime("2017-04-17 13:02:25");
+        borrowResponse.setRecordId(1);
+
+        return Observable.fromCallable(() -> {
+            return borrowResponse;
+        }).delay(0, TimeUnit.MILLISECONDS);
+
+
     }
 
 
