@@ -74,10 +74,37 @@
         <activity android:name=".feature.suggestion.search.SuggestSearchActivity" >
         </activity>
 
+        <activity android:name=".feature.book_detail.BookDetailActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.add_to_bookcase.AddToBookcaseActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.comment.CommentActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.list_user_sharing_book.ListUserSharingBookActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.self_update_reading.SelfUpdateReadingActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.share_book.ShareBookActivity" >
+        </activity>
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"/>
 
         <service
             android:name=".data.service.FetchAddressIntentService"
             android:exported="false"/>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1937935059771206"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
     </application>
 
 </manifest>

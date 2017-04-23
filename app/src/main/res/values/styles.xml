@@ -58,7 +58,8 @@
     <style name="TextViewHeaderTop" parent="TextViewBase">
         <item name="android:textSize">22sp</item>
         <item name="textAllCaps">true</item>
-        <item name="android:gravity">center_horizontal</item>
+        <item name="android:gravity">center_horizontal|center_vertical</item>
+
     </style>
 
     <style name="TextViewHeaderTitle" parent="TextViewBase">
@@ -72,6 +73,19 @@
         <item name="android:progressDrawable">@drawable/ratingbar</item>
         <item name="android:minHeight">28dp</item>
         <item name="android:maxHeight">28dp</item>
+    </style>
+
+    <style name="RadioButtonStyle" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
+
+        <item name="android:height">40dp</item>
+        <item name="android:background">@drawable/bg_radio_selector</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawableStart">@drawable/bg_radio_icon</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_marginBottom">20dp</item>
+
     </style>
 
 </resources>

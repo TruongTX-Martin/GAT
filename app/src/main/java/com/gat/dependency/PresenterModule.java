@@ -2,10 +2,23 @@ package com.gat.dependency;
 
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
+
 import com.gat.feature.bookdetail.BookDetailRequestPresenter;
 import com.gat.feature.bookdetail.BookDetailRequestPresenterImpl;
 import com.gat.feature.editinfo.EditInfoPresenter;
 import com.gat.feature.editinfo.EditInfoPresenterImpl;
+
+import com.gat.feature.book_detail.BookDetailPresenter;
+import com.gat.feature.book_detail.BookDetailPresenterImpl;
+import com.gat.feature.book_detail.add_to_bookcase.AddToBookcasePresenter;
+import com.gat.feature.book_detail.add_to_bookcase.AddToBookcasePresenterImpl;
+import com.gat.feature.book_detail.comment.CommentPresenter;
+import com.gat.feature.book_detail.comment.CommentPresenterImpl;
+import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenter;
+import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenterImpl;
+import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenter;
+import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenterImpl;
+
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
 import com.gat.feature.main.MainPresenter;
@@ -122,9 +135,39 @@ public class PresenterModule {
     }
 
     @Provides
-    BookDetailRequestPresenter provideBookDetailPresenter(UseCaseFactory useCaseFactory,
+    BookDetailRequestPresenter provideBookDetailRequestPresenter(UseCaseFactory useCaseFactory,
                                                           SchedulerFactory schedulerFactory) {
         return new BookDetailRequestPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    BookDetailPresenter provideBookDetailPresenter(UseCaseFactory useCaseFactory,
+                                                   SchedulerFactory schedulerFactory){
+        return  new BookDetailPresenterImpl(useCaseFactory,schedulerFactory);
+    }
+
+    @Provides
+    SelfUpdateReadingPresenter provideSelfUpdateReadingPresenter(UseCaseFactory useCaseFactory,
+                                                                 SchedulerFactory schedulerFactory) {
+        return new SelfUpdateReadingPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    ListUserSharingBookPresenter provideListUserSharingBookPresenter(UseCaseFactory useCaseFactory,
+                                                                     SchedulerFactory schedulerFactory) {
+        return new ListUserSharingBookPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    AddToBookcasePresenter provideAddToBookcasePresenter (UseCaseFactory useCaseFactory,
+                                                          SchedulerFactory schedulerFactory) {
+        return new AddToBookcasePresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    CommentPresenter provideCommentPresenter (UseCaseFactory useCaseFactory,
+                                              SchedulerFactory schedulerFactory) {
+        return new CommentPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
 }

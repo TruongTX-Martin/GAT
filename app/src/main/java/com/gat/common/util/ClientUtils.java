@@ -1,22 +1,35 @@
 package com.gat.common.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.gat.dependency.AppModule;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by truongtechno on 29/03/2017.
  */
 
 public class ClientUtils {
+
+    public final static String SIZE_DEFAULT = "o";
+    public final static String SIZE_THUMBNAIL = "t";
+    public final static String SIZE_SMALL = "s";
+    public final static String SIZE_LARGE = "q";
 
     public static Context context;
 
@@ -38,8 +51,9 @@ public class ClientUtils {
     }
 
     public static void setImage(ImageView image, String url) {
-        if (image != null) {
-            Glide.with(context).load(url).dontAnimate().into(image);
+        if(image != null){
+            Glide.with(context).load(url).crossFade().diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true).fitCenter().into(image);
         }
     }
 
@@ -55,5 +69,27 @@ public class ClientUtils {
         }
         return "";
     }
+
+    public static Bitmap loadBitmap(ImageView imageView, String url, OnBitmapLoaded onBitmapLoaded){
+        Bitmap bitmap = null;
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>(imageView.getWidth(), imageView.getHeight()) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                        imageView.setImageBitmap(resource);
+                        onBitmapLoaded.onBitmapLoaded(resource);
+                    }
+                });
+
+        return bitmap;
+    }
+
+
+    public interface OnBitmapLoaded {
+        void onBitmapLoaded (Bitmap bitmap);
+    }
+
 
 }

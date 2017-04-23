@@ -6,7 +6,14 @@ import com.gat.data.id.LongId;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ResultInfoList;
+import com.gat.data.response.ResultInfoObject;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.dependency.DataComponent;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Author;
@@ -215,4 +222,179 @@ public class DebugBookDataSource implements BookDataSource {
             return list;
         });
     }
+
+    @Override
+    public Observable<BookInfo> getBookInfo(int editionId) {
+        MZDebug.w("_____________________________________ getBookInfo ____________________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<ResultInfoObject<BookInfo>>>> responseObservable;
+        responseObservable = api.getBookInfo(editionId);
+
+        return responseObservable.map( response -> {
+            MZDebug.w("book info response: " + response.body().toString());
+
+            return  response.body().data().getResultInfo();
+        });
+    }
+
+    @Override
+    public Observable<List<EvaluationItemResponse>> getBookEditionEvaluation(int editionId) {
+        MZDebug.w("________________________ getBookEditionEvaluation ____________________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse<EvaluationItemResponse>>>> responseObservable;
+        responseObservable = api.getBookEditionEvaluation(editionId);
+
+        return responseObservable.map(response -> {
+            List<EvaluationItemResponse> list = response.body().data().getResultInfo();
+            return list;
+        });
+    }
+
+    @Override
+    public Observable<BookReadingInfo> getReadingStatus(int editionId) {
+        MZDebug.w("________________________________ getReadingStatus ____________________________");
+
+        // TODO data test
+
+        BookReadingInfo bookReadingInfo = new BookReadingInfo();
+        bookReadingInfo.setReadingStatus(-1);
+        bookReadingInfo.setEditionId(12);
+
+        return Observable.fromCallable(() -> {
+            return bookReadingInfo;
+        }).delay(0, TimeUnit.MILLISECONDS);
+
+
+//        GatApi api = dataComponent.getPrivateGatApi();
+//        Observable<Response<ServerResponse<ResultInfoObject<BookReadingInfo>>>> responseObservable;
+//        responseObservable = api.getReadingStatus(editionId);
+//
+//        return responseObservable.map(response -> response.body().data().getResultInfo());
+    }
+
+    @Override
+    public Observable<EvaluationItemResponse> getBookEvaluationByUser(int editionId) {
+        MZDebug.w("____________________________ getBookEvaluationByUser _________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<ResultInfoObject<EvaluationItemResponse>>>> responseObservable;
+        responseObservable = api.getBookEvaluationByUser(editionId);
+
+        return responseObservable.map(response -> response.body().data().getResultInfo());
+    }
+
+    @Override
+    public Observable<List<UserResponse>> getEditionSharingUser(int editionId) {
+        MZDebug.w("____________________________ getEditionSharingUser ___________________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> responseObservable;
+        responseObservable = api.getEditionSharingUser(editionId);
+
+        return responseObservable.map(response -> {
+            List<UserResponse> list = response.body().data().getResultInfo();
+            return list;
+        });
+    }
+
+    @Override
+    public Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler) {
+        MZDebug.w("______________________________________ postComment ___________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse>> responseObservable;
+        responseObservable = api.postComment(editionId, value, review, spoiler);
+
+        return responseObservable.map(response -> response.body());
+    }
+
+    @Override
+    public Observable<BookInstanceInfo> getSelfInstanceInfo(int editionId) {
+        MZDebug.w("______________________________ getSelfInstanceInfo _________________ [ DEBUG ]");
+
+        BookInstanceInfo bookInstanceInfo = new BookInstanceInfo();
+        bookInstanceInfo.setBorrowingTotal(2);
+        bookInstanceInfo.setLostTotal(2);
+        bookInstanceInfo.setNotSharingToal(0);
+        bookInstanceInfo.setSharingTotal(2);
+
+        return Observable.fromCallable(() -> {
+            return bookInstanceInfo;
+        }).delay(0, TimeUnit.MILLISECONDS);
+
+
+//        GatApi api = dataComponent.getPrivateGatApi();
+//        Observable<Response<ServerResponse<ResultInfoObject<BookInstanceInfo>>>> responseObservable;
+//        responseObservable = api.getSelfInstanceInfo(editionId);
+//
+//        return responseObservable.map( response -> response.body().data().getResultInfo());
+    }
+
+    @Override
+    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
+        MZDebug.w("______________________________________ selfAddInstance _____________ [ DEBUG ]");
+
+        ServerResponse serverResponse = new ServerResponse("Success", 200, null);
+        return Observable.fromCallable(() -> {
+            return serverResponse;
+        }).delay(0, TimeUnit.MILLISECONDS);
+
+//        GatApi api = dataComponent.getPrivateGatApi();
+//        Observable<Response<ServerResponse>> responseObservable;
+//        responseObservable = api.selfAddInstance(editionId, sharingStatus, numberOfBook);
+//
+//        return responseObservable.map(response -> response.body());
+    }
+
+    @Override
+    public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
+        MZDebug.w("______________________________________ selfUpdateReadingStatus _______________");
+
+
+        ServerResponse serverResponse = new ServerResponse("Success", 200, null);
+
+        return Observable.fromCallable(() -> {
+            return serverResponse;
+        }).delay(0, TimeUnit.MILLISECONDS);
+
+
+//        GatApi api = dataComponent.getPrivateGatApi();
+//        Observable<Response<ServerResponse>> responseObservable;
+//        responseObservable = api.selfUpdateReadingStatus(editionId, readingStatus);
+//
+//        return responseObservable.map(response -> response.body());
+    }
+
+    @Override
+    public Observable<BorrowResponse> requestBorrow(int editionId, int ownerId) {
+        MZDebug.w("____________________________________ requestBorrow _________________ [ DEBUG ]");
+
+//        BorrowResponse borrowResponse = new BorrowResponse();
+//        borrowResponse.setRecordId(103);
+//        borrowResponse.setBookId(150);
+//        borrowResponse.setBorrowerId(156);
+//        borrowResponse.setOwnerId(2);
+//        borrowResponse.setRequestTime("2017-04-17 13:02:25");
+//        borrowResponse.setRecordStatus(0);
+//
+//        return Observable.fromCallable(() -> {
+//            return borrowResponse;
+//        }).delay(1000, TimeUnit.MILLISECONDS);
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>> responseObservable;
+        responseObservable = api.requestBorrow(editionId, ownerId);
+
+        return responseObservable.map(response -> {
+            BorrowResponse borrowResponse = response.body().data().getResultInfo();
+            MZDebug.w("DEBUG: borrow response \n\r" + borrowResponse.toString());
+
+            return borrowResponse;
+        });
+
+    }
+
+
 }

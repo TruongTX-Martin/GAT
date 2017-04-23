@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/paddingNormal"
+    android:paddingLeft="@dimen/paddingLarge"
+    android:paddingRight="@dimen/paddingLarge"
+    android:paddingTop="@dimen/paddingLarge">
+
+    <com.gat.common.customview.CircleImage
+        android:id="@+id/image_view_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginRight="@dimen/margin_horizontal_large"
+        android:src="@drawable/demo_book_cover" />
+
+    <TextView
+        android:id="@+id/text_view_time_ago"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text=".. days ago" />
+
+    <TextView
+        android:id="@+id/text_view_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/image_view_avatar"
+        android:layout_toStartOf="@+id/text_view_time_ago"
+        android:text="..."
+        android:textColor="@color/colorTextViewDark"
+        android:textSize="@dimen/large_text_view_size" />
+
+    <RatingBar
+        android:id="@+id/rating_bar_comment"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_name"
+        android:layout_marginBottom="@dimen/margin_top_bottom_small"
+        android:layout_marginTop="@dimen/margin_top_bottom_small"
+        android:layout_toEndOf="@+id/image_view_avatar"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="0.5" />
+
+    <TextView
+        android:id="@+id/text_view_comment_evaluation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating_bar_comment"
+        android:layout_marginBottom="@dimen/margin_top_bottom_normal"
+        android:layout_toEndOf="@+id/image_view_avatar"
+        android:maxLines="4"
+        android:textColor="@color/colorTextViewDark" />
+
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_view_comment_evaluation"
+        android:background="@color/divider" />
+
+</RelativeLayout>
