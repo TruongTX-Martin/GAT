@@ -1,3 +1,6 @@
+build/
+.gitignore
+
 # Built application files
 *.apk
 *.ap_
@@ -50,4 +53,5 @@ gradle/
 local.properties
 gradlew
 gradlew.bat
+
 
