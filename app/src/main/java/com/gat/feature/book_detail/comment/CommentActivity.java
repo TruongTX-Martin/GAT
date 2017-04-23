@@ -1,5 +1,6 @@
 package com.gat.feature.book_detail.comment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.EditText;
@@ -7,7 +8,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.feature.book_detail.BookDetailActivity;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -60,6 +64,8 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
     protected void onResume() {
         super.onResume();
 
+        MZDebug.w("CommentActivity:onResume: " + evaluation.toString());
+
         textViewUserName.setText(evaluation.getName());
         editTextComment.setText(evaluation.getReview() == null? "" : evaluation.getReview());
     }
@@ -82,6 +88,9 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
 
     private void onPostCommentSuccess (String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(BookDetailActivity.KEY_UPDATE_COMMENT, editTextComment.getText().toString());
+        setResult(RESULT_OK, returnIntent);
         finish();
     }
 

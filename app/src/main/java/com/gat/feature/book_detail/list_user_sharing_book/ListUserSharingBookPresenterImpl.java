@@ -57,15 +57,18 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
 
     @Override
     public void getUserId() {
-        // TODO after merge : getUser ID
         UseCase<User> getUser = useCaseFactory.getUser();
         getUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(user -> {
-                    subjectUserIdSuccess.onNext(2);
+                    if (user != null) {
+                        subjectUserIdSuccess.onNext(user.userId());
+                    } else {
+                        subjectUserIdFailure.onNext("Failed");
+                    }
                 })
                 .onError(throwable -> {
-                    subjectUserIdFailure.onNext("");
+                    subjectUserIdFailure.onNext("Failed");
                 }).execute();
     }
 

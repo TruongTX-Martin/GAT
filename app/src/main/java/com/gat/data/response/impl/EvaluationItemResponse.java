@@ -45,6 +45,14 @@ public class EvaluationItemResponse implements Parcelable{
         }
     };
 
+    public void setValue(float value) {
+        this.value = value;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getEvaluationId() {
         return evaluationId;
     }

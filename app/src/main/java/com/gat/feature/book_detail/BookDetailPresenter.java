@@ -4,6 +4,7 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.repository.entity.User;
 import com.rey.mvp2.Presenter;
 import java.util.List;
 import io.reactivex.Observable;
@@ -40,7 +41,7 @@ public interface BookDetailPresenter extends Presenter {
     Observable<String> onError ();
 
     void isUserLoggedIn ();
-    Observable<String> onUserLoggedIn ();
+    Observable<User> onUserLoggedIn ();
     Observable<String> onUserNotLoggedIn ();
 
 }

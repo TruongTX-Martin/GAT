@@ -19,12 +19,12 @@ public class DateTimeUtil {
             SimpleDateFormat format = new SimpleDateFormat(formatType);
             Date past = format.parse(timeString);
             Date now = new Date();
-            return TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime()) + " days ago";
+            return TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime()) + " ngày";
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        return "today";
+        return "hôm nay";
     }
 
 

@@ -1,7 +1,6 @@
 package com.gat.feature.book_detail;
 
 import android.util.Log;
-
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
@@ -12,6 +11,7 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.book_detail.self_update_reading.ReadingState;
+import com.gat.repository.entity.User;
 import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -49,7 +49,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
 
     private final Subject<String> onError;
 
-    private final Subject<String> subjectUserLoggedIn;
+    private final Subject<User> subjectUserLoggedIn;
     private final Subject<String> subjectUserNotLoggedIn;
 
     private int mEditionId;
@@ -254,12 +254,28 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
 
     @Override
     public void isUserLoggedIn() {
-        // TODO after merge : getUser
-        subjectUserNotLoggedIn.onNext("User logged in");
+
+        UseCase<User> userUseCase = useCaseFactory.getUser();
+        userUseCase.executeOn(schedulerFactory.main())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    if (user != null) {
+                        subjectUserLoggedIn.onNext(user);
+                    } else {
+                        subjectUserNotLoggedIn.onNext("Failed");
+                    }
+
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: isUserLoggedIn ___________________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                    subjectUserNotLoggedIn.onNext("Failed");
+                })
+                .execute();
     }
 
     @Override
-    public Observable<String> onUserLoggedIn() {
+    public Observable<User> onUserLoggedIn() {
         return subjectUserLoggedIn.subscribeOn(schedulerFactory.main());
     }
 

@@ -39,6 +39,8 @@ import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScr
 import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
+import com.gat.repository.entity.User;
+
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -48,10 +50,13 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mryit on 4/16/2017.
  */
 
-public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDetailPresenter>{
+public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDetailPresenter>
+        implements RatingBar.OnRatingBarChangeListener{
 
     private static final int RC_UPDATE_READING_STATUS = 0x01;
+    private static final int RC_UPDATE_COMMENT = 0x02;
     public static final String KEY_UPDATE_READING_STATUS = "status";
+    public static final String KEY_UPDATE_COMMENT = "comment";
 
     @BindView(R.id.scroll_view)
     ScrollView scrollView;
@@ -142,6 +147,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         getPresenter().getEditionSharingUsers();
         getPresenter().getBookEditionEvaluation();
 
+        ratingBarUserRate.setOnRatingBarChangeListener(this);
     }
 
     @Override
@@ -170,6 +176,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             int statusResult = data.getIntExtra(KEY_UPDATE_READING_STATUS, ReadingState.REMOVE);
             mBookReadingInfo.setReadingStatus(statusResult);
             updateButtonReadingStatus(statusResult);
+        } else if (requestCode == RC_UPDATE_COMMENT && resultCode == RESULT_OK) {
+            String comment = data.getStringExtra(KEY_UPDATE_COMMENT);
+            textViewCommentByUser.setText(comment == null ? "" : comment);
         } else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
@@ -214,8 +223,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         if (mEvaluationByUser == null) {
             return;
         }
-
-        start(this, CommentActivity.class, CommentScreen.instance(mEvaluationByUser));
+        MZDebug.w("BookDetailActivity:onGoComment: " + mEvaluationByUser.toString());
+        startForResult(this, CommentActivity.class, CommentScreen.instance(mEvaluationByUser), RC_UPDATE_COMMENT);
     }
 
     @OnClick(R.id.image_button_plus)
@@ -310,9 +319,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private EvaluationItemResponse mEvaluationByUser;
     private void onGetBookEvaluationByUser (EvaluationItemResponse evaluation) {
         mEvaluationByUser = evaluation;
+        mEvaluationByUser.setName(mUser.name());
+
         MZDebug.w("onGetEditionSharingUsersSuccess: " + evaluation.toString());
         llComment.setVisibility(View.VISIBLE);
 
+        ratingBarUserRate.setRating(evaluation.getValue());
         textViewCommentByUser.setText(evaluation.getReview() == null ? "" : evaluation.getReview());
         if (evaluation.getValue()!= 0 ||  evaluation.getReview() != null) {
             buttonComment.setVisibility(View.VISIBLE);
@@ -332,10 +344,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void onUserLoggedIn (String message) {
+    private User mUser;
+    private void onUserLoggedIn (User user) {
+        mUser = user;
         getPresenter().getBookEvaluationByUser();
         getPresenter().getSelfReadingStatus();
-        buttonReadingState.setClickable(true);
     }
 
     private void onUserNotLoggedIn (String message) {
@@ -390,5 +403,13 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
             shareDialog.show(shareLinkContent);
         }
+    }
+
+    @Override
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        if (null == mEvaluationByUser) {
+            return;
+        }
+        mEvaluationByUser.setValue(rating);
     }
 }
