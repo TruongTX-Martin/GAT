@@ -118,7 +118,7 @@ public class UserSharingItemViewHolder extends ItemViewHolder<UserSharingItem> {
                 textViewBookState.setVisibility(View.GONE);
                 buttonBookState.setVisibility(View.VISIBLE);
                 buttonBookState.setText(itemView.getContext().getResources().getString(R.string.borrow_book));
-//                buttonBookState.setBackground(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.bg_rounded_cool_blue, null));
+                buttonBookState.setBackground(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.bg_rounded_cool_blue, null));
                 break;
 
             case UserSharingType.WAIT_FOR_BORROW:
@@ -127,7 +127,7 @@ public class UserSharingItemViewHolder extends ItemViewHolder<UserSharingItem> {
                 textViewBookState.setText(itemView.getContext().getResources().getString(R.string.book_in_sharing));
                 buttonBookState.setVisibility(View.VISIBLE);
                 buttonBookState.setText(itemView.getContext().getResources().getString(R.string.wait_to_borrow));
-//                buttonBookState.setBackground(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.bg_rounded_green, null));
+                buttonBookState.setBackground(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.bg_rounded_green, null));
                 break;
 
             case UserSharingType.WAIT_FOR_ACCEPT:

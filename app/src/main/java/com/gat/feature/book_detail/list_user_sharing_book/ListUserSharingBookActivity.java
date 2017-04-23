@@ -96,8 +96,8 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     }
 
     private void onGetUserFailure (String message) {
-//        setupRecyclerViewComments(0);
-//        adapter.setItems(getScreen().listUser());
+        setupRecyclerViewComments(0);
+        adapter.setItems(getScreen().listUser());
         Toast.makeText(this, "Không lấy được thông tin user, chưa đăng nhập?", Toast.LENGTH_SHORT).show();
     }
 

@@ -1,27 +1,22 @@
 package com.gat.feature.book_detail;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
+import com.facebook.internal.CallbackManagerImpl;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -38,15 +33,13 @@ import com.gat.feature.book_detail.adapter.EvaluationItemAdapter;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseActivity;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
 import com.gat.feature.book_detail.comment.CommentActivity;
+import com.gat.feature.book_detail.comment.CommentScreen;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookActivity;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
 import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
-import com.gat.feature.book_detail.share_book.ShareBookActivity;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -77,6 +70,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @BindView(R.id.button_reading_state)
     Button buttonReadingState;
+
+    @BindView(R.id.ll_comment)
+    LinearLayout llComment;
 
     @BindView(R.id.rating_bar_user_rate)
     RatingBar ratingBarUserRate;
@@ -131,16 +127,19 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 getPresenter().onGetEditionSharingUsersSuccess().subscribe(this::onGetEditionSharingUsersSuccess),
                 getPresenter().onGetBookEvaluationByUser().subscribe(this::onGetBookEvaluationByUser),
                 getPresenter().onGetSelfReadingStatusSuccess().subscribe(this::onGetSelfReadingStatusSuccess),
+                getPresenter().onGetSelfReadingStatusFailure().subscribe(this::onGetSelfReadingStatusFailure),
                 getPresenter().onGetBookEditionEvaluationSuccess().subscribe(this::onGetBookEditionEvaluationSuccess),
                 getPresenter().onError().subscribe(this::onError),
+                getPresenter().onUserLoggedIn().subscribe(this::onUserLoggedIn),
                 getPresenter().onUserNotLoggedIn().subscribe(this::onUserNotLoggedIn),
-                getPresenter().onUpdateReadingStatusSuccess().subscribe(this::onUpdateReadingStatusSuccess)
+                getPresenter().onUpdateReadingStatusSuccess().subscribe(this::onUpdateReadingStatusSuccess),
+                getPresenter().onUpdateReadingStatusFailure().subscribe(this::onUpdateReadingStatusFailure),
+                getPresenter().onGetEvaluationByUserFailure().subscribe(this::onGetEvaluationByUserFailure)
         );
 
+        getPresenter().isUserLoggedIn();
         getPresenter().getBookInfo();
         getPresenter().getEditionSharingUsers();
-        getPresenter().getBookEvaluationByUser();
-        getPresenter().getSelfReadingStatus();
         getPresenter().getBookEditionEvaluation();
 
     }
@@ -171,9 +170,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             int statusResult = data.getIntExtra(KEY_UPDATE_READING_STATUS, ReadingState.REMOVE);
             mBookReadingInfo.setReadingStatus(statusResult);
             updateButtonReadingStatus(statusResult);
+        } else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
-
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @OnClick(R.id.image_button_back)
@@ -188,10 +187,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.button_reading_state)
     void updateReadingState () {
-
-        if (null == mBookReadingInfo) {
-            return;
-        }
         // nếu readingStatus = -1 sẽ hiển thị là Muốn đọc
         // nhấn vào thì sẽ hiện dấu tích bên trái và gọi api update status;
 
@@ -201,9 +196,14 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // + 2: To read - sẽ đọc
         // khi nhấp vào thì sẽ gọi SelfUpdateReadingActivity
 
+        if (mBookReadingInfo == null) {
+            return;
+        }
+
         MZDebug.w("Book reading info: " + mBookReadingInfo.toString());
-        if (mBookReadingInfo.getReadingStatus() == ReadingState.REMOVE) {
+        if (null == mBookReadingInfo || mBookReadingInfo.getReadingStatus() == ReadingState.REMOVE) {
             getPresenter().updateReadingStatus();
+            buttonReadingState.setClickable(false);
         } else {
             startForResult(BookDetailActivity.this, SelfUpdateReadingActivity.class, SelfUpdateReadingScreen.instance(mBookReadingInfo),RC_UPDATE_READING_STATUS);
         }
@@ -211,8 +211,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.button_comment)
     void onGoComment () {
-        Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
-        startActivity(intent);
+        if (mEvaluationByUser == null) {
+            return;
+        }
+
+        start(this, CommentActivity.class, CommentScreen.instance(mEvaluationByUser));
     }
 
     @OnClick(R.id.image_button_plus)
@@ -229,7 +232,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             return;
         }
 
-        MZDebug.e("++++++++++++++++++++++++++++ START activity ++++++++++++++++++++++++++++++++++");
+        MZDebug.e("BookDetailActivity: position 0= " + mListUserSharing.get(0).toString() );
         start(this, ListUserSharingBookActivity.class, ListUserSharingBookScreen.instance(mListUserSharing));
     }
 
@@ -280,7 +283,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private void onGetBookEditionEvaluationSuccess (List<EvaluationItemResponse> list) {
         listEvaluations = list;
         adapter.setItem(EvaluationBuilder.transformListEvaluation(list));
-        MZDebug.w("onGetBookEditionEvaluationSuccess: " + list.size());
+        MZDebug.w("onGetBookEditionEvaluationSuccess: " + list.get(0).toString());
     }
 
     private BookReadingInfo mBookReadingInfo;
@@ -289,6 +292,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         MZDebug.w("onGetSelfReadingStatusSuccess: " + bookReadingInfo.toString());
 
         updateButtonReadingStatus(mBookReadingInfo.getReadingStatus());
+    }
+
+    private void onGetSelfReadingStatusFailure (String message) {
+        MZDebug.w("onGetSelfReadingStatusFailure _____________________________________ " + message);
+        updateButtonReadingStatus(ReadingState.REMOVE);
     }
 
     private List<UserResponse> mListUserSharing;
@@ -303,27 +311,49 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private void onGetBookEvaluationByUser (EvaluationItemResponse evaluation) {
         mEvaluationByUser = evaluation;
         MZDebug.w("onGetEditionSharingUsersSuccess: " + evaluation.toString());
+        llComment.setVisibility(View.VISIBLE);
 
-        textViewCommentByUser.setVisibility(View.VISIBLE);
-        buttonComment.setVisibility(View.VISIBLE);
-        textViewCommentByUser.setText(evaluation.getReview());
+        textViewCommentByUser.setText(evaluation.getReview() == null ? "" : evaluation.getReview());
+        if (evaluation.getValue()!= 0 ||  evaluation.getReview() != null) {
+            buttonComment.setVisibility(View.VISIBLE);
+            if (evaluation.getReview() != null && !evaluation.getReview().isEmpty()) {
+                buttonComment.setText(getResources().getString(R.string.edit_comment));
+            } else {
+                buttonComment.setText(getResources().getString(R.string.write_comment));
+            }
+        }
+    }
+
+    private void onGetEvaluationByUserFailure (String message) {
+        llComment.setVisibility(View.GONE);
     }
 
     private void onError (String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void onUserLoggedIn (String message) {
+        getPresenter().getBookEvaluationByUser();
+        getPresenter().getSelfReadingStatus();
+        buttonReadingState.setClickable(true);
+    }
+
     private void onUserNotLoggedIn (String message) {
-        // hide button comment, string comment
-        textViewCommentByUser.setVisibility(View.GONE);
-        buttonComment.setVisibility(View.GONE);
+        // hide button comment, rating, string comment
+        llComment.setVisibility(View.GONE);
+        buttonReadingState.setClickable(false);
     }
 
     private void onUpdateReadingStatusSuccess (String message) {
+        buttonReadingState.setClickable(true);
         mBookReadingInfo.setReadingStatus(ReadingState.TO_READ);
         buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
     }
 
+    private void onUpdateReadingStatusFailure (String message) {
+        buttonReadingState.setClickable(true);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 
     private static CallbackManager callbackManager;
     private void showFacebookShareDialog () {
@@ -340,16 +370,13 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             @Override
             public void onCancel() {
                 MZDebug.d(BookDetailActivity.class.getSimpleName(), "sharing cancelled");
-                //add your code to handle cancelled sharing
-                Toast.makeText(BookDetailActivity.this, "share cancel", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
             public void onError(FacebookException error) {
                 MZDebug.d(BookDetailActivity.class.getSimpleName(), "sharing error");
                 //add your code to handle sharing error
-                Toast.makeText(BookDetailActivity.this, "share error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BookDetailActivity.this, "Share Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });

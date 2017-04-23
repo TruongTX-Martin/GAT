@@ -1,27 +1,55 @@
 package com.gat.data.response.impl;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by mryit on 4/16/2017.
  */
 
-public class EvaluationItemResponse {
+public class EvaluationItemResponse implements Parcelable{
 
     private String evaluationId;
-    private long userId;
+    private int userId;
     private String name;
     private String imageId;
-    private long bookId;
-    private long editionId;
-    private long value;
+    private int bookId;
+    private int editionId;
+    private float value;
     private String review;
     private boolean spoiler;
     private String evaluationTime;
+
+    protected EvaluationItemResponse(Parcel in) {
+        evaluationId = in.readString();
+        userId = in.readInt();
+        name = in.readString();
+        imageId = in.readString();
+        bookId = in.readInt();
+        editionId = in.readInt();
+        value = in.readFloat();
+        review = in.readString();
+        spoiler = in.readByte() != 0;
+        evaluationTime = in.readString();
+    }
+
+    public static final Creator<EvaluationItemResponse> CREATOR = new Creator<EvaluationItemResponse>() {
+        @Override
+        public EvaluationItemResponse createFromParcel(Parcel in) {
+            return new EvaluationItemResponse(in);
+        }
+
+        @Override
+        public EvaluationItemResponse[] newArray(int size) {
+            return new EvaluationItemResponse[size];
+        }
+    };
 
     public String getEvaluationId() {
         return evaluationId;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
@@ -33,15 +61,15 @@ public class EvaluationItemResponse {
         return imageId;
     }
 
-    public long getBookId() {
+    public int getBookId() {
         return bookId;
     }
 
-    public long getEditionId() {
+    public int getEditionId() {
         return editionId;
     }
 
-    public long getValue() {
+    public float getValue() {
         return value;
     }
 
@@ -71,5 +99,24 @@ public class EvaluationItemResponse {
                 ", spoiler=" + spoiler +
                 ", evaluationTime='" + evaluationTime + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(evaluationId);
+        dest.writeInt(userId);
+        dest.writeString(name);
+        dest.writeString(imageId);
+        dest.writeInt(bookId);
+        dest.writeInt(editionId);
+        dest.writeFloat(value);
+        dest.writeString(review);
+        dest.writeByte((byte) (spoiler ? 1 : 0));
+        dest.writeString(evaluationTime);
     }
 }

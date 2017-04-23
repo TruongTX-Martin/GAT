@@ -23,7 +23,7 @@ public class RequestBorrow extends UseCase<BorrowResponse> {
 
     @Override
     protected Observable<BorrowResponse> createObservable() {
-        return null;
+        return repository.requestBorrow(editionId, ownerId);
     }
 
 

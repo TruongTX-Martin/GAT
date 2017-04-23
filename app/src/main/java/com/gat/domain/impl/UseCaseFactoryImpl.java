@@ -258,6 +258,6 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
 
     @Override
     public UseCase<BorrowResponse> requestBorrow(int editionId, int ownerId) {
-        return null;
+        return new RequestBorrow(bookRepositoryLazy.get(), editionId, ownerId);
     }
 }

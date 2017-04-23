@@ -6,6 +6,8 @@ import com.gat.feature.book_detail.BookDetailPresenter;
 import com.gat.feature.book_detail.BookDetailPresenterImpl;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcasePresenter;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcasePresenterImpl;
+import com.gat.feature.book_detail.comment.CommentPresenter;
+import com.gat.feature.book_detail.comment.CommentPresenterImpl;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenter;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenterImpl;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenter;
@@ -132,6 +134,12 @@ public class PresenterModule {
     AddToBookcasePresenter provideAddToBookcasePresenter (UseCaseFactory useCaseFactory,
                                                           SchedulerFactory schedulerFactory) {
         return new AddToBookcasePresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    CommentPresenter provideCommentPresenter (UseCaseFactory useCaseFactory,
+                                              SchedulerFactory schedulerFactory) {
+        return new CommentPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
 }

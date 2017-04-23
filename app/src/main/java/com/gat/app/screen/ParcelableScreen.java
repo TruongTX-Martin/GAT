@@ -7,8 +7,10 @@ import com.gat.common.util.MZDebug;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
+import com.gat.feature.book_detail.comment.CommentScreen;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
@@ -46,6 +48,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int SELF_UPDATE_READING = 12;
     private static final int LIST_USER_SHARING_BOOK = 13;
     private static final int ADD_TO_BOOKCASE = 14;
+    private static final int ADD_COMMENT = 15;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -87,6 +90,8 @@ public class ParcelableScreen implements Parcelable {
             return LIST_USER_SHARING_BOOK;
         if (screen instanceof AddToBookcaseScreen)
             return ADD_TO_BOOKCASE;
+        if (screen instanceof CommentScreen)
+            return ADD_COMMENT;
 
 
         throw new IllegalArgumentException("Not support screen " + screen);
@@ -127,6 +132,9 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof AddToBookcaseScreen ) {
             AddToBookcaseScreen addToBookcaseScreen = (AddToBookcaseScreen) screen;
             dest.writeParcelable(addToBookcaseScreen.bookInfo(), flags);
+        } else if (screen instanceof CommentScreen) {
+            CommentScreen commentScreen = (CommentScreen) screen;
+            dest.writeParcelable(commentScreen.evaluation(), flags);
         }
 
         else {
@@ -181,6 +189,9 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case ADD_TO_BOOKCASE:
                 screen = AddToBookcaseScreen.instance(in.readParcelable(BookInfo.class.getClassLoader()));
+                break;
+            case ADD_COMMENT:
+                screen = CommentScreen.instance(in.readParcelable(EvaluationItemResponse.class.getClassLoader()));
                 break;
 
             default:

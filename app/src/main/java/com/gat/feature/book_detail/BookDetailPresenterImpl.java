@@ -34,18 +34,23 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
 
     private UseCase<BookReadingInfo> useCaseGetReadingStatus;
     private final Subject<BookReadingInfo> subjectReadingStatus;
+    private final Subject<String> subjectReadingStatusFailure;
 
     private UseCase<List<UserResponse>> useCaseGetEditionSharingUsers;
     private final Subject<List<UserResponse>> subjectEditionSharingUsers;
 
     private UseCase<EvaluationItemResponse> useCaseGetBookEvaluationByUser;
     private final Subject<EvaluationItemResponse> subjectBookEvaluationByUser;
+    private final Subject<String> subjectEvaluationByUserFailure;
 
     private UseCase<ServerResponse> useCaseSelfUpdateReadingStatus;
     private final Subject<String> subjectSelfUpdateReadingStatus;
+    private final Subject<String> subjectSelfUpdateReadingFailure;
 
     private final Subject<String> onError;
-    private final Subject<String> onUserNotLoggedIn;
+
+    private final Subject<String> subjectUserLoggedIn;
+    private final Subject<String> subjectUserNotLoggedIn;
 
     private int mEditionId;
 
@@ -61,9 +66,13 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
         subjectReadingStatus = PublishSubject.create();
         subjectEditionSharingUsers = PublishSubject.create();
         subjectBookEvaluationByUser = PublishSubject.create();
-        onUserNotLoggedIn = PublishSubject.create();
         onError = PublishSubject.create();
         subjectSelfUpdateReadingStatus = PublishSubject.create();
+        subjectEvaluationByUserFailure = PublishSubject.create();
+        subjectReadingStatusFailure = PublishSubject.create();
+        subjectSelfUpdateReadingFailure = PublishSubject.create();
+        subjectUserLoggedIn = PublishSubject.create();
+        subjectUserNotLoggedIn = PublishSubject.create();
     }
 
     @Override
@@ -112,7 +121,12 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
         useCaseGetReadingStatus.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(readingInfo -> {
-                    subjectReadingStatus.onNext(readingInfo);
+                    if (null == readingInfo) {
+                        subjectReadingStatusFailure.onNext("Reading info = null");
+                    } else {
+                        subjectReadingStatus.onNext(readingInfo);
+                    }
+
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: getSelfReadingStatus _________________________________ E \n\r"
@@ -125,6 +139,11 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     @Override
     public Observable<BookReadingInfo> onGetSelfReadingStatusSuccess() {
         return subjectReadingStatus.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onGetSelfReadingStatusFailure() {
+        return subjectReadingStatusFailure.subscribeOn(schedulerFactory.main());
     }
 
     @Override
@@ -162,6 +181,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: getBookEvaluationByUser _______________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectEvaluationByUserFailure.onNext("Failed");
                 })
                 .execute();
     }
@@ -169,6 +189,11 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     @Override
     public Observable<EvaluationItemResponse> onGetBookEvaluationByUser() {
         return subjectBookEvaluationByUser.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onGetEvaluationByUserFailure() {
+        return subjectEvaluationByUserFailure.subscribeOn(schedulerFactory.main());
     }
 
     @Override
@@ -184,6 +209,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
                 onError(throwable -> {
                     MZDebug.e("ERROR: getBookEvaluationByUser ______________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectSelfUpdateReadingFailure.onNext("Failed");
                 }).execute();
 
     }
@@ -191,6 +217,11 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     @Override
     public Observable<String> onUpdateReadingStatusSuccess() {
         return subjectSelfUpdateReadingStatus.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onUpdateReadingStatusFailure() {
+        return subjectSelfUpdateReadingFailure.subscribeOn(schedulerFactory.main());
     }
 
 
@@ -222,7 +253,18 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     }
 
     @Override
+    public void isUserLoggedIn() {
+        // TODO after merge : getUser
+        subjectUserNotLoggedIn.onNext("User logged in");
+    }
+
+    @Override
+    public Observable<String> onUserLoggedIn() {
+        return subjectUserLoggedIn.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
     public Observable<String> onUserNotLoggedIn() {
-        return onUserNotLoggedIn.subscribeOn(schedulerFactory.main());
+        return subjectUserNotLoggedIn.subscribeOn(schedulerFactory.main());
     }
 }

@@ -2,7 +2,6 @@ package com.gat.data.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -137,17 +136,17 @@ public class UserResponse implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(userId);
+        dest.writeInt(userId);
         dest.writeString(name);
         dest.writeString(email);
         dest.writeString(imageId);
         dest.writeInt(userTypeFlag);
         dest.writeString(address);
-        dest.writeLong(editionId);
+        dest.writeInt(editionId);
         dest.writeInt(sharingCount);
         dest.writeInt(availableStatus);
         dest.writeInt(requestingStatus);
-        dest.writeLong(recordId);
+        dest.writeInt(recordId);
         dest.writeInt(recordStatus);
         dest.writeInt(deleteFlag);
     }

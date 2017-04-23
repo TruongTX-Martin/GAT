@@ -24,17 +24,23 @@ public interface BookDetailPresenter extends Presenter {
 
     void getSelfReadingStatus ();
     Observable<BookReadingInfo> onGetSelfReadingStatusSuccess ();
+    Observable<String> onGetSelfReadingStatusFailure ();
 
     void getEditionSharingUsers ();
     Observable<List<UserResponse>> onGetEditionSharingUsersSuccess ();
 
     void getBookEvaluationByUser ();
     Observable<EvaluationItemResponse> onGetBookEvaluationByUser ();
+    Observable<String> onGetEvaluationByUserFailure ();
 
     void updateReadingStatus ();
     Observable<String> onUpdateReadingStatusSuccess ();
+    Observable<String> onUpdateReadingStatusFailure ();
 
     Observable<String> onError ();
+
+    void isUserLoggedIn ();
+    Observable<String> onUserLoggedIn ();
     Observable<String> onUserNotLoggedIn ();
 
 }

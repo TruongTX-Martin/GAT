@@ -152,6 +152,8 @@
     <string name="let_people_borrow_book">Cho mọi người mượn sách</string>
     <string name="your_comment">Bình luận của bạn</string>
     <string name="your_comment_hint">Bình luận của bạn về cuốn sách này</string>
+    <string name="write_comment">Viết bình luận</string>
+    <string name="edit_comment">Sửa bình luận</string>
     <string name="post_your_comment">ĐĂNG BÌNH LUẬN</string>
     <string name="share">Chia sẻ</string>
     <string name="comment_for_share">Viết chia sẻ cho sách</string>

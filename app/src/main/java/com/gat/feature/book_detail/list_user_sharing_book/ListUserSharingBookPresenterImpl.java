@@ -52,10 +52,12 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
     @Override
     public void setListUser(List<UserResponse> list) {
         mListUser = list;
+        MZDebug.w("Presenter:setListUser : 0 = " + list.get(0).toString());
     }
 
     @Override
     public void getUserId() {
+        // TODO after merge : getUser ID
         UseCase<User> getUser = useCaseFactory.getUser();
         getUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
