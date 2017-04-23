@@ -7,10 +7,12 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
@@ -165,6 +167,27 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<Data> getBookInstance(BookInstanceInput input) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().getBookInstance(input));
+    }
+
+    @Override
+    public Observable<Data> updateUserInfo(EditInfoInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().updateUserInfo(input));
+    }
+
+    @Override
+    public Observable<Data> getBookUserSharing(BookSharingUserInput input) {
+        return Observable.defer(() -> localUserDataSourceLazy.get().loadUser())
+                .map(user -> {
+                    input.setUserId(user.userId());
+                    return input;
+                })
+                .flatMap(newInput -> networkUserDataSourceLazy.get().getBookUserSharing(newInput));
+//        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookUserSharing(input));
+    }
+
+    @Override
+    public Observable<Data> getBookDetail(Integer input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookDetail(input));
     }
 
     @Override

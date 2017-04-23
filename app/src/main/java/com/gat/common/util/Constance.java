@@ -10,4 +10,6 @@ public class Constance {
     public static final String IMAGE_SIZE_THUMBNAIL = "t";
     public static final String IMAGE_SIZE_SMALL = "s";
     public static final String IMAGE_SIZE_LARGE = "q";
+    public static final int REQUEST_ACCESS_IMAGE  = 4321;
+    public static final int REQUEST_ACCESS_PERMISSION_WRITESTORAGE  = 12345;
 }

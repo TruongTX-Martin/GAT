@@ -11,6 +11,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
     <uses-feature android:name="android.hardware.camera.flash"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -51,8 +52,10 @@
         </activity>
         <activity android:name=".feature.login.ForgotPassword.VerifyResetTokenActivity" >
         </activity>
-        <activity android:name=".feature.personal.PersonalActivity"/>
 
+        <activity android:name="com.gat.feature.editinfo.EditInfoActivity" />
+        <activity android:name="com.gat.feature.personaluser.PersonalUserActivity" />
+        <activity android:name="com.gat.feature.bookdetail.BookDetailRequestActivity" />
         <activity android:name=".feature.start.StartActivity"
             android:theme="@style/DefaultScreenTheme"
             android:screenOrientation="portrait">

@@ -18,6 +18,7 @@ import java.util.List;
 public class Data<T> {
 
 
+
     @SerializedName("resultInfo")
     private Object resultInfo;
 
@@ -26,9 +27,14 @@ public class Data<T> {
     }
 
     public T getDataReturn(Class<T> t){
-        String json = new Gson().toJson(resultInfo);
-        T t1 = new Gson().fromJson(json, t);
-        return t1;
+        try {
+            String json = new Gson().toJson(resultInfo);
+            T t1 = new Gson().fromJson(json, t);
+            return t1;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     public T getDataReturn(TypeAdapter<T> t){

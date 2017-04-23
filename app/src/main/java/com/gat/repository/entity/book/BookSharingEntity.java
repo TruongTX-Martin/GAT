@@ -27,11 +27,14 @@ public class BookSharingEntity {
     @SerializedName("imageId")
     private String imageId;
 
+    @SerializedName("borrowingRecordId")
+    private int borrowingRecordId;
+
     @SerializedName("borrowingUserName")
     private String borrowingUserName;
 
     @SerializedName("rateAvg")
-    private int rateAvg;
+    private double rateAvg;
 
     @SerializedName("rateCount")
     private int rateCount;
@@ -55,9 +58,32 @@ public class BookSharingEntity {
     private int sharingCompletedCount;
 
 
+    //property for user
+    @SerializedName("sharingCount")
+    private int sharingCount;
+
+    @SerializedName("availableStatus")
+    private int availableStatus;
+
+    @SerializedName("requestingStatus")
+    private int requestingStatus;
+
+
     public BookSharingEntity() {
     }
 
+
+    public int getSharingCount() {
+        return sharingCount;
+    }
+
+    public int getAvailableStatus() {
+        return availableStatus;
+    }
+
+    public int getRequestingStatus() {
+        return requestingStatus;
+    }
 
     public int getInstanceId() {
         return instanceId;
@@ -115,7 +141,7 @@ public class BookSharingEntity {
         this.borrowingUserName = borrowingUserName;
     }
 
-    public int getRateAvg() {
+    public double getRateAvg() {
         return rateAvg;
     }
 
@@ -177,5 +203,9 @@ public class BookSharingEntity {
 
     public void setSharingCompletedCount(int sharingCompletedCount) {
         this.sharingCompletedCount = sharingCompletedCount;
+    }
+
+    public int getBorrowingRecordId() {
+        return borrowingRecordId;
     }
 }

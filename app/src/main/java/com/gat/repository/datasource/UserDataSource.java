@@ -8,10 +8,12 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
@@ -75,4 +77,7 @@ public interface UserDataSource {
     Observable<Data> getBookRequest(BookRequestInput instanceInput);
     Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getReadingBook(BookReadingInput input);
+    Observable<Data> updateUserInfo(EditInfoInput input);
+    Observable<Data> getBookUserSharing(BookSharingUserInput input);
+    Observable<Data> getBookDetail(Integer input);
 }
