@@ -93,6 +93,10 @@
         <service
             android:name=".data.service.FetchAddressIntentService"
             android:exported="false"/>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider213118392506307"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
     </application>
 
 </manifest>

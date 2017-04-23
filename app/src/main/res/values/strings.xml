@@ -5,10 +5,10 @@
     <!--<string name="facebook_app_id">1130625350393376</string>-->
 
     <!-- REAL -->
-    <!--<string name="facebook_app_id">213118392506307</string>-->
+    <string name="facebook_app_id">1937935059771206</string>
 
     <!-- DEV -->
-    <string name="facebook_app_id">936889173084630</string>
+    <!--<string name="facebook_app_id">936889173084630</string>-->
 
     <string name="hintSearch">Search book</string>
 

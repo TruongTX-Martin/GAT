@@ -1,24 +1,35 @@
 package com.gat.feature.book_detail;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.internal.CallbackManagerImpl;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.ShareOpenGraphAction;
+import com.facebook.share.model.ShareOpenGraphContent;
+import com.facebook.share.model.ShareOpenGraphObject;
+import com.facebook.share.model.SharePhoto;
 import com.facebook.share.widget.ShareDialog;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -42,6 +53,8 @@ import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.repository.entity.User;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -57,6 +70,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private static final int RC_UPDATE_COMMENT = 0x02;
     public static final String KEY_UPDATE_READING_STATUS = "status";
     public static final String KEY_UPDATE_COMMENT = "comment";
+
+    @BindView(R.id.image_view_book_cover)
+    ImageView imageViewBookCover;
 
     @BindView(R.id.scroll_view)
     ScrollView scrollView;
@@ -191,7 +207,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.image_button_go_share)
     void onGoShare () {
-        showFacebookShareDialog();
+        showFacebookShareOpenGraph();
     }
 
     @OnClick(R.id.button_reading_state)
@@ -286,6 +302,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         textViewRating.setText(String.valueOf(book.getRateAvg()));
         ratingBarBook.setRating(book.getRateAvg());
         textViewBookDescription.setText(book.getDescription());
+        if (mBookInfo.getImageId() != null && !mBookInfo.getImageId().isEmpty()) {
+            ClientUtils.setImage(imageViewBookCover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_LARGE));
+            imageViewBookCover.setDrawingCacheEnabled(true);
+        }
     }
 
     private List<EvaluationItemResponse> listEvaluations;
@@ -369,9 +389,40 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     }
 
     private static CallbackManager callbackManager;
-    private void showFacebookShareDialog () {
-        callbackManager = CallbackManager.Factory.create();
+
+    private void showFacebookShareOpenGraph () {
+        // Create an object
+        ShareOpenGraphObject object = new ShareOpenGraphObject.Builder()
+                .putString("og:type", "books.book")
+                .putString("og:title", mBookInfo.getTitle())
+                .putString("og:description", mBookInfo.getDescription())
+                .putString("books:isbn", (mBookInfo.getIsbn10() == null || mBookInfo.getIsbn10().isEmpty()) ? "0-553-57340-3" : mBookInfo.getIsbn10())
+                .build();
+
+//        BitmapDrawable drawable = (BitmapDrawable) imageViewBookCover.getDrawable();
+//        Bitmap bitmap = drawable.getBitmap();
+//
+//        SharePhoto photo = new SharePhoto.Builder()
+//                .setBitmap(bitmap)
+//                .setUserGenerated(true)
+//                .build();
+
+            // Create an action
+        ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
+                    .setActionType("books.reads")
+                    .putObject("book", object)
+//                    .putPhoto("image", photo)
+                    .build();
+
+
+        // Create the content
+        ShareOpenGraphContent content = new ShareOpenGraphContent.Builder()
+                .setPreviewPropertyName("book")
+                .setAction(action)
+                .build();
+
         ShareDialog shareDialog = new ShareDialog(this);
+        callbackManager = CallbackManager.Factory.create();
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
@@ -387,22 +438,13 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
             @Override
             public void onError(FacebookException error) {
-                MZDebug.d(BookDetailActivity.class.getSimpleName(), "sharing error");
+                MZDebug.d(BookDetailActivity.class.getSimpleName(), "SHARING ERROR: \n\r" + error.getMessage());
                 //add your code to handle sharing error
                 Toast.makeText(BookDetailActivity.this, "Share Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
-
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                    .setQuote(mBookInfo.getTitle())
-                    .setImageUrl(Uri.parse(ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_DEFAULT)))
-                    .setContentUrl(Uri.parse("https://github.com/MrKenitvnn"))
-                    .build();
-
-            shareDialog.show(shareLinkContent);
-        }
+        shareDialog.show(this, content);
     }
 
     @Override
@@ -412,4 +454,5 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         }
         mEvaluationByUser.setValue(rating);
     }
+
 }

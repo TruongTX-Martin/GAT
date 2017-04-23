@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gat.dependency.AppModule;
 
 /**
@@ -39,8 +40,9 @@ public class ClientUtils {
     }
 
     public static void setImage(ImageView image, String url) {
-        if (image != null) {
-            Glide.with(context).load(url).dontAnimate().into(image);
+        if(image != null){
+            Glide.with(context).load(url).crossFade().diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true).fitCenter().into(image);
         }
     }
 
