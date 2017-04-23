@@ -185,4 +185,9 @@ public class UserRepositoryImpl implements UserRepository {
         return Observable.defer(()->networkUserDataSourceLazy.get().getPersonalInfo());
     }
 
+    @Override
+    public Observable<User> getUserPublicInfo(int userId) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().getUserInformation(userId));
+    }
+
 }

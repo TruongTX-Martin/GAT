@@ -197,6 +197,11 @@ public interface GatApi {
     @GET("user/get_user_private_info")
     Observable<Response<ServerResponse<Data<User>>>> getPersonalInformation();
 
+    @GET("user/get_user_public_info")
+    Observable<Response<ServerResponse<Data<User>>>> getUserPublicInfo(
+            @Query("userId") int userId
+    );
+
     @GET("book/selfget_book_instance")
     Observable<Response<ServerResponse<Data>>> getBookInstance(
             @Query("sharingFilter") boolean sharingFilter,

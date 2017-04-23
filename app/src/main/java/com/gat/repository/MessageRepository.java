@@ -12,9 +12,7 @@ import io.reactivex.Observable;
  */
 
 public interface MessageRepository {
-    public Observable<List<Message>> getMessageList(String userId);
-    public Observable<List<Group>> getGroupList();
-    public Observable<List<Group>> loadMoreGroup();
-    public Observable<List<Message>> loadMoreMessage();
+    public Observable<List<Message>> getMessageList(String groupId, int page, int size);
+    public Observable<List<Group>> getGroupList(int page, int size);
     public Observable<Boolean> sendMessage(String toUserId, String message);
 }

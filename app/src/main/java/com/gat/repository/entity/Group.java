@@ -19,6 +19,8 @@ public abstract class Group {
     public abstract Long timeStamp();
     public abstract Boolean isRead();
     public abstract List<String> users();
+    public abstract String userName();
+    public abstract String userImage();
 
     public static Group instance(Group group) {
         return new AutoValue_Group.Builder()
@@ -36,6 +38,8 @@ public abstract class Group {
                 .lastMessage(Strings.EMPTY)
                 .timeStamp(new Date().getTime())
                 .isRead(false)
+                .userName(Strings.EMPTY)
+                .userImage(Strings.EMPTY)
                 .users(new ArrayList<String>());
     }
 
@@ -46,6 +50,8 @@ public abstract class Group {
         public abstract Builder timeStamp(Long timeStamp);
         public abstract Builder isRead(Boolean isRead);
         public abstract Builder users(List<String> users);
+        public abstract Builder userName(String userName);
+        public abstract Builder userImage(String userImage);
         public abstract Group build();
     }
 

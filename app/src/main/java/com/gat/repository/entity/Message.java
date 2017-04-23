@@ -13,6 +13,7 @@ public abstract class Message {
     public abstract long timeStamp();
     public abstract boolean isRead();
     public abstract String groupId();
+    public abstract String imageId();
 
     public static Builder builder() {
         return new AutoValue_Message.Builder()
@@ -20,6 +21,7 @@ public abstract class Message {
                 .message(Strings.EMPTY)
                 .timeStamp(0l)
                 .isRead(false)
+                .imageId(Strings.EMPTY)
                 .groupId(Strings.EMPTY);
     }
 
@@ -30,6 +32,7 @@ public abstract class Message {
                 .timeStamp(0l)
                 .isRead(false)
                 .groupId(Strings.EMPTY)
+                .imageId(Strings.EMPTY)
                 .build();
     }
 
@@ -40,6 +43,7 @@ public abstract class Message {
         public abstract Builder timeStamp(long timeStamp);
         public abstract Builder isRead(boolean isRead);
         public abstract Builder groupId(String groupId);
+        public abstract Builder imageId(String imageId);
         public abstract Message build();
     }
 }

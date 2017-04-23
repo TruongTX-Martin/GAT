@@ -3,6 +3,8 @@ package com.gat.data;
 import android.util.Log;
 
 import com.gat.data.firebase.FirebaseService;
+import com.gat.data.firebase.entity.GroupTable;
+import com.gat.data.firebase.entity.MessageTable;
 import com.gat.repository.datasource.MessageDataSource;
 import com.gat.repository.entity.Group;
 import com.gat.repository.entity.Message;
@@ -27,58 +29,15 @@ public class DebugMessageDataSource implements MessageDataSource {
         this.firebaseService = firebaseService;
     }
     @Override
-    public Observable<List<Message>> getMessageList(String userId) {
-        return null;
-        //return firebaseService.getMessageList(userId);
-        /*return Observable.fromCallable(() -> {
-            Message[] messages = new Message[10];
-            for (int i = 0; i < messages.length; i++) {
-                messages[i] = Message.instance(
-                        Integer.toString(1000+i),
-                        "Nguyen Van A",
-                        "Hello, how are you?",
-                        Integer.toString(10000+i),
-                        "2017/04/01");
-            }
-
-            return listOfMessages(messages);
-        }).delay(1000, TimeUnit.MILLISECONDS);
-        */
+    public Observable<List<MessageTable>> getMessageList(String groupId, int page, int size) {
+        firebaseService.getMessageList(groupId, page, size);
+        return firebaseService.messageList();
     }
 
     @Override
-    public Observable<List<Group>> getGroupList() {
-        return null;
-        //return firebaseService.getGroupList();
-        /*
-        return Observable.fromCallable(() -> {
-            Group[] groups = new Group[10];
-            for (int i = 0; i < groups.length; i++) {
-                Map<String, Group.Member> map = new HashMap<String, Group.Member>();
-                map.put("key" + Integer.toString(i), new Group.Member("user_name", "image_id"));
-                //map.put("key" + Integer.toString(i), new Group.Member("user_name", "image_id"));
-                groups[i] = new Group("userId",
-                        "last message here",
-                        "2017/04/01",
-                        map
-                );
-            }
-
-            return listOfGroups(groups);
-        }).delay(1000, TimeUnit.MILLISECONDS);
-        */
+    public Observable<List<GroupTable>> getGroupList(int page, int size) {
+        return firebaseService.getGroupList(page, size);
     }
-
-    @Override
-    public Observable<List<Group>> loadMoreGroup() {
-        return null;
-    }
-
-    @Override
-    public Observable<List<Message>> loadMoreMessage() {
-        return null;
-    }
-
     @Override
     public Observable<Boolean> sendMessage(String toUserId, String message) {
         return null;

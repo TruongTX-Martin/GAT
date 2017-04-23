@@ -39,11 +39,6 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<User> getUserInformation() {
-        return null;
-    }
-
-    @Override
     public Observable<ServerResponse<LoginResponseData>> login(LoginData data) {
         return null;
     }
@@ -144,6 +139,16 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<Data> getReadingBook(BookReadingInput input) {
+        return null;
+    }
+
+    @Override
+    public Observable<User> getUserInformation(int userId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<User>> getListUserInfo(List<Integer> userIdList) {
         return null;
     }
 

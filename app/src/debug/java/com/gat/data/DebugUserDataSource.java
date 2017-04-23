@@ -3,8 +3,10 @@ package com.gat.data;
 import android.location.Address;
 import android.util.Log;
 
+import com.gat.common.adapter.Item;
 import com.gat.common.util.MZDebug;
 import com.gat.data.api.GatApi;
+import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
 import com.gat.data.id.LongId;
 import com.gat.data.response.BookResponse;
@@ -28,12 +30,17 @@ import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 import retrofit2.Response;
 
 /**
@@ -50,13 +57,43 @@ public class DebugUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<User> getUserInformation() {
-        // TODO
-        return Observable.just(User.builder()
-                .userId(1)
-                .name("ducdt")
-                .email("duongduc.vn@gmail.com")
-                .build());
+    public Observable<User> getUserInformation(int userId) {
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<Data<User>>>> responseObservable;
+        responseObservable = api.getUserPublicInfo(userId);
+        return responseObservable.map(response -> {
+            //Log.d(TAG, "UserId" + userId);
+            User user = User.NONE;
+            ServerResponse<Data<User>> serverResponse = response.body();
+            if (serverResponse == null) {
+
+            } else {
+                user = serverResponse.data().getDataReturn(User.typeAdapter(new Gson()));
+                if (user == null) {
+                    user = User.NONE;
+                }
+            }
+            return user;
+        });
+    }
+
+    @Override
+    public Observable<List<User>> getListUserInfo(List<Integer> userIdList) {
+        List<User> users = new ArrayList<>();
+        Subject<List<User>> userListSubject = BehaviorSubject.create();
+        Subject<User> userSubject = BehaviorSubject.create();
+        userSubject.subscribe(user -> {
+            users.add(user);
+            if (users.size() >= userIdList.size())
+                userListSubject.onNext(users);
+        });
+        for (Iterator<Integer> iterator = userIdList.iterator(); iterator.hasNext();) {
+            getUserInformation(iterator.next()).subscribe(user -> {
+                userSubject.onNext(user);
+            });
+        }
+
+        return userListSubject;
     }
 
     @Override
@@ -104,13 +141,13 @@ public class DebugUserDataSource implements UserDataSource {
             Log.d(TAG, emailLoginData.email() + "," + emailLoginData.password() + "," + emailLoginData.name());
             response = api.registerByEmail(emailLoginData.email(), emailLoginData.password(), emailLoginData.name());
         } else {
-            SocialLoginData socialLoginData = (SocialLoginData)loginData;
+            SocialLoginData socialLoginData = (SocialLoginData) loginData;
             response = api.registerBySocial(
-                        socialLoginData.socialID(),
-                        Integer.toString(socialLoginData.type()),
-                        socialLoginData.name(),
-                        socialLoginData.email(),
-                        socialLoginData.password()/*,
+                    socialLoginData.socialID(),
+                    Integer.toString(socialLoginData.type()),
+                    socialLoginData.name(),
+                    socialLoginData.email(),
+                    socialLoginData.password()/*,
                         image*/);
         }
         ObservableTransformer<Response<ServerResponse<LoginResponseData>>, ServerResponse<LoginResponseData>> transformer =
@@ -258,59 +295,60 @@ public class DebugUserDataSource implements UserDataSource {
         Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> responseObservable;
         responseObservable = api.searchUser(name, page, sizeOfPage);
 
-        return responseObservable.map( response -> {
+        return responseObservable.map(response -> {
             DataResultListResponse<UserResponse> data = response.body().data();
             return data;
         });
     }
-        @Override
-        public Observable<Data> getBookRequest (BookRequestInput input){
-            GatApi api = dataComponent.getPrivateGatApi();
-            Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookRequest(input.getParamSharing(), input.getParamBorrow(), input.getPage(), input.getPer_page());
-            return responseObservable.map(response -> {
-                ServerResponse<Data> serverResponse = response.body();
-                if (serverResponse == null) {
-                    serverResponse = ServerResponse.BAD_RESPONSE;
-                }
-                serverResponse.code(response.code());
-                return serverResponse.data();
-            });
-        }
-
-        @Override
-        public Observable<Data> changeBookSharingStatus (BookChangeStatusInput input){
-            GatApi api = dataComponent.getPrivateGatApi();
-            Observable<Response<ServerResponse<Data>>> responseObservable = api.changeBookSharingStatus(input.getInstanceId(), input.getSharingStatus());
-            return responseObservable.map(response -> {
-                ServerResponse<Data> serverResponse = response.body();
-                if (serverResponse == null) {
-                    serverResponse = ServerResponse.BAD_RESPONSE;
-                }
-                serverResponse.code(response.code());
-                return serverResponse.data();
-            });
-        }
 
     @Override
-        public Observable<List<String>> getUsersSearchedKeyword () {
-            MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
+    public Observable<Data> getBookRequest(BookRequestInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookRequest(input.getParamSharing(), input.getParamBorrow(), input.getPage(), input.getPer_page());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
 
-            GatApi api = dataComponent.getPrivateGatApi();
-            Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
-            responseObservable = api.getUsersSearchedKeyword();
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.changeBookSharingStatus(input.getInstanceId(), input.getSharingStatus());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
 
-            List<String> list = new ArrayList<String>();
-            list.add("user 1");
-            list.add("user 2");
-            list.add("user 3");
-            list.add("user 4");
-            list.add("user 5");
+    @Override
+    public Observable<List<String>> getUsersSearchedKeyword() {
+        MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
 
-            return responseObservable.map( response -> {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
+        responseObservable = api.getUsersSearchedKeyword();
+
+        List<String> list = new ArrayList<String>();
+        list.add("user 1");
+        list.add("user 2");
+        list.add("user 3");
+        list.add("user 4");
+        list.add("user 5");
+
+        return responseObservable.map(response -> {
             //            List<String> list = response.body().data().getResultInfo();
-                return list;
-            });
-        }
+            return list;
+        });
+    }
 
     @Override
     public Observable<Data<User>> getPersonalInfo() {
@@ -329,7 +367,7 @@ public class DebugUserDataSource implements UserDataSource {
     @Override
     public Observable<Data> getBookInstance(BookInstanceInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter(),input.getPage(),input.getPer_page());
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter(), input.getPage(), input.getPer_page());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = response.body();
             if (serverResponse == null) {
@@ -343,7 +381,7 @@ public class DebugUserDataSource implements UserDataSource {
     @Override
     public Observable<Data> getReadingBook(BookReadingInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<Data>>> responseObservable = api.getReadingBooks(input.getUserId(),input.isReadingFilter(),input.isToReadFilter(),input.isReadFilter(),input.getPage(),input.getPer_page());
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getReadingBooks(input.getUserId(), input.isReadingFilter(), input.isToReadFilter(), input.isReadFilter(), input.getPage(), input.getPer_page());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = response.body();
             if (serverResponse == null) {
@@ -357,58 +395,61 @@ public class DebugUserDataSource implements UserDataSource {
 
 
     @Override
-        public void storeLoginToken (String token){
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Observable<String> getLoginToken () {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Observable<LoginData> loadLoginData () {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void saveLoginData (LoginData loginData){
-            throw new UnsupportedOperationException();
-        }
-        @Override
-        public Observable<User> loadUser () {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Observable<User> persitUser (User user){
-            throw new UnsupportedOperationException();
-        }
-        @Override
-        public Observable<ServerResponse<VerifyTokenResponseData>> storeVerifyToken
-        (ServerResponse < VerifyTokenResponseData > data) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Observable<ServerResponse<VerifyTokenResponseData>> getVerifyToken () {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken
-        (ServerResponse < ResetPasswordResponseData > data) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Observable<ServerResponse<ResetPasswordResponseData>> getResetToken () {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Observable<List<Address>> getAddress (LatLng location){
-            // TODO
-            throw new UnsupportedOperationException();
-        }
+    public void storeLoginToken(String token) {
+        throw new UnsupportedOperationException();
     }
+
+    @Override
+    public Observable<String> getLoginToken() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<LoginData> loadLoginData() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void saveLoginData(LoginData loginData) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<User> loadUser() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<User> persitUser(User user) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<ServerResponse<VerifyTokenResponseData>> storeVerifyToken
+            (ServerResponse<VerifyTokenResponseData> data) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<ServerResponse<VerifyTokenResponseData>> getVerifyToken() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken
+            (ServerResponse<ResetPasswordResponseData> data) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<ServerResponse<ResetPasswordResponseData>> getResetToken() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<List<Address>> getAddress(LatLng location) {
+        // TODO
+        throw new UnsupportedOperationException();
+    }
+
+}

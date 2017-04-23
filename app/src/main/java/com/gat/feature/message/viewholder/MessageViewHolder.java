@@ -1,11 +1,14 @@
 package com.gat.feature.message.viewholder;
 
 import android.support.annotation.LayoutRes;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.ClientUtils;
+import com.gat.common.util.Constance;
 import com.gat.feature.message.item.MessageItem;
 import com.gat.repository.entity.Message;
 
@@ -24,9 +27,11 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
     @BindView(R.id.messenger_image)
     CircleImageView userImage;
 
-    public MessageViewHolder(ViewGroup parent, @LayoutRes int layoutId) {
+    private final boolean isRight;
+    public MessageViewHolder(ViewGroup parent, @LayoutRes int layoutId, boolean isRight) {
         super(parent, layoutId);
         ButterKnife.bind(this, itemView);
+        this.isRight = isRight;
     }
 
     @Override
@@ -34,6 +39,11 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
         super.onBindItem(item);
         Message message = item.message();
         text.setText(message.message());
-        userImage.setImageResource(R.drawable.steve_job);
+        if (isRight) {
+            userImage.setVisibility(View.INVISIBLE);
+        } else {
+            String url = ClientUtils.getUrlImage(message.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
+            ClientUtils.setImage(userImage, R.drawable.steve_job, url);
+        }
     }
 }

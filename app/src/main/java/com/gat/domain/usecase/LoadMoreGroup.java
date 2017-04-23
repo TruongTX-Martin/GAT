@@ -20,6 +20,6 @@ public class LoadMoreGroup extends UseCase<List<Group>> {
 
     @Override
     protected Observable<List<Group>> createObservable() {
-        return messageRepository.loadMoreGroup();
+        return null;//messageRepository.loadMoreGroup();
     }
 }

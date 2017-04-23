@@ -9,7 +9,11 @@ public class MessageTable {
     private long userId;
     private long timeStamp;
     private boolean isRead;
+    private String groupId;
 
+    public MessageTable() {
+
+    }
     public MessageTable (long userId, String message, long timeStamp, boolean isRead) {
         this.userId = userId;
         this.message = message;
@@ -47,5 +51,13 @@ public class MessageTable {
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }

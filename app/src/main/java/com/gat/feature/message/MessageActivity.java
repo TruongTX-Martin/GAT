@@ -47,13 +47,13 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     private CompositeDisposable compositeDisposable;
 
-    private String userId;
+    private String groupId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        userId = getScreen().userId();
+        groupId = getScreen().groupId();
 
         Log.d(TAG, "create");
         compositeDisposable = new CompositeDisposable(
@@ -61,21 +61,22 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
                 getPresenter().loadingEvents().subscribe(this::onLoadingEvent)
 
         );
-        messageAdapter = new MessageAdapter();
+
+        messageAdapter = new MessageAdapter(56/*TODO*/);
         recyclerView.setAdapter(messageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         loadMoreScrollListener = new LoadMoreScrollListener(3, false, () -> {
             if (messageAdapter.hasLoadMoreItem())
-                getPresenter().loadMoreMessageList(userId);
+                getPresenter().loadMoreMessageList(groupId);
         });
         recyclerView.addOnScrollListener(loadMoreScrollListener);
 
-        getPresenter().refreshMessageList(userId);
+        getPresenter().refreshMessageList(groupId);
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent);
         refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
-        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(userId));
+        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(groupId));
 
         messageSendBtn.setOnClickListener(view -> {
             if (!Strings.isNullOrEmpty(messageEdit.getText().toString())) {
@@ -97,7 +98,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
                 refreshLayout.setEnabled(!event.refresh() && messageAdapter.getItemCount() > 1);
                 break;
             case LoadingEvent.Status.DONE:
-                loadMoreScrollListener.setEnable(/*messageAdapter.hasLoadMoreItem()*/false);
+                loadMoreScrollListener.setEnable(messageAdapter.hasLoadMoreItem());
                 refreshLayout.setRefreshing(false);
                 refreshLayout.setEnabled(true);
                 if (event.refresh())

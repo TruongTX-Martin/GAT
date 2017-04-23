@@ -1,5 +1,7 @@
 package com.gat.data.firebase;
 
+import android.util.Log;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -15,5 +17,10 @@ public class InstanceIdService extends FirebaseInstanceIdService{
     public void onTokenRefresh() {
         super.onTokenRefresh();
         firebaseToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("FirebaseToken:", firebaseToken);
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
     }
 }

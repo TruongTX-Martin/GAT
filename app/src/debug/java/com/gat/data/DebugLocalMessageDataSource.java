@@ -1,5 +1,7 @@
 package com.gat.data;
 
+import com.gat.data.firebase.entity.GroupTable;
+import com.gat.data.firebase.entity.MessageTable;
 import com.gat.repository.datasource.MessageDataSource;
 import com.gat.repository.entity.Group;
 import com.gat.repository.entity.Message;
@@ -14,28 +16,18 @@ import io.reactivex.Observable;
  */
 
 public class DebugLocalMessageDataSource implements MessageDataSource {
-    List<Group> groupList;
+    List<GroupTable> groupList;
 
     public DebugLocalMessageDataSource() {
         groupList = new ArrayList<>();
     }
     @Override
-    public Observable<List<Message>> getMessageList(String userId) {
+    public Observable<List<MessageTable>> getMessageList(String groupId, int page, int size) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Observable<List<Group>> getGroupList() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Observable<List<Group>> loadMoreGroup() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Observable<List<Message>> loadMoreMessage() {
+    public Observable<List<GroupTable>> getGroupList(int page, int size) {
         throw new UnsupportedOperationException();
     }
 

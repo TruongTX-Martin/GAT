@@ -109,7 +109,12 @@ public class PaperUserDataSource implements UserDataSource {
 
 
     @Override
-    public Observable<User> getUserInformation() {
+    public Observable<User> getUserInformation(int userId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<List<User>> getListUserInfo(List<Integer> userIdList) {
         throw new UnsupportedOperationException();
     }
 

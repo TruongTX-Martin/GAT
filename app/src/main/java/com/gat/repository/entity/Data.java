@@ -1,5 +1,7 @@
 package com.gat.repository.entity;
 
+import android.util.Log;
+
 import com.gat.common.util.Strings;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;

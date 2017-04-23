@@ -119,8 +119,10 @@ public class AppModule {
     @Provides
     @Singleton
     MessageRepository provideMessageRepository(@Named("network")Lazy<MessageDataSource> networkDataSourceLazy,
-                                         @Named("local")Lazy<MessageDataSource> localDataSourceLazy){
-        return new MessageRepositoryImpl(networkDataSourceLazy, localDataSourceLazy);
+                                               @Named("local")Lazy<MessageDataSource> localDataSourceLazy,
+                                               @Named("network") Lazy<UserDataSource> networkUserDataSourceLazy,
+                                               @Named("local") Lazy<UserDataSource> localUserDataSourceLazy){
+        return new MessageRepositoryImpl(networkDataSourceLazy, localDataSourceLazy, networkUserDataSourceLazy, localUserDataSourceLazy);
     }
 
     @Provides

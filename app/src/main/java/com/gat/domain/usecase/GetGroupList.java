@@ -13,12 +13,16 @@ import io.reactivex.Observable;
 
 public class GetGroupList extends UseCase<List<Group>> {
     private final MessageRepository messageRepository;
+    private final int page;
+    private final int size;
 
-    public GetGroupList(MessageRepository messageRepository) {
+    public GetGroupList(MessageRepository messageRepository, int page, int size) {
         this.messageRepository = messageRepository;
+        this.page = page;
+        this.size = size;
     }
     @Override
     protected Observable<List<Group>> createObservable() {
-        return messageRepository.getGroupList();
+        return messageRepository.getGroupList(page, size);
     }
 }

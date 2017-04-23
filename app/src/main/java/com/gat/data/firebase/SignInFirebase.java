@@ -1,5 +1,7 @@
 package com.gat.data.firebase;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import io.reactivex.Observable;
 
 /**
@@ -11,7 +13,7 @@ public interface SignInFirebase {
     public void signOut();
     public void register();
 
-    public Observable<Boolean> getLoginResult();
+    public Observable<FirebaseUser> getLoginResult();
 
     public void destroy();
 }

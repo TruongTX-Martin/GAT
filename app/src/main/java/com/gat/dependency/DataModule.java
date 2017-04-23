@@ -2,8 +2,10 @@ package com.gat.dependency;
 
 import com.gat.common.util.Strings;
 import com.gat.data.api.GatApi;
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.ServerResponse;
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.LoginData;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.IOException;
@@ -56,6 +58,9 @@ public class DataModule {
                                 requestBuilder.addHeader("Accept-Language", language);
                             Request request = requestBuilder.build();
                             okhttp3.Response response = chain.proceed(request);
+                            if (response.code() == ServerResponse.HTTP_CODE.TOKEN) {
+                                throw new LoginException(ServerResponse.TOKEN_CHANGED);
+                            }
                             return response;
                         } catch (SocketTimeoutException socketEx) {
                             socketEx.printStackTrace();

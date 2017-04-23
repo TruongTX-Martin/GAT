@@ -15,6 +15,7 @@ import com.gat.dependency.AppModule;
 public class ClientUtils {
 
     public static Context context;
+    private static final String DEFAULT_IMAGE = "33328625223";       // TODO default image path
 
 
     public static void showToast(String text) {
@@ -24,7 +25,7 @@ public class ClientUtils {
     }
 
     public static String getUrlImage(String image, String size) {
-        return Constance.BASE_URL_IMAGE + "common/get_image/" + image + "?size=" + size;
+        return Constance.BASE_URL_IMAGE + "common/get_image/" + (Strings.isNullOrEmpty(image) ? DEFAULT_IMAGE : image)+ "?size=" + size;
     }
 
     public static void setImage(ImageView image, int drawble, String url) {

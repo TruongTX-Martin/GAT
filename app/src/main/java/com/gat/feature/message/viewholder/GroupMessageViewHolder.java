@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.ClientUtils;
+import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.feature.message.item.GroupItem;
 import com.gat.repository.entity.Group;
@@ -44,10 +46,11 @@ public class GroupMessageViewHolder extends ItemViewHolder<GroupItem> {
     public void onBindItem(GroupItem item) {
         super.onBindItem(item);
         group = item.group();
-        name.setText("TODO");
+        name.setText(group.userName());
         text.setText(group.lastMessage());
         time.setText(getDateDisplay(group.timeStamp()));
-        userImage.setImageResource(R.drawable.steve_job);
+        String url = ClientUtils.getUrlImage(group.userImage(), Constance.IMAGE_SIZE_ORIGINAL);
+        ClientUtils.setImage(userImage, R.drawable.steve_job, url);
     }
 
     public String getGroupId() {

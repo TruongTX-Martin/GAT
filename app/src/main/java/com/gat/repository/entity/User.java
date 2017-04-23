@@ -1,5 +1,7 @@
 package com.gat.repository.entity;
 
+import android.support.annotation.Nullable;
+
 import com.gat.common.util.Strings;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
@@ -13,6 +15,11 @@ public abstract class User {
 
     public static int INVALID_USERID = 0;
     public static User NONE = builder().userId(INVALID_USERID).name(Strings.EMPTY).build();
+    public static User DEFAULT = builder().userId(INVALID_USERID)       // TODO make default user
+            .name("Invalid user")
+            .email("")
+            .imageId("33328625223")
+            .build();
     public boolean isValid() {
         return userId() != INVALID_USERID;
     }
@@ -21,7 +28,7 @@ public abstract class User {
     }
     public abstract int userId();
     public abstract String name();
-    public abstract String email();
+    public abstract @Nullable String email();
     public abstract String imageId();
     public abstract int userTypeFlag();
     public abstract int deleteFlag();

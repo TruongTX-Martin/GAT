@@ -30,7 +30,6 @@ public interface UserDataSource {
 
     Observable<User> loadUser();
     Observable<User> persitUser(User user);
-    Observable<User> getUserInformation();
 
     Observable<ServerResponse<LoginResponseData>> login(LoginData data);
     Observable<LoginData> loadLoginData();
@@ -75,4 +74,7 @@ public interface UserDataSource {
     Observable<Data> getBookRequest(BookRequestInput instanceInput);
     Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getReadingBook(BookReadingInput input);
+
+    Observable<User> getUserInformation(int userId);
+    Observable<List<User>> getListUserInfo(List<Integer> userIdList);
 }

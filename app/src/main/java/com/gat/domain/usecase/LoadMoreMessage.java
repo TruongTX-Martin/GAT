@@ -20,6 +20,6 @@ public class LoadMoreMessage extends UseCase<List<Message>> {
 
     @Override
     protected Observable<List<Message>> createObservable() {
-        return messageRepository.loadMoreMessage();
+        return null;//messageRepository.loadMoreMessage();
     }
 }

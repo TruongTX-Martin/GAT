@@ -14,6 +14,7 @@ import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
 import com.gat.common.listener.LoadMoreScrollListener;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Strings;
 import com.gat.feature.message.adapter.GroupMessageAdapter;
 import com.gat.feature.message.event.RecyclerItemClickListener;
@@ -44,6 +45,7 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ClientUtils.context = getApplicationContext();  // TODO remove after
         compositeDisposable = new CompositeDisposable(
                 getPresenter().itemsChanged().subscribe(this::onItemChanged),
                 getPresenter().loadingEvents().subscribe(this::onLoadingEvent)
@@ -74,7 +76,7 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
                 if (!(item instanceof GroupItem))
                     return;
                 Log.d(TAG, "clicked:" + position);
-                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(((GroupItem)item).group().users().get(0)));
+                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(((GroupItem)item).group().groupId()));
 
             }
         }));
@@ -95,10 +97,10 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
             case LoadingEvent.Status.BEGIN:
                 loadMoreScrollListener.setEnable(false);
                 refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(!event.refresh() && groupMessageAdapter.getItemCount() > 1);
+                refreshLayout.setEnabled(false);
                 break;
             case LoadingEvent.Status.DONE:
-                loadMoreScrollListener.setEnable(/*groupMessageAdapter.hasLoadMoreItem()*/false);
+                loadMoreScrollListener.setEnable(groupMessageAdapter.hasLoadMoreItem());
                 refreshLayout.setRefreshing(false);
                 refreshLayout.setEnabled(true);
                 if (event.refresh())

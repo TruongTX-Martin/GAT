@@ -27,16 +27,18 @@ public class MessageAdapter extends ItemAdapter {
         int MESSAGE_LEFT    = 2;
         int MESSAGE_RIGHT    = 3;
     }
-    public MessageAdapter() {
+    private final int userId;
+    public MessageAdapter(int userId) {
         setReady();
+        this.userId = userId;
     }
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case Type.MESSAGE_LEFT:
-                return new MessageViewHolder(parent, R.layout.message_item);
+                return new MessageViewHolder(parent, R.layout.message_item, false);
             case Type.MESSAGE_RIGHT:
-                return new MessageViewHolder(parent, R.layout.message_item_right);
+                return new MessageViewHolder(parent, R.layout.message_item_right, true);
             case Type.LOADING:
                 return new LoadingMessageViewHolder(parent, R.layout.search_item_loading);
         }
@@ -50,7 +52,7 @@ public class MessageAdapter extends ItemAdapter {
         if(item instanceof LoadingMessage)
             return Type.LOADING;
         if(item instanceof MessageItem)
-            if (((MessageItem)item).message().userId() == 1/*TODO*/)
+            if (((MessageItem)item).message().userId() == userId)
                 return Type.MESSAGE_RIGHT;
             else
                 return Type.MESSAGE_LEFT;

@@ -84,23 +84,13 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Message>> getMessageList(String userId) {
-        return new GetMessageList(messageRepositoryLazy.get(), userId);
+    public UseCase<List<Message>> getMessageList(String userId, int page, int size) {
+        return new GetMessageList(messageRepositoryLazy.get(), userId, page, size);
     }
 
     @Override
-    public UseCase<List<Group>> getGroupList() {
-        return new GetGroupList(messageRepositoryLazy.get());
-    }
-
-    @Override
-    public UseCase<List<Group>> loadMoreGroup() {
-        return new LoadMoreGroup(messageRepositoryLazy.get());
-    }
-
-    @Override
-    public UseCase<List<Message>> loadMoreMessage() {
-        return new LoadMoreMessage(messageRepositoryLazy.get());
+    public UseCase<List<Group>> getGroupList(int page, int size) {
+        return new GetGroupList(messageRepositoryLazy.get(), page, size);
     }
 
     @Override

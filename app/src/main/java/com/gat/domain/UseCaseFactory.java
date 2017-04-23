@@ -54,13 +54,9 @@ public interface UseCaseFactory {
 
     UseCase<Book> getBookByIsbn(String isbn);
 
-    UseCase<List<Message>> getMessageList(String userId);
+    UseCase<List<Message>> getMessageList(String groupId, int page, int size);
 
-    UseCase<List<Group>> getGroupList();
-
-    UseCase<List<Group>> loadMoreGroup();
-
-    UseCase<List<Message>> loadMoreMessage();
+    UseCase<List<Group>> getGroupList(int page, int size);
 
     UseCase<Boolean> sendMessage(String toUserId, String message);
 
