@@ -89,12 +89,17 @@
         <activity android:name=".feature.book_detail.share_book.ShareBookActivity" >
         </activity>
 
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"/>
 
         <service
             android:name=".data.service.FetchAddressIntentService"
             android:exported="false"/>
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider213118392506307"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1937935059771206"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true" />
     </application>

@@ -2,6 +2,7 @@ package com.gat.feature.book_detail;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,6 +53,8 @@ import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.repository.entity.User;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -303,8 +306,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         ratingBarBook.setRating(book.getRateAvg());
         textViewBookDescription.setText(book.getDescription());
         if (mBookInfo.getImageId() != null && !mBookInfo.getImageId().isEmpty()) {
-            ClientUtils.setImage(imageViewBookCover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_LARGE));
             imageViewBookCover.setDrawingCacheEnabled(true);
+            ClientUtils.setImage(imageViewBookCover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_THUMBNAIL));
         }
     }
 
@@ -391,29 +394,41 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private static CallbackManager callbackManager;
 
     private void showFacebookShareOpenGraph () {
-        // Create an object
-        ShareOpenGraphObject object = new ShareOpenGraphObject.Builder()
-                .putString("og:type", "books.book")
-                .putString("og:title", mBookInfo.getTitle())
-                .putString("og:description", mBookInfo.getDescription())
-                .putString("books:isbn", (mBookInfo.getIsbn10() == null || mBookInfo.getIsbn10().isEmpty()) ? "0-553-57340-3" : mBookInfo.getIsbn10())
-                .build();
+        if (mBookInfo == null) {
+            return;
+        }
 
-//        BitmapDrawable drawable = (BitmapDrawable) imageViewBookCover.getDrawable();
-//        Bitmap bitmap = drawable.getBitmap();
-//
-//        SharePhoto photo = new SharePhoto.Builder()
-//                .setBitmap(bitmap)
-//                .setUserGenerated(true)
-//                .build();
+        SharePhoto photo;
+        ShareOpenGraphObject object;
+        if (mBookInfo.getImageId().isEmpty()) {
+            // Create an object
+            object = new ShareOpenGraphObject.Builder()
+                    .putString("og:type", "books.book")
+                    .putString("og:title", mBookInfo.getTitle())
+                    .putString("og:description", mBookInfo.getDescription())
+                    .putString("books:isbn", (mBookInfo.getIsbn10() == null || mBookInfo.getIsbn10().isEmpty()) ? "0-553-57340-3" : mBookInfo.getIsbn10())
 
-            // Create an action
+                    .build();
+        } else {
+
+            photo = new SharePhoto.Builder()
+                    .setImageUrl(Uri.parse(ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_DEFAULT)))
+                    .setUserGenerated(true)
+                    .build();
+            // Create an object
+            object = new ShareOpenGraphObject.Builder()
+                    .putString("og:type", "books.book")
+                    .putString("og:title", mBookInfo.getTitle())
+                    .putString("og:description", mBookInfo.getDescription())
+                    .putString("books:isbn", (mBookInfo.getIsbn10() == null || mBookInfo.getIsbn10().isEmpty()) ? "0-553-57340-3" : mBookInfo.getIsbn10())
+                    .putPhoto("og:image", photo)
+                    .build();
+        }
+
         ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
                     .setActionType("books.reads")
                     .putObject("book", object)
-//                    .putPhoto("image", photo)
                     .build();
-
 
         // Create the content
         ShareOpenGraphContent content = new ShareOpenGraphContent.Builder()
@@ -444,7 +459,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
             }
         });
-        shareDialog.show(this, content);
+        shareDialog.show(BookDetailActivity.this, content);
     }
 
     @Override
