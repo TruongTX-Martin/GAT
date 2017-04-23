@@ -38,9 +38,16 @@ public class DebugMessageDataSource implements MessageDataSource {
     public Observable<List<GroupTable>> getGroupList(int page, int size) {
         return firebaseService.getGroupList(page, size);
     }
+
+    @Override
+    public Observable<GroupTable> groupUpdate() {
+        return firebaseService.groupUpdated();
+    }
+
     @Override
     public Observable<Boolean> sendMessage(String toUserId, String message) {
-        return null;
+        firebaseService.sendMessage(Long.parseLong(toUserId), message);
+        return firebaseService.sendResult();
     }
 
     @Override

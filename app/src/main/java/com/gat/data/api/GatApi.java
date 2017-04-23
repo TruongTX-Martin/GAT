@@ -85,7 +85,7 @@ public interface GatApi {
     );
 
     @GET("user/get_user_information")
-    Observable<User> getUserInformation();
+    Observable<User> getPublicUserInfo();
 
     @FormUrlEncoded
     @POST("user/update_usually_location")

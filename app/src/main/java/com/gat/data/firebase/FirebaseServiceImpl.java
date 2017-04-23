@@ -97,6 +97,10 @@ public class FirebaseServiceImpl implements FirebaseService{
     private ChildEventListener messageChildEventListener = null;
     private ChildEventListener groupChildEventListener = null;
 
+    private boolean isInit = false;
+
+    private boolean isMessageInit = false;
+
     private void init() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -193,7 +197,8 @@ public class FirebaseServiceImpl implements FirebaseService{
                 sendMessageSubject.observeOn(schedulerFactory.main()).subscribe(this::sendMes),
                 groupStartSubject.observeOn(schedulerFactory.main()).subscribe(page -> {
                     mGroupPage = page;
-                    groupListSubject.onNext(makeEmitGroupList(groups, page));
+                    //groupListSubject.onNext(makeEmitGroupList(groups, page));
+                    //groupListSubject.onComplete();
                 })
         );
 
@@ -228,7 +233,7 @@ public class FirebaseServiceImpl implements FirebaseService{
      */
     @Override
     public Observable<GroupTable> groupUpdated() {
-        return updatedGroupSubject.observeOn(schedulerFactory.main());
+        return updatedGroupSubject.observeOn(schedulerFactory.io());
     }
 
     /**
@@ -236,15 +241,15 @@ public class FirebaseServiceImpl implements FirebaseService{
      * @param userId
      */
     private void getGroupOfUser(long userId) {
+        if (isInit) return;
         Log.d(TAG, "getGroupOfUser" + userId);
+        databaseReference.child(USER_LEVEL).child(Long.toString(userId)).addChildEventListener(groupChildEventListener);
         databaseReference.child(USER_LEVEL).child(Long.toString(userId)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mGroupCnt = dataSnapshot.getChildrenCount();
-                for (Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator(); iterator.hasNext();) {
-                    String groupId = iterator.next().getKey();
-                    makeGroupList(groupId);
-                }
+                isInit = true;
+                Log.d(TAG, "GroupCnt="+mGroupCnt);
             }
 
             @Override
@@ -322,6 +327,7 @@ public class FirebaseServiceImpl implements FirebaseService{
     @Override
     public void getMessageList(String groupId, int page, int size) {
         mMessagePage = page;
+        isMessageInit = false;
         groupIdSubject.onNext(groupId);
     }
 
@@ -331,7 +337,7 @@ public class FirebaseServiceImpl implements FirebaseService{
      */
     @Override
     public Observable<List<MessageTable>> messageList() {
-        return messageListSubject.observeOn(schedulerFactory.main());
+        return messageListSubject.observeOn(schedulerFactory.io());
     }
 
     /**
@@ -340,18 +346,16 @@ public class FirebaseServiceImpl implements FirebaseService{
      */
     @Override
     public Observable<MessageTable> hasNewMessage() {
-        return hasNewMessageSubject.observeOn(schedulerFactory.main());
+        return hasNewMessageSubject.observeOn(schedulerFactory.io());
     }
 
     private void getMessageInGroup(String groupId) {
+        messages.clear();
         databaseReference.child(MESSAGE_LEVEL).child(groupId).orderByChild("timeStamp").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator(); iterator.hasNext();) {
-                    MessageTable messageTable = iterator.next().getValue(MessageTable.class);
-                    messageTable.setGroupId(groupId);
-                    addMessage(messageTable);
-                }
+                mMessageCnt = dataSnapshot.getChildrenCount();
+                isMessageInit = true;
             }
 
             @Override
@@ -359,11 +363,13 @@ public class FirebaseServiceImpl implements FirebaseService{
 
             }
         });
+        databaseReference.child(MESSAGE_LEVEL).child(groupId).orderByChild("timeStamp").addChildEventListener(messageChildEventListener);
     }
 
     @Override
-    public void sendMessage(long fromUserId, long toUserId, String message) {
+    public void sendMessage(/*long fromUserId, */long toUserId, String message) {
         Log.d(TAG, "sendMessage");
+        int fromUserId = userDataSourceLazy.get().loadUser().blockingFirst().userId();
         String groupId = (fromUserId < toUserId) ? (fromUserId + "" + toUserId) : (toUserId + "" + fromUserId);
         MessageTable mes = new MessageTable(fromUserId, message, new Date().getTime(), false);
         sendMessageSubject.onNext(new Pair<>(groupId, mes));
@@ -379,7 +385,7 @@ public class FirebaseServiceImpl implements FirebaseService{
     }
 
     private void sendMes(Pair<String, MessageTable> mes) {
-        databaseReference.child(GROUP_LEVEL).child(mes.first).setValue(mes.second)
+        databaseReference.child(MESSAGE_LEVEL).child(mes.first).setValue(mes.second)
                 .addOnCompleteListener(act -> sendMessageResult.onNext(true))
                 .addOnFailureListener(act -> sendMessageResult.onNext(false));
     }
@@ -438,9 +444,22 @@ public class FirebaseServiceImpl implements FirebaseService{
 
             groups.add(count, group);
             // Remove most in-active in the list
+            Log.d(TAG, "GroupSize="+groups.size());
             if (groups.size() > GROUP_MAX_SIZE) {
                 Log.i(TAG, "Over group size");
                 groups.remove(groups.size()-1);
+            }
+
+            // Group updated
+            if (isInit)
+                updatedGroupSubject.onNext(group);
+
+            if (groups.size() >= GROUP_SIZE) {
+                groupListSubject.onNext(groups);
+            }
+            if (groups.size() >= mGroupCnt) {
+                Log.d(TAG, "Group loading completed.");
+                groupListSubject.onComplete();
             }
         }
     }
@@ -451,22 +470,23 @@ public class FirebaseServiceImpl implements FirebaseService{
      */
     private void addMessage(MessageTable message) {
         synchronized (messages) {
-            int count = 0;
-            for (Iterator<MessageTable> iterator = messages.iterator(); iterator.hasNext(); ) {
-                MessageTable mes = iterator.next();
-                if (mes.equals(message)) {
-                    return;
-                } else if (mes.getTimeStamp() > message.getTimeStamp()) {
-                    count++;
-                }
-            }
-            messages.add(count, message);
+            //int count = 0;
+            //for (Iterator<MessageTable> iterator = messages.iterator(); iterator.hasNext(); ) {
+            //    MessageTable mes = iterator.next();
+            //    if (mes.getTimeStamp() > message.getTimeStamp()) {
+            //        count++;
+            //    }
+            //}
+            messages.add(message);
             if (messages.size() > MESSAGE_MAX_SIZE) {
                 Log.i(TAG, "Over message size");
                 messages.remove(messages.size() - 1);
             }
-            if (count < MESSAGE_SIZE) {
-                messageListSubject.onNext(makeEmitMessageList(messages, 1));
+            if (messages.size() >= MESSAGE_SIZE) {
+                messageListSubject.onNext(messages);
+            }
+            if (messages.size() >= mMessageCnt) {
+                messageListSubject.onNext(messages);
             }
         }
     }
@@ -484,6 +504,8 @@ public class FirebaseServiceImpl implements FirebaseService{
             if (count >= end) break;
         }
         Log.d(TAG, "PageSize:" + tarList.size());
+        if (tarList.size() == 0)
+            tarList.add(GroupTable.builder().build());
         return tarList;
     }
 

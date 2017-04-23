@@ -75,6 +75,10 @@ public interface UserDataSource {
     Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getReadingBook(BookReadingInput input);
 
-    Observable<User> getUserInformation(int userId);
+    Observable<User> getPublicUserInfo(int userId);
     Observable<List<User>> getListUserInfo(List<Integer> userIdList);
+
+    Observable<User> storePublicUserInfo(User user);
+    Observable<List<User>> storeListUserInfo(List<User> userList);
+    Observable<User> loadPublicUserInfo(int userId);
 }

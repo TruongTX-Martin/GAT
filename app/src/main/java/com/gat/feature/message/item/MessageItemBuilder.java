@@ -40,4 +40,16 @@ public class MessageItemBuilder extends ItemBuilder<Message>{
 
         return ItemResult.instance(newItems, DiffUtil.calculateDiff(new Comparator(items, newItems)));
     }
+
+    @Override
+    public ItemResult updateList(List<Item> items, Message data) {
+        int oldSize = items.size();
+        List<Item> newItems = new ArrayList<>();
+
+        for (Item item : items) {
+            newItems.add(item);
+        }
+        newItems.add(0, MessageItem.instance(data));
+        return ItemResult.instance(newItems, DiffUtil.calculateDiff(new Comparator(items, newItems)));
+    }
 }

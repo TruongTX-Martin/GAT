@@ -1,5 +1,8 @@
 package com.gat.repository.impl;
 
+import android.util.Log;
+
+import com.gat.common.util.Strings;
 import com.gat.data.firebase.entity.GroupTable;
 import com.gat.data.firebase.entity.MessageTable;
 import com.gat.repository.MessageRepository;
@@ -44,20 +47,35 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Observable<List<Message>> getMessageList(String groupId, int page, int size) {
         return Observable.defer(() -> networkDataSource.get().getMessageList(groupId, page, size))
-                .map(list -> {
-                    List<Message> messages = new ArrayList<Message>();
-                    // TODO get user
-                    for (Iterator<MessageTable> iterator = list.iterator(); iterator.hasNext();) {
-                        MessageTable messageTable = iterator.next();
-                        messages.add(Message.builder().groupId(messageTable.getGroupId())
-                                .isRead(messageTable.isRead())
-                                .message(messageTable.getMessage())
-                                .timeStamp(messageTable.getTimeStamp())
-                                .userId(messageTable.getUserId())
-                                .build()
-                        );
+                .flatMap(list -> {
+                    // Get user id list
+                    int length = list.size();
+                    if (length > 0) {
+                        int localUser = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
+                        int userId = 0;
+                        for (Iterator<MessageTable> iterator = list.iterator(); iterator.hasNext(); ) {
+                            userId = (int)iterator.next().getUserId();
+                            if (userId != localUser)
+                                break;
+                        }
+                        // Get user list from server
+                        return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId).flatMap(user -> {
+                            List<Message> messageList = new ArrayList<Message>();
+                            for (int i = 0; i < length; i++) {
+                                MessageTable messageTable = list.get(i);
+                                messageList.add(Message.builder()
+                                        .groupId(groupId)
+                                        .isRead(messageTable.isRead())
+                                        .message(messageTable.getMessage())
+                                        .imageId((user != null) ? user.imageId() : Strings.EMPTY)
+                                        .timeStamp(messageTable.getTimeStamp())
+                                        .build());
+                            }
+                            return Observable.just(messageList);
+                        });
+                    } else {
+                        return Observable.just(new ArrayList<>());
                     }
-                    return messages;
                 });
     }
 
@@ -65,7 +83,6 @@ public class MessageRepositoryImpl implements MessageRepository {
     public Observable<List<Group>> getGroupList(int page, int size) {
         return Observable.defer(() -> networkDataSource.get().getGroupList(page, size))
                 .flatMap(list -> {
-                    int localUserId = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
                     // Get user id list
                     int length = list.size();
                     if (length > 0) {
@@ -97,8 +114,69 @@ public class MessageRepositoryImpl implements MessageRepository {
                     } else {
                         return Observable.just(new ArrayList<Group>());
                     }
+                }).flatMap(list -> localDataSource.get().storeGroupList(list));
+                /*.flatMapIterable(groupTables -> {
+                    Log.d("FlatIterable", groupTables.size() + "");
+                    return groupTables;
                 })
+                .flatMap(groupTable -> {
+                    int userId = Integer.parseInt(groupTable.users().get(0));
+                    return localUserDataSourceLazy.get().loadPublicUserInfo(userId)
+                            .flatMap(user -> {
+                                if (user.isValid()) {
+                                    Log.d("USER", user.userId() + "");
+                                    return Observable.just(Group.builder()
+                                            .groupId(groupTable.groupId())
+                                            .isRead(groupTable.isRead())
+                                            .timeStamp(groupTable.timeStamp())
+                                            .userName(user.name())
+                                            .userImage(user.imageId())
+                                            .lastMessage(groupTable.lastMessage())
+                                            .users(groupTable.users())
+                                            .build());
+                                } else {
+                                    return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId)
+                                            .flatMap(newUser -> Observable.just(Group.builder()
+                                                    .groupId(groupTable.groupId())
+                                                    .isRead(groupTable.isRead())
+                                                    .timeStamp(groupTable.timeStamp())
+                                                    .userName(newUser.name())
+                                                    .userImage(newUser.imageId())
+                                                    .lastMessage(groupTable.lastMessage())
+                                                    .users(groupTable.users())
+                                                    .build()));
+                                }
+                            });
+                })
+                .toList()
+                .toObservable()
                 .flatMap(list -> localDataSource.get().storeGroupList(list));
+                */
+    }
+
+    @Override
+    public Observable<Group> groupUpdate() {
+        return Observable.defer(() -> networkDataSource.get().groupUpdate())
+                .flatMap(groupTable -> {
+                    int localUser = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
+                    int userId = 0;
+                    int size = groupTable.users().size();
+                    for (int i = 0; i < size; i++) {
+                        userId = Integer.parseInt(groupTable.users().get(i));
+                        if (userId != localUser)
+                            break;
+                    }
+                    return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId)
+                            .flatMap(newUser -> Observable.just(Group.builder()
+                                    .groupId(groupTable.groupId())
+                                    .isRead(groupTable.isRead())
+                                    .timeStamp(groupTable.timeStamp())
+                                    .userName(newUser.name())
+                                    .userImage(newUser.imageId())
+                                    .lastMessage(groupTable.lastMessage())
+                                    .users(groupTable.users())
+                                    .build()));
+                });
     }
 
     @Override

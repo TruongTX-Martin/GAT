@@ -81,6 +81,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         messageSendBtn.setOnClickListener(view -> {
             if (!Strings.isNullOrEmpty(messageEdit.getText().toString())) {
                 getPresenter().sendMessage(messageEdit.getText().toString());
+                messageEdit.setText(Strings.EMPTY);
             }
         });
     }

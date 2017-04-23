@@ -57,7 +57,7 @@ public class DebugUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<User> getUserInformation(int userId) {
+    public Observable<User> getPublicUserInfo(int userId) {
         GatApi api = dataComponent.getPublicGatApi();
         Observable<Response<ServerResponse<Data<User>>>> responseObservable;
         responseObservable = api.getUserPublicInfo(userId);
@@ -88,12 +88,27 @@ public class DebugUserDataSource implements UserDataSource {
                 userListSubject.onNext(users);
         });
         for (Iterator<Integer> iterator = userIdList.iterator(); iterator.hasNext();) {
-            getUserInformation(iterator.next()).subscribe(user -> {
+            getPublicUserInfo(iterator.next()).subscribe(user -> {
                 userSubject.onNext(user);
             });
         }
 
         return userListSubject;
+    }
+
+    @Override
+    public Observable<User> storePublicUserInfo(User user) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<User>> storeListUserInfo(List<User> userList) {
+        return null;
+    }
+
+    @Override
+    public Observable<User> loadPublicUserInfo(int userId) {
+        return null;
     }
 
     @Override

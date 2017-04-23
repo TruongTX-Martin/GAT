@@ -58,6 +58,8 @@ public interface UseCaseFactory {
 
     UseCase<List<Group>> getGroupList(int page, int size);
 
+    UseCase<Group> groupUpdate();
+
     UseCase<Boolean> sendMessage(String toUserId, String message);
 
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);

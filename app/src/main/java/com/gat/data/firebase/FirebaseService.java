@@ -22,6 +22,6 @@ public interface FirebaseService {
     Observable<List<GroupTable>> getGroupList(int page, int size);
     Observable<GroupTable> groupUpdated();
 
-    void sendMessage(long fromUserId, long toUserId, String message);
+    void sendMessage(/*long fromUserId, */long toUserId, String message);
     Observable<Boolean> sendResult();
 }

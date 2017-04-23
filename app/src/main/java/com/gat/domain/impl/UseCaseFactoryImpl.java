@@ -94,6 +94,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
+    public UseCase<Group> groupUpdate() {
+        return new GroupUpdate(messageRepositoryLazy.get());
+    }
+
+    @Override
     public UseCase<Boolean> sendMessage(String toUserId, String message) {
         return new SendMessage(messageRepositoryLazy.get(), message, toUserId);
     }

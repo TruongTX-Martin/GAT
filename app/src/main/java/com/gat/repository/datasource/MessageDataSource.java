@@ -17,6 +17,7 @@ import io.reactivex.Observable;
 public interface MessageDataSource {
 
     public Observable<List<GroupTable>> getGroupList(int page, int size);
+    public Observable<GroupTable> groupUpdate();
     public Observable<List<MessageTable>> getMessageList(String groupId, int page, int size);
     public Observable<Boolean> sendMessage(String toUserId, String message);
 

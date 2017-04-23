@@ -21,6 +21,8 @@ import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import io.paperdb.Book;
@@ -40,6 +42,10 @@ public class PaperUserDataSource implements UserDataSource {
     private static final String KEY_RESET_TOKEN = "resetToken";
     private static final String KEY_VERIFY_TOKEN = "verifiedToken";
     private static final String KEY_LOGIN_TOKEN = "loginToken";
+    private static final String KEY_USER_LIST = "userList";
+
+    private List<User> userList = new ArrayList<>();
+
     private final Book book = Paper.book(BOOK);
 
     @Override
@@ -109,13 +115,39 @@ public class PaperUserDataSource implements UserDataSource {
 
 
     @Override
-    public Observable<User> getUserInformation(int userId) {
+    public Observable<User> getPublicUserInfo(int userId) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Observable<List<User>> getListUserInfo(List<Integer> userIdList) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<User> storePublicUserInfo(User user) {
+        return Observable.fromCallable(() -> book.read(KEY_USER_LIST, new ArrayList<User>()))
+                .doOnNext(list -> list.add(user))
+                .flatMap(list -> Observable.just(user));
+    }
+
+    @Override
+    public Observable<List<User>> storeListUserInfo(List<User> userList) {
+        return null;
+    }
+
+    @Override
+    public Observable<User> loadPublicUserInfo(int userId) {
+        return Observable.fromCallable(() -> book.read(KEY_USER_LIST, new ArrayList<User>()))
+                .flatMap(list -> {
+                    for (Iterator<User> iterator = list.iterator(); iterator.hasNext();) {
+                        User user1 = iterator.next();
+                        if (user1.userId() == userId) {
+                            return Observable.just(user1);
+                        }
+                    }
+                    return Observable.just(User.NONE);
+                });
     }
 
     @Override

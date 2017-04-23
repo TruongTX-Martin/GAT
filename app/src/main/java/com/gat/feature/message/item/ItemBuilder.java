@@ -42,4 +42,5 @@ public abstract class ItemBuilder<T> {
         return ItemResult.instance(newItems, DiffUtil.calculateDiff(new Comparator(items, newItems)));
     }
     public abstract ItemResult addList(List<Item> items, List<T> data, boolean clearOldItems, boolean showMore);
+    public abstract ItemResult updateList(List<Item> items, T data);
 }

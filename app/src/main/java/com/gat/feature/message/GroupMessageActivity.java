@@ -56,8 +56,8 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         loadMoreScrollListener = new LoadMoreScrollListener(3, false, () -> {
-            if (groupMessageAdapter.hasLoadMoreItem())
-                getPresenter().loadMoreGroupList();
+            //if (groupMessageAdapter.hasLoadMoreItem())
+            //    getPresenter().loadMoreGroupList();
         });
         recyclerView.addOnScrollListener(loadMoreScrollListener);
 
@@ -105,6 +105,14 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
                 refreshLayout.setEnabled(true);
                 if (event.refresh())
                     recyclerView.scrollToPosition(0);
+                break;
+            case LoadingEvent.Status.COMPLETE:
+                loadMoreScrollListener.setEnable(false);
+                refreshLayout.setRefreshing(false);
+                refreshLayout.setEnabled(true);
+                if (event.refresh())
+                    recyclerView.scrollToPosition(0);
+                groupMessageAdapter.completeLoading();
                 break;
             case LoadingEvent.Status.ERROR:
                 loadMoreScrollListener.setEnable(false);

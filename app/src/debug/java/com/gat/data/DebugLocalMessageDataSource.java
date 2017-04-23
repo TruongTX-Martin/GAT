@@ -32,6 +32,11 @@ public class DebugLocalMessageDataSource implements MessageDataSource {
     }
 
     @Override
+    public Observable<GroupTable> groupUpdate() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Observable<Boolean> sendMessage(String toUserId, String message) {
         throw new UnsupportedOperationException();
     }
