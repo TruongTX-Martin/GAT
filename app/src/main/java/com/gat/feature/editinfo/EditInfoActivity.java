@@ -91,25 +91,12 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     }
 
     private void handleEvent() {
-        txtEditInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkPermission();
-            }
+        txtEditInfo.setOnClickListener(v -> checkPermission());
+        imgChangeName.setOnClickListener(v -> {
+            edtName.setFocusableInTouchMode(true);
+            edtName.setFocusable(true);
         });
-        imgChangeName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edtName.setFocusableInTouchMode(true);
-                edtName.setFocusable(true);
-            }
-        });
-        imgSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateProfile();
-            }
-        });
+        imgSave.setOnClickListener(v -> updateProfile());
     }
 
     private void editInfoError(ServerResponse<ResponseData> error){
@@ -137,8 +124,6 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
         input.setImageBase64(encoded);
         getPresenter().requestEditInfo(input);
-
-
     }
 
     public Bitmap getResizedBitmap(Bitmap bm, int newWidth) {

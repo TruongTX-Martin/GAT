@@ -79,4 +79,5 @@ public interface UserDataSource {
     Observable<Data> getReadingBook(BookReadingInput input);
     Observable<Data> updateUserInfo(EditInfoInput input);
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
+    Observable<Data> getBookDetail(Integer input);
 }

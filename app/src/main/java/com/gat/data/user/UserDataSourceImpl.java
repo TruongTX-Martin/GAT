@@ -160,6 +160,11 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
+    public Observable<Data> getBookDetail(Integer input) {
+        return null;
+    }
+
+    @Override
     public Observable<List<String>> getUsersSearchedKeyword() {
         return null;
     }

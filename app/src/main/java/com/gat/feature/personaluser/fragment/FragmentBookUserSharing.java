@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.listener.RecyclerItemClickListener;
+import com.gat.common.util.ClientUtils;
 import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.personaluser.adapter.BookUserSharingAdapter;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
@@ -79,6 +81,7 @@ public class FragmentBookUserSharing extends Fragment {
         rootView = inflater.inflate(R.layout.layout_fragment_book_user_sharing, container, false);
         context = getActivity().getApplicationContext();
         initView();
+        handleEvent();
         requestBook(currentInput);
         return rootView;
     }
@@ -96,6 +99,19 @@ public class FragmentBookUserSharing extends Fragment {
         txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
     }
 
+    private void handleEvent(){
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                BookSharingEntity entity = listBook.get(position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        }));
+    }
 
     private void showLoadMore(){
         progressLoadMore.setVisibility(View.VISIBLE);

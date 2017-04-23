@@ -6,6 +6,7 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.entity.Data;
 
@@ -34,6 +35,13 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
     private Subject<BookSharingUserInput> bookUserSharingInputSubject;
     private Subject<ServerResponse<ResponseData>> bookUserSharingError;
 
+    //change book reading
+    private CompositeDisposable bookUserReadingDisposable;
+    private UseCase<Data> bookUserReadingUsecase;
+    private Subject<Data> bookUserReadingResultSubject;
+    private Subject<BookReadingInput> bookUserReadingInputSubject;
+    private Subject<ServerResponse<ResponseData>> bookUserReadingError;
+
     public PersonalUserPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
@@ -42,12 +50,22 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         this.bookUserSharingError = PublishSubject.create();
         bookUserSharingResultSubject = PublishSubject.create();
         bookUserSharingInputSubject = BehaviorSubject.create();
+
+        this.bookUserReadingError = PublishSubject.create();
+        bookUserReadingResultSubject = PublishSubject.create();
+        bookUserReadingInputSubject = BehaviorSubject.create();
+
+
     }
 
     @Override
     public void onCreate() {
         bookUserSharingDisposable = new CompositeDisposable(
                 bookUserSharingInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getBookUserSharing)
+        );
+
+        bookUserReadingDisposable = new CompositeDisposable(
+                bookUserReadingInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getBookUserReading)
         );
     }
 
@@ -72,6 +90,21 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
 
     }
 
+    @Override
+    public void requestBookUserReading(BookReadingInput input) {
+        bookUserReadingInputSubject.onNext(input);
+    }
+
+    @Override
+    public Observable<Data> getResponseBookUserReading() {
+        return bookUserReadingResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<ServerResponse<ResponseData>> onErrorBookUserReading() {
+        return bookUserReadingError.observeOn(schedulerFactory.main());
+    }
+
     private void getBookUserSharing(BookSharingUserInput input) {
         bookUserSharingUsecase = UseCases.release(bookUserSharingUsecase);
         bookUserSharingUsecase = useCaseFactory.getBookUserSharing(input);
@@ -85,6 +118,24 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
                 })
                 .onStop(
                         () -> bookUserSharingUsecase = UseCases.release(bookUserSharingUsecase)
+                )
+                .execute();
+    }
+
+
+    private void getBookUserReading(BookReadingInput input) {
+        bookUserReadingUsecase = UseCases.release(bookUserReadingUsecase);
+        bookUserReadingUsecase = useCaseFactory.getReadingBooks(input);
+        bookUserReadingUsecase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(response -> {
+                    bookUserReadingResultSubject.onNext(response);
+                })
+                .onError(throwable -> {
+                    bookUserReadingError.onError(throwable);
+                })
+                .onStop(
+                        () -> bookUserReadingUsecase = UseCases.release(bookUserReadingUsecase)
                 )
                 .execute();
     }

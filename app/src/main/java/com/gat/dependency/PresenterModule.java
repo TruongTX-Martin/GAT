@@ -2,6 +2,8 @@ package com.gat.dependency;
 
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
+import com.gat.feature.bookdetail.BookDetailRequestPresenter;
+import com.gat.feature.bookdetail.BookDetailRequestPresenterImpl;
 import com.gat.feature.editinfo.EditInfoPresenter;
 import com.gat.feature.editinfo.EditInfoPresenterImpl;
 import com.gat.feature.login.LoginPresenter;
@@ -12,7 +14,6 @@ import com.gat.feature.personal.PersonalPresenter;
 import com.gat.feature.personal.PersonalPresenterImpl;
 import com.gat.feature.personaluser.PersonalUserPresenter;
 import com.gat.feature.personaluser.PersonalUserPresenterImpl;
-import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.RegisterPresenterImpl;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
@@ -118,6 +119,12 @@ public class PresenterModule {
     PersonalUserPresenter providePersonalUserPresenter(UseCaseFactory useCaseFactory,
                                                        SchedulerFactory schedulerFactory) {
         return new PersonalUserPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    BookDetailRequestPresenter provideBookDetailPresenter(UseCaseFactory useCaseFactory,
+                                                          SchedulerFactory schedulerFactory) {
+        return new BookDetailRequestPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
 }

@@ -22,6 +22,7 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.user.PaperUserDataSource;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
+import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
@@ -29,6 +30,7 @@ import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.fragment.FragmentBookUserReading;
 import com.gat.feature.personaluser.fragment.FragmentBookUserSharing;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.book.BookReadingEntity;
 import com.gat.repository.entity.book.BookSharingEntity;
 
 import java.util.List;
@@ -66,6 +68,8 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
 
     private CompositeDisposable disposablesBookUserSharing;
+    private CompositeDisposable disposablesBookUserReading;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +77,9 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         context = getApplicationContext();
         disposablesBookUserSharing = new CompositeDisposable(getPresenter().getResponseBookUserSharing().subscribe(this::getBookUserSharingSuccess),
                 getPresenter().onErrorBookUserSharing().subscribe(this::getBookUserSharingError));
+
+        disposablesBookUserReading = new CompositeDisposable(getPresenter().getResponseBookUserReading().subscribe(this::getBookUserReadingSuccess),
+                getPresenter().onErrorBookUserReading().subscribe(this::getBookUserSharingError));
         initView();
     }
 
@@ -123,6 +130,10 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         }
         if (fragmentBookUserReading == null) {
             fragmentBookUserReading = new FragmentBookUserReading();
+            fragmentBookUserReading.setParrentActivity(this);
+            BookReadingInput currentInput = new BookReadingInput(false,true,false);
+            currentInput.setUserId((int)userResponse.getUserId());
+            fragmentBookUserReading.setCurrentInput(currentInput);
         }
         adapter.addFragment(fragmentBookUserSharing, "");
         adapter.addFragment(fragmentBookUserReading, "");
@@ -135,6 +146,8 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
     private void getBookUserSharingSuccess(Data data){
         if(data != null){
+            int totalSharing = data.getTotalSharing();
+            txtNumberSharing.setText(totalSharing + "");
             List<BookSharingEntity> list = data.getListDataReturn(BookSharingEntity.class);
             fragmentBookUserSharing.setListBook(list);
         }
@@ -144,10 +157,19 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         ClientUtils.showToast(error.message());
     }
 
+    private void getBookUserReadingSuccess(Data data){
+        if(data != null){
+            List<BookReadingEntity> list = data.getListDataReturn(BookReadingEntity.class);
+            fragmentBookUserReading.setListBook(list);
+            int totalReading = data.getReadingTotal();
+            txtNumberReading.setText(totalReading+"");
+        }
+    }
 
 
-    public void requestBookUserReading(){
 
+    public void requestBookUserReading(BookReadingInput input){
+        getPresenter().requestBookUserReading(input);
     }
 
 
@@ -166,5 +188,10 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         return PersonalUserScreen.instance();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposablesBookUserSharing.dispose();
+        disposablesBookUserReading.dispose();
+    }
 }

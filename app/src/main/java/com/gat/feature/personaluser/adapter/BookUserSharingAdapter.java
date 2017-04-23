@@ -11,6 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
@@ -29,6 +30,7 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
     private Context context;
     private FragmentBookUserSharing fragmentBookSharing;
     private LayoutInflater inflate;
+    private IRecyclerViewItemClickListener itemClickListener;
 
     public BookUserSharingAdapter(List<BookSharingEntity> list, Context context, FragmentBookUserSharing bookSharing) {
         this.list = list;

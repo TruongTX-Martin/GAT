@@ -27,6 +27,9 @@ public class BookSharingEntity {
     @SerializedName("imageId")
     private String imageId;
 
+    @SerializedName("borrowingRecordId")
+    private int borrowingRecordId;
+
     @SerializedName("borrowingUserName")
     private String borrowingUserName;
 
@@ -200,5 +203,9 @@ public class BookSharingEntity {
 
     public void setSharingCompletedCount(int sharingCompletedCount) {
         this.sharingCompletedCount = sharingCompletedCount;
+    }
+
+    public int getBorrowingRecordId() {
+        return borrowingRecordId;
     }
 }

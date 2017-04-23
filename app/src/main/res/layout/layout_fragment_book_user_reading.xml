@@ -34,31 +34,7 @@
         android:indeterminateDrawable="@drawable/progressbar_indeterminate"
         />
 
-    <RelativeLayout
-        android:id="@+id/layoutBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        >
 
-
-        <ImageView
-            android:id="@+id/imgBackGroundd"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/bg_filter" />
-
-        <ImageView
-            android:id="@+id/imgFilter"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_filter" />
-    </RelativeLayout>
 
 
     <TextView
@@ -66,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Book User Reading"
+        android:text="No data"
         android:textColor="#000000"
         android:gravity="center"
         android:textSize="18dp"

@@ -217,4 +217,9 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     public UseCase<Data> getBookUserSharing(BookSharingUserInput input) {
         return new GetBookUserSharing(userRepositoryLazy.get(),input);
     }
+
+    @Override
+    public UseCase<Data> getBookDetail(Integer input) {
+        return new GetBookDetail(userRepositoryLazy.get(),input);
+    }
 }

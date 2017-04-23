@@ -385,6 +385,20 @@ public class DebugUserDataSource implements UserDataSource {
         });
     }
 
+    @Override
+    public Observable<Data> getBookDetail(Integer input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookDetail(input);
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
 
     @Override
         public void storeLoginToken (String token){

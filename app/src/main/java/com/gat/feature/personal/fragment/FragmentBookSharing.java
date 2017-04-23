@@ -1,6 +1,7 @@
 package com.gat.feature.personal.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.listener.RecyclerItemClickListener;
+import com.gat.feature.bookdetail.BookDetailRequestActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
@@ -111,6 +114,28 @@ public class FragmentBookSharing extends Fragment {
         layoutBottom.setOnClickListener(v -> {
             showDialogFilter();
         });
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                BookSharingEntity entity = listBook.get(position);
+                int borrowingRecordId = entity.getBorrowingRecordId();
+                int sharingStatus = entity.getSharingStatus();
+                if( sharingStatus == 1 ) {
+                    //sharing
+
+                }else if (sharingStatus == 2){
+                    //borrowing
+                    Intent intent = new Intent(MainActivity.instance, BookDetailRequestActivity.class);
+                    intent.putExtra("BorrowingRecordId",borrowingRecordId);
+                    MainActivity.instance.startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        }));
     }
 
     public void loadMore() {

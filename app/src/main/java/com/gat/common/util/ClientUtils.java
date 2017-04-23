@@ -8,6 +8,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.gat.dependency.AppModule;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by truongtechno on 29/03/2017.
  */
@@ -37,6 +41,19 @@ public class ClientUtils {
         if (image != null) {
             Glide.with(context).load(url).dontAnimate().into(image);
         }
+    }
+
+    public static String getDateFromString(String input){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat formatBack = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date date = (Date) format.parse(input);
+            String dateConvert = formatBack.format(date);
+            return dateConvert;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }

@@ -92,5 +92,7 @@ public interface UseCaseFactory {
 
     UseCase<Data> getBookUserSharing(BookSharingUserInput input);
 
+    UseCase<Data> getBookDetail(Integer input);
+
 
 }

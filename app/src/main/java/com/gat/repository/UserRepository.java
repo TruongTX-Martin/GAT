@@ -64,5 +64,7 @@ public interface UserRepository {
     Observable<Data> updateUserInfo(EditInfoInput input);
 
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
+    Observable<Data> getBookDetail(Integer input);
+
 
 }

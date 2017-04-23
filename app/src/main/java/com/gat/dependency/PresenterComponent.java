@@ -1,5 +1,6 @@
 package com.gat.dependency;
 
+import com.gat.feature.bookdetail.BookDetailRequestPresenter;
 import com.gat.feature.editinfo.EditInfoPresenter;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
@@ -37,5 +38,6 @@ public interface PresenterComponent {
     PersonalPresenter getPersonalPresenter();
     EditInfoPresenter getEditInfoPresenter();
     PersonalUserPresenter getPersonalUserPresenter();
+    BookDetailRequestPresenter getBookDetailPresenter();
 
 }
