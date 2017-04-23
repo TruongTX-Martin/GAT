@@ -78,6 +78,24 @@
         <activity android:name=".feature.suggestion.search.SuggestSearchActivity" >
         </activity>
 
+        <activity android:name=".feature.book_detail.BookDetailActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.add_to_bookcase.AddToBookcaseActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.comment.CommentActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.list_user_sharing_book.ListUserSharingBookActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.self_update_reading.SelfUpdateReadingActivity" >
+        </activity>
+
+        <activity android:name=".feature.book_detail.share_book.ShareBookActivity" >
+        </activity>
+
 
         <service
             android:name=".data.service.FetchAddressIntentService"

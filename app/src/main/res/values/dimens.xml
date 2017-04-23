@@ -52,6 +52,9 @@
     <dimen name="btn_margin_bt">20dp</dimen>
     <dimen name="item_book_suggest_height">160dp</dimen>
 
+    <dimen name="button_height">40dp</dimen>
+
+
 
     <dimen name="message_image_width">50.9dp</dimen>
     <dimen name="message_image_height">50.4dp</dimen>

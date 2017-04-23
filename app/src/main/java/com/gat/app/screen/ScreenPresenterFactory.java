@@ -1,6 +1,11 @@
 package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
+import com.gat.feature.book_detail.BookDetailScreen;
+import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
+import com.gat.feature.book_detail.comment.CommentScreen;
+import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
+import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessageScreen;
@@ -51,9 +56,19 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getShareNearByUserDistancePresenter();
         else if (key instanceof SuggestSearchScreen)
             return (P) presenterComponent.getSuggestSearchPresenter();
-        else if (key instanceof PersonalScreen){
+        else if (key instanceof PersonalScreen)
             return (P) presenterComponent.getPersonalPresenter();
-        }
+        else if (key instanceof BookDetailScreen)
+            return (P) presenterComponent.getBookDetailPresenter();
+        else if (key instanceof SelfUpdateReadingScreen)
+            return (P) presenterComponent.getSelfUpdateReadingPresenter();
+        else if (key instanceof ListUserSharingBookScreen)
+            return (P) presenterComponent.getListUserSharingBookPresenter();
+        else if (key instanceof AddToBookcaseScreen)
+            return (P) presenterComponent.getAddToBookcasePresenter();
+        else if (key instanceof CommentScreen)
+            return (P) presenterComponent.getCommentPresenter();
+
 
         throw new IllegalArgumentException("Not support key " + key);
     }

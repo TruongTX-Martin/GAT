@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height">
+
+        <ImageView
+            android:id="@+id/image_view_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/narrow_back_black" />
+
+        <TextView
+            style="@style/TextViewHeaderTop"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="@string/add_to_bookcase"
+            android:textColor="@color/colorTextViewDark"
+            android:textSize="@dimen/larger_text_view_size" />
+
+        <ImageView
+            android:id="@+id/image_view_save"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_check_gray" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dividerDark" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/paddingLarge">
+
+        <ImageView
+            android:id="@+id/image_view_book_cover"
+            android:layout_width="60dp"
+            android:layout_height="90dp"
+            android:layout_marginRight="@dimen/margin_horizontal_large"
+            android:src="@drawable/demo_book_detail_cover" />
+
+        <TextView
+            android:id="@+id/text_view_book_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/image_view_book_cover"
+            android:text="Steve Jobs - Thiên tài gàn dở và câu chuyện thần kỳ về quả táo"
+            android:textColor="@color/colorTextViewDark"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:textSize="@dimen/large_text_view_size" />
+
+        <TextView
+            android:id="@+id/text_view_book_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view_book_name"
+            android:layout_marginBottom="@dimen/margin_top_bottom_normal"
+            android:layout_marginTop="@dimen/margin_top_bottom_normal"
+            android:layout_toEndOf="@+id/image_view_book_cover"
+            android:text="Leander Kahney"
+            android:textColor="@color/colorTextViewGray" />
+
+
+        <RatingBar
+            android:id="@+id/rating_bar_book"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view_book_author"
+            android:layout_toEndOf="@+id/image_view_book_cover"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="0.5" />
+
+        <TextView
+            android:id="@+id/text_view_rating_average"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view_book_author"
+            android:layout_toEndOf="@+id/rating_bar_book"
+            android:text="4.5"
+            android:textColor="@color/colorTextViewDark"
+            android:textSize="@dimen/normal_text_view_size" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dividerDark" />
+
+    <TextView
+        android:id="@+id/tv_title_total_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_horizontal_large"
+        android:layout_marginTop="@dimen/margin_horizontal_large"
+        android:text="@string/total_book_in_bookcase"
+        android:textColor="@color/colorTextViewDark" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/paddingLarge">
+
+        <ImageView
+            android:id="@+id/image_view_minus"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:clickable="true"
+            android:visibility="gone"
+            android:src="@drawable/ic_minus_circle_gray"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/text_view_total_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="0"
+            android:textColor="@color/colorTextViewDark"
+            android:textSize="@dimen/larger_text_view_size" />
+
+        <ImageView
+            android:id="@+id/image_view_plus"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:clickable="true"
+            android:src="@drawable/ic_plus_circle"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/paddingLarge">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/let_people_borrow_book"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorTextViewDark" />
+
+        <ToggleButton
+            android:id="@+id/toggle_button"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:background="@drawable/bg_toggle_selector"
+            android:button="@null"
+            android:checked="false"
+            android:textOff=""
+            android:textOn="" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

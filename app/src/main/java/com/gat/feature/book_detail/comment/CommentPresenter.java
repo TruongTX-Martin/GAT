@@ -1,0 +1,17 @@
+package com.gat.feature.book_detail.comment;
+
+import com.rey.mvp2.Presenter;
+
+import io.reactivex.Observable;
+
+/**
+ * Created by mryit on 4/23/2017.
+ */
+
+public interface CommentPresenter extends Presenter {
+
+    void postComment (int editionId, float rating, String review, boolean spoiler);
+    Observable<String> onPostCommentSuccess ();
+    Observable<String> onPostCommentFailure ();
+
+}

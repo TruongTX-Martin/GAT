@@ -21,9 +21,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.TrackGPS;
 import com.gat.data.response.BookResponse;
+import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
@@ -44,7 +47,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 
 public class SuggestionFragment extends ScreenFragment<SuggestionScreen, SuggestionPresenter>
-        implements EasyPermissions.PermissionCallbacks {
+        implements EasyPermissions.PermissionCallbacks, BookSuggestAdapter.IBookSuggestItemClickListener{
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1986;
 
     @BindView(R.id.image_button_search)
@@ -235,7 +238,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     void onTopBorrowingSuccess(List<BookResponse> list) {
         mListBookMostBorrowing.addAll(list);
         if (null == mMostBorrowingAdapter) {
-            mMostBorrowingAdapter = new BookSuggestAdapter(mContext, mListBookMostBorrowing);
+            mMostBorrowingAdapter = new BookSuggestAdapter(mContext, mListBookMostBorrowing, this);
             mRecyclerViewMostBorrowing.setAdapter(mMostBorrowingAdapter);
             return;
         }
@@ -245,7 +248,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     void onSuggestBooksSuccess(List<BookResponse> list) {
         mListBookSuggest.addAll(list);
         if (null == mBookSuggestAdapter) {
-            mBookSuggestAdapter = new BookSuggestAdapter(getActivity(), mListBookSuggest);
+            mBookSuggestAdapter = new BookSuggestAdapter(getActivity(), mListBookSuggest, this);
             mRecyclerViewSuggestBooks.setAdapter(mBookSuggestAdapter);
             return;
         }
@@ -308,4 +311,8 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         getPresenter().getPeopleNearByUser(currentLatLng, neLocation, wsLocation);
     }
 
+    @Override
+    public void onItemBookClickListener(View view, BookResponse book) {
+        MainActivity.start(getActivity(), BookDetailActivity.class, BookDetailScreen.instance( (int) book.getEditionId()));
+    }
 }

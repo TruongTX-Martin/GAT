@@ -1,8 +1,14 @@
 package com.gat.data.api;
 
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.ResultInfoObject;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
@@ -210,4 +216,71 @@ public interface GatApi {
             @Query("page") int page,
             @Query("per_page") int per_page
     );
+
+
+    @GET("book/get_book_info")
+    Observable<Response<ServerResponse<ResultInfoObject<BookInfo>>>> getBookInfo (
+            @Query("editionId") int editionId
+    );
+
+    @GET("book/get_edition_evaluation")
+    Observable<Response<ServerResponse<DataResultListResponse<EvaluationItemResponse>>>> getBookEditionEvaluation (
+            @Query("editionId") int editionId
+    );
+
+    @GET("book/selfget_reading_stt")
+    Observable<Response<ServerResponse<ResultInfoObject<BookReadingInfo>>>> getReadingStatus (
+            @Query("editionId") int editionId
+    );
+
+
+    @GET("book/selfget_book_evaluation")
+    Observable<Response<ServerResponse<ResultInfoObject<EvaluationItemResponse>>>> getBookEvaluationByUser (
+            @Query("editionId") int editionId
+    );
+
+    @GET("book/get_edition_sharing_user")
+    Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> getEditionSharingUser (
+            @Query("editionId") int editionId
+    );
+
+    @FormUrlEncoded
+    @POST("book/selfupdate_book_evaluation")
+    Observable<Response<ServerResponse>> postComment (
+            @Field("editionId") int editionId,
+            @Field("value") int value,
+            @Field("review") String review,
+            @Field("spoiler") boolean spoiler
+    );
+
+    @GET("book/selfget_instance_info")
+    Observable<Response<ServerResponse<ResultInfoObject<BookInstanceInfo>>>> getSelfInstanceInfo (
+            @Query("editionId") int editionId
+    );
+
+    @FormUrlEncoded
+    @POST("book/selfadd_instance")
+    Observable<Response<ServerResponse>> selfAddInstance (
+            @Field("editionId") int editionId,
+            @Field("sharingStatus") int sharingStatus,
+            @Field("numberOfBook") int numberOfBook
+    );
+
+
+    @FormUrlEncoded
+    @POST("book/selfupdate_reading_stt")
+    Observable<Response<ServerResponse>> selfUpdateReadingStatus (
+            @Field("editionId") int editionId,
+            @Field("readingStatus") int readingStatus
+    );
+
+    @FormUrlEncoded
+    @POST("share/create_request")
+    Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>>
+            requestBorrow (
+            @Field("editionId") int editionId,
+            @Field("ownerId") int ownerId
+    );
+
+
 }
