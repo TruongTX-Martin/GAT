@@ -77,6 +77,18 @@ public class UserResponse implements Parcelable {
         }
     };
 
+    public void setAvailableStatus(int availableStatus) {
+        this.availableStatus = availableStatus;
+    }
+
+    public void setRequestingStatus(int requestingStatus) {
+        this.requestingStatus = requestingStatus;
+    }
+
+    public void setRecordStatus(int recordStatus) {
+        this.recordStatus = recordStatus;
+    }
+
     public int getUserId() {
         return userId;
     }

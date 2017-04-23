@@ -371,18 +371,28 @@ public class DebugBookDataSource implements BookDataSource {
     public Observable<BorrowResponse> requestBorrow(int editionId, int ownerId) {
         MZDebug.w("____________________________________ requestBorrow _________________ [ DEBUG ]");
 
-        BorrowResponse borrowResponse = new BorrowResponse();
-        borrowResponse.setRecordId(103);
-        borrowResponse.setBookId(150);
-        borrowResponse.setBorrowerId(156);
-        borrowResponse.setOwnerId(2);
-        borrowResponse.setRequestTime("2017-04-17 13:02:25");
-        borrowResponse.setRecordId(1);
+//        BorrowResponse borrowResponse = new BorrowResponse();
+//        borrowResponse.setRecordId(103);
+//        borrowResponse.setBookId(150);
+//        borrowResponse.setBorrowerId(156);
+//        borrowResponse.setOwnerId(2);
+//        borrowResponse.setRequestTime("2017-04-17 13:02:25");
+//        borrowResponse.setRecordStatus(0);
+//
+//        return Observable.fromCallable(() -> {
+//            return borrowResponse;
+//        }).delay(1000, TimeUnit.MILLISECONDS);
 
-        return Observable.fromCallable(() -> {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>> responseObservable;
+        responseObservable = api.requestBorrow(editionId, ownerId);
+
+        return responseObservable.map(response -> {
+            BorrowResponse borrowResponse = response.body().data().getResultInfo();
+            MZDebug.w("DEBUG: borrow response \n\r" + borrowResponse.toString());
+
             return borrowResponse;
-        }).delay(0, TimeUnit.MILLISECONDS);
-
+        });
 
     }
 

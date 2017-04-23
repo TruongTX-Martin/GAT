@@ -1,5 +1,6 @@
 package com.gat.feature.book_detail.list_user_sharing_book;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,8 +24,9 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    CompositeDisposable disposable;
-    UserSharingItemAdapter adapter;
+    private CompositeDisposable disposable;
+    private UserSharingItemAdapter adapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -50,10 +52,13 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        progressDialog = new ProgressDialog(this);
+
         disposable = new CompositeDisposable(
                 getPresenter().onUserIdSuccess().subscribe(this::onGetUserSuccess),
                 getPresenter().onUserIdFailure().subscribe(this::onGetUserFailure),
-                getPresenter().onRequestBorrowBookSuccess().subscribe(this::onRequestBorrowSuccess)
+                getPresenter().onRequestBorrowBookSuccess().subscribe(this::onRequestBorrowSuccess),
+                getPresenter().onRequestBorrowBookFailure().subscribe(this::onRequestBorrowFailure)
         );
         getPresenter().setListUser(getScreen().listUser());
         getPresenter().getUserId();
@@ -68,6 +73,8 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     protected void onDestroy() {
         super.onDestroy();
         disposable.dispose();
+        hideProgress();
+        progressDialog = null;
     }
 
     @OnClick(R.id.image_button_cancel)
@@ -84,8 +91,11 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
         this.recyclerView.setAdapter(adapter);
     }
 
+    private int positionClicked;
     @Override
     public void onButtonBorrowClick(int position, UserResponse userResponse) {
+        positionClicked= position;
+        progressDialog.show();
         Toast.makeText(this, "position: " + position + ", User: " + userResponse.getName(), Toast.LENGTH_SHORT).show();
         getPresenter().requestBorrowBook(userResponse.getEditionId(), userResponse.getUserId());
     }
@@ -102,9 +112,21 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     }
 
     private void onRequestBorrowSuccess (BorrowResponse borrowResponse) {
-        Toast.makeText(this, "Borrow success, xử lý row", Toast.LENGTH_SHORT).show();
+        hideProgress();
+        adapter.updateBorrowStatus(positionClicked, borrowResponse.getRecordStatus());
+
     }
 
+    private void onRequestBorrowFailure (String message) {
+        hideProgress();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void hideProgress () {
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
+    }
 
 
 }

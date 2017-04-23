@@ -28,6 +28,7 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
 
     private UseCase<BorrowResponse> useCaseRequestBorrowBook;
     private final Subject<BorrowResponse> subjectBorrowResponse;
+    private final Subject<String> subjectRequestBorrowBookFailure;
 
     private List<UserResponse> mListUser;
 
@@ -37,6 +38,7 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
         subjectUserIdSuccess = PublishSubject.create();
         subjectUserIdFailure = PublishSubject.create();
         subjectBorrowResponse = PublishSubject.create();
+        subjectRequestBorrowBookFailure = PublishSubject.create();
     }
 
     @Override
@@ -88,11 +90,16 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
         useCaseRequestBorrowBook.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(borrowResponse -> {
-                    subjectBorrowResponse.onNext(borrowResponse);
+                    if (null != borrowResponse) {
+                        subjectBorrowResponse.onNext(borrowResponse);
+                    } else {
+                        subjectRequestBorrowBookFailure.onNext("Failed");
+                    }
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: requestBorrowBook ____________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectRequestBorrowBookFailure.onNext("Failed");
                 })
                 .execute();
 
@@ -101,6 +108,11 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
     @Override
     public Observable<BorrowResponse> onRequestBorrowBookSuccess() {
         return subjectBorrowResponse.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onRequestBorrowBookFailure() {
+        return subjectRequestBorrowBookFailure.subscribeOn(schedulerFactory.main());
     }
 
 

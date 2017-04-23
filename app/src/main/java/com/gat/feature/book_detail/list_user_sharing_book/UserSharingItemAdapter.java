@@ -1,13 +1,11 @@
 package com.gat.feature.book_detail.list_user_sharing_book;
 
 import android.view.ViewGroup;
-
 import com.gat.R;
 import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemAdapter;
 import com.gat.common.adapter.ItemViewHolder;
 import com.gat.data.response.UserResponse;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +24,21 @@ public class UserSharingItemAdapter extends ItemAdapter {
         this.listener = listener;
     }
 
+    UserSharingItemViewHolder viewHolder;
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ItemViewHolder viewHolder = new UserSharingItemViewHolder(parent, R.layout.item_user_sharing_book, userId, listener);
+        viewHolder = new UserSharingItemViewHolder(parent, R.layout.item_user_sharing_book, userId, listener);
 
         return viewHolder;
+    }
+
+    public void updateBorrowStatus (int position, int recordStatus) {
+        UserSharingItem item = (UserSharingItem) getItemAt(position);
+        item.user().setAvailableStatus(1);
+        item.user().setRequestingStatus(1);
+        item.user().setRecordStatus(recordStatus);
+
+        notifyItemChanged(position);
     }
 
 
@@ -48,5 +56,8 @@ public class UserSharingItemAdapter extends ItemAdapter {
         setItem(newList);
     }
 
-
+    @Override
+    public Item getItemAt(int position) {
+        return super.getItemAt(position);
+    }
 }

@@ -235,7 +235,6 @@
                     android:paddingLeft="@dimen/paddingLarge"
                     android:paddingRight="@dimen/paddingLarge"
                     android:text="Viết bình luận"
-                    android:visibility="gone"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white" />
 

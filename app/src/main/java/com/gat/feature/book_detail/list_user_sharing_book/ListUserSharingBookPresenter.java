@@ -20,5 +20,6 @@ public interface ListUserSharingBookPresenter extends Presenter {
 
     void requestBorrowBook (int editionId, int ownerId);
     Observable<BorrowResponse> onRequestBorrowBookSuccess ();
+    Observable<String> onRequestBorrowBookFailure ();
 
 }

@@ -61,7 +61,6 @@ public class UserSharingItemViewHolder extends ItemViewHolder<UserSharingItem> {
         });
     }
 
-
     private void executeTypeOfRow(UserResponse user) {
 
         if (user.getUserId() == mUserId) {
@@ -79,17 +78,17 @@ public class UserSharingItemViewHolder extends ItemViewHolder<UserSharingItem> {
             return;
         }
 
-        if (user.getAvailableStatus() == 0 && user.getRequestingStatus() == 1) {
+        if (user.getAvailableStatus() == 1 && user.getRequestingStatus() == 1) {
             switch (user.getRecordStatus()) {
-                case 4:
+                case 0:
                     itemView.setTag(UserSharingType.WAIT_FOR_ACCEPT);
                     return;
 
-                case 5:
+                case 2:
                     itemView.setTag(UserSharingType.WAIT_FOR_CONNECT);
                     return;
 
-                case 6:
+                case 3:
                     itemView.setTag(UserSharingType.IS_BORROWING);
                     return;
             }
@@ -131,23 +130,23 @@ public class UserSharingItemViewHolder extends ItemViewHolder<UserSharingItem> {
                 break;
 
             case UserSharingType.WAIT_FOR_ACCEPT:
-                textViewWaitForAccept.setVisibility(View.VISIBLE);
                 buttonBookState.setVisibility(View.GONE);
                 textViewBookState.setVisibility(View.GONE);
+                textViewWaitForAccept.setVisibility(View.VISIBLE);
                 textViewWaitForAccept.setText(itemView.getContext().getResources().getString(R.string.wait_for_accept_borrow));
                 break;
 
             case UserSharingType.WAIT_FOR_CONNECT:
-                textViewWaitForAccept.setVisibility(View.VISIBLE);
                 buttonBookState.setVisibility(View.GONE);
                 textViewBookState.setVisibility(View.GONE);
+                textViewWaitForAccept.setVisibility(View.VISIBLE);
                 textViewWaitForAccept.setText(itemView.getContext().getResources().getString(R.string.is_connecting));
                 break;
 
             case UserSharingType.IS_BORROWING:
-                textViewWaitForAccept.setVisibility(View.VISIBLE);
                 buttonBookState.setVisibility(View.GONE);
                 textViewBookState.setVisibility(View.GONE);
+                textViewWaitForAccept.setVisibility(View.VISIBLE);
                 textViewWaitForAccept.setText(itemView.getContext().getResources().getString(R.string.is_borrowing));
                 break;
 
@@ -160,5 +159,6 @@ public class UserSharingItemViewHolder extends ItemViewHolder<UserSharingItem> {
                 break;
         }
     }
+
 
 }
