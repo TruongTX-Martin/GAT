@@ -183,7 +183,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> getPersonalInfo() {
+    public Observable<Data<User>> getPersonalInfo() {
         return null;
     }
 

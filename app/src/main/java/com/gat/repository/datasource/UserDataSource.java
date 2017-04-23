@@ -70,7 +70,7 @@ public interface UserDataSource {
     Observable<List<String>> getUsersSearchedKeyword();
 
 
-    Observable<Data> getPersonalInfo();
+    Observable<Data<User>> getPersonalInfo();
     Observable<Data> getBookInstance(BookInstanceInput instanceInput);
     Observable<Data> getBookRequest(BookRequestInput instanceInput);
     Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);

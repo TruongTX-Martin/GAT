@@ -89,7 +89,7 @@ public interface UseCaseFactory {
 
     UseCase<Data> getBookRequest(BookRequestInput input);
 
-    UseCase<Data> getUserInfo();
+    UseCase<Data<User>> getUserInfo();
 
     UseCase<BookInfo> getBookInfo (int editionId);
 

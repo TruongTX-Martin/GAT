@@ -8,11 +8,13 @@ import com.gat.common.util.Strings;
 
 public class BookRequestInput {
 
+    //request to you
     private boolean sharingWaitConfirm;
     private boolean sharingContacting;
     private boolean sharingBorrowing;
     private boolean sharingOther;
 
+    //request from you
     private boolean borrowWaitConfirm;
     private boolean borrowContacting;
     private boolean borrowBorrowing;
