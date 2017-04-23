@@ -1,5 +1,6 @@
 package com.gat.app.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,14 @@ public abstract class ScreenActivity<S extends Screen, P extends Presenter> exte
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
+
+
+    public static <S extends Screen, P extends Presenter, T extends ScreenActivity<S, P>> void startForResult(Activity activity, Class<T> activityClass, S screen, int requestCode){
+        Intent intent = new Intent(activity, activityClass)
+                .putExtra(EXTRA_SCREEN, new ParcelableScreen(screen));
+        activity.startActivityForResult(intent, requestCode);
+    }
+
 
     @Override
     protected PresenterManager getPresenterManager() {

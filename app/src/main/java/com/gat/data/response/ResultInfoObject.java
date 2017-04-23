@@ -5,6 +5,7 @@ package com.gat.data.response;
  */
 
 public class ResultInfoObject<T> {
+
     T resultInfo;
 
     public T getResultInfo() {
