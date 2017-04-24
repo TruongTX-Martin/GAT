@@ -4,12 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by mozaa on 11/04/2017.
  */
 
 public class UserResponse implements Parcelable {
-
     @SerializedName("userId")
     private int userId;
 

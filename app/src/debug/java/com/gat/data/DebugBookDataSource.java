@@ -2,6 +2,7 @@ package com.gat.data;
 
 import com.gat.common.util.MZDebug;
 import com.gat.data.api.GatApi;
+import com.gat.data.exception.CommonException;
 import com.gat.data.id.LongId;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
@@ -19,6 +20,8 @@ import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Author;
 import com.gat.repository.entity.Book;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 //import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 //import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
@@ -88,18 +92,26 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<Book> searchBookByIsbn(String isbn) {
+    public Observable<Integer> searchBookByIsbn(String isbn) {
         MZDebug.w("______________ searchBookByIsbn______________________________________________");
         GatApi gatApi = dataComponent.getPublicGatApi();
 
-        Observable<Response<ServerResponse<Book>>> bookResponse = gatApi.getBookByIsbn(isbn);
+        Observable<Response<ServerResponse>> bookResponse = gatApi.getBookByIsbn(isbn);
         return bookResponse.map(response -> {
-            ServerResponse<Book> serverResponse = response.body();
+            ServerResponse serverResponse = response.body();
             if (serverResponse != null) {
                 MZDebug.w("____________________________________________________ searchBookByIsbn");
-                return serverResponse.data();
+                JSONObject jsonObject = (JSONObject) serverResponse.data();
+                if (jsonObject.has("editionId"))
+                    return (int)jsonObject.get("editionId");
+                else
+                    throw new CommonException("Bad response.");
             } else {
-                throw new RuntimeException();
+                JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                if (jsonObject.has("message"))
+                    throw new CommonException(jsonObject.getString("message"));
+                else
+                    throw new CommonException("Bad response.");
             }
         });
     }

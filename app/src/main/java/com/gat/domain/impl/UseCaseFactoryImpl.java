@@ -37,10 +37,12 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
@@ -84,7 +86,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Book> getBookByIsbn(String isbn) {
+    public UseCase<Integer> getBookByIsbn(String isbn) {
         return new SearchBookByIsbn(bookRepositoryLazy.get(), isbn);
     }
 
@@ -238,6 +240,20 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
+    public UseCase<Data> updateInfo(EditInfoInput input) {
+        return new EditInfo(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> getBookUserSharing(BookSharingUserInput input) {
+        return new GetBookUserSharing(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<Data> getBookDetail(Integer input) {
+        return new GetBookDetail(userRepositoryLazy.get(), input);
+    }
+
     public UseCase<BookInfo> getBookInfo(int editionId) {
         return new GetBookInfo(bookRepositoryLazy.get(), editionId);
     }
@@ -285,5 +301,6 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<BorrowResponse> requestBorrow(int editionId, int ownerId) {
         return new RequestBorrow(bookRepositoryLazy.get(), editionId, ownerId);
+
     }
 }

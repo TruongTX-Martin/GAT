@@ -123,7 +123,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
 
         skip.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), GroupMessageActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         });
 
@@ -181,7 +181,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     private void onLoginResult(User user) {
         onLogging(false);
-        start(this, GroupMessageActivity.class, MessageScreen.instance(Strings.EMPTY));
+        start(this, MainActivity.class, MainScreen.instance());
         finish();
     }
 

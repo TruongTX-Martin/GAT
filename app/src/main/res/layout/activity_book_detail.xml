@@ -54,8 +54,7 @@
             android:layout_height="180dp"
             android:layout_below="@+id/fl_header"
             android:layout_marginRight="@dimen/margin_horizontal_large"
-            android:scaleType="centerCrop"
-            android:src="@drawable/demo_book_detail_cover" />
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/text_view_book_name"

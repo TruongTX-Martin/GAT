@@ -12,10 +12,12 @@ import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.Group;
@@ -57,7 +59,7 @@ public interface UseCaseFactory {
 
     UseCase<ServerResponse> updateCategories(List<Integer> categories);
 
-    UseCase<Book> getBookByIsbn(String isbn);
+    UseCase<Integer> getBookByIsbn(String isbn);
 
     UseCase<List<Message>> getMessageList(String groupId, int page, int size);
 
@@ -99,6 +101,12 @@ public interface UseCaseFactory {
 
     UseCase<Data<User>> getUserInfo();
 
+    UseCase<Data> updateInfo(EditInfoInput input);
+
+    UseCase<Data> getBookUserSharing(BookSharingUserInput input);
+
+    UseCase<Data> getBookDetail(Integer input);
+
     UseCase<BookInfo> getBookInfo (int editionId);
 
     UseCase<List<EvaluationItemResponse>> getBookEditionEvaluation (int editionId);
@@ -118,5 +126,6 @@ public interface UseCaseFactory {
     UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
 
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
+
 
 }

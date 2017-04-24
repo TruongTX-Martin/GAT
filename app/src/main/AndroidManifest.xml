@@ -11,6 +11,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
     <uses-feature android:name="android.hardware.camera.flash"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -60,6 +61,9 @@
         <activity android:name=".feature.login.ForgotPassword.VerifyResetTokenActivity" >
         </activity>
 
+        <activity android:name="com.gat.feature.editinfo.EditInfoActivity" />
+        <activity android:name="com.gat.feature.personaluser.PersonalUserActivity" />
+        <activity android:name="com.gat.feature.bookdetail.BookDetailRequestActivity" />
         <activity android:name=".feature.start.StartActivity"
             android:theme="@style/DefaultScreenTheme"
             android:screenOrientation="portrait">
@@ -96,6 +100,11 @@
         <activity android:name=".feature.book_detail.share_book.ShareBookActivity" >
         </activity>
 
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"/>
 
         <service
             android:name=".data.service.FetchAddressIntentService"
@@ -112,6 +121,10 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1937935059771206"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
     </application>
 
 </manifest>

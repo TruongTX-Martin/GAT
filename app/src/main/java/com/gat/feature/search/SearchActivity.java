@@ -10,7 +10,6 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.fragment.MainTabFragment;
 import com.gat.common.util.Strings;
 import com.gat.common.fragment.MainTabFragment.TAB_POS;
-import com.gat.feature.scanbarcode.ScanBarcodeActivity;
 
 /**
  * Created by Rey on 2/13/2017.

@@ -21,6 +21,7 @@ import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
+import com.gat.feature.scanbarcode.ScanScreen;
 import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
@@ -53,6 +54,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int ADD_TO_BOOKCASE = 14;
     private static final int ADD_COMMENT = 15;
     private static final int MESSAGER = 16;
+    private static final int SCAN = 17;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -96,10 +98,10 @@ public class ParcelableScreen implements Parcelable {
             return ADD_TO_BOOKCASE;
         if (screen instanceof CommentScreen)
             return ADD_COMMENT;
-
-
         if (screen instanceof MessageScreen)
             return MESSAGER;
+        if (screen instanceof ScanScreen)
+            return SCAN;
         throw new IllegalArgumentException("Not support screen " + screen);
     }
 
@@ -144,6 +146,8 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof CommentScreen) {
             CommentScreen commentScreen = (CommentScreen) screen;
             dest.writeParcelable(commentScreen.evaluation(), flags);
+        } else if (screen instanceof ScanScreen) {
+
         }
 
         else {

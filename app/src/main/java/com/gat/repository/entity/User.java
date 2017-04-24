@@ -7,11 +7,13 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 
+import java.io.Serializable;
+
 /**
  * Created by Rey on 2/23/2017.
  */
 @AutoValue
-public abstract class User {
+public abstract class User implements Serializable {
 
     public static int INVALID_USERID = 0;
     public static User NONE = builder().userId(INVALID_USERID).name(Strings.EMPTY).build();
