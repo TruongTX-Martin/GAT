@@ -181,7 +181,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     private void onLoginResult(User user) {
         onLogging(false);
-        start(this, GroupMessageActivity.class, MessageScreen.instance(Strings.EMPTY));
+        start(this, GroupMessageActivity.class, MessageScreen.instance(Strings.EMPTY, 0));
         finish();
     }
 

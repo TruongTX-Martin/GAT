@@ -15,6 +15,7 @@ import com.gat.feature.message.item.LoadingMessage;
 import com.gat.feature.message.item.MessageItemBuilder;
 import com.gat.repository.entity.Group;
 import com.gat.repository.entity.Message;
+import com.gat.repository.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class MessagePresenterImpl implements MessagePresenter {
     private final int GROUP_LIST_SIZE = 15;
     private final int MESSAGE_LIST_SIZE = 15;
     private int pageCnt;
-    private String userId;
+    private int userId;
 
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
@@ -99,6 +100,7 @@ public class MessagePresenterImpl implements MessagePresenter {
         showLoadingItem(refresh, clear, LoadingMessage.Message.LOADING);
 
         MessageItemBuilder itemBuilder = new MessageItemBuilder();
+
         getMessageUseCase = useCaseFactory.getMessageList(userId, pageCnt, MESSAGE_LIST_SIZE);
         ObservableTransformer<List<Message>, ItemResult> transformer =
                 upstream -> upstream
@@ -288,14 +290,14 @@ public class MessagePresenterImpl implements MessagePresenter {
     }
 
     @Override
-    public void loadMoreMessageList(String userId) {
+    public void loadMoreMessageList(int userId) {
         Log.d(TAG, "loadMoreMessageList");
         this.userId = userId;
         loadSubject.onNext(ACTION.MESSAGE_LOAD_MORE);
     }
 
     @Override
-    public void refreshMessageList(String userId) {
+    public void refreshMessageList(int userId) {
         Log.d(TAG, "refreshMessageList");
         this.userId = userId;
         loadSubject.onNext(ACTION.MESSAGE_REFRESH);

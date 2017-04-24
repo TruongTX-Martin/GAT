@@ -22,7 +22,7 @@ public class DebugLocalMessageDataSource implements MessageDataSource {
         groupList = new ArrayList<>();
     }
     @Override
-    public Observable<List<MessageTable>> getMessageList(String groupId, int page, int size) {
+    public Observable<List<MessageTable>> getMessageList(int userId, int page, int size) {
         throw new UnsupportedOperationException();
     }
 
@@ -37,7 +37,7 @@ public class DebugLocalMessageDataSource implements MessageDataSource {
     }
 
     @Override
-    public Observable<Boolean> sendMessage(String toUserId, String message) {
+    public Observable<Boolean> sendMessage(int toUserId, String message) {
         throw new UnsupportedOperationException();
     }
 

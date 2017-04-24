@@ -1,5 +1,7 @@
 package com.gat.repository.entity;
 
+import android.support.annotation.Nullable;
+
 import com.gat.common.util.Strings;
 import com.google.auto.value.AutoValue;
 
@@ -12,7 +14,7 @@ public abstract class Message {
     public abstract String message();
     public abstract long timeStamp();
     public abstract boolean isRead();
-    public abstract String groupId();
+    public abstract @Nullable String groupId();
     public abstract String imageId();
 
     public static Builder builder() {

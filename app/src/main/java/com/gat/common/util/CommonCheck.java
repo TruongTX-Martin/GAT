@@ -117,4 +117,8 @@ public class CommonCheck {
         }
     }
 
+    public static String getGroupId(int user1, int user2) {
+        return (user1 < user2) ? (user1 + "" + user2) : (user2 + "" + user1);
+    }
+
 }

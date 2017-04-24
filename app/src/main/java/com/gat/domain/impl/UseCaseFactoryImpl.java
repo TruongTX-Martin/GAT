@@ -84,7 +84,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Message>> getMessageList(String userId, int page, int size) {
+    public UseCase<List<Message>> getMessageList(int userId, int page, int size) {
         return new GetMessageList(messageRepositoryLazy.get(), userId, page, size);
     }
 
@@ -99,7 +99,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Boolean> sendMessage(String toUserId, String message) {
+    public UseCase<Boolean> sendMessage(int toUserId, String message) {
         return new SendMessage(messageRepositoryLazy.get(), message, toUserId);
     }
 

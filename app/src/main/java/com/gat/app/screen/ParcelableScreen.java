@@ -68,7 +68,6 @@ public class ParcelableScreen implements Parcelable {
             return SHARE_NEAR_BY_USER_DISTANCE;
         if (screen instanceof SuggestSearchScreen)
             return SUGGESTION_SEARCH;
-
         if (screen instanceof MessageScreen)
             return MESSAGER;
         throw new IllegalArgumentException("Not support screen " + screen);
@@ -93,7 +92,8 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof MessageScreen) {
             MessageScreen messageScreen = (MessageScreen) screen;
-            dest.writeString(messageScreen.groupId());
+            dest.writeString(messageScreen.userName());
+            dest.writeInt(messageScreen.userId());
         } else if (screen instanceof MainScreen) {
 
         } else if (screen instanceof ShareNearByUserDistanceScreen) {
@@ -142,7 +142,7 @@ public class ParcelableScreen implements Parcelable {
                 screen = MainScreen.instance();
                 break;
             case MESSAGER:
-                screen = MessageScreen.instance(in.readString());
+                screen = MessageScreen.instance(in.readString(), in.readInt());
                 break;
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);

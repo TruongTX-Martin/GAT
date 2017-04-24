@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -42,18 +43,25 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     @BindView(R.id.message_send)
     Button messageSendBtn;
 
+    @BindView(R.id.message_header_text)
+    TextView messageHeader;
+
     private LoadMoreScrollListener loadMoreScrollListener;
     private MessageAdapter messageAdapter;
 
     private CompositeDisposable compositeDisposable;
 
-    private String groupId;
+    private String userName;
+    private int userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        groupId = getScreen().groupId();
+        userName = getScreen().userName();
+        userId = getScreen().userId();
+
+        messageHeader.setText(userName);
 
         Log.d(TAG, "create");
         compositeDisposable = new CompositeDisposable(
@@ -68,15 +76,16 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
         loadMoreScrollListener = new LoadMoreScrollListener(3, false, () -> {
             if (messageAdapter.hasLoadMoreItem())
-                getPresenter().loadMoreMessageList(groupId);
+                getPresenter().loadMoreMessageList(userId);
         });
+
         recyclerView.addOnScrollListener(loadMoreScrollListener);
 
-        getPresenter().refreshMessageList(groupId);
+        getPresenter().refreshMessageList(userId);
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent);
         refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
-        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(groupId));
+        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(userId));
 
         messageSendBtn.setOnClickListener(view -> {
             if (!Strings.isNullOrEmpty(messageEdit.getText().toString())) {
@@ -132,7 +141,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     @Override
     protected MessageScreen getDefaultScreen() {
-        return MessageScreen.instance(Strings.EMPTY);
+        return MessageScreen.instance(Strings.EMPTY, 0);
     }
 
     @Override

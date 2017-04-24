@@ -11,9 +11,9 @@ import io.reactivex.Observable;
  */
 
 public interface MessagePresenter extends Presenter{
-    void loadMoreMessageList(String userId);
+    void loadMoreMessageList(int userId);
 
-    void refreshMessageList(String userId);
+    void refreshMessageList(int userId);
 
     void refreshGroupList();
 

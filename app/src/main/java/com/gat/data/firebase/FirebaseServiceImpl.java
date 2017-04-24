@@ -3,6 +3,7 @@ package com.gat.data.firebase;
 import android.util.Log;
 import android.util.Pair;
 
+import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
 import com.gat.data.firebase.entity.GroupTable;
 import com.gat.data.firebase.entity.MessageTable;
@@ -18,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.reactivestreams.Subscriber;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -25,6 +28,7 @@ import java.util.List;
 
 import dagger.Lazy;
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
@@ -291,7 +295,7 @@ public class FirebaseServiceImpl implements FirebaseService{
                     MessageTable messageTable = dataSnapshot.getChildren().iterator().next().getValue(MessageTable.class);
                     GroupTable gr = GroupTable.builder().groupId(group.groupId())
                             .users(group.users())
-                            .lastMessage(messageTable.getMessage())
+                            .lastMessage(messageTable.getMessage() == null ? "default" : messageTable.getMessage())
                             .timeStamp(messageTable.getTimeStamp())
                             .isRead(messageTable.isRead())
                             .build();
@@ -320,15 +324,17 @@ public class FirebaseServiceImpl implements FirebaseService{
 
     /**
      *
-     * @param groupId
+     * @param userId
      * @param page
      * @param size : no use
      */
     @Override
-    public void getMessageList(String groupId, int page, int size) {
+    public void getMessageList(int userId, int page, int size) {
         mMessagePage = page;
         isMessageInit = false;
-        groupIdSubject.onNext(groupId);
+        int fromUserId = userDataSourceLazy.get().loadUser().blockingFirst().userId();
+        //String groupId = (fromUserId < userId) ? (fromUserId + "" + userId) : (userId + "" + fromUserId);
+        groupIdSubject.onNext(CommonCheck.getGroupId(userId, fromUserId));
     }
 
     /**
@@ -385,7 +391,7 @@ public class FirebaseServiceImpl implements FirebaseService{
     }
 
     private void sendMes(Pair<String, MessageTable> mes) {
-        databaseReference.child(MESSAGE_LEVEL).child(mes.first).setValue(mes.second)
+        databaseReference.child(MESSAGE_LEVEL).child(mes.first).push().setValue(mes.second)
                 .addOnCompleteListener(act -> sendMessageResult.onNext(true))
                 .addOnFailureListener(act -> sendMessageResult.onNext(false));
     }

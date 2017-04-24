@@ -2,6 +2,7 @@ package com.gat.repository.impl;
 
 import android.util.Log;
 
+import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
 import com.gat.data.firebase.entity.GroupTable;
 import com.gat.data.firebase.entity.MessageTable;
@@ -45,29 +46,23 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Observable<List<Message>> getMessageList(String groupId, int page, int size) {
-        return Observable.defer(() -> networkDataSource.get().getMessageList(groupId, page, size))
+    public Observable<List<Message>> getMessageList(int userId, int page, int size) {
+        return Observable.defer(() -> networkDataSource.get().getMessageList(userId, page, size))
                 .flatMap(list -> {
                     // Get user id list
                     int length = list.size();
                     if (length > 0) {
                         int localUser = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
-                        int userId = 0;
-                        for (Iterator<MessageTable> iterator = list.iterator(); iterator.hasNext(); ) {
-                            userId = (int)iterator.next().getUserId();
-                            if (userId != localUser)
-                                break;
-                        }
                         // Get user list from server
                         return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId).flatMap(user -> {
                             List<Message> messageList = new ArrayList<Message>();
                             for (int i = 0; i < length; i++) {
                                 MessageTable messageTable = list.get(i);
                                 messageList.add(Message.builder()
-                                        .groupId(groupId)
+                                        .groupId(CommonCheck.getGroupId(localUser, userId))
                                         .isRead(messageTable.isRead())
                                         .message(messageTable.getMessage())
-                                        .imageId((user != null) ? user.imageId() : Strings.EMPTY)
+                                        .imageId((user != null && messageTable.getUserId() != userId) ? user.imageId() : Strings.EMPTY)
                                         .timeStamp(messageTable.getTimeStamp())
                                         .build());
                             }
@@ -81,7 +76,28 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Observable<List<Group>> getGroupList(int page, int size) {
-        return Observable.defer(() -> networkDataSource.get().getGroupList(page, size))
+        return Observable.defer(() -> networkDataSource.get().groupUpdate())
+                .flatMap(groupTable -> {
+                    int localUser = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
+                    int userId = 0;
+                    int length = groupTable.users().size();
+                    for (int i = 0; i < length; i++) {
+                        userId = Integer.parseInt(groupTable.users().get(i));
+                        if (userId != localUser)
+                            break;
+                    }
+                    return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId)
+                            .flatMap(newUser -> Observable.just(Group.builder()
+                                    .groupId(groupTable.groupId())
+                                    .isRead(groupTable.isRead())
+                                    .timeStamp(groupTable.timeStamp())
+                                    .userName(newUser.name())
+                                    .userImage(newUser.imageId())
+                                    .lastMessage(groupTable.lastMessage())
+                                    .users(groupTable.users())
+                                    .build()));
+                }).toList().toObservable();
+        /*return Observable.defer(() -> networkDataSource.get().getGroupList(page, size))
                 .flatMap(list -> {
                     // Get user id list
                     int length = list.size();
@@ -180,7 +196,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Observable<Boolean> sendMessage(String toUserId, String message) {
+    public Observable<Boolean> sendMessage(int toUserId, String message) {
         return Observable.defer(() -> networkDataSource.get().sendMessage(toUserId, message));
     }
 

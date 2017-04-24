@@ -54,13 +54,13 @@ public interface UseCaseFactory {
 
     UseCase<Book> getBookByIsbn(String isbn);
 
-    UseCase<List<Message>> getMessageList(String groupId, int page, int size);
+    UseCase<List<Message>> getMessageList(int userId, int page, int size);
 
     UseCase<List<Group>> getGroupList(int page, int size);
 
     UseCase<Group> groupUpdate();
 
-    UseCase<Boolean> sendMessage(String toUserId, String message);
+    UseCase<Boolean> sendMessage(int toUserId, String message);
 
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);
 

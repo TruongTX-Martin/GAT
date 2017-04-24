@@ -29,8 +29,8 @@ public class DebugMessageDataSource implements MessageDataSource {
         this.firebaseService = firebaseService;
     }
     @Override
-    public Observable<List<MessageTable>> getMessageList(String groupId, int page, int size) {
-        firebaseService.getMessageList(groupId, page, size);
+    public Observable<List<MessageTable>> getMessageList(int userId, int page, int size) {
+        firebaseService.getMessageList(userId, page, size);
         return firebaseService.messageList();
     }
 
@@ -45,8 +45,8 @@ public class DebugMessageDataSource implements MessageDataSource {
     }
 
     @Override
-    public Observable<Boolean> sendMessage(String toUserId, String message) {
-        firebaseService.sendMessage(Long.parseLong(toUserId), message);
+    public Observable<Boolean> sendMessage(int toUserId, String message) {
+        firebaseService.sendMessage((long)toUserId, message);
         return firebaseService.sendResult();
     }
 

@@ -76,7 +76,13 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
                 if (!(item instanceof GroupItem))
                     return;
                 Log.d(TAG, "clicked:" + position);
-                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(((GroupItem)item).group().groupId()));
+                start(getApplicationContext(),
+                        MessageActivity.class,
+                        MessageScreen.instance(
+                                ((GroupItem)item).group().userName(),
+                                Integer.parseInt(((GroupItem)item).group().users().get(0))
+                        )
+                );
 
             }
         }));
@@ -140,7 +146,7 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
 
     @Override
     protected MessageScreen getDefaultScreen() {
-        return MessageScreen.instance(Strings.EMPTY);
+        return MessageScreen.instance(Strings.EMPTY, 0);
     }
 
     @Override
