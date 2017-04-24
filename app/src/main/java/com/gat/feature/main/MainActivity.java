@@ -3,17 +3,20 @@ package com.gat.feature.main;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
-import com.gat.common.util.Strings;
-import com.gat.feature.scanbarcode.ScanBarcodeActivity;
+import com.gat.common.util.ClientUtils;
+import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
-import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionFragment;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
 import butterknife.BindView;
 
 /**
@@ -36,6 +39,8 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
+
+    public static MainActivity instance;
 
     @Override
     protected int getLayoutResource() {
@@ -61,6 +66,8 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ClientUtils.context = getApplicationContext();
+        instance = this;
         // setup view pager
         setupViewPager(mViewPager);
         // setup tab layout
@@ -95,10 +102,10 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
-        adapter.addFragment(new ScanFragment(), "PERSONAL");
+        adapter.addFragment(new PersonalFragment(), "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
-        adapter.addFragment(new ScanFragment(), "NOTICE");
-        adapter.addFragment(new ScanFragment(), "SETTING");
+        adapter.addFragment(new Fragment(), "NOTICE");
+        adapter.addFragment(new Fragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
     }

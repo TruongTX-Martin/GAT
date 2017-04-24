@@ -3,17 +3,23 @@ package com.gat.dependency;
 import android.app.Application;
 
 import com.gat.app.screen.ScreenPresenterFactory;
-import com.gat.data.response.ServerResponse;
+import com.gat.data.firebase.FirebaseService;
+import com.gat.data.firebase.FirebaseServiceImpl;
+import com.gat.data.firebase.SignInFirebase;
+import com.gat.data.firebase.SignInFirebaseImpl;
 import com.gat.data.user.PaperUserDataSource;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.impl.SchedulerFactoryImpl;
 import com.gat.domain.impl.UseCaseFactoryImpl;
 import com.gat.repository.BookRepository;
+import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.BookDataSource;
+import com.gat.repository.datasource.MessageDataSource;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.impl.BookRepositoryImpl;
+import com.gat.repository.impl.MessageRepositoryImpl;
 import com.gat.repository.impl.UserRepositoryImpl;
 import com.rey.mvp2.PresenterManager;
 import com.rey.mvp2.impl.SimplePresenterManager;
@@ -85,10 +91,49 @@ public class AppModule {
 
     @Provides
     @Singleton
-    UserRepository provideUserRepository(@Named("network")Lazy<UserDataSource> networkDataSourceLazy,
-                                         @Named("local")Lazy<UserDataSource> localDataSourceLazy){
-        return new UserRepositoryImpl(networkDataSourceLazy, localDataSourceLazy);
+    FirebaseService provideFirebaseService(@Named("local") Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
+        return new FirebaseServiceImpl(userDataSourceLazy, schedulerFactory);
     }
+
+    @Provides
+    @Singleton
+    SignInFirebase provideSignInFirebase(@Named("local") Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
+        return new SignInFirebaseImpl(userDataSourceLazy, schedulerFactory);
+    }
+    @Provides
+    @Singleton
+    @Named("network")
+    MessageDataSource provideNetworkMessageDataSource(FirebaseService firebaseService) {
+        // TODO: provide implementation
+        return null;
+    }
+
+    @Provides
+    @Singleton
+    @Named("local")
+    MessageDataSource provideLocalMessageDataSource() {
+        // TODO: provide implementation
+        return null;
+    }
+
+    @Provides
+    @Singleton
+    MessageRepository provideMessageRepository(@Named("network")Lazy<MessageDataSource> networkDataSourceLazy,
+                                               @Named("local")Lazy<MessageDataSource> localDataSourceLazy,
+                                               @Named("network") Lazy<UserDataSource> networkUserDataSourceLazy,
+                                               @Named("local") Lazy<UserDataSource> localUserDataSourceLazy){
+        return new MessageRepositoryImpl(networkDataSourceLazy, localDataSourceLazy, networkUserDataSourceLazy, localUserDataSourceLazy);
+    }
+
+    @Provides
+    @Singleton
+    UserRepository provideUserRepository(@Named("network")Lazy<UserDataSource> networkDataSourceLazy,
+                                         @Named("local")Lazy<UserDataSource> localDataSourceLazy,
+                                         SignInFirebase signInFirebase){
+        return new UserRepositoryImpl(networkDataSourceLazy, localDataSourceLazy, signInFirebase);
+    }
+
+
 
     @Provides
     @Singleton
@@ -99,8 +144,9 @@ public class AppModule {
     @Provides
     @Singleton
     UseCaseFactory provideUseCaseFactory(Lazy<BookRepository> bookRepositoryLazy,
-                                         Lazy<UserRepository> userRepositoryLazy){
-        return new UseCaseFactoryImpl(bookRepositoryLazy, userRepositoryLazy);
+                                         Lazy<UserRepository> userRepositoryLazy,
+                                         Lazy<MessageRepository> messageRepositoryLazy){
+        return new UseCaseFactoryImpl(bookRepositoryLazy, userRepositoryLazy, messageRepositoryLazy);
     }
 
     @Provides

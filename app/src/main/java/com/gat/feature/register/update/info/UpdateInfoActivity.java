@@ -54,7 +54,7 @@ public class UpdateInfoActivity extends Activity {
         unbinder = ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        nameStr = intent.getStringExtra("name");
+        nameStr = intent.getStringExtra("sender");
         passwordStr = intent.getStringExtra("password");
         emailStr = intent.getStringExtra("email");
         urlStr = intent.getStringExtra("url");
@@ -65,7 +65,7 @@ public class UpdateInfoActivity extends Activity {
         textName.setText(nameStr);
         // TODO image get and display
         updateBtn.setOnClickListener(e -> {
-            // check edit name field
+            // check edit sender field
             String name = editName.getText().toString();
             if (Strings.isNullOrEmpty(name)) {
                 editName.setError(getString(R.string.name_field_null));
@@ -103,7 +103,7 @@ public class UpdateInfoActivity extends Activity {
                 }
             }
             Intent result = new Intent();
-            intent.putExtra("name", name);
+            intent.putExtra("sender", name);
             intent.putExtra("email", Strings.isNullOrEmpty(mail) ? Strings.EMPTY : mail);
             intent.putExtra("url", urlStr);
             intent.putExtra("password", Strings.isNullOrEmpty(pass) ? Strings.EMPTY : pass);

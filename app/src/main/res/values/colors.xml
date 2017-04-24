@@ -10,6 +10,7 @@
 
     <color name="backgroundCard">#FFFFFF</color>
     <color name="backgroundGreen">#7cc576</color>
+    <color name="backgroundGreenLight">#cbefc4</color>
     <color name="backgroundRedLight">#f69679</color>
 
     <color name="textPrimary">#212121</color>
@@ -21,10 +22,11 @@
     <color name="divider">#BDBDBD</color>
     <color name="dividerDark">#A1A1A1</color>
 
-    <color name="background_login">#8EC3DF</color>
+    <color name="background_header_blue">#8EC3DF</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlue">#5396B9</color>
     <color name="colorGray">#919191</color>
+    <color name="colorGrayNormal">#d7d7d7</color>
     <color name="colorGrayLight">#F1F1F1</color>
     <color name="colorBlueDark">#4392bb</color>
 
@@ -45,6 +47,7 @@
     <color name="dot_light_screen2">#8cf9eb</color>
     <color name="dot_light_screen3">#93c6fd</color>
     <color name="dot_light_screen4">#e4b5fc</color>
+    <color name="separate_line_color">#a1a1a1</color>
 
     <array name="array_dot_active">
         <item>@color/dot_light_screen1</item>

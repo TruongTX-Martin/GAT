@@ -32,12 +32,14 @@
     <dimen name="map_height">420dp</dimen>
     <dimen name="padding_end">30dp</dimen>
     <dimen name="padding_start">40dp</dimen>
-    <dimen name="logo_margin_top">80dp</dimen>
+    <dimen name="slider_margin_top">40dp</dimen>
+    <dimen name="slider_margin_left_right">40dp</dimen>
     <dimen name="dots_height">30dp</dimen>
     <dimen name="dots_margin_bottom">60dp</dimen>
     <dimen name="intro_height">450dp</dimen>
     <dimen name="category_width">100dp</dimen>
-    <dimen name="header_height">100dp</dimen>
+    <dimen name="message_message_size">16sp</dimen>
+    <dimen name="header_height">80dp</dimen>
 
     <dimen name="navigation_header_height">72dp</dimen>
     <dimen name="navigation_main_height">60dp</dimen>
@@ -46,7 +48,18 @@
     <dimen name="rating_bar_height">12dp</dimen>
     <dimen name="item_sharing_near_height">100dp</dimen>
     <dimen name="item_book_suggest_width">100dp</dimen>
+    <dimen name="btn_margin_lr">20dp</dimen>
+    <dimen name="btn_margin_bt">20dp</dimen>
     <dimen name="item_book_suggest_height">160dp</dimen>
 
+    <dimen name="button_height">40dp</dimen>
 
+
+
+    <dimen name="message_image_width">50.9dp</dimen>
+    <dimen name="message_image_height">50.4dp</dimen>
+    <dimen name="message_name_size">18.7sp</dimen>
+    <dimen name="margin_message_left">40dp</dimen>
+    <dimen name="margin_message_right">40dp</dimen>
+    <dimen name="margin_message_bottom">20dp</dimen>
 </resources>

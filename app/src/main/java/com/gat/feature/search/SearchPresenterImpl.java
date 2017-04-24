@@ -199,18 +199,5 @@ public class SearchPresenterImpl implements SearchPresenter {
 
     private void searchBookByIsbn(String isbn) {
         Log.d(TAG, isbn);
-        getByIsbnUseCase = UseCases.release(getByIsbnUseCase);
-
-        getByIsbnUseCase = useCaseFactory.getBookByIsbn(isbn);
-
-        getByIsbnUseCase.executeOn(schedulerFactory.io())
-                .returnOn(schedulerFactory.main())
-                .onNext(response -> {
-                    bookResultSubject.onNext(response);
-                })
-                .onError(throwable -> {
-                    errorSubject.onNext(ServerResponse.EXCEPTION);
-                })
-                .execute();
     }
 }

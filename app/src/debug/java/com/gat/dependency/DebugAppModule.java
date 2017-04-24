@@ -3,9 +3,14 @@ package com.gat.dependency;
 import android.app.Application;
 
 import com.gat.data.DebugBookDataSource;
+import com.gat.data.DebugLocalMessageDataSource;
+import com.gat.data.DebugMessageDataSource;
 import com.gat.data.DebugUserDataSource;
+import com.gat.data.firebase.FirebaseService;
 import com.gat.data.user.PaperUserDataSource;
+import com.gat.repository.MessageRepository;
 import com.gat.repository.datasource.BookDataSource;
+import com.gat.repository.datasource.MessageDataSource;
 import com.gat.repository.datasource.UserDataSource;
 
 import javax.inject.Named;
@@ -31,4 +36,15 @@ public class DebugAppModule extends AppModule {
     UserDataSource provideNetworkUserDataSource(DataComponent dataComponent) {
         return new DebugUserDataSource(dataComponent);
     }
+
+    @Override
+    MessageDataSource provideNetworkMessageDataSource(FirebaseService firebaseService) {
+        return new DebugMessageDataSource(firebaseService);
+    }
+
+    @Override
+    MessageDataSource provideLocalMessageDataSource() {
+        return new DebugLocalMessageDataSource();
+    }
+    
 }

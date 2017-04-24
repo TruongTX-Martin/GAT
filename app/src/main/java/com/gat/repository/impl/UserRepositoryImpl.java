@@ -2,18 +2,26 @@ package com.gat.repository.impl;
 
 import android.location.Address;
 
+import com.gat.data.firebase.SignInFirebase;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.editinfo.entity.EditInfoInput;
+import com.gat.feature.personal.entity.BookChangeStatusInput;
+import com.gat.feature.personal.entity.BookInstanceInput;
+import com.gat.feature.personal.entity.BookReadingInput;
+import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
+import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -30,12 +38,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final Lazy<UserDataSource> networkUserDataSourceLazy;
     private final Lazy<UserDataSource> localUserDataSourceLazy;
+    private final SignInFirebase signInFirebase;
 
     private final Subject<User> userSubject;
 
-    public UserRepositoryImpl(Lazy<UserDataSource> networkUserDataSourceLazy, Lazy<UserDataSource> localUserDataSourceLazy) {
+    public UserRepositoryImpl(Lazy<UserDataSource> networkUserDataSourceLazy, Lazy<UserDataSource> localUserDataSourceLazy, SignInFirebase signInFirebase) {
         this.networkUserDataSourceLazy = networkUserDataSourceLazy;
         this.localUserDataSourceLazy = localUserDataSourceLazy;
+        this.signInFirebase = signInFirebase;
         this.userSubject= PublishSubject.create();
     }
 
@@ -52,18 +62,24 @@ public class UserRepositoryImpl implements UserRepository {
                 .flatMap(response -> {
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
                     localUserDataSourceLazy.get().saveLoginData(data);
-                    return networkUserDataSourceLazy.get().getUserInformation();
+                    return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
+                .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
                 .flatMap(user -> localUserDataSourceLazy.get().persitUser(user))
-                .doOnNext(userSubject::onNext));
+                .doOnNext(userSubject::onNext)
+                .doOnNext(user -> signInFirebase.login())
+        );
     }
 
     @Override
     public Observable<User> login() {
         return Observable.defer(() -> localUserDataSourceLazy.get().loadLoginData()
                 .flatMap(loginData -> networkUserDataSourceLazy.get().login(loginData))
-                .flatMap(response -> networkUserDataSourceLazy.get().getUserInformation())
-                .doOnNext(userSubject::onNext));
+                .flatMap(response -> networkUserDataSourceLazy.get().getPersonalInfo())
+                .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
+                .doOnNext(userSubject::onNext)
+                .doOnNext(user -> signInFirebase.login())
+        );
     }
 
     @Override
@@ -78,10 +94,12 @@ public class UserRepositoryImpl implements UserRepository {
                 .flatMap(response -> {
                     localUserDataSourceLazy.get().saveLoginData(data);
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
-                    return networkUserDataSourceLazy.get().getUserInformation();
+                    return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
+                .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
                 .flatMap(user -> localUserDataSourceLazy.get().persitUser(user))
                 .doOnNext(userSubject::onNext)
+                .doOnNext(user -> signInFirebase.register())
         );
     }
 
@@ -137,12 +155,62 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
-        return Observable.defer(()->networkUserDataSourceLazy.get().searchUser(name,page,sizeOfPage));
+        return Observable.defer(() -> networkUserDataSourceLazy.get().searchUser(name, page, sizeOfPage));
+    }
+    @Override
+    public Observable<Data> getBookRequest(BookRequestInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookRequest(input));
+    }
+
+    @Override
+    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().changeBookSharingStatus(input));
+    }
+
+    @Override
+    public Observable<Data> getReadingBooks(BookReadingInput input) {
+        return Observable.defer(()->networkUserDataSourceLazy.get().getReadingBook(input));
+    }
+
+    @Override
+    public Observable<Data> getBookInstance(BookInstanceInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookInstance(input));
+    }
+
+    @Override
+    public Observable<Data> updateUserInfo(EditInfoInput input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().updateUserInfo(input));
+    }
+
+    @Override
+    public Observable<Data> getBookUserSharing(BookSharingUserInput input) {
+        return Observable.defer(() -> localUserDataSourceLazy.get().loadUser())
+                .map(user -> {
+                    input.setUserId(user.userId());
+                    return input;
+                })
+                .flatMap(newInput -> networkUserDataSourceLazy.get().getBookUserSharing(newInput));
+//        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookUserSharing(input));
+    }
+
+    @Override
+    public Observable<Data> getBookDetail(Integer input) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getBookDetail(input));
     }
 
     @Override
     public Observable<List<String>> getUsersSearchedKeyword() {
         return Observable.defer(()->networkUserDataSourceLazy.get().getUsersSearchedKeyword());
+    }
+
+    @Override
+    public Observable<Data<User>> getPersonalData() {
+        return Observable.defer(()->networkUserDataSourceLazy.get().getPersonalInfo());
+    }
+
+    @Override
+    public Observable<User> getUserPublicInfo(int userId) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().getUserInformation(userId));
     }
 
 }

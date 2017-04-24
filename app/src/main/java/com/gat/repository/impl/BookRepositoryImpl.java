@@ -2,6 +2,13 @@ package com.gat.repository.impl;
 
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
+import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.repository.BookRepository;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Book;
@@ -31,7 +38,7 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Observable<Book> searchBookByIsbn(String isbn) {
+    public Observable<Integer> searchBookByIsbn(String isbn) {
         return Observable.defer(() -> networkDataSourceLazy.get().searchBookByIsbn(isbn));
     }
 
@@ -68,6 +75,56 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public Observable<List<String>> getAuthorsSearchedKeyword() {
         return Observable.defer(()->networkDataSourceLazy.get().getAuthorsSearchedKeyword());
+    }
+
+    @Override
+    public Observable<BookInfo> getBookInfo(int editionId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().getBookInfo(editionId));
+    }
+
+    @Override
+    public Observable<List<EvaluationItemResponse>> getBookEditionEvaluation(int editionId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().getBookEditionEvaluation(editionId));
+    }
+
+    @Override
+    public Observable<BookReadingInfo> getReadingStatus(int editionId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().getReadingStatus(editionId));
+    }
+
+    @Override
+    public Observable<EvaluationItemResponse> getBookEvaluationByUser(int editionId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().getBookEvaluationByUser(editionId));
+    }
+
+    @Override
+    public Observable<List<UserResponse>> getEditionSharingUser(int editionId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().getEditionSharingUser(editionId));
+    }
+
+    @Override
+    public Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler) {
+        return Observable.defer( ()->networkDataSourceLazy.get().postComment(editionId, value, review, spoiler));
+    }
+
+    @Override
+    public Observable<BookInstanceInfo> getSelfInstanceInfo(int editionId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().getSelfInstanceInfo(editionId));
+    }
+
+    @Override
+    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
+        return Observable.defer( ()->networkDataSourceLazy.get().selfAddInstance(editionId, sharingStatus, numberOfBook));
+    }
+
+    @Override
+    public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
+        return Observable.defer( ()->networkDataSourceLazy.get().selfUpdateReadingStatus(editionId, readingStatus));
+    }
+
+    @Override
+    public Observable<BorrowResponse> requestBorrow(int editionId, int ownerId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().requestBorrow(editionId, ownerId));
     }
 
 }
