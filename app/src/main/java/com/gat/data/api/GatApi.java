@@ -307,4 +307,38 @@ public interface GatApi {
     );
 
 
+    /**
+     * @param socialType: 1=Facebook, 2=Google, 3=Twitter
+     */
+    @FormUrlEncoded
+    @POST("user/unlink_social_acc")
+    Observable<Response<ServerResponse>> unlinkSocialAccount (
+            @Field("socialType") int socialType
+    );
+
+    @FormUrlEncoded
+    @POST("user/unlink_social_acc")
+    Observable<Response<ServerResponse>> linkSocialAccount (
+            @Field("socialID") String socialID,
+            @Field("socialName") String socialName,
+            @Field("socialType") int socialType
+    );
+
+    //  Chưa có api
+    @FormUrlEncoded
+    @POST("user/change_password")
+    Observable<Response<ServerResponse>> updatePassword (
+            @Field("oldPassword") String oldPassword,
+            @Field("newPassword") String newPassword
+    );
+
+    //  Chưa có api
+    @FormUrlEncoded
+    @POST("user/add_email_pass")
+    Observable<Response<ServerResponse>> addEmailPassword (
+            @Field("email") String email,
+            @Field("password") String password
+    );
+
+
 }
