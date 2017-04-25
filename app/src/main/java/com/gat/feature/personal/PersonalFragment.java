@@ -329,6 +329,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     @Override
     public void onDestroy() {
         super.onDestroy();
+        disposablesPersonal.dispose();
+        disposablesBookInstance.dispose();
+        disposablesChangeBookSharingStatus.dispose();
+        disposablesReadingBooks.dispose();
+        disposablesBooksRequest.dispose();
     }
 
 }

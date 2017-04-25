@@ -1,4 +1,4 @@
-package com.gat.feature.bookdetail;
+package com.gat.feature.bookdetailrequest;
 
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;

@@ -1,7 +1,7 @@
 package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
-import com.gat.feature.bookdetail.BookDetailRequestScreen;
+import com.gat.feature.bookdetailrequest.BookDetailRequestScreen;
 import com.gat.feature.editinfo.EditInfoScreen;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainScreen;

@@ -2,8 +2,8 @@ package com.gat.dependency;
 
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
-import com.gat.feature.bookdetail.BookDetailRequestPresenter;
-import com.gat.feature.bookdetail.BookDetailRequestPresenterImpl;
+import com.gat.feature.bookdetailrequest.BookDetailRequestPresenter;
+import com.gat.feature.bookdetailrequest.BookDetailRequestPresenterImpl;
 import com.gat.feature.editinfo.EditInfoPresenter;
 import com.gat.feature.editinfo.EditInfoPresenterImpl;
 import com.gat.feature.login.LoginPresenter;
