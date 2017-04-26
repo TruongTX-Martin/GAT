@@ -16,10 +16,8 @@ import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.user.PaperUserDataSource;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.book.BookDetailEntity;
-import com.google.android.gms.vision.text.Text;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -115,6 +113,18 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
     @BindView(R.id.layoutParrentRejected)
     RelativeLayout layoutParrentRejected;
 
+
+    @BindView(R.id.layoutParrentUnReturn)
+    RelativeLayout layoutParrentUnReturn;
+
+
+    @BindView(R.id.rltLostClose)
+    RelativeLayout rltLostClose;
+
+    @BindView(R.id.rltRejectClose)
+    RelativeLayout rltRejectClose;
+
+
     @BindView(R.id.layoutParrentWaitForTurn)
     RelativeLayout layoutParrentWaitForTurn;
 
@@ -123,6 +133,51 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
 
     @BindView(R.id.layoutParrentDeleteRequest)
     RelativeLayout layoutParrentDeleteRequest;
+
+    @BindView(R.id.layoutBottomLeft)
+    RelativeLayout layoutBottomLeft;
+
+    @BindView(R.id.layoutBottomRight)
+    LinearLayout layoutBottomRight;
+
+    @BindView(R.id.rltOverLayBorrow)
+    RelativeLayout rltOverLayBorrow;
+
+    @BindView(R.id.rltOverLayReturnBook)
+    RelativeLayout rltOverLayReturnBook;
+
+    @BindView(R.id.rltOverLayCancelRequest)
+    RelativeLayout rltOverLayCancelRequest;
+
+    @BindView(R.id.rltOverLayUnreturn)
+    RelativeLayout rltOverLayUnreturn;
+
+
+
+    @BindView(R.id.layoutContactingBorder)
+    RelativeLayout layoutContactingBorder;
+
+    @BindView(R.id.layoutBorrowBookBorder)
+    RelativeLayout layoutBorrowBookBorder;
+
+    @BindView(R.id.layoutReturnBookBorder)
+    RelativeLayout layoutReturnBookBorder;
+
+    @BindView(R.id.rltCheckCancel)
+    RelativeLayout rltCheckCancel;
+
+    @BindView(R.id.layoutReturnBook)
+    RelativeLayout layoutReturnBook;
+
+    @BindView(R.id.rltCheckReturn)
+    RelativeLayout rltCheckReturn;
+
+    @BindView(R.id.rltCheckUnreturn)
+    RelativeLayout rltCheckUnreturn;
+
+
+
+
 
 
     int borrowingRecordId = 0;
@@ -211,6 +266,8 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
                     txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                     layoutParrentAgreed.setVisibility(View.VISIBLE);
                     layoutParrentRejected.setVisibility(View.VISIBLE);
+                    rltRejectClose.setVisibility(View.GONE);
+                    layoutBottomLeft.setVisibility(View.GONE);
                     break;
                 case 1:
                     //on hold
@@ -218,6 +275,7 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
                     txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                     txtWaitForTurnMessage.setVisibility(View.VISIBLE);
                     layoutParrentWaitForTurn.setVisibility(View.VISIBLE);
+                    layoutBottomLeft.setVisibility(View.GONE);
                     break;
                 case 2:
                     //contacting
@@ -227,6 +285,7 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
                     layoutParrentBorrowBook.setVisibility(View.VISIBLE);
                     layoutParrentReturnBook.setVisibility(View.VISIBLE);
                     layoutParrentLost.setVisibility(View.VISIBLE);
+                    layoutBottomLeft.setVisibility(View.VISIBLE);
                     break;
                 case 3:
                     //borrowing
@@ -238,6 +297,12 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
                     layoutParrentBorrowBook.setVisibility(View.VISIBLE);
                     layoutParrentReturnBook.setVisibility(View.VISIBLE);
                     layoutParrentLost.setVisibility(View.VISIBLE);
+                    layoutBottomLeft.setVisibility(View.VISIBLE);
+                    rltOverLayBorrow.setVisibility(View.GONE);
+                    rltCheckCancel.setVisibility(View.GONE);
+                    layoutContactingBorder.setVisibility(View.VISIBLE);
+                    layoutBorrowBookBorder.setVisibility(View.VISIBLE);
+
                     break;
                 case 4:
                     //completted
@@ -250,12 +315,23 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
                     layoutParrentContacting.setVisibility(View.VISIBLE);
                     layoutParrentBorrowBook.setVisibility(View.VISIBLE);
                     layoutParrentReturnBook.setVisibility(View.VISIBLE);
+                    layoutBottomLeft.setVisibility(View.VISIBLE);
+                    layoutContactingBorder.setVisibility(View.VISIBLE);
+                    layoutBorrowBookBorder.setVisibility(View.VISIBLE);
+                    layoutReturnBookBorder.setVisibility(View.VISIBLE);
+                    rltCheckCancel.setVisibility(View.GONE);
+                    rltOverLayBorrow.setVisibility(View.GONE);
+                    rltOverLayReturnBook.setVisibility(View.GONE);
+                    rltOverLayCancelRequest.setVisibility(View.GONE);
+                    layoutReturnBook.setBackground(getResources().getDrawable(R.drawable.bg_layout_filter_book));
                     break;
                 case 5:
                     //reject
+                    layoutSendRequest.setVisibility(View.VISIBLE);
+                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                     layoutRejectRequest.setVisibility(View.VISIBLE);
                     txtDateRejectRequest.setText(ClientUtils.getDateFromString(bookDetail.getRejectTime()));
-                    layoutRejectRequest.setVisibility(View.VISIBLE);
+                    layoutParrentRejected.setVisibility(View.VISIBLE);
                     break;
                 case 6:
                     //cancled
@@ -263,7 +339,8 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
                     txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                     layoutDeletedRequest.setVisibility(View.VISIBLE);
                     txtDateDeleteRequest.setText(ClientUtils.getDateFromString(bookDetail.getRejectTime()));
-                    layoutDeletedRequest.setVisibility(View.VISIBLE);
+                    rltLostClose.setVisibility(View.VISIBLE);
+                    layoutParrentLost.setVisibility(View.VISIBLE);
                     break;
                 case 7:
                     //unreturnd
@@ -272,8 +349,19 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
                     layoutStartBorrow.setVisibility(View.VISIBLE);
                     txtDateStartBorrow.setText(ClientUtils.getDateFromString(bookDetail.getBorrowTime()));
                     layoutParrentContacting.setVisibility(View.VISIBLE);
+                    layoutContactingBorder.setVisibility(View.VISIBLE);
                     layoutParrentBorrowBook.setVisibility(View.VISIBLE);
-                    layoutParrentLost.setVisibility(View.VISIBLE);
+                    layoutBorrowBookBorder.setVisibility(View.VISIBLE);
+                    layoutParrentUnReturn.setVisibility(View.VISIBLE);
+
+                    layoutBottomLeft.setVisibility(View.VISIBLE);
+                    rltCheckUnreturn.setVisibility(View.VISIBLE);
+                    rltOverLayBorrow.setVisibility(View.GONE);
+                    rltOverLayReturnBook.setVisibility(View.GONE);
+                    rltOverLayCancelRequest.setVisibility(View.GONE);
+                    rltOverLayUnreturn.setVisibility(View.GONE);
+                    rltCheckReturn.setVisibility(View.GONE);
+                    rltCheckCancel.setVisibility(View.GONE);
                     break;
             }
         }
@@ -281,7 +369,7 @@ public class BookDetailRequestActivity extends ScreenActivity<BookDetailRequestS
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.layout_bookdetail_activity;
+        return R.layout.layout_bookdetail_request_activity;
     }
 
     @Override

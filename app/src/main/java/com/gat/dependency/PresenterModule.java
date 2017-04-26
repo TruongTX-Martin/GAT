@@ -2,6 +2,8 @@ package com.gat.dependency;
 
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
+import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenter;
+import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenterImpl;
 import com.gat.feature.bookdetailrequest.BookDetailRequestPresenter;
 import com.gat.feature.bookdetailrequest.BookDetailRequestPresenterImpl;
 import com.gat.feature.editinfo.EditInfoPresenter;
@@ -127,4 +129,9 @@ public class PresenterModule {
         return new BookDetailRequestPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
+    @Provides
+    BookDetailBorrowPresenter provideBookDetailBorrowPresenter(UseCaseFactory useCaseFactory,
+                                                         SchedulerFactory schedulerFactory) {
+        return new BookDetailBorrowPresenterImpl(useCaseFactory, schedulerFactory);
+    }
 }
