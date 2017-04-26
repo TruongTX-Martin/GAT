@@ -19,6 +19,8 @@ import com.gat.common.util.Strings;
 import com.gat.feature.message.adapter.GroupMessageAdapter;
 import com.gat.feature.message.event.RecyclerItemClickListener;
 import com.gat.feature.message.item.GroupItem;
+import com.gat.feature.message.presenter.GroupMessagePresenter;
+import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.repository.entity.Group;
 
 import butterknife.BindView;
@@ -28,7 +30,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by ducbtsn on 4/1/17.
  */
 
-public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessagePresenter> {
+public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, GroupMessagePresenter> {
     private final String TAG = GroupMessageActivity.class.getSimpleName();
 
     @BindView(R.id.message_refresh)
@@ -61,9 +63,6 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
         });
         recyclerView.addOnScrollListener(loadMoreScrollListener);
 
-        // Get group list
-        getPresenter().refreshGroupList();
-
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -87,8 +86,12 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
             }
         }));
 
+        // Get group list
+        getPresenter().refreshGroupList();
+
         refreshLayout.setColorSchemeResources(R.color.colorAccent);
         refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
+
         refreshLayout.setOnRefreshListener(() -> getPresenter().refreshGroupList());
 
     }
@@ -108,14 +111,14 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
             case LoadingEvent.Status.DONE:
                 loadMoreScrollListener.setEnable(groupMessageAdapter.hasLoadMoreItem());
                 refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(true);
+                refreshLayout.setEnabled(false);
                 if (event.refresh())
                     recyclerView.scrollToPosition(0);
                 break;
             case LoadingEvent.Status.COMPLETE:
                 loadMoreScrollListener.setEnable(false);
                 refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(true);
+                refreshLayout.setEnabled(false);
                 if (event.refresh())
                     recyclerView.scrollToPosition(0);
                 groupMessageAdapter.completeLoading();
@@ -140,13 +143,13 @@ public class GroupMessageActivity extends ScreenActivity<MessageScreen, MessageP
     }
 
     @Override
-    protected Class<MessagePresenter> getPresenterClass() {
-        return MessagePresenter.class;
+    protected Class<GroupMessagePresenter> getPresenterClass() {
+        return GroupMessagePresenter.class;
     }
 
     @Override
-    protected MessageScreen getDefaultScreen() {
-        return MessageScreen.instance(Strings.EMPTY, 0);
+    protected GroupMessageScreen getDefaultScreen() {
+        return GroupMessageScreen.instance();
     }
 
     @Override

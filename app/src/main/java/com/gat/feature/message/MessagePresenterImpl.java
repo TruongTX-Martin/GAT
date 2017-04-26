@@ -36,14 +36,10 @@ import timber.log.Timber;
 public class MessagePresenterImpl implements MessagePresenter {
     private final String TAG = MessagePresenterImpl.class.getSimpleName();
 
-    public @interface ACTION {
+    public @interface TYPE {
         int MESSAGE_LOAD_MORE = 1;
         int MESSAGE_REFRESH = 2;
-        int GROUP_LOAD_MORE = 3;
-        int GROUP_REFRESH = 4;
     }
-
-    private final int GROUP_LIST_SIZE = 15;
     private final int MESSAGE_LIST_SIZE = 15;
     private int pageCnt;
     private int userId;
@@ -59,13 +55,7 @@ public class MessagePresenterImpl implements MessagePresenter {
 
     private UseCase<ItemResult> loadMessageUseCase;
 
-    private UseCase<List<Group>> loadMoreGroupUseCase;
-
-    private UseCase<Group> groupUpdateUseCase;
-
     private UseCase<List<Message>> loadMoreMessageUseCase;
-
-    private UseCase<List<Group>> getGroupUseCase;
 
     private UseCase<List<Message>> getMessageUseCase;
 
@@ -91,8 +81,12 @@ public class MessagePresenterImpl implements MessagePresenter {
 
     }
 
-    private void refreshMessage(boolean refresh, boolean clear) {
+    private void getMessage(boolean refresh, boolean clear) {
         Log.d(TAG, "getMessageList");
+        if (loadMessageUseCase != null) {
+            Log.d(TAG, "During load message...");
+            return;
+        }
         getMessageUseCase = UseCases.release(getMessageUseCase);
 
         pageCnt = refresh ? 1 : (pageCnt+1);
@@ -104,12 +98,12 @@ public class MessagePresenterImpl implements MessagePresenter {
         getMessageUseCase = useCaseFactory.getMessageList(userId, pageCnt, MESSAGE_LIST_SIZE);
         ObservableTransformer<List<Message>, ItemResult> transformer =
                 upstream -> upstream
-                        .filter(list -> list.size() > 0)
                         .map(messages -> {
-                            List<Item> items = itemResultSubject.blockingLatest().iterator().next().items();
+                            List<Item> items = itemResultSubject.blockingFirst().items();
+                            Log.d(TAG, "Transformer:" + messages.size() + "," + items.size());
                             ItemResult result = itemBuilder.addList(items, messages,
-                                    true,
-                                    messages.size() >= GROUP_LIST_SIZE);
+                                    refresh,
+                                    messages.size() >= MESSAGE_LIST_SIZE);
                             itemResultSubject.onNext(result);
                             return result;
                         });
@@ -117,6 +111,7 @@ public class MessagePresenterImpl implements MessagePresenter {
         loadMessageUseCase = useCaseFactory.transform(getMessageUseCase, transformer,worker)
                 .executeOn(schedulerFactory.io())
                 .onNext(list -> {
+                    Log.d(TAG, "Loading message: has new messages");
                     LoadingEvent event = LoadingEvent.builder()
                             .refresh(true)
                             .status(LoadingEvent.Status.DONE)
@@ -124,124 +119,41 @@ public class MessagePresenterImpl implements MessagePresenter {
                     loadingEventSubject.onNext(event);
                 })
                 .onError(throwable -> {
+                    Log.d(TAG, "Loading message: has error.");
                     showLoadingItem(true, true, LoadingMessage.Message.ERROR);
-                    Timber.d(throwable, "Error loading message");
+                })
+                .onComplete(() -> {
+                    Log.d(TAG, "Loading message stop");
+                    showLoadingItem(refresh, clear, LoadingMessage.Message.COMPLETED);
+                    getMessageUseCase = UseCases.release(getMessageUseCase);
+                    loadMessageUseCase = UseCases.release(loadMessageUseCase);
                 })
                 .onStop(() -> {
-                    Log.d(TAG, "Message Stop");
-                    UseCases.release(getMessageUseCase);
+                    Log.d(TAG, "Loading message stop");
+                    showLoadingItem(refresh, clear, LoadingMessage.Message.COMPLETED);
+                    getMessageUseCase = UseCases.release(getMessageUseCase);
                     loadMessageUseCase = UseCases.release(loadMessageUseCase);
                 })
                 .execute();
     }
 
-    private void refreshGroup(boolean refresh, boolean clear) {
-        Log.d(TAG, "getGroupList");
-
-        if (loadMessageUseCase != null) {
-            Log.d(TAG, "return during load");
-            return;
+    private void getMessage(int type) {
+        switch (type) {
+            case TYPE.MESSAGE_LOAD_MORE:
+                getMessage(false, false);
+                break;
+            case TYPE.MESSAGE_REFRESH:
+                getMessage(true, true);
+                break;
+            default:
+                break;
         }
-        getGroupUseCase = UseCases.release(getGroupUseCase);
-
-        pageCnt = refresh ? 1 : (pageCnt+1);
-
-        showLoadingItem(refresh, clear, LoadingMessage.Message.LOADING);
-
-        getGroupUseCase = useCaseFactory.getGroupList(pageCnt, GROUP_LIST_SIZE);
-        GroupItemBuilder itemBuilder = new GroupItemBuilder();
-        ObservableTransformer<List<Group>, ItemResult> transformer =
-                upstream -> upstream
-                        .filter(groupList -> !groupList.isEmpty())
-                        .map(groups -> {
-                            List<Item> items = itemResultSubject.blockingFirst().items();
-                            Log.d(TAG, "ListSize:" + items.size() + ", GroupSize:" + groups.size());
-                            ItemResult result = itemBuilder.addList(items, groups,
-                                    true,//refresh ? true : false,
-                                    groups.size() >= GROUP_LIST_SIZE);
-                            itemResultSubject.onNext(result);
-                            return result;}
-                        );
-
-        loadMessageUseCase = useCaseFactory.transform(getGroupUseCase, transformer, worker)
-                .executeOn(schedulerFactory.io())
-                .onNext(list -> {
-                    LoadingEvent event = LoadingEvent.builder()
-                            .refresh(false)     // Do not scroll to head
-                            .status(LoadingEvent.Status.DONE)
-                            .build();
-                    Log.d(TAG, "EventDone");
-                    loadingEventSubject.onNext(event);
-                })
-                .onError(throwable -> {
-                    showLoadingItem(true, true, LoadingMessage.Message.ERROR);
-                    Timber.d(throwable, "Error loading message");
-                })
-                .onComplete(() -> {
-                    Log.d(TAG, "OnComplete");
-                    LoadingEvent event = LoadingEvent.builder()
-                            .refresh(true)         // scroll to head
-                            .status(LoadingEvent.Status.COMPLETE)
-                            .build();
-                    Log.d(TAG, "EventDone");
-                    loadingEventSubject.onNext(event);
-
-                    getGroupUseCase = UseCases.release(getGroupUseCase);
-                    loadMessageUseCase = UseCases.release(loadMessageUseCase);
-                })
-                .onStop(() -> {
-                    Log.d(TAG, "OnStop");
-                    LoadingEvent event = LoadingEvent.builder()
-                            .refresh(true)         // scroll to head
-                            .status(LoadingEvent.Status.COMPLETE)
-                            .build();
-                    Log.d(TAG, "EventDone");
-                    loadingEventSubject.onNext(event);
-
-                    getGroupUseCase = UseCases.release(getGroupUseCase);
-                    loadMessageUseCase = UseCases.release(loadMessageUseCase);
-                })
-                .execute();
-        // TODO
-        groupUpdate();
-    }
-
-    private void groupUpdate() {
-        groupUpdateUseCase = UseCases.release(groupUpdateUseCase);
-
-        groupUpdateUseCase = useCaseFactory.groupUpdate();
-        GroupItemBuilder itemBuilder = new GroupItemBuilder();
-        ObservableTransformer<Group, ItemResult> transformer =
-                upstream -> upstream
-                        .map(group -> {
-                            List<Item> items = itemResultSubject.blockingFirst().items();
-                            Log.d(TAG, "ListSize:" + items.size());
-                            ItemResult result = itemBuilder.updateList(items, group);
-                            itemResultSubject.onNext(result);
-                            return result;}
-                        );
-
-        UseCase<ItemResult> updateItemUseCase = useCaseFactory.transform(groupUpdateUseCase, transformer, worker)
-                .executeOn(schedulerFactory.io())
-                .onNext(list -> {
-                })
-                .onError(throwable -> {
-                    showLoadingItem(true, true, LoadingMessage.Message.ERROR);
-                    Timber.d(throwable, "Error loading message");
-                })
-                .onComplete(() -> {
-                })
-                .onStop(() -> {
-                    groupUpdateUseCase = UseCases.release(groupUpdateUseCase);
-                })
-                .execute();
-
     }
 
     private void showLoadingItem(boolean refresh, boolean clear, @LoadingMessage.Message int message){
         Callable<ItemResult> job = () -> {
             List<Item> items = itemResultSubject.blockingFirst().items();
-            Log.d(TAG, "do job");
+            Log.d(TAG, "show loading " + message);
             ItemResult result = ItemBuilder.showLoading(items, clear, !refresh || clear, message);
             itemResultSubject.onNext(result);
             return result;
@@ -251,9 +163,21 @@ public class MessagePresenterImpl implements MessagePresenter {
                 .executeOn(worker)
                 .returnOn(schedulerFactory.main())
                 .onNext(result -> {
+                    int status = LoadingEvent.Status.BEGIN;
+                    switch (message) {
+                        case LoadingMessage.Message.LOADING:
+                            status = LoadingEvent.Status.BEGIN;
+                            break;
+                        case LoadingMessage.Message.COMPLETED:
+                            status = LoadingEvent.Status.DONE;
+                            break;
+                        default:
+                            status = LoadingEvent.Status.ERROR;
+                            break;
+                    }
                     LoadingEvent event = LoadingEvent.builder()
                             .refresh(refresh)
-                            .status(message == LoadingMessage.Message.LOADING ? LoadingEvent.Status.BEGIN : LoadingEvent.Status.ERROR)
+                            .status(status)
                             .build();
                     loadingEventSubject.onNext(event);
                 })
@@ -263,18 +187,7 @@ public class MessagePresenterImpl implements MessagePresenter {
     @Override
     public void onCreate() {
         compositeDisposable = new CompositeDisposable(
-                this.loadSubject.observeOn(schedulerFactory.main()).subscribe(type -> {
-                    switch (type) {
-                        case ACTION.GROUP_LOAD_MORE:
-                        case ACTION.GROUP_REFRESH:
-                            refreshGroup(type == ACTION.GROUP_REFRESH ? true : false, false);
-                            break;
-                        case ACTION.MESSAGE_LOAD_MORE:
-                        case ACTION.MESSAGE_REFRESH:
-                            refreshMessage(type == ACTION.MESSAGE_REFRESH ? true : false, false);
-                            break;
-                    }
-                }),
+                this.loadSubject.observeOn(schedulerFactory.main()).subscribe(this::getMessage),
                 this.sendMessageSubject.observeOn(schedulerFactory.main()).subscribe(message -> send(message))
         );
     }
@@ -282,37 +195,23 @@ public class MessagePresenterImpl implements MessagePresenter {
     @Override
     public void onDestroy() {
         loadMessageUseCase = UseCases.release(loadMessageUseCase);
-        getGroupUseCase = UseCases.release(getGroupUseCase);
         getMessageUseCase = UseCases.release(getMessageUseCase);
-        loadMoreGroupUseCase = UseCases.release(loadMoreGroupUseCase);
         loadMoreMessageUseCase = UseCases.release(loadMoreMessageUseCase);
         compositeDisposable.dispose();
     }
 
     @Override
     public void loadMoreMessageList(int userId) {
-        Log.d(TAG, "loadMoreMessageList");
+        Log.d(TAG, "loadMoreMessage");
         this.userId = userId;
-        loadSubject.onNext(ACTION.MESSAGE_LOAD_MORE);
+        loadSubject.onNext(TYPE.MESSAGE_LOAD_MORE);
     }
 
     @Override
     public void refreshMessageList(int userId) {
-        Log.d(TAG, "refreshMessageList");
+        Log.d(TAG, "refreshMessage");
         this.userId = userId;
-        loadSubject.onNext(ACTION.MESSAGE_REFRESH);
-    }
-
-    @Override
-    public void refreshGroupList() {
-        Log.d(TAG, "refreshGroupList");
-        loadSubject.onNext(ACTION.GROUP_REFRESH);
-    }
-
-    @Override
-    public void loadMoreGroupList() {
-        Log.d(TAG, "loadMoreGroupList");
-        loadSubject.onNext(ACTION.GROUP_LOAD_MORE);
+        loadSubject.onNext(TYPE.MESSAGE_REFRESH);
     }
 
     @Override
@@ -334,6 +233,7 @@ public class MessagePresenterImpl implements MessagePresenter {
     public Observable<Boolean> sendMessageResult() {
         return sendMessageResult.observeOn(schedulerFactory.main());
     }
+
     private void send(String message) {
         sendMessageUseCase = UseCases.release(sendMessageUseCase);
 

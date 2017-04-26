@@ -5,6 +5,7 @@ import com.gat.feature.login.LoginScreen;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessageScreen;
 import com.gat.feature.main.MainScreen;
+import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.personal.PersonalScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
@@ -45,6 +46,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getSuggestionPresenter();
         else if (key instanceof MessageScreen)
             return (P) presenterComponent.getMessagePresenter();
+        else if (key instanceof GroupMessageScreen)
+            return (P) presenterComponent.getGroupMessagePresenter();
         else if (key instanceof MainScreen)
             return (P) presenterComponent.getMainPresenter();
         else if (key instanceof ShareNearByUserDistanceScreen)

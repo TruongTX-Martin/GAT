@@ -15,10 +15,6 @@ public interface MessagePresenter extends Presenter{
 
     void refreshMessageList(int userId);
 
-    void refreshGroupList();
-
-    void loadMoreGroupList();
-
     Observable<LoadingEvent> loadingEvents();
 
     Observable<ItemResult> itemsChanged();

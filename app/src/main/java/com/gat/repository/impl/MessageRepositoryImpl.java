@@ -76,7 +76,7 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Observable<List<Group>> getGroupList(int page, int size) {
-        return Observable.defer(() -> networkDataSource.get().groupUpdate())
+        /*return Observable.defer(() -> networkDataSource.get().groupUpdate())
                 .flatMap(groupTable -> {
                     int localUser = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
                     int userId = 0;
@@ -96,8 +96,8 @@ public class MessageRepositoryImpl implements MessageRepository {
                                     .lastMessage(groupTable.lastMessage())
                                     .users(groupTable.users())
                                     .build()));
-                }).toList().toObservable();
-        /*return Observable.defer(() -> networkDataSource.get().getGroupList(page, size))
+                }).toList().toObservable();*/
+        return Observable.defer(() -> networkDataSource.get().getGroupList(page, size))
                 .flatMap(list -> {
                     // Get user id list
                     int length = list.size();

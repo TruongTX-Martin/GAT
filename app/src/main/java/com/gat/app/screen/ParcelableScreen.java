@@ -9,6 +9,7 @@ import com.gat.feature.login.LoginScreen;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessageScreen;
 import com.gat.feature.main.MainScreen;
+import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
@@ -35,6 +36,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int SUGGESTION_SEARCH = 8;
     private static final int MAIN = 9;
     private static final int MESSAGER = 10;
+    private static final int GROUP_MESSAGE = 11;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -70,6 +72,8 @@ public class ParcelableScreen implements Parcelable {
             return SUGGESTION_SEARCH;
         if (screen instanceof MessageScreen)
             return MESSAGER;
+        if (screen instanceof GroupMessageScreen)
+            return GROUP_MESSAGE;
         throw new IllegalArgumentException("Not support screen " + screen);
     }
 
@@ -99,6 +103,8 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof ShareNearByUserDistanceScreen) {
 
         } else if (screen instanceof SuggestSearchScreen) {
+
+        } else if (screen instanceof GroupMessageScreen) {
 
         }
 
@@ -143,6 +149,9 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case MESSAGER:
                 screen = MessageScreen.instance(in.readString(), in.readInt());
+                break;
+            case GROUP_MESSAGE:
+                screen = GroupMessageScreen.instance();
                 break;
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);

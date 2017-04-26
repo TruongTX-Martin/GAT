@@ -25,6 +25,7 @@ import com.gat.feature.main.MainActivity;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.message.GroupMessageActivity;
 import com.gat.feature.message.MessageScreen;
+import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.register.RegisterActivity;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
@@ -181,7 +182,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     private void onLoginResult(User user) {
         onLogging(false);
-        start(this, GroupMessageActivity.class, MessageScreen.instance(Strings.EMPTY, 0));
+        start(this, GroupMessageActivity.class, GroupMessageScreen.instance());
         finish();
     }
 
