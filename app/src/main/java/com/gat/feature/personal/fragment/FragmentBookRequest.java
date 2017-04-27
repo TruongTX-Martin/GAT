@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.listener.RecyclerItemClickListener;
 import com.gat.common.util.ClientUtils;
+import com.gat.feature.bookdetailborrow.BookDetailBorrowActivity;
 import com.gat.feature.bookdetailrequest.BookDetailRequestActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
@@ -132,7 +133,9 @@ public class FragmentBookRequest extends Fragment {
                 int recodeId = entity.getRecordId();
                 if( recordType == 1 ) {
                     //sharing
-
+                    Intent intent = new Intent(MainActivity.instance, BookDetailBorrowActivity.class);
+                    intent.putExtra("BorrowingRecordId",recodeId);
+                    MainActivity.instance.startActivity(intent);
                 }else if (recordType == 2){
                     //borrowing
                     Intent intent = new Intent(MainActivity.instance, BookDetailRequestActivity.class);

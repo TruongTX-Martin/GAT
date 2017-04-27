@@ -691,7 +691,7 @@
 
 
                     <RelativeLayout
-                        android:id="@+id/layoutLostBorder"
+                        android:id="@+id/layoutUnReturnBorder"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@drawable/border_layout_filter_book"
