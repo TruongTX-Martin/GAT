@@ -6,9 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -31,9 +34,6 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     private final String USER_ID = "user_id";
 
-    @BindView(R.id.message_refresh)
-    SwipeRefreshLayout refreshLayout;
-
     @BindView(R.id.message_recycler)
     RecyclerView recyclerView;
 
@@ -50,6 +50,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     private MessageAdapter messageAdapter;
 
     private CompositeDisposable compositeDisposable;
+    private LinearLayoutManager linearLayoutManager;
 
     private String userName;
     private int userId;
@@ -70,7 +71,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
         );
 
-        messageAdapter = new MessageAdapter(56/*TODO*/);
+        messageAdapter = new MessageAdapter();
         recyclerView.setAdapter(messageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
@@ -80,18 +81,43 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         });
 
         recyclerView.addOnScrollListener(loadMoreScrollListener);
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         getPresenter().refreshMessageList(userId);
 
-        refreshLayout.setColorSchemeResources(R.color.colorAccent);
-        refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
-        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(userId));
+        //refreshLayout.setColorSchemeResources(R.color.colorAccent);
+        //refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
+        //refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(userId));
+
+        messageEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().length() > 0) {
+                    messageSendBtn.setEnabled(true);
+                } else {
+                    messageSendBtn.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
 
         messageSendBtn.setOnClickListener(view -> {
             if (!Strings.isNullOrEmpty(messageEdit.getText().toString())) {
                 getPresenter().sendMessage(messageEdit.getText().toString());
                 messageEdit.setText(Strings.EMPTY);
             }
+        });
+        messageEdit.setOnClickListener(view -> {
+            recyclerView.scrollToPosition((messageAdapter.getItemCount() > 0) ? messageAdapter.getItemCount() - 1 : 0);
         });
     }
 
@@ -104,20 +130,23 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         switch (event.status()) {
             case LoadingEvent.Status.BEGIN:
                 loadMoreScrollListener.setEnable(false);
-                refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(!event.refresh() && messageAdapter.getItemCount() > 1);
+                //refreshLayout.setRefreshing(false);
+                //refreshLayout.setEnabled(!event.refresh() && messageAdapter.getItemCount() > 1);
                 break;
             case LoadingEvent.Status.DONE:
                 loadMoreScrollListener.setEnable(messageAdapter.hasLoadMoreItem());
-                refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(true);
-                if (event.refresh())
-                    recyclerView.scrollToPosition(0);
+                //refreshLayout.setRefreshing(false);
+                //refreshLayout.setEnabled(true);
+                //if (event.refresh())
+                //    recyclerView.scrollToPosition(0);
+
+                recyclerView.scrollToPosition(messageAdapter.getItemCount()-1);
+
                 break;
             case LoadingEvent.Status.ERROR:
                 loadMoreScrollListener.setEnable(false);
-                refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(true);
+                //refreshLayout.setRefreshing(false);
+                //refreshLayout.setEnabled(true);
                 break;
         }
     }

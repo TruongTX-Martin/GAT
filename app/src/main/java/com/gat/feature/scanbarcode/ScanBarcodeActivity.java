@@ -1,7 +1,5 @@
 package com.gat.feature.scanbarcode;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,10 +14,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.gat.R;
-import com.gat.app.activity.ScreenActivity;
 import com.gat.app.fragment.ScreenFragment;
-import com.gat.common.fragment.MainTabFragment;
-import com.gat.common.util.CommonCheck;
+import com.gat.common.util.CommonUtil;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ServerResponse;
 import com.gat.feature.search.SearchPresenter;
@@ -138,7 +134,7 @@ public class ScanBarcodeActivity extends ScreenFragment<SearchScreen, SearchPres
     public void handleResult(Result result) {
         String isbn = result.getText();
         Log.d(TAG, isbn);
-        if (CommonCheck.checkIsbnCode(isbn)) {
+        if (CommonUtil.checkIsbnCode(isbn)) {
             getPresenter().setIsbn(isbn);
         } else {
             Toast.makeText(getContext(), getString(R.string.isbn_invalid), Toast.LENGTH_SHORT).show();

@@ -1,34 +1,27 @@
 package com.gat.feature.login.ForgotPassword;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.common.util.CommonCheck;
+import com.gat.common.util.CommonUtil;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by ducbtsn on 3/3/17.
@@ -58,12 +51,12 @@ public class ResetPasswordActivity extends ScreenActivity<LoginScreen, LoginPres
 
         btnVerify.setOnClickListener(view -> {
             String password = passwordText.getText().toString();
-            Pair<Boolean, Integer> result = CommonCheck.validatePassword(password);
+            Pair<Boolean, Integer> result = CommonUtil.validatePassword(password);
             if (!result.first) {
                 String error;
-                if (result.second == CommonCheck.Error.FIELD_EMPTY) {
+                if (result.second == CommonUtil.Error.FIELD_EMPTY) {
                     error = getString(R.string.login_password_empty);
-                } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
+                } else if (result.second == CommonUtil.Error.EMAIL_INVALID) {
                     error = getString(R.string.login_password_length);
                 } else {
                     error = Strings.EMPTY;

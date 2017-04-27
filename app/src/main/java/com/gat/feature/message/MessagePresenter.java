@@ -2,6 +2,7 @@ package com.gat.feature.message;
 
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
+import com.gat.repository.entity.User;
 import com.rey.mvp2.Presenter;
 
 import io.reactivex.Observable;
@@ -22,4 +23,6 @@ public interface MessagePresenter extends Presenter{
     void sendMessage(String message);
 
     Observable<Boolean> sendMessageResult();
+
+    Observable<User> loadUser();
 }

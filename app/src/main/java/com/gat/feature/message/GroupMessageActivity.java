@@ -143,6 +143,13 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "Resume");
+        getPresenter().refreshGroupList();
+    }
+
+    @Override
     protected Class<GroupMessagePresenter> getPresenterClass() {
         return GroupMessagePresenter.class;
     }

@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.common.util.CommonCheck;
+import com.gat.common.util.CommonUtil;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
@@ -19,11 +19,7 @@ import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by ducbtsn on 2/26/17.
@@ -58,12 +54,12 @@ public class ForgotPasswordActivity extends ScreenActivity<LoginScreen, LoginPre
 
         btnSend.setOnClickListener(view -> {
             String email = emailText.getText().toString();
-            Pair<Boolean, Integer> result = CommonCheck.validateEmail(email);
+            Pair<Boolean, Integer> result = CommonUtil.validateEmail(email);
             if (!result.first) {
                 String error;
-                if (result.second == CommonCheck.Error.FIELD_EMPTY) {
+                if (result.second == CommonUtil.Error.FIELD_EMPTY) {
                     error = getString(R.string.login_email_empty);
-                } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
+                } else if (result.second == CommonUtil.Error.EMAIL_INVALID) {
                     error = getString(R.string.login_email_invalid);
                 } else {
                     error = Strings.EMPTY;

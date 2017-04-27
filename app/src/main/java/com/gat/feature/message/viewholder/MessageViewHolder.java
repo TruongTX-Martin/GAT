@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.util.CommonUtil;
 import com.gat.common.util.Constance;
 import com.gat.feature.message.item.MessageItem;
 import com.gat.repository.entity.Message;
@@ -27,6 +28,9 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
     @BindView(R.id.messenger_image)
     CircleImageView userImage;
 
+    @BindView(R.id.message_date)
+    TextView textDate;
+
     private final boolean isRight;
     public MessageViewHolder(ViewGroup parent, @LayoutRes int layoutId, boolean isRight) {
         super(parent, layoutId);
@@ -39,11 +43,16 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
         super.onBindItem(item);
         Message message = item.message();
         text.setText(message.message());
-        if (isRight) {
+        if (isRight || !item.displayImage()) {
             userImage.setVisibility(View.INVISIBLE);
         } else {
             String url = ClientUtils.getUrlImage(message.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
             ClientUtils.setImage(userImage, R.drawable.steve_job, url);
+        }
+        if (item.displayDate()) {
+            textDate.setText(CommonUtil.getDate(item.message().timeStamp()));
+        } else {
+            textDate.setVisibility(View.GONE);
         }
     }
 }

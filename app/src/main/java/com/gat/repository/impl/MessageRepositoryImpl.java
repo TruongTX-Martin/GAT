@@ -1,8 +1,6 @@
 package com.gat.repository.impl;
 
-import android.util.Log;
-
-import com.gat.common.util.CommonCheck;
+import com.gat.common.util.CommonUtil;
 import com.gat.common.util.Strings;
 import com.gat.data.firebase.entity.GroupTable;
 import com.gat.data.firebase.entity.MessageTable;
@@ -14,14 +12,11 @@ import com.gat.repository.entity.Message;
 import com.gat.repository.entity.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import dagger.Lazy;
 import io.reactivex.Observable;
-import io.reactivex.subjects.Subject;
 
 /**
  * Created by ducbtsn on 3/30/17.
@@ -56,14 +51,17 @@ public class MessageRepositoryImpl implements MessageRepository {
                         // Get user list from server
                         return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId).flatMap(user -> {
                             List<Message> messageList = new ArrayList<Message>();
+                            String imageId = (user != null) ? user.imageId() : Strings.EMPTY;
                             for (int i = 0; i < length; i++) {
                                 MessageTable messageTable = list.get(i);
                                 messageList.add(Message.builder()
-                                        .groupId(CommonCheck.getGroupId(localUser, userId))
+                                        .groupId(CommonUtil.getGroupId(localUser, userId))
                                         .isRead(messageTable.isRead())
                                         .message(messageTable.getMessage())
-                                        .imageId((user != null && messageTable.getUserId() != userId) ? user.imageId() : Strings.EMPTY)
+                                        .imageId(messageTable.getUserId() == localUser ? Strings.EMPTY : imageId)
                                         .timeStamp(messageTable.getTimeStamp())
+                                        .userId(messageTable.getUserId())
+                                        .isLocal(messageTable.getUserId() == localUser)
                                         .build());
                             }
                             return Observable.just(messageList);

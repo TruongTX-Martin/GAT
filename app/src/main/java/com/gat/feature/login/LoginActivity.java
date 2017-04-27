@@ -19,7 +19,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.common.util.CommonCheck;
+import com.gat.common.util.CommonUtil;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
@@ -103,12 +103,12 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         loginBtn.setOnClickListener(view -> {
             String email = emailText.getText().toString();
             String password = passwordText.getText().toString();
-            Pair<Boolean, Integer> result = CommonCheck.validateEmail(email);
+            Pair<Boolean, Integer> result = CommonUtil.validateEmail(email);
             if (!result.first) {
                 String error;
-                if (result.second == CommonCheck.Error.FIELD_EMPTY) {
+                if (result.second == CommonUtil.Error.FIELD_EMPTY) {
                     error = getString(R.string.login_email_empty);
-                } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
+                } else if (result.second == CommonUtil.Error.EMAIL_INVALID) {
                     error = getString(R.string.login_email_invalid);
                 } else {
                     error = Strings.EMPTY;
@@ -116,12 +116,12 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                 emailText.setError(error);
                 return;
             }
-            result = CommonCheck.validatePassword(password);
+            result = CommonUtil.validatePassword(password);
             if (!result.first) {
                 String error;
-                if (result.second == CommonCheck.Error.FIELD_EMPTY) {
+                if (result.second == CommonUtil.Error.FIELD_EMPTY) {
                     error = getString(R.string.login_password_empty);
-                } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
+                } else if (result.second == CommonUtil.Error.EMAIL_INVALID) {
                     error = getString(R.string.login_password_length);
                 } else {
                     error = Strings.EMPTY;

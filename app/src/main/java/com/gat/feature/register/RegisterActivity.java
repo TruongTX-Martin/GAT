@@ -1,10 +1,8 @@
 package com.gat.feature.register;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,16 +17,13 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.common.util.CommonCheck;
+import com.gat.common.util.CommonUtil;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
-import com.gat.feature.register.update.category.AddCategoryActivity;
-import com.gat.feature.register.update.info.UpdateInfoActivity;
 import com.gat.feature.register.update.location.AddLocationActivity;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.repository.entity.LoginData;
@@ -43,7 +38,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by ducbtsn on 2/26/17.
@@ -108,12 +102,12 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
         registerBtn.setOnClickListener(e -> {
             String email = emailText.getText().toString();
             String password = passwordText.getText().toString();
-            Pair<Boolean, Integer> result = CommonCheck.validateEmail(email);
+            Pair<Boolean, Integer> result = CommonUtil.validateEmail(email);
             if (!result.first) {
                 String error;
-                if (result.second == CommonCheck.Error.FIELD_EMPTY) {
+                if (result.second == CommonUtil.Error.FIELD_EMPTY) {
                     error = getString(R.string.login_email_empty);
-                } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
+                } else if (result.second == CommonUtil.Error.EMAIL_INVALID) {
                     error = getString(R.string.login_email_invalid);
                 } else {
                     error = Strings.EMPTY;
@@ -121,12 +115,12 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                 emailText.setError(error);
                 return;
             }
-            result = CommonCheck.validatePassword(password);
+            result = CommonUtil.validatePassword(password);
             if (!result.first) {
                 String error;
-                if (result.second == CommonCheck.Error.FIELD_EMPTY) {
+                if (result.second == CommonUtil.Error.FIELD_EMPTY) {
                     error = getString(R.string.login_password_empty);
-                } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
+                } else if (result.second == CommonUtil.Error.EMAIL_INVALID) {
                     error = getString(R.string.login_password_length);
                 } else {
                     error = Strings.EMPTY;

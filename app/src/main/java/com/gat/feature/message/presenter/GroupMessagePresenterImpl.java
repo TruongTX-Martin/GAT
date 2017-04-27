@@ -22,6 +22,7 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 import timber.log.Timber;
 
@@ -51,8 +52,11 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
     // Start load observer
     private Subject<Integer> loadSubject;
 
+    // Initialized observer
+    private Subject<Boolean> initializedSubject;
+
     private UseCase<List<Group>> getGroupUseCase;
-    //private UseCase<List<Group>> loadMoreGroupUseCase;
+    private UseCase<Group> groupUpdateUseCase;
     private UseCase<ItemResult> loadingUseCase;
 
     private CompositeDisposable compositeDisposable;
@@ -67,6 +71,7 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
         this.loadingEventSubject = BehaviorSubject.create();
         this.itemResultSubject = BehaviorSubject.createDefault(ItemBuilder.defaultItems());
         this.loadSubject = BehaviorSubject.create();
+        this.initializedSubject = PublishSubject.create();
 
         this.loadingPageCnt = 0;
     }
@@ -112,6 +117,7 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
                 })
                 .onError(throwable -> {
                     Log.d(TAG, "Loading error.");
+                    throwable.printStackTrace();
                     showLoadingItem(refresh, clear, LoadingMessage.Message.ERROR);
                     // Release all use case
                     loadingUseCase = UseCases.release(loadingUseCase);
@@ -123,6 +129,8 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
                     // Release all use case
                     loadingUseCase = UseCases.release(loadingUseCase);
                     getGroupUseCase = UseCases.release(getGroupUseCase);
+
+                    initializedSubject.onNext(true);
                 })
                 .onStop(() -> {
                     Log.d(TAG, "Loading stopped.");
@@ -182,7 +190,12 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
         }
     }
 
-    /*private void groupUpdate() {
+    private void groupUpdate() {
+        Log.d(TAG, "groupUpdate");
+        if (loadingUseCase != null) {
+            Log.d(TAG, "Cannot update, loading...");
+            return;
+        }
         groupUpdateUseCase = UseCases.release(groupUpdateUseCase);
 
         groupUpdateUseCase = useCaseFactory.groupUpdate();
@@ -191,28 +204,28 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
                 upstream -> upstream
                         .map(group -> {
                             List<Item> items = itemResultSubject.blockingFirst().items();
-                            Log.d(TAG, "ListSize:" + items.size());
+                            Log.d(TAG, "Transformer:" + items.size() + "," + group.groupId());
                             ItemResult result = itemBuilder.updateList(items, group);
                             itemResultSubject.onNext(result);
                             return result;}
                         );
 
-        UseCase<ItemResult> updateItemUseCase = useCaseFactory.transform(groupUpdateUseCase, transformer, worker)
+        loadingUseCase = useCaseFactory.transform(groupUpdateUseCase, transformer, worker)
                 .executeOn(schedulerFactory.io())
                 .onNext(list -> {
+
                 })
                 .onError(throwable -> {
-                    showLoadingItem(true, true, LoadingMessage.Message.ERROR);
-                    Timber.d(throwable, "Error loading message");
-                })
-                .onComplete(() -> {
+                    throwable.printStackTrace();
+                    Log.d(TAG, "UpdateGroup error.");
+                    showLoadingItem(false, false, LoadingMessage.Message.ERROR);
                 })
                 .onStop(() -> {
                     groupUpdateUseCase = UseCases.release(groupUpdateUseCase);
                 })
                 .execute();
 
-    }*/
+    }
 
     @Override
     public void refreshGroupList() {
@@ -237,7 +250,13 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
     @Override
     public void onCreate() {
         compositeDisposable = new CompositeDisposable(
-                loadSubject.observeOn(schedulerFactory.main()).subscribe(this::getGroupList)
+                loadSubject.observeOn(schedulerFactory.main()).subscribe(this::getGroupList),
+                initializedSubject.observeOn(schedulerFactory.io()).subscribe(isInit -> {
+                    Log.d(TAG, "IsInitialized:" + isInit);
+                    if (isInit) {
+                        groupUpdate();
+                    }
+                })
         );
     }
 

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,47 +21,54 @@
             android:layout_marginBottom="20dp"
             android:layout_gravity="center_horizontal"
             android:id="@+id/message_header_text"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1sp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/darker_gray"/>
     </LinearLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/message_refresh"
+    <RelativeLayout
+        android:id="@+id/message_recycler_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/header"
-        android:layout_above="@+id/linearLayout"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/message_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/sendMessageLayout"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
             android:padding="@dimen/paddingSmall"/>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/message_edit"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/sendMessageLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/message_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:lines="1"/>
 
-        <Button
-            android:id="@+id/message_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:enabled="true"
-            android:text="@string/send_message_btn"/>
+            <Button
+                android:id="@+id/message_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:enabled="true"
+                android:text="@string/send_message_btn"/>
+        </LinearLayout>
+    </RelativeLayout>
 
-    </LinearLayout>
 </RelativeLayout>

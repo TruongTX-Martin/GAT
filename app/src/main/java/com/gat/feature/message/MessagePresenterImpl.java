@@ -51,6 +51,7 @@ public class MessagePresenterImpl implements MessagePresenter {
     private Subject<LoadingEvent> loadingEventSubject;
     private Subject<ItemResult> itemResultSubject;
 
+
     private Subject<Integer> loadSubject;
 
     private UseCase<ItemResult> loadMessageUseCase;
@@ -103,7 +104,7 @@ public class MessagePresenterImpl implements MessagePresenter {
                             Log.d(TAG, "Transformer:" + messages.size() + "," + items.size());
                             ItemResult result = itemBuilder.addList(items, messages,
                                     refresh,
-                                    messages.size() >= MESSAGE_LIST_SIZE);
+                                    /*messages.size() >= MESSAGE_LIST_SIZE*/false);
                             itemResultSubject.onNext(result);
                             return result;
                         });
@@ -113,12 +114,13 @@ public class MessagePresenterImpl implements MessagePresenter {
                 .onNext(list -> {
                     Log.d(TAG, "Loading message: has new messages");
                     LoadingEvent event = LoadingEvent.builder()
-                            .refresh(true)
+                            .refresh(false)
                             .status(LoadingEvent.Status.DONE)
                             .build();
                     loadingEventSubject.onNext(event);
                 })
                 .onError(throwable -> {
+                    throwable.printStackTrace();
                     Log.d(TAG, "Loading message: has error.");
                     showLoadingItem(true, true, LoadingMessage.Message.ERROR);
                 })
@@ -181,7 +183,10 @@ public class MessagePresenterImpl implements MessagePresenter {
                             .build();
                     loadingEventSubject.onNext(event);
                 })
-                .onError(throwable -> Timber.d(throwable, "Error show loading."))
+                .onError(throwable -> {
+                    Timber.d(throwable, "Error show loading.");
+                    throwable.printStackTrace();
+                })
                 .execute();
     }
     @Override
@@ -245,6 +250,7 @@ public class MessagePresenterImpl implements MessagePresenter {
                     sendMessageResult.onNext(result);
                 })
                 .onError(throwable -> {
+                    throwable.printStackTrace();
                     Log.d(TAG, throwable.getStackTrace().toString());
                 })
                 .onStop(() -> {
@@ -253,4 +259,8 @@ public class MessagePresenterImpl implements MessagePresenter {
                 .execute();
     }
 
+    @Override
+    public Observable<User> loadUser() {
+        return null;
+    }
 }

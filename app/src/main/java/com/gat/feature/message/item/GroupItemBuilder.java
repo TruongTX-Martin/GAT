@@ -44,7 +44,6 @@ public class GroupItemBuilder extends ItemBuilder<Group> {
 
     @Override
     public ItemResult updateList(List<Item> items, Group data) {
-        int oldSize = items.size();
         List<Item> newItems = new ArrayList<>();
 
         for (Item item : items) {
