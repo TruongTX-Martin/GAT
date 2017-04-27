@@ -71,6 +71,14 @@ public class BookRequestEntity {
     private String rejectTime = Strings.EMPTY;
 
 
+    public int getRecordId() {
+        return recordId;
+    }
+
+    public int getRecordType() {
+        return recordType;
+    }
+
     public String getEditionTitle() {
         return editionTitle;
     }

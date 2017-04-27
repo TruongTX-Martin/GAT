@@ -21,7 +21,8 @@ import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.common.listener.RecyclerItemClickListener;
-import com.gat.feature.bookdetail.BookDetailRequestActivity;
+import com.gat.common.util.ClientUtils;
+import com.gat.feature.bookdetailrequest.BookDetailRequestActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
@@ -120,6 +121,7 @@ public class FragmentBookSharing extends Fragment {
                 BookSharingEntity entity = listBook.get(position);
                 int borrowingRecordId = entity.getBorrowingRecordId();
                 int sharingStatus = entity.getSharingStatus();
+                ClientUtils.showToast("Sharing status:" + sharingStatus);
                 if( sharingStatus == 1 ) {
                     //sharing
 
@@ -270,6 +272,7 @@ public class FragmentBookSharing extends Fragment {
 
 
     private void searchBook(BookInstanceInput input) {
+        if(input == null) return;
         try {
             isRequesting = true;
             parrentActivity.requestBookInstance(input);
