@@ -47,7 +47,6 @@ public class FirebaseServiceImpl implements FirebaseService{
     private final int GROUP_SIZE = 15;
     private final int MESSAGE_SIZE = 15;
     private int mUserId = 0;
-    private String mGroupId = "";
 
     private int mGroupPage = 0;
     private int mMessagePage = 0;
@@ -105,6 +104,8 @@ public class FirebaseServiceImpl implements FirebaseService{
 
     private boolean mGroupInitialized = false;
 
+    private String mGroupId;
+
     private void init() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -129,6 +130,8 @@ public class FirebaseServiceImpl implements FirebaseService{
         /** Send message **/
         sendMessageSubject = BehaviorSubject.create();
         sendMessageResult = BehaviorSubject.create();
+
+        mGroupId = null;
 
         groupChildEventListener = new ChildEventListener() {
             @Override
@@ -381,6 +384,10 @@ public class FirebaseServiceImpl implements FirebaseService{
     }
 
     private void getMessageInGroup(String groupId) {
+        if (mGroupId != null)
+            databaseReference.child(MESSAGE_LEVEL).child(groupId).removeEventListener(messageChildEventListener);
+
+        mGroupId = groupId;
         messages.clear();
         databaseReference.child(MESSAGE_LEVEL).child(groupId).orderByChild("timeStamp").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -401,7 +408,7 @@ public class FirebaseServiceImpl implements FirebaseService{
         Log.d(TAG, "sendMessage");
         int fromUserId = userDataSourceLazy.get().loadUser().blockingFirst().userId();
         MessageTable mes = new MessageTable(fromUserId, message, new Date().getTime(), false);
-        sendMessageSubject.onNext(new Pair<>(fromUserId, mes));
+        sendMessageSubject.onNext(new Pair<>((int)toUserId, mes));
     }
 
     /**
@@ -414,9 +421,9 @@ public class FirebaseServiceImpl implements FirebaseService{
     }
 
     private void sendMes(Pair<Integer, MessageTable> mes) {
-        int fromUserId = mes.first;
-        int toUserId = (int)mes.second.getUserId();
-        String groupId = (mes.first < mes.second.getUserId()) ? (fromUserId + "" + toUserId) : (toUserId + "" + fromUserId);
+        int toUserId = mes.first;
+        int fromUserId = (int)mes.second.getUserId();
+        String groupId = (fromUserId < toUserId) ? (fromUserId + "" + toUserId) : (toUserId + "" + fromUserId);
 
         if (databaseReference.child(GROUP_LEVEL).child(groupId) != null) {
 

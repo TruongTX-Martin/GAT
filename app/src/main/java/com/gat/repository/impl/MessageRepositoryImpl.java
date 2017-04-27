@@ -52,7 +52,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                         return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId).flatMap(user -> {
                             List<Message> messageList = new ArrayList<Message>();
                             String imageId = (user != null) ? user.imageId() : Strings.EMPTY;
-                            for (int i = 0; i < length; i++) {
+                            for (int i = 0; i < list.size(); i++) {
                                 MessageTable messageTable = list.get(i);
                                 messageList.add(Message.builder()
                                         .groupId(CommonUtil.getGroupId(localUser, userId))
