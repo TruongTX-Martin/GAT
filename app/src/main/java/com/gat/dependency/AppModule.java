@@ -1,7 +1,6 @@
 package com.gat.dependency;
 
 import android.app.Application;
-
 import com.gat.app.screen.ScreenPresenterFactory;
 import com.gat.data.firebase.FirebaseService;
 import com.gat.data.firebase.FirebaseServiceImpl;
@@ -23,10 +22,8 @@ import com.gat.repository.impl.MessageRepositoryImpl;
 import com.gat.repository.impl.UserRepositoryImpl;
 import com.rey.mvp2.PresenterManager;
 import com.rey.mvp2.impl.SimplePresenterManager;
-
 import javax.inject.Named;
 import javax.inject.Singleton;
-
 import dagger.Lazy;
 import dagger.Module;
 import dagger.Provides;

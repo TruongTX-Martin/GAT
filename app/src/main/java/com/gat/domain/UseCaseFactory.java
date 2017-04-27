@@ -11,6 +11,7 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
@@ -127,5 +128,5 @@ public interface UseCaseFactory {
 
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
 
-
+    UseCase<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
 }

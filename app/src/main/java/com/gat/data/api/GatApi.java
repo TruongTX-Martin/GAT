@@ -10,6 +10,7 @@ import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
@@ -300,10 +301,15 @@ public interface GatApi {
 
     @FormUrlEncoded
     @POST("share/create_request")
-    Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>>
-            requestBorrow (
+    Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>> requestBorrow (
             @Field("editionId") int editionId,
             @Field("ownerId") int ownerId
+    );
+
+    @GET("user/get_user_notification")
+    Observable<Response<ServerResponse<DataResultListResponse<NotifyEntity>>>> getUserNotification (
+            @Query("page") int page,
+            @Query("per_page") int per_page
     );
 
 

@@ -179,7 +179,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
                     subjectBookEvaluationByUser.onNext(evaluation);
                 })
                 .onError(throwable -> {
-                    MZDebug.e("ERROR: getBookEvaluationByUser _______________________________ E \n\r"
+                    MZDebug.e("ERROR: getBookEvaluationByUser ______________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
                     subjectEvaluationByUserFailure.onNext("Failed");
                 })

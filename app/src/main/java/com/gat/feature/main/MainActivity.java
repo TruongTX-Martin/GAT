@@ -10,6 +10,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.feature.notification.NotificationFragment;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
@@ -104,7 +105,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
         adapter.addFragment(new PersonalFragment(), "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
-        adapter.addFragment(new Fragment(), "NOTICE");
+        adapter.addFragment(new NotificationFragment(), "NOTICE");
         adapter.addFragment(new Fragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);

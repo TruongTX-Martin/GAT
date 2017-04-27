@@ -11,6 +11,7 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetGroupList;
 import com.gat.domain.usecase.*;
@@ -303,4 +304,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
         return new RequestBorrow(bookRepositoryLazy.get(), editionId, ownerId);
 
     }
+
+    @Override
+    public UseCase<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        return new GetUserNotifications(userRepositoryLazy.get(), page, per_page);
+    }
+
+
 }

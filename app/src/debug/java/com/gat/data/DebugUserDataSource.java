@@ -14,6 +14,7 @@ import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
@@ -434,6 +435,28 @@ public class DebugUserDataSource implements UserDataSource {
             }
             serverResponse.code(response.code());
             return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        MZDebug.w("______________________________ getUserNotification ___________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse<NotifyEntity>>>> responseObservable =
+                api.getUserNotification(page, per_page);
+
+        return responseObservable.map(response -> {
+            ServerResponse<DataResultListResponse<NotifyEntity>> serverResponse = response.body();
+
+            if (null == serverResponse)
+                throw new CommonException("Connect to server failed.");
+
+            if (serverResponse.isOk()) {
+                return serverResponse.data();
+            }
+
+            throw new CommonException("Bad response");
         });
     }
 

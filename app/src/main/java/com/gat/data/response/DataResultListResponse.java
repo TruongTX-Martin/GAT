@@ -11,6 +11,8 @@ import java.util.List;
 public class DataResultListResponse<T> {
 
     int totalResult;
+    int notifyTotal;
+
     List<T> resultInfo;
 
     public int getTotalResult() {
@@ -19,5 +21,9 @@ public class DataResultListResponse<T> {
 
     public List<T> getResultInfo() {
         return resultInfo;
+    }
+
+    public int getNotifyTotal() {
+        return notifyTotal;
     }
 }

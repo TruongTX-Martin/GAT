@@ -23,6 +23,8 @@ import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.main.MainPresenterImpl;
+import com.gat.feature.notification.NotificationPresenter;
+import com.gat.feature.notification.NotificationPresenterImpl;
 import com.gat.feature.personal.PersonalPresenter;
 import com.gat.feature.personal.PersonalPresenterImpl;
 import com.gat.feature.message.MessagePresenter;
@@ -186,4 +188,12 @@ public class PresenterModule {
                                            SchedulerFactory schedulerFactory) {
         return new ScanPresenterImpl(useCaseFactory, schedulerFactory);
     }
+
+    @Provides
+    NotificationPresenter provideNotificationPresenter (UseCaseFactory useCaseFactory,
+                                                        SchedulerFactory schedulerFactory) {
+        return new NotificationPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+
 }

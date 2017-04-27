@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/paddingLarge">
+
+    <com.gat.common.customview.CircleImage
+        android:id="@+id/image_view_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="@dimen/margin_horizontal_normal"
+        android:clickable="true"
+        android:src="@drawable/demo_people_near" />
+
+    <TextView
+        android:id="@+id/text_view_time_ago"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/colorTextViewGray"
+        android:text="hiện tại"
+        android:textSize="@dimen/smaller_text_view_size" />
+
+    <TextView
+        android:id="@+id/text_view_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/image_view_avatar"
+        android:layout_toStartOf="@+id/text_view_time_ago"
+        android:lines="1"
+        android:maxLines="1"
+        android:text="Ken Nguyễn"
+        android:textColor="@color/colorTextViewDark" />
+
+
+    <TextView
+        android:id="@+id/text_view_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_user_name"
+        android:layout_marginBottom="@dimen/margin_top_bottom_small"
+        android:layout_marginTop="@dimen/margin_top_bottom_small"
+        android:layout_toEndOf="@+id/image_view_avatar"
+        android:lines="1"
+        android:maxLines="1"
+        android:text="Bạn có 2 tin nhắn chưa đọc"
+        android:textColor="@color/colorTextViewDark" />
+
+    <TextView
+        android:id="@+id/text_view_message_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_message"
+        android:layout_toEndOf="@+id/image_view_avatar"
+        android:lines="1"
+        android:maxLines="1"
+        android:text="Chào em"
+        android:textColor="@color/colorTextViewGray" />
+
+
+</RelativeLayout>

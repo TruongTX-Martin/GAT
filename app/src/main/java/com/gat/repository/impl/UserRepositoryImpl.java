@@ -6,6 +6,7 @@ import com.gat.data.firebase.SignInFirebase;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.feature.editinfo.entity.EditInfoInput;
@@ -211,6 +212,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<User> getUserPublicInfo(int userId) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().getUserInformation(userId));
+    }
+
+    @Override
+    public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getUserNotification(page, per_page));
     }
 
 }
