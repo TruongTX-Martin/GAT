@@ -6,6 +6,7 @@ import com.gat.data.exception.LoginException;
 import com.gat.data.response.ServerResponse;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.LoginData;
+import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.IOException;
@@ -33,10 +34,15 @@ public class DataModule {
     private UserDataSource userDataSource;
     private String language;
     private String url;
+    GsonConverterFactory gsonConverterFactory;
     public DataModule(String url, String language, UserDataSource userDataSource) {
         this.userDataSource = userDataSource;
         this.language = language;
         this.url = url;
+        gsonConverterFactory = GsonConverterFactory.create(
+                new GsonBuilder()
+                        .registerTypeAdapterFactory(new AutoValueGsonTypeAdapterFactory())
+                        .create());
     }
     @Provides
     @Singleton
@@ -108,11 +114,12 @@ public class DataModule {
     @Singleton
     @Named("public")
     Retrofit providePublicRetrofit(@Named("public") OkHttpClient client) {
+
         return new Retrofit.Builder()
                 .baseUrl(url)
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(gsonConverterFactory)
                 .build();
     }
 
@@ -120,11 +127,12 @@ public class DataModule {
     @Singleton
     @Named("private")
     Retrofit providePrivateRetrofit(@Named("private") OkHttpClient client) {
+
         return new Retrofit.Builder()
                 .baseUrl(url)
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(gsonConverterFactory)
                 .build();
     }
 

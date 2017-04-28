@@ -452,11 +452,44 @@ public class DebugUserDataSource implements UserDataSource {
             if (null == serverResponse)
                 throw new CommonException("Connect to server failed.");
 
-            if (serverResponse.isOk()) {
-                return serverResponse.data();
-            }
+            DataResultListResponse<NotifyEntity> data = new DataResultListResponse<NotifyEntity>();
+            data.setTotalResult(20);
 
-            throw new CommonException("Bad response");
+            NotifyEntity today, nextDay;
+
+            today =  NotifyEntity.builder().notificationId(1)
+                    .notificationType(0)
+                    .destId(123)
+                    .sourceId(2)
+                    .sourceName("Đây là source ")
+                    .sourceImage("32507316083")
+                    .targetId(2)
+                    .targetName("Đây là target namename")
+                    .referId(287)
+                    .pullFlag(false)
+                    .modifyTime("2017-04-26 08:08:10").build();
+
+            nextDay =  NotifyEntity.builder().notificationId(23)
+                    .notificationType(1)
+                    .destId(2222)
+                    .sourceId(2)
+                    .sourceName("Đây là source ")
+                    .sourceImage("32507316083")
+                    .targetId(2)
+                    .targetName("Đây là target namename")
+                    .referId(287)
+                    .pullFlag(false)
+                    .modifyTime("2017-04-27 12:12:12").build();
+
+            List<NotifyEntity> list = new ArrayList<>();
+            list.add(today);
+            list.add(nextDay);
+
+            data.setResultInfo(list);
+
+            MZDebug.w("getUserNotification, total notifies: " + data.getNotifyTotal());
+
+            return data;
         });
     }
 

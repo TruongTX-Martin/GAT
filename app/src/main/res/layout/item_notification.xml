@@ -49,7 +49,7 @@
         android:textColor="@color/colorTextViewDark" />
 
     <TextView
-        android:id="@+id/text_view_message_info"
+        android:id="@+id/text_view_message_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_view_message"

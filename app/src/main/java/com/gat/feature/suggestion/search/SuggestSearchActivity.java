@@ -145,7 +145,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     @OnClick(R.id.image_button_search_scan)
     void onButtonSearchScanTap () {
-        start(getApplicationContext(), SearchActivity.class, SearchScreen.instance("he"));
+
     }
 
     @OnClick(R.id.button_cancel)

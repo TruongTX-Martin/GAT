@@ -53,11 +53,11 @@ public class NotificationPresenterImpl implements NotificationPresenter {
     public void loadUserNotification() {
 
         MZDebug.w("_______________________________________________ loadUserNotification ");
-//        if (mTotalResult > PER_PAGE) {
-//            if (mCurrentPage * PER_PAGE >= mTotalResult) {
-//                return;
-//            }
-//        }
+        if (mTotalResult > PER_PAGE) {
+            if (mCurrentPage * PER_PAGE >= mTotalResult) {
+                return;
+            }
+        }
 
         useCaseNotifications = useCaseFactory.getUserNotification(mCurrentPage, PER_PAGE);
         useCaseNotifications.executeOn(schedulerFactory.io())

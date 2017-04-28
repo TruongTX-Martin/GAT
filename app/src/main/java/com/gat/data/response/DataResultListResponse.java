@@ -26,4 +26,17 @@ public class DataResultListResponse<T> {
     public int getNotifyTotal() {
         return notifyTotal;
     }
+
+
+    public void setTotalResult(int totalResult) {
+        this.totalResult = totalResult;
+    }
+
+    public void setNotifyTotal(int notifyTotal) {
+        this.notifyTotal = notifyTotal;
+    }
+
+    public void setResultInfo(List<T> resultInfo) {
+        this.resultInfo = resultInfo;
+    }
 }
