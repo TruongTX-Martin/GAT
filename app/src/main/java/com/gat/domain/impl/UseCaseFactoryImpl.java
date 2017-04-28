@@ -6,6 +6,12 @@ import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
+import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetGroupList;
 import com.gat.domain.usecase.*;
@@ -32,10 +38,12 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
@@ -79,7 +87,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Book> getBookByIsbn(String isbn) {
+    public UseCase<Integer> getBookByIsbn(String isbn) {
         return new SearchBookByIsbn(bookRepositoryLazy.get(), isbn);
     }
 
@@ -241,4 +249,76 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     public UseCase<Data<User>> getUserInfo() {
         return new GetPersonalData(userRepositoryLazy.get());
     }
+
+    @Override
+    public UseCase<Data> updateInfo(EditInfoInput input) {
+        return new EditInfo(userRepositoryLazy.get(), input);
+    }
+
+    @Override
+    public UseCase<Data> getBookUserSharing(BookSharingUserInput input) {
+        return new GetBookUserSharing(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<Data> getBookDetail(Integer input) {
+        return new GetBookDetail(userRepositoryLazy.get(), input);
+    }
+
+    public UseCase<BookInfo> getBookInfo(int editionId) {
+        return new GetBookInfo(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<List<EvaluationItemResponse>> getBookEditionEvaluation(int editionId) {
+        return new GetBookEditionEvaluation(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<BookReadingInfo> getReadingStatus(int editionId) {
+        return new GetReadingStatus(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<EvaluationItemResponse> getBookEvaluationByUser(int editionId) {
+        return new GetBookEvaluationByUser(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<List<UserResponse>> getEditionSharingUser(int editionId) {
+        return new GetEditionSharingUser(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler) {
+        return new PostComment(bookRepositoryLazy.get(), editionId, value, review, spoiler);
+    }
+
+    @Override
+    public UseCase<BookInstanceInfo> getSelfInstanceInfo(int editionId) {
+        return new GetSelfInstanceInfo(bookRepositoryLazy.get(), editionId);
+    }
+
+    @Override
+    public UseCase<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
+        return new SelfAddInstance(bookRepositoryLazy.get(), editionId, sharingStatus, numberOfBook);
+    }
+
+    @Override
+    public UseCase<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
+        return new SelfUpdateReadingStatus(bookRepositoryLazy.get(), editionId, readingStatus);
+    }
+
+    @Override
+    public UseCase<BorrowResponse> requestBorrow(int editionId, int ownerId) {
+        return new RequestBorrow(bookRepositoryLazy.get(), editionId, ownerId);
+
+    }
+
+    @Override
+    public UseCase<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        return new GetUserNotifications(userRepositoryLazy.get(), page, per_page);
+    }
+
+
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height"
+        android:paddingStart="@dimen/paddingLarge">
+
+        <TextView
+            style="@style/TextViewHeaderTop"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/list_user_sharing_book"
+            android:textColor="@color/colorTextViewDark"
+            android:textSize="@dimen/larger_text_view_size" />
+
+        <ImageView
+            android:id="@+id/image_button_cancel"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_cancle" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dividerDark" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

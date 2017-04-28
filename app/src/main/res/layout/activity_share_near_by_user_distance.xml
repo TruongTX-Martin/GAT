@@ -11,7 +11,7 @@
         android:layout_height="@dimen/navigation_header_height"
         android:layout_gravity="center_vertical"
         android:background="@color/backgroundApp"
-        android:drawableStart="@drawable/ic_back_left"
+        android:drawableStart="@drawable/narrow_back_white"
         android:gravity="center"
         android:paddingLeft="@dimen/paddingNormal"
         android:text="@string/share_near_me" />

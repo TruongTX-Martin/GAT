@@ -1,9 +1,16 @@
 package com.gat.data.api;
 
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.ResultInfoObject;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
@@ -16,11 +23,15 @@ import com.gat.repository.entity.UserNearByDistance;
 import java.util.List;
 //import rx.Observable;
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 /**
@@ -102,7 +113,7 @@ public interface GatApi {
     );
 
     @GET("search/book_by_isbn")
-    Observable<Response<ServerResponse<Book>>> getBookByIsbn(
+    Observable<Response<ServerResponse>> getBookByIsbn(
             @Query("isbn") String isbn
     );
 
@@ -210,4 +221,96 @@ public interface GatApi {
             @Query("page") int page,
             @Query("per_page") int per_page
     );
+
+    @FormUrlEncoded
+    @POST("user/update_user_info")
+    Observable<Response<ServerResponse<Data>>> updateUserInfo(
+            @Field("name") String name,
+            @Field("image") String image,
+            @Field("changeImageFlag") boolean changeImageFlag
+    );
+
+    @GET("book/get_user_sharing_editions")
+    Observable<Response<ServerResponse<Data>>> getBookUserSharing(
+            @Query("userId") int userId,
+            @Query("ownerId") int ownerId,
+            @Query("page") int page,
+            @Query("per_page") int per_page
+    );
+
+    @GET("share/get_request_info")
+    Observable<Response<ServerResponse<Data>>> getBookDetail(
+            @Query("recordId") int recordId
+    );
+
+    @GET("book/get_book_info")
+    Observable<Response<ServerResponse<ResultInfoObject<BookInfo>>>> getBookInfo (
+            @Query("editionId") int editionId
+    );
+
+    @GET("book/get_edition_evaluation")
+    Observable<Response<ServerResponse<DataResultListResponse<EvaluationItemResponse>>>> getBookEditionEvaluation (
+            @Query("editionId") int editionId
+    );
+
+    @GET("book/selfget_reading_stt")
+    Observable<Response<ServerResponse<ResultInfoObject<BookReadingInfo>>>> getReadingStatus (
+            @Query("editionId") int editionId
+    );
+
+
+    @GET("book/selfget_book_evaluation")
+    Observable<Response<ServerResponse<ResultInfoObject<EvaluationItemResponse>>>> getBookEvaluationByUser (
+            @Query("editionId") int editionId
+    );
+
+    @GET("book/get_edition_sharing_user")
+    Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> getEditionSharingUser (
+            @Query("editionId") int editionId
+    );
+
+    @FormUrlEncoded
+    @POST("book/selfupdate_book_evaluation")
+    Observable<Response<ServerResponse>> postComment (
+            @Field("editionId") int editionId,
+            @Field("value") int value,
+            @Field("review") String review,
+            @Field("spoiler") boolean spoiler
+    );
+
+    @GET("book/selfget_instance_info")
+    Observable<Response<ServerResponse<ResultInfoObject<BookInstanceInfo>>>> getSelfInstanceInfo (
+            @Query("editionId") int editionId
+    );
+
+    @FormUrlEncoded
+    @POST("book/selfadd_instance")
+    Observable<Response<ServerResponse>> selfAddInstance (
+            @Field("editionId") int editionId,
+            @Field("sharingStatus") int sharingStatus,
+            @Field("numberOfBook") int numberOfBook
+    );
+
+
+    @FormUrlEncoded
+    @POST("book/selfupdate_reading_stt")
+    Observable<Response<ServerResponse>> selfUpdateReadingStatus (
+            @Field("editionId") int editionId,
+            @Field("readingStatus") int readingStatus
+    );
+
+    @FormUrlEncoded
+    @POST("share/create_request")
+    Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>> requestBorrow (
+            @Field("editionId") int editionId,
+            @Field("ownerId") int ownerId
+    );
+
+    @GET("user/get_user_notification")
+    Observable<Response<ServerResponse<DataResultListResponse<NotifyEntity>>>> getUserNotification (
+            @Query("page") int page,
+            @Query("per_page") int per_page
+    );
+
+
 }

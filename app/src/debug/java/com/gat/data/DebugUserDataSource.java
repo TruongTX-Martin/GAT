@@ -14,16 +14,19 @@ import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.dependency.DataComponent;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -406,6 +409,70 @@ public class DebugUserDataSource implements UserDataSource {
             return serverResponse.data();
         });
 
+    }
+
+    @Override
+    public Observable<Data> updateUserInfo(EditInfoInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.updateUserInfo(input.getName(),input.getImageBase64(),input.isChangeImage());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<Data> getBookUserSharing(BookSharingUserInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookUserSharing(input.getUserId(),input.getOwnerId(),input.getPage(),input.getPer_page());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<Data> getBookDetail(Integer input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookDetail(input);
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        MZDebug.w("______________________________ getUserNotification ___________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse<NotifyEntity>>>> responseObservable =
+                api.getUserNotification(page, per_page);
+
+        return responseObservable.map(response -> {
+            ServerResponse<DataResultListResponse<NotifyEntity>> serverResponse = response.body();
+
+            if (null == serverResponse)
+                throw new CommonException("Connect to server failed.");
+
+            if (serverResponse.isOk()) {
+                return serverResponse.data();
+            }
+
+            throw new CommonException("Bad response");
+        });
     }
 
 

@@ -3,14 +3,15 @@ package com.gat.feature.main;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.feature.notification.NotificationFragment;
 import com.gat.feature.personal.PersonalFragment;
-import com.gat.feature.scanbarcode.ScanBarcodeActivity;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
 
@@ -103,9 +104,9 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
         adapter.addFragment(new PersonalFragment(), "PERSONAL");
-        adapter.addFragment(new ScanBarcodeActivity(), "SCAN");
-        adapter.addFragment(new ScanFragment(), "NOTICE");
-        adapter.addFragment(new ScanFragment(), "SETTING");
+        adapter.addFragment(new ScanFragment(), "SCAN");
+        adapter.addFragment(new NotificationFragment(), "NOTICE");
+        adapter.addFragment(new Fragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
     }

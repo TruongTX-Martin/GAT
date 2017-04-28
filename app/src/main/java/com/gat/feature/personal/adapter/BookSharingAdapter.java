@@ -71,7 +71,7 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
             if(!Strings.isNullOrEmpty(entity.getBorrowingUserName())){
                 holder.txtBorrowFrom.setText("Người mượn:"+entity.getBorrowingUserName());
             }
-            holder.ratingBar.setNumStars(entity.getRateAvg());
+            holder.ratingBar.setNumStars((int)entity.getRateAvg());
             if (!Strings.isNullOrEmpty(entity.getImageId())) {
                 ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
             }

@@ -4,7 +4,11 @@
     <!-- facebook login strings for GatEx-->
     <!--<string name="facebook_app_id">1130625350393376</string>-->
 
-    <string name="facebook_app_id">213118392506307</string>
+    <!-- REAL -->
+    <!--<string name="facebook_app_id">213118392506307</string>-->
+
+    <!-- DEV -->
+    <string name="facebook_app_id">936889173084630</string>
 
     <string name="hintSearch">Search book</string>
 
@@ -111,6 +115,7 @@
     <string name="share_near_me">Chia sẻ sách gần bạn</string>
     <string name="cover_content_description">Book Image Cover</string>
     <string name="iv_back_description">Back</string>
+    <string name="iv_share_description">Share</string>
     <string name="most_search_by_user">Sách tìm kiếm nhiều nhất</string>
     <string name="suggest">Đề xuất</string>
     <string name="view_more">View more </string>
@@ -129,5 +134,44 @@
     <string name="tab_book_name">Tên sách</string>
     <string name="tab_book_author">Tác giả</string>
     <string name="tab_user_name">Người dùng</string>
+
+    <!-- book details -->
+    <string name="book_detail">Thông tin sách</string>
+    <string name="book_description">Nội dung sách</string>
+    <string name="comment">Bình luận</string>
+    <string name="none">None</string>
+    <string name="list_user_sharing_book">Danh sách người cho mượn</string>
+    <string name="wait_for_accept_borrow">Đợi đồng ý</string>
+    <string name="is_connecting">Đang liên lạc</string>
+    <string name="is_borrowing">Đang mượn</string>
+    <string name="wait_your_turn">Đợi đến lượt</string>
+    <string name="book_in_sharing">Đang được mượn</string>
+    <string name="borrow_book">Mượn sách</string>
+    <string name="wait_to_borrow">Đợi mượn</string>
+    <string name="add_to_list_reading_book">Thêm vào danh sách đọc</string>
+    <string name="want_to_read">Muốn đọc</string>
+    <string name="reading_book">Đang đọc</string>
+    <string name="red_book">Đã đọc</string>
+    <string name="add_to_bookcase">Thêm vào tủ sách</string>
+    <string name="total_book_in_bookcase">Số lượng sách có trong tủ</string>
+    <string name="let_people_borrow_book">Cho mọi người mượn sách</string>
+    <string name="your_comment">Bình luận của bạn</string>
+    <string name="your_comment_hint">Bình luận của bạn về cuốn sách này</string>
+    <string name="write_comment">Viết bình luận</string>
+    <string name="edit_comment">Sửa bình luận</string>
+    <string name="post_your_comment">ĐĂNG BÌNH LUẬN</string>
+    <string name="share">Chia sẻ</string>
+    <string name="comment_for_share">Viết chia sẻ cho sách</string>
+    <string name="enable_for_share_facebook">Đăng chia sẻ qua Facebook</string>
+    <string name="post_the_share">ĐĂNG CHIA SẺ</string>
+    <string name="remove_from_reading_list">Xóa khỏi danh sách đọc</string>
+    <string name="ask_remove_from_reading_list">Bạn muốn xóa cuốn sách này khỏi danh sách sách đọc?</string>
+
+    <!-- notification -->
+    <string name="need_accept_borrow">Muốn mượn sách</string>
+    <string name="message_to_you">Gửi tin nhắn tới bạn</string>
+    <string name="people_count_sharing_book">Có %1$s người đang cho mượn sách </string>
+    <string name="you_have_count_message_read">Bạn có %1$s tin nhắn chưa đọc</string>
+
 
 </resources>

@@ -9,4 +9,8 @@ public class CommonException extends RuntimeException {
     public CommonException(String message) {
         this.message = message;
     }
+
+    public String getMessage() {
+        return message;
+    }
 }

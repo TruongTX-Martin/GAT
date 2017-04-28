@@ -1,6 +1,8 @@
 package com.gat.feature.personal;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,16 +13,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.editinfo.EditInfoActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -36,6 +41,7 @@ import com.gat.repository.entity.book.BookRequestEntity;
 import com.gat.repository.entity.book.BookSharingEntity;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,20 +55,17 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPresenter> {
 
-    @BindView(R.id.imgAvatar)
-    CircleImageView imgAvatar;
+    private CircleImageView imgAvatar;
+    private TextView txtName;
+    private TextView txtAddress;
+    private TabLayout tabLayout;
+    private NonSwipeableViewPager viewPager;
+    private RelativeLayout layoutInfo;
 
-    @BindView(R.id.txtName)
-    TextView txtName;
 
-    @BindView(R.id.txtAddress)
-    TextView txtAddress;
-
-    @BindView(R.id.tabLayout)
-    TabLayout tabLayout;
-
-    @BindView(R.id.viewpager)
-    NonSwipeableViewPager viewPager;
+    private RelativeLayout layoutTop;
+    private ImageView imgBack,imgSave;
+    private TextView txtTitle;
 
     private CompositeDisposable disposablesPersonal;
     private CompositeDisposable disposablesBookInstance;
@@ -80,7 +83,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
 
     private User userInfo;
-    //private Context context;
+    private Context context;
+    private View rootView;
     @Override
     protected int getLayoutResource() {
         return R.layout.layout_personal_activity;
@@ -100,15 +104,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-//        imgAvatar = (CircleImageView) findViewById(R.id.imgAvatar);
-        //context = getActivity().getApplicationContext();
-        //viewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.viewpager);
-        //tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
-        //imgAvatar = (CircleImageView) rootView.findViewById(R.id.imgAvatar);
-        //txtName = (TextView) rootView.findViewById(R.id.txtName);
-        //txtAddress = (TextView) rootView.findViewById(R.id.txtAddress);
-
+        rootView = super.onCreateView(inflater, container, savedInstanceState);
+        context = getActivity().getApplicationContext();
+        rootView = inflater.inflate(R.layout.layout_personal_activity,
+                container, false);
+        initView();
 
         disposablesPersonal = new CompositeDisposable(getPresenter().getResponsePersonal().subscribe(this::getUserInfoSuccess),
                 getPresenter().onErrorPersonal().subscribe(this::getUserInfoError));
@@ -134,6 +134,25 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         return rootView;
     }
 
+    private void initView(){
+        viewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
+        imgAvatar = (CircleImageView) rootView.findViewById(R.id.imgAvatar);
+        txtName = (TextView) rootView.findViewById(R.id.txtName);
+        txtAddress = (TextView) rootView.findViewById(R.id.txtAddress);
+        layoutInfo = (RelativeLayout) rootView.findViewById(R.id.layoutEdit);
+
+        layoutTop = (RelativeLayout) rootView.findViewById(R.id.layoutMenutop);
+        imgBack = (ImageView) rootView.findViewById(R.id.imgBack);
+        imgSave = (ImageView) rootView.findViewById(R.id.imgSave);
+        txtTitle = (TextView) rootView.findViewById(R.id.txtTitle);
+        imgBack.setVisibility(View.GONE);
+        imgSave.setVisibility(View.GONE);
+        txtTitle.setText("CÁ NHÂN");
+        txtTitle.setTextColor(Color.parseColor("#ffffff"));
+        layoutTop.setBackgroundColor(Color.parseColor("#8ec3df"));
+    }
+
     private void handleEvent() {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -150,6 +169,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             public void onPageScrollStateChanged(int state) {
 
             }
+        });
+        layoutInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.instance, EditInfoActivity.class);
+            intent.putExtra("UserInfo",  userInfo);
+            MainActivity.instance.startActivity(intent);
         });
     }
 
@@ -198,40 +222,10 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             fragmentBookRequest = new FragmentBookRequest();
             fragmentBookRequest.setParrentActivity(this);
         }
-        adapter.addFrag(fragmentBookSharing, "");
-        adapter.addFrag(fragmentBookReading, "");
-        adapter.addFrag(fragmentBookRequest, "");
+        adapter.addFragment(fragmentBookSharing, "");
+        adapter.addFragment(fragmentBookReading, "");
+        adapter.addFragment(fragmentBookRequest, "");
         viewPager.setAdapter(adapter);
-    }
-
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
     }
 
 
@@ -336,4 +330,5 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     public void onDestroy() {
         super.onDestroy();
     }
+
 }

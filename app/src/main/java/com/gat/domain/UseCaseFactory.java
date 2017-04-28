@@ -6,11 +6,19 @@ import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
+import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.Group;
@@ -52,7 +60,7 @@ public interface UseCaseFactory {
 
     UseCase<ServerResponse> updateCategories(List<Integer> categories);
 
-    UseCase<Book> getBookByIsbn(String isbn);
+    UseCase<Integer> getBookByIsbn(String isbn);
 
     UseCase<List<Message>> getMessageList(int userId, int page, int size);
 
@@ -98,4 +106,31 @@ public interface UseCaseFactory {
 
     UseCase<Data<User>> getUserInfo();
 
+    UseCase<Data> updateInfo(EditInfoInput input);
+
+    UseCase<Data> getBookUserSharing(BookSharingUserInput input);
+
+    UseCase<Data> getBookDetail(Integer input);
+
+    UseCase<BookInfo> getBookInfo (int editionId);
+
+    UseCase<List<EvaluationItemResponse>> getBookEditionEvaluation (int editionId);
+
+    UseCase<BookReadingInfo> getReadingStatus(int editionId);
+
+    UseCase<EvaluationItemResponse> getBookEvaluationByUser (int editionId);
+
+    UseCase<List<UserResponse>> getEditionSharingUser (int editionId);
+
+    UseCase<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler);
+
+    UseCase <BookInstanceInfo> getSelfInstanceInfo (int editionId);
+
+    UseCase<ServerResponse> selfAddInstance (int editionId, int sharingStatus, int numberOfBook);
+
+    UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
+
+    UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
+
+    UseCase<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
 }

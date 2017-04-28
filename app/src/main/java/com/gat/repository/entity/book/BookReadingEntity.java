@@ -31,7 +31,7 @@ public class BookReadingEntity {
     private String editionImageId = Strings.EMPTY;
 
     @SerializedName("rateAvg")
-    private int rateAvg;
+    private double rateAvg;
 
     @SerializedName("readingStatus")
     private int readingStatus;
@@ -71,7 +71,7 @@ public class BookReadingEntity {
         return borrowFromUserName;
     }
 
-    public int getRateAvg() {
+    public double getRateAvg() {
         return rateAvg;
     }
 }

@@ -2,6 +2,13 @@ package com.gat.repository.datasource;
 
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
+import com.gat.data.response.ServerResponse;
+import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.BookInfo;
+import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.BorrowResponse;
+import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.repository.entity.Book;
 
 import java.util.List;
@@ -16,7 +23,7 @@ public interface BookDataSource {
 
     Observable<List<Book>> searchBookByKeyword(String keyword, int page, int sizeOfPage);
 
-    Observable<Book> searchBookByIsbn(String isbn);
+    Observable<Integer> searchBookByIsbn(String isbn);
 
     Observable<List<BookResponse>> suggestMostBorrowing();
 
@@ -33,4 +40,26 @@ public interface BookDataSource {
     Observable<List<String>> getBooksSearchedKeyword();
 
     Observable<List<String>> getAuthorsSearchedKeyword();
+
+    Observable<BookInfo> getBookInfo (int editionId);
+
+    Observable<List<EvaluationItemResponse>> getBookEditionEvaluation (int editionId);
+
+    Observable<BookReadingInfo> getReadingStatus(int editionId);
+
+    Observable<EvaluationItemResponse> getBookEvaluationByUser (int editionId);
+
+    Observable<List<UserResponse>> getEditionSharingUser (int editionId);
+
+    Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler);
+
+    Observable <BookInstanceInfo> getSelfInstanceInfo (int editionId);
+
+    Observable<ServerResponse> selfAddInstance (int editionId, int sharingStatus, int numberOfBook);
+
+    Observable<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
+
+    Observable<BorrowResponse> requestBorrow (int editionId, int ownerId);
+
+
 }

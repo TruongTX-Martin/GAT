@@ -1,14 +1,24 @@
 package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
+import com.gat.feature.bookdetail.BookDetailRequestScreen;
+import com.gat.feature.editinfo.EditInfoScreen;
+import com.gat.feature.book_detail.BookDetailScreen;
+import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
+import com.gat.feature.book_detail.comment.CommentScreen;
+import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
+import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.message.presenter.GroupMessageScreen;
+import com.gat.feature.notification.NotificationScreen;
 import com.gat.feature.personal.PersonalScreen;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
+import com.gat.feature.scanbarcode.ScanScreen;
 import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
@@ -53,9 +63,29 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getShareNearByUserDistancePresenter();
         else if (key instanceof SuggestSearchScreen)
             return (P) presenterComponent.getSuggestSearchPresenter();
-        else if (key instanceof PersonalScreen){
+        else if (key instanceof PersonalScreen) {
             return (P) presenterComponent.getPersonalPresenter();
+        }else if(key instanceof EditInfoScreen){
+            return (P) presenterComponent.getEditInfoPresenter();
+        }else if (key instanceof PersonalUserScreen){
+            return (P) presenterComponent.getPersonalUserPresenter();
+        }else if (key instanceof BookDetailRequestScreen) {
+            return (P) (P) presenterComponent.getBookDetailPresenter();
         }
+        else if (key instanceof BookDetailScreen)
+            return (P) presenterComponent.getBookDetailPresenter();
+        else if (key instanceof SelfUpdateReadingScreen)
+            return (P) presenterComponent.getSelfUpdateReadingPresenter();
+        else if (key instanceof ListUserSharingBookScreen)
+            return (P) presenterComponent.getListUserSharingBookPresenter();
+        else if (key instanceof AddToBookcaseScreen)
+            return (P) presenterComponent.getAddToBookcasePresenter();
+        else if (key instanceof CommentScreen)
+            return (P) presenterComponent.getCommentPresenter();
+        else if (key instanceof ScanScreen)
+            return (P) presenterComponent.getScanPresenter();
+        else if (key instanceof NotificationScreen)
+            return (P) presenterComponent.getNotificationPresenter();
 
         throw new IllegalArgumentException("Not support key " + key);
     }

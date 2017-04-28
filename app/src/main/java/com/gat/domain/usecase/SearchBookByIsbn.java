@@ -10,7 +10,7 @@ import io.reactivex.Observable;
  * Created by ducbtsn on 3/16/17.
  */
 
-public class SearchBookByIsbn extends UseCase<Book> {
+public class SearchBookByIsbn extends UseCase<Integer> {
     private final BookRepository repository;
     private final String isbn;
 
@@ -19,7 +19,7 @@ public class SearchBookByIsbn extends UseCase<Book> {
         this.isbn = isbn;
     }
     @Override
-    protected Observable<Book> createObservable() {
+    protected Observable<Integer> createObservable() {
         return repository.searchBookByIsbn(isbn);
     }
 }
