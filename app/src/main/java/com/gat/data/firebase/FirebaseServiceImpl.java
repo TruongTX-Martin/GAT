@@ -1,5 +1,6 @@
 package com.gat.data.firebase;
 
+import android.nfc.Tag;
 import android.util.Log;
 import android.util.Pair;
 
@@ -96,6 +97,8 @@ public class FirebaseServiceImpl implements FirebaseService{
     /** send message **/
     private Subject<Pair<Integer, MessageTable>> sendMessageSubject;
     private Subject<Boolean> sendMessageResult;
+    private Subject<Pair<String, Long>> sawMessageSubject;
+    private Subject<Pair<String, String>> listMessageReadSubject;
 
     private CompositeDisposable compositeDisposable;
 
@@ -130,6 +133,8 @@ public class FirebaseServiceImpl implements FirebaseService{
         /** Send message **/
         sendMessageSubject = BehaviorSubject.create();
         sendMessageResult = BehaviorSubject.create();
+        sawMessageSubject = BehaviorSubject.create();
+        listMessageReadSubject = BehaviorSubject.create();
 
         mGroupId = null;
 
@@ -236,6 +241,12 @@ public class FirebaseServiceImpl implements FirebaseService{
                     if (!mGroupInitialized) {
                         databaseReference.child(GROUP_LEVEL).child(Integer.toString(mUserId)).addChildEventListener(groupChildEventListener);
                     }
+                }),
+                sawMessageSubject.observeOn(schedulerFactory.main()).subscribe(pair -> {
+                    getSeenMessage(pair.first, pair.second);
+                }),
+                listMessageReadSubject.observeOn(schedulerFactory.io()).subscribe(pair -> {
+                    setSeenMessage(pair.first, pair.second);
                 })
         );
 
@@ -336,7 +347,7 @@ public class FirebaseServiceImpl implements FirebaseService{
                             .users(group.users())
                             .lastMessage(messageTable.getMessage() == null ? "" : messageTable.getMessage())
                             .timeStamp(messageTable.getTimeStamp())
-                            .isRead(messageTable.isRead())
+                            .isRead(messageTable.getIsRead())
                             .build();
                     addGroup(gr);
                 } else {
@@ -418,6 +429,38 @@ public class FirebaseServiceImpl implements FirebaseService{
     @Override
     public Observable<Boolean> sendResult() {
         return sendMessageResult.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void sawMessage(String groupId, long timeStamp) {
+        sawMessageSubject.onNext(new Pair<>(groupId, timeStamp));
+    }
+
+    private void getSeenMessage(String groupId, long timeStamp) {
+        Log.d(TAG, "Group:" + groupId + ", time:" + timeStamp);
+        databaseReference.child(MESSAGE_LEVEL).child(groupId).orderByChild("timeStamp").endAt(timeStamp).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator(); iterator.hasNext();) {
+                            DataSnapshot snapshot = iterator.next();
+                            // Update isRead status
+                            if (!snapshot.child("isRead").exists() || snapshot.child("isRead").getValue(Boolean.class))
+                                listMessageReadSubject.onNext(new Pair<>(groupId, snapshot.getKey()));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
+    }
+
+    private void setSeenMessage(String groupId, String key) {
+        Log.d(TAG, "Group:" + groupId + ", key:" + key);
+        databaseReference.child(MESSAGE_LEVEL).child(groupId).child(key).child("isRead").setValue(true);
     }
 
     private void sendMes(Pair<Integer, MessageTable> mes) {

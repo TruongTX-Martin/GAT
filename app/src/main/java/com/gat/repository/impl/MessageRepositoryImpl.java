@@ -56,7 +56,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                                 MessageTable messageTable = list.get(i);
                                 messageList.add(Message.builder()
                                         .groupId(CommonUtil.getGroupId(localUser, userId))
-                                        .isRead(messageTable.isRead())
+                                        .isRead(messageTable.getIsRead())
                                         .message(messageTable.getMessage())
                                         .imageId(messageTable.getUserId() == localUser ? Strings.EMPTY : imageId)
                                         .timeStamp(messageTable.getTimeStamp())
@@ -196,6 +196,14 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Observable<Boolean> sendMessage(int toUserId, String message) {
         return Observable.defer(() -> networkDataSource.get().sendMessage(toUserId, message));
+    }
+
+    @Override
+    public Observable<Boolean> sawMessage(String groupId, long timeStamp) {
+        return Observable.defer(() -> {
+            networkDataSource.get().sawMessage(groupId, timeStamp);
+            return Observable.just(true);
+        });
     }
 
     private User getUser(List<User> users, int userId) {

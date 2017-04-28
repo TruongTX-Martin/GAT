@@ -4,7 +4,7 @@ import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.message.presenter.GroupMessagePresenter;
 import com.gat.feature.personal.PersonalPresenter;
-import com.gat.feature.message.MessagePresenter;
+import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
 import com.gat.feature.register.update.location.AddLocationPresenter;

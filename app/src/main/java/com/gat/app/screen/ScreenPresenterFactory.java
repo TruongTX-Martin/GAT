@@ -2,8 +2,7 @@ package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
 import com.gat.feature.login.LoginScreen;
-import com.gat.feature.message.MessagePresenter;
-import com.gat.feature.message.MessageScreen;
+import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.personal.PersonalScreen;

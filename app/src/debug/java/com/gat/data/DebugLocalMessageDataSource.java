@@ -51,4 +51,9 @@ public class DebugLocalMessageDataSource implements MessageDataSource {
     public Observable<List<Message>> storeMessageList(String groupId, List<Message> messageList) {
         return null;
     }
+
+    @Override
+    public void sawMessage(String groupId, long timeStamp) {
+        throw new UnsupportedOperationException();
+    }
 }

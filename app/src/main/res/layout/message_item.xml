@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_message_right"
+            android:layout_marginStart="20dp"
             android:background="@drawable/message_shape"
             android:textSize="@dimen/message_message_size"
             android:maxLines="4"/>

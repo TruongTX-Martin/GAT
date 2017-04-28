@@ -1,6 +1,7 @@
-package com.gat.feature.message;
+package com.gat.feature.message.presenter;
 
 import android.util.Log;
+import android.util.Pair;
 
 import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemResult;
@@ -9,15 +10,12 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
-import com.gat.feature.message.item.GroupItemBuilder;
 import com.gat.feature.message.item.ItemBuilder;
 import com.gat.feature.message.item.LoadingMessage;
 import com.gat.feature.message.item.MessageItemBuilder;
-import com.gat.repository.entity.Group;
 import com.gat.repository.entity.Message;
 import com.gat.repository.entity.User;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -66,6 +64,10 @@ public class MessagePresenterImpl implements MessagePresenter {
 
     private UseCase<Boolean> sendMessageUseCase;
 
+    private UseCase<Boolean> sawMessageUseCase;
+
+    private Subject<Pair<String, Long>> sawMessageSubject;
+
     private CompositeDisposable compositeDisposable;
 
     public MessagePresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
@@ -77,6 +79,7 @@ public class MessagePresenterImpl implements MessagePresenter {
         this.itemResultSubject = BehaviorSubject.createDefault(ItemBuilder.defaultItems());
         this.loadSubject = BehaviorSubject.create();
         this.sendMessageSubject = BehaviorSubject.create();
+        this.sawMessageSubject = BehaviorSubject.create();
 
         pageCnt = 1;
 
@@ -193,7 +196,8 @@ public class MessagePresenterImpl implements MessagePresenter {
     public void onCreate() {
         compositeDisposable = new CompositeDisposable(
                 this.loadSubject.observeOn(schedulerFactory.main()).subscribe(this::getMessage),
-                this.sendMessageSubject.observeOn(schedulerFactory.main()).subscribe(message -> send(message))
+                this.sendMessageSubject.observeOn(schedulerFactory.main()).subscribe(message -> send(message)),
+                this.sawMessageSubject.observeOn(schedulerFactory.main()).subscribe(pair -> setSeenMessage(pair.first, pair.second))
         );
     }
 
@@ -235,6 +239,19 @@ public class MessagePresenterImpl implements MessagePresenter {
     }
 
     @Override
+    public void sawMessage(String groupId, long timeStamp) {
+        sawMessageSubject.onNext(new Pair<>(groupId, timeStamp));
+    }
+
+    private void setSeenMessage(String groupId, long timeStamp) {
+        sawMessageUseCase = UseCases.release(sawMessageUseCase);
+
+        sawMessageUseCase = useCaseFactory.sawMessage(groupId,timeStamp);
+        sawMessageUseCase.executeOn(schedulerFactory.io()).execute();
+    }
+
+
+    @Override
     public Observable<Boolean> sendMessageResult() {
         return sendMessageResult.observeOn(schedulerFactory.main());
     }
@@ -248,6 +265,10 @@ public class MessagePresenterImpl implements MessagePresenter {
                 .onNext(result -> {
                     Log.d(TAG, result ? "SendOK":"NG");
                     sendMessageResult.onNext(result);
+                    loadingEventSubject.onNext(LoadingEvent.builder().refresh(false)
+                            .status(LoadingEvent.Status.COMPLETE)
+                            .build()
+                    );
                 })
                 .onError(throwable -> {
                     throwable.printStackTrace();

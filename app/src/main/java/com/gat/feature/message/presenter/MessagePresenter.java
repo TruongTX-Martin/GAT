@@ -1,4 +1,4 @@
-package com.gat.feature.message;
+package com.gat.feature.message.presenter;
 
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
@@ -21,6 +21,8 @@ public interface MessagePresenter extends Presenter{
     Observable<ItemResult> itemsChanged();
 
     void sendMessage(String message);
+
+    void sawMessage(String groupId, long timeStamp);
 
     Observable<Boolean> sendMessageResult();
 

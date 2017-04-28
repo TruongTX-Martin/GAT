@@ -104,6 +104,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
+    public UseCase<Boolean> sawMessage(String groupId, long timeStamp) {
+        return new SawMessage(messageRepositoryLazy.get(), groupId, timeStamp);
+    }
+
+    @Override
     public UseCase<User> getUser() {
         return new GetUser(userRepositoryLazy.get());
     }

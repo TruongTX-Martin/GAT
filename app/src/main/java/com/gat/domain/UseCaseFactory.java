@@ -62,6 +62,8 @@ public interface UseCaseFactory {
 
     UseCase<Boolean> sendMessage(int toUserId, String message);
 
+    UseCase<Boolean> sawMessage(String groupId, long timeStamp);
+
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);
 
     <T> UseCase<T> doWork(Callable<T> callable);

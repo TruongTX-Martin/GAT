@@ -16,4 +16,5 @@ public interface MessageRepository {
     public Observable<List<Group>> getGroupList(int page, int size);
     public Observable<Group> groupUpdate();
     public Observable<Boolean> sendMessage(int toUserId, String message);
+    public Observable<Boolean> sawMessage(String groupId, long timeStamp);
 }

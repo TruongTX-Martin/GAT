@@ -15,13 +15,12 @@ import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
 import com.gat.common.listener.LoadMoreScrollListener;
 import com.gat.common.util.ClientUtils;
-import com.gat.common.util.Strings;
 import com.gat.feature.message.adapter.GroupMessageAdapter;
 import com.gat.feature.message.event.RecyclerItemClickListener;
 import com.gat.feature.message.item.GroupItem;
 import com.gat.feature.message.presenter.GroupMessagePresenter;
 import com.gat.feature.message.presenter.GroupMessageScreen;
-import com.gat.repository.entity.Group;
+import com.gat.feature.message.presenter.MessageScreen;
 
 import butterknife.BindView;
 import io.reactivex.disposables.CompositeDisposable;

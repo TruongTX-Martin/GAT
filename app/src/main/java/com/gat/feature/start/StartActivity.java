@@ -21,14 +21,9 @@ import com.gat.data.response.ServerResponse;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
-import com.gat.feature.main.MainActivity;
-import com.gat.feature.main.MainScreen;
 import com.gat.feature.message.GroupMessageActivity;
-import com.gat.feature.message.MessageScreen;
 import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.register.RegisterActivity;
-import com.gat.feature.search.SearchActivity;
-import com.gat.feature.search.SearchScreen;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 

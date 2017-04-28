@@ -3,11 +3,9 @@ package com.gat.app.screen;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.gat.common.util.Strings;
 import com.gat.common.util.MZDebug;
 import com.gat.feature.login.LoginScreen;
-import com.gat.feature.message.MessagePresenter;
-import com.gat.feature.message.MessageScreen;
+import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.register.RegisterScreen;

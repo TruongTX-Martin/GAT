@@ -1,4 +1,4 @@
-package com.gat.feature.message;
+package com.gat.feature.message.presenter;
 
 import com.gat.app.screen.Screen;
 import com.google.auto.value.AutoValue;

@@ -1,9 +1,7 @@
 package com.gat.feature.message;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -11,16 +9,20 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
 import com.gat.common.listener.LoadMoreScrollListener;
 import com.gat.common.util.Strings;
 import com.gat.feature.message.adapter.MessageAdapter;
+import com.gat.feature.message.item.MessageItem;
+import com.gat.feature.message.presenter.MessagePresenter;
+import com.gat.feature.message.presenter.MessageScreen;
+import com.gat.repository.entity.Message;
 
 import butterknife.BindView;
 import io.reactivex.disposables.CompositeDisposable;
@@ -81,6 +83,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         });
 
         recyclerView.addOnScrollListener(loadMoreScrollListener);
+
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -124,6 +127,13 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     private void onItemChanged(ItemResult result) {
         if (messageAdapter.setItem(result.items()) && result.diffResult() != null)
             result.diffResult().dispatchUpdatesTo(messageAdapter);
+        for (int i = result.items().size() - 1; i >= 0; i--) {
+            Item item = result.items().get(i);
+            if (item instanceof MessageItem) {
+                Message message = ((MessageItem) item).message();
+                getPresenter().sawMessage(message.groupId(), message.timeStamp());
+            }
+        }
     }
 
     private void onLoadingEvent(LoadingEvent event) {
@@ -140,8 +150,9 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
                 //if (event.refresh())
                 //    recyclerView.scrollToPosition(0);
 
+                break;
+            case LoadingEvent.Status.COMPLETE:
                 recyclerView.scrollToPosition(messageAdapter.getItemCount()-1);
-
                 break;
             case LoadingEvent.Status.ERROR:
                 loadMoreScrollListener.setEnable(false);
