@@ -1,5 +1,7 @@
 package com.gat.feature.scanbarcode;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -7,11 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gat.R;
@@ -19,6 +23,7 @@ import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ServerResponse;
+import com.gat.domain.SchedulerFactory;
 import com.gat.feature.book_detail.BookDetailActivity;
 import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.main.MainActivity;
@@ -31,7 +36,11 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
@@ -76,10 +85,12 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
                              @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        Log.d(TAG, "onCreateView");
         disposables = new CompositeDisposable(
                 getPresenter().onSuccess().subscribe(this::onBookResult),
                 getPresenter().onError().subscribe(this::onError)
         );
+
 
         boolean cameraPermission = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -104,9 +115,9 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG, "onDestroyView");
         scannerView.setFlash(false);
         scannerView.stopCamera();
-
         super.onDestroyView();
     }
 
@@ -137,6 +148,7 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy");
         disposables.dispose();
         scannerView.stopCamera();
         super.onDestroy();
@@ -150,7 +162,22 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
             getPresenter().searchByIsbn(isbn);
         } else {
             Toast.makeText(getContext(), getString(R.string.isbn_invalid), Toast.LENGTH_SHORT).show();
+            showErrorDialog(getString(R.string.isbn_invalid), getString(R.string.isbn_invalid_message));
             scannerView.resumeCameraPreview(this);
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d(TAG, "UserVisibleHint:"+isVisibleToUser);
+        if (!isVisibleToUser && scannerView != null) {
+            scannerView.stopCamera();
+            scannerView.setFlash(false);
+            isTorchOn = false;
+        } else if (isVisibleToUser && scannerView != null) {
+            scannerView.startCamera();
+            scannerView.setAutoFocus(true);
         }
     }
 
@@ -167,12 +194,22 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     }
 
     private void onError(String error) {
-        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-        try {
-            TimeUnit.SECONDS.sleep(3l);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        showErrorDialog(error, getString(R.string.book_not_found));
         scannerView.resumeCameraPreview(this);
+    }
+
+    private void showErrorDialog(String header, String content) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance);
+        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.instance);
+        View view = layoutInflater.inflate(R.layout.layout_popup_scan, null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        TextView textHeader = (TextView)view.findViewById(R.id.scan_popup_header);
+        textHeader.setText(header);
+        TextView textContent = (TextView) view.findViewById(R.id.scan_popup_content);
+        textContent.setText(content);
+        Button button = (Button) view.findViewById(R.id.btn_popup_ok);
+        button.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 }

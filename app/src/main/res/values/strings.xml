@@ -165,6 +165,8 @@
     <string name="post_the_share">ĐĂNG CHIA SẺ</string>
     <string name="remove_from_reading_list">Xóa khỏi danh sách đọc</string>
     <string name="ask_remove_from_reading_list">Bạn muốn xóa cuốn sách này khỏi danh sách sách đọc?</string>
+    <string name="book_not_found">The ISBN is not found on our system.</string>
+    <string name="isbn_invalid_message">Your ISBN is not valid. Please try again with another book.</string>
 
 
 </resources>
