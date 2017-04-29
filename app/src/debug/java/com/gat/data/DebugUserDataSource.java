@@ -1,10 +1,15 @@
 package com.gat.data;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.util.Log;
 
 import com.gat.common.adapter.Item;
+import com.gat.common.util.ClientUtils;
+import com.gat.common.util.CommonCheck;
 import com.gat.common.util.MZDebug;
+import com.gat.common.util.Strings;
 import com.gat.data.api.GatApi;
 import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
@@ -34,6 +39,8 @@ import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -144,13 +151,14 @@ public class DebugUserDataSource implements UserDataSource {
             response = api.registerByEmail(emailLoginData.email(), emailLoginData.password(), emailLoginData.name());
         } else {
             SocialLoginData socialLoginData = (SocialLoginData) loginData;
+            Bitmap bitmap = ClientUtils.getBitmapFromURL(socialLoginData.image());
             response = api.registerBySocial(
                     socialLoginData.socialID(),
                     Integer.toString(socialLoginData.type()),
                     socialLoginData.name(),
                     socialLoginData.email(),
-                    socialLoginData.password()/*,
-                        image*/);
+                    socialLoginData.password(),
+                    bitmap == null ? Strings.EMPTY : ClientUtils.imageEncode64(bitmap));
         }
         ObservableTransformer<Response<ServerResponse<LoginResponseData>>, ServerResponse<LoginResponseData>> transformer =
                 upstream -> upstream.map(result -> {

@@ -55,7 +55,7 @@ public interface PresenterComponent {
     ListUserSharingBookPresenter getListUserSharingBookPresenter();
     AddToBookcasePresenter getAddToBookcasePresenter();
     CommentPresenter getCommentPresenter();
-    BookDetailRequestPresenter getBookDetailPresenter();
+    BookDetailPresenter getBookDetailPresenter();
     BookDetailBorrowPresenter getBookDetailBorrowPresenter();
     ScanPresenter getScanPresenter();
 }

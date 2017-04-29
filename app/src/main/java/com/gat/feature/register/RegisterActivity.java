@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
@@ -153,45 +155,51 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                try {
-                                    String name = object.has("sender") ? object.getString("sender") : Strings.EMPTY;
-                                    String email = object.has("email") ? object.getString("email") : Strings.EMPTY;
-                                    String image = object.has("picture") ? object.getJSONObject("picture").getJSONObject("data").getString("url") : Strings.EMPTY;
-                                    String userId = loginResult.getAccessToken().getUserId();
-                                    String token = loginResult.getAccessToken().getToken();
-                                    // Logging
-                                    getPresenter().setIdentity(SocialLoginData.instance(
-                                            userId,
-                                            LoginData.Type.FACE,
-                                            email,
-                                            Strings.EMPTY,
-                                            name,
-                                            image,
-                                            token
-                                    ));
-                                    // Loading
-                                    onLogging(true);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                if (response.getError() != null) {
+                                    Log.d("FaceBookRegisterError", response.getError().getErrorMessage());
+                                } else {
+                                    try {
+                                        String name = object.has("name") ? object.getString("name") : Strings.EMPTY;
+                                        String email = object.has("email") ? object.getString("email") : Strings.EMPTY;
+                                        String image = object.has("picture") ? object.getJSONObject("picture").getJSONObject("data").getString("url") : Strings.EMPTY;
+                                        String userId = loginResult.getAccessToken().getUserId();
+                                        String token = loginResult.getAccessToken().getToken();
+                                        // Logging
+                                        getPresenter().setIdentity(SocialLoginData.instance(
+                                                userId,
+                                                LoginData.Type.FACE,
+                                                email,
+                                                Strings.EMPTY,
+                                                name,
+                                                image,
+                                                token
+                                        ));
+                                        // Loading
+                                        onLogging(true);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                         });
                         //Here we put the requested fields to be returned from the JSONObject
                         Bundle parameters = new Bundle();
-                        parameters.putString("fields", "sender, email, picture");
+                        parameters.putString("fields", "name, email, picture");
                         request.setParameters(parameters);
                         request.executeAsync();
 
                     }
-
+                    @Override
+                    public void onError(FacebookException e) {
+                        if (e instanceof FacebookAuthorizationException) {
+                            if (AccessToken.getCurrentAccessToken() != null) {
+                                LoginManager.getInstance().logOut();
+                            }
+                        }
+                    }
                     @Override
                     public void onCancel() {
                         Toast.makeText(getApplicationContext(), getString(R.string.login_social_cancel), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        exception.printStackTrace();
                     }
                 });
         faceRegisterBtn.setOnClickListener(e -> {

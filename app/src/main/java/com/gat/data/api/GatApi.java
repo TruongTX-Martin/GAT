@@ -70,8 +70,8 @@ public interface GatApi {
             @Field("socialType") String socialType,
             @Field("name") String name,
             @Field("email") String email,
-            @Field("password") String password/*,
-            @Field("image") RequestBody image*/
+            @Field("password") String password,
+            @Field("image") String image
     );
 
     @FormUrlEncoded

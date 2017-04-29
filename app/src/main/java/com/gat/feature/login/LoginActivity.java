@@ -3,6 +3,7 @@ package com.gat.feature.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +11,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
@@ -166,26 +169,30 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                try {
-                                    String name = object.has("name") ? object.getString("name") : Strings.EMPTY;
-                                    String email = object.has("email") ? object.getString("email") : Strings.EMPTY;
-                                    String image = object.has("picture") ? object.getJSONObject("picture").getJSONObject("data").getString("url") : Strings.EMPTY;
-                                    String userId = loginResult.getAccessToken().getUserId();
-                                    String token = loginResult.getAccessToken().getToken();
+                                if (response.getError() != null) {
+                                    Log.d("FaceBookLoginError", response.getError().getErrorMessage());
+                                } else {
+                                    try {
+                                        String name = object.has("name") ? object.getString("name") : Strings.EMPTY;
+                                        String email = object.has("email") ? object.getString("email") : Strings.EMPTY;
+                                        String image = object.has("picture") ? object.getJSONObject("picture").getJSONObject("data").getString("url") : Strings.EMPTY;
+                                        String userId = loginResult.getAccessToken().getUserId();
+                                        String token = loginResult.getAccessToken().getToken();
 
-                                    getPresenter().setIdentity(SocialLoginData.instance(
-                                            userId,
-                                            LoginData.Type.FACE,
-                                            email,
-                                            Strings.EMPTY,
-                                            name,
-                                            image,
-                                            token
-                                    ));
-                                    // Loading
-                                    onLogging(true);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                        getPresenter().setIdentity(SocialLoginData.instance(
+                                                userId,
+                                                LoginData.Type.FACE,
+                                                email,
+                                                Strings.EMPTY,
+                                                name,
+                                                image,
+                                                token
+                                        ));
+                                        // Loading
+                                        onLogging(true);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                         });
@@ -203,8 +210,12 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                     }
 
                     @Override
-                    public void onError(FacebookException exception) {
-                        exception.printStackTrace();
+                    public void onError(FacebookException e) {
+                        if (e instanceof FacebookAuthorizationException) {
+                            if (AccessToken.getCurrentAccessToken() != null) {
+                                LoginManager.getInstance().logOut();
+                            }
+                        }
                     }
                 });
         faceLoginBtn.setOnClickListener(e -> {
