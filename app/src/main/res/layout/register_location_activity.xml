@@ -4,12 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     android:id="@+id/register_location_view">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <View
+        android:background="@color/backgroundApp"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp">
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:background="@color/backgroundApp"/>
@@ -30,21 +37,30 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="10dp"
-            android:background="@color/backgroundApp"/>
+            android:background="@color/backgroundApp"/>-->
+        <EditText
+            android:id="@+id/search_location_edit"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_rounded_white"
+            android:gravity="center_vertical"
+            android:hint="@string/hintSearch"
+            android:inputType="textAutoCorrect"
+            android:lines="1"
+            android:padding="@dimen/paddingNormal"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_marginEnd="10dp"/>
+
+        <ImageButton
+            android:id="@+id/search_location_btn"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_rounded_white"
+            android:src="@drawable/forma_1_copy_7"
+            android:clickable="false"/>
     </LinearLayout>
-    <!--EditText
-        android:id="@+id/search_location"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_rounded_white"
-        android:padding="@dimen/paddingNormal"
-        android:inputType="textAutoCorrect"
-        android:lines="1"
-        android:hint="@string/hintSearch"
-        android:drawableStart="@drawable/ic_search_text_secondary_24dp"
-        android:drawablePadding="@dimen/paddingNormal"
-        android:gravity="center_vertical"/-->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

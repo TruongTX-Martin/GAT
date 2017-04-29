@@ -4,16 +4,21 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,7 @@ import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.UserAddressData;
+import com.gat.domain.SchedulerFactory;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryActivity;
@@ -33,26 +39,35 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.drive.query.Filter;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by ducbtsn on 2/28/17.
@@ -70,9 +85,6 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
 
     // The entry point to Google Play services, used by the Places API and Fused Location Provider.
     private GoogleApiClient googleApiClient;
-
-    // Auto complete
-    PlaceAutocompleteFragment autocompleteFragment;
 
     // A default location is Hanoi city
     private final LatLng defaultLocation = new LatLng(21.022703,105.8194541);
@@ -96,8 +108,20 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
     private CompositeDisposable disposables;
     private ProgressDialog progressDialog;
 
+    private Subject<String> getPlaceIdSubject;
+    private Subject<List<String>> getLocationSubject;
+    private Subject<LatLng> updateLocationSubject;
+    private Subject<String> notFoundSubject;
+
+
     @BindView(R.id.btn_add_location)
     Button addLocationBtn;
+
+    @BindView(R.id.search_location_edit)
+    EditText locationText;
+
+    @BindView(R.id.search_location_btn)
+    ImageButton searchBtn;
 
     @Override
     protected int getLayoutResource() {
@@ -124,10 +148,21 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         super.onCreate(savedInstanceState);
 
         unbinder = ButterKnife.bind(findViewById(R.id.register_location_view));
+
+        getPlaceIdSubject = BehaviorSubject.create();
+        getLocationSubject = BehaviorSubject.create();
+        updateLocationSubject = BehaviorSubject.create();
+        notFoundSubject = BehaviorSubject.create();
+
         // Disposable
         disposables = new CompositeDisposable(
                 getPresenter().updateResult().subscribe(this::onUpdateSuccess),
-                getPresenter().onError().subscribe(this::onUpdateError)
+                getPresenter().onError().subscribe(this::onUpdateError),
+                getPlaceIdSubject.subscribe(this::getPlaceIdFromAddress),
+                getLocationSubject.subscribe(this::getLocationFromPlaceId),
+                updateLocationSubject.subscribe(this::onUpdateLocation),
+                notFoundSubject.subscribe(this::placeNotFound)
+
         );
 
         progressDialog = new ProgressDialog(this);
@@ -136,7 +171,9 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         if (savedInstanceState != null) {
             selectedLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             inputAddress = savedInstanceState.getParcelable(KEY_ADDRESS);
-            addMarker(true);
+            if (selectedLocation != null) {
+                addMarker(true);
+            }
         }
 
         // Build the Play services client for use by the Fused Location Provider and the Places API.
@@ -151,74 +188,6 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 .build();
         googleApiClient.connect();
 
-        // Active place auto complete
-        autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-        /**
-         * When a place was selected
-         */
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                Log.d(TAG, "Place: " + place.getName());
-                inputAddress = place.getAddress().toString();
-                selectedLocation = place.getLatLng();
-                changeButtonLable();
-                // Add marker to this place
-                addMarker(true);
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.d(TAG, "An error occurred: " + status);
-                Toast.makeText(getApplicationContext(), getString(R.string.error_auto_place), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        /**
-         * When clear button is pushed
-         */
-        autocompleteFragment.getView().findViewById(R.id.place_autocomplete_clear_button).setOnClickListener(view -> {
-            TextView textView = (TextView) autocompleteFragment.getView().findViewById(R.id.place_autocomplete_search_input);
-            inputAddress = Strings.EMPTY;
-            textView.setText(inputAddress);
-            selectedLocation = null;
-            removeMarker();
-            changeButtonLable();
-        });
-
-        /**
-         * When search button is pushed
-         */
-        autocompleteFragment.getView().findViewById(R.id.place_autocomplete_search_button).setOnClickListener(view -> {
-            TextView textView = (TextView) autocompleteFragment.getView().findViewById(R.id.place_autocomplete_search_input);
-            inputAddress = textView.getText().toString();
-            // TODO get location by text
-            getDeviceLocation();
-            if (lastKnownLocation != null) {
-                selectedLocation = new LatLng(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude());
-                addMarker(true);
-                changeButtonLable();
-            }
-        });
-
-        /**
-         * Override key listener to catch search key
-         */
-        //autocompleteFragment.getView().setFocusableInTouchMode(true);
-        //autocompleteFragment.getView().requestFocus();
-        autocompleteFragment.getView().setOnKeyListener((v, keyCode, event) -> {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_SEARCH:
-                    autocompleteFragment.getActivity().onBackPressed();
-                    return true;
-                default:
-                    return super.onKeyUp(keyCode, event);
-            }
-        });
-
         addLocationBtn.setOnClickListener(view -> {
             if (!Strings.isNullOrEmpty(inputAddress) && selectedLocation != null) {
                 onUpdating(true);
@@ -230,6 +199,75 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
             }
         });
 
+        locationText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().length() > 0) {
+                    searchBtn.setClickable(true);
+                } else {
+                    searchBtn.setClickable(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        searchBtn.setOnClickListener(view -> {
+            getPlaceIdFromAddress(locationText.getText().toString());
+        });
+    }
+
+    private void onUpdateLocation(LatLng location) {
+        selectedLocation = location;
+        inputAddress = locationText.getText().toString();
+        addMarker(true);
+        changeButtonLable();
+    }
+
+    private void placeNotFound(String error) {
+
+    }
+
+    private void getPlaceIdFromAddress(String address)
+    {
+        //Southwest corner to Northeast corner.
+        LatLngBounds bounds = new LatLngBounds( new LatLng( 39.906374, -105.122337 ), new LatLng( 39.949552, -105.068779 ) );
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                //.setCountry("VN")
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
+                .build();
+        Places.GeoDataApi.getAutocompletePredictions(googleApiClient, address, bounds, typeFilter)
+                .setResultCallback(autocompletePredictions -> {
+                    if (autocompletePredictions != null) {
+                        if (autocompletePredictions.getStatus().isSuccess()) {
+                            List<String> placeIds = new ArrayList<String>();
+                            for (Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator(); iterator.hasNext();) {
+                                placeIds.add(iterator.next().getPlaceId());
+                            }
+                            getLocationFromPlaceId(placeIds);
+                        }
+                        autocompletePredictions.release();
+                    } else {
+                        notFoundSubject.onNext("Place not found.");
+                    }
+                });
+    }
+
+    private void getLocationFromPlaceId(List<String> placeIds) {
+        Places.GeoDataApi.getPlaceById(googleApiClient, placeIds.get(0)).setResultCallback(places -> {
+            if (places.getStatus().isSuccess()) {
+                Place place = places.get(0);
+                updateLocationSubject.onNext(place.getLatLng());
+            } else {
+                notFoundSubject.onNext("Place not found.");
+            }
+        });
     }
 
     private void onUpdateError(ServerResponse<ResponseData> error) {
@@ -352,21 +390,8 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
             }
         });
 
-        /**
-         * Handling click event
-         */
-        googleMap.setOnMapClickListener(location -> {
-            if (marker != null) {
-                // Prevent info window is disappeared
-                marker.showInfoWindow();
-            }
-        });
-
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
-
-        // Get the current location of the device and set the position of the map.
-        getDeviceLocation();
     }
 
     private void addMarker(boolean cameraMove) {
@@ -376,10 +401,6 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 .position(selectedLocation)
                 .title(inputAddress)
                 .snippet(selectedLocation.toString())
-                //.icon(BitmapDescriptorFactory.fromBitmap(drawBmp))
-                //.icon(BitmapDescriptorFactory.fromBitmap(drawBmp))
-                // .anchor(0.5f, 1)
-                //.draggable(true)
                 .visible(true);
         marker = googleMap.addMarker(markerOptions);
         marker.showInfoWindow();
@@ -392,40 +413,6 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
 
     private void removeMarker() {
         if (marker != null) marker.remove();
-    }
-
-    /**
-     * Gets the current location of the device, and positions the map's camera.
-     */
-    private void getDeviceLocation() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            isLocationAccessGranted = true;
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        }
-
-        // Set the map's camera position to the current location of the device.
-        if (selectedLocation != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(selectedLocation));
-        } else if (isLocationAccessGranted) {
-            lastKnownLocation = LocationServices.FusedLocationApi
-                    .getLastLocation(googleApiClient);
-            if (lastKnownLocation != null)
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-        } else {
-            Log.d(TAG, "Cannot get device location");
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-        }
     }
 
     /**
@@ -471,12 +458,24 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
 
-        if (isLocationAccessGranted) {
+        if (selectedLocation != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(selectedLocation));
+            locationText.setText(inputAddress);
+        } else if (isLocationAccessGranted) {
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+            lastKnownLocation = LocationServices.FusedLocationApi
+                    .getLastLocation(googleApiClient);
+            if (lastKnownLocation != null) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+            }
         } else {
             googleMap.setMyLocationEnabled(false);
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+            Log.d(TAG, "Cannot get device location");
         }
     }
 

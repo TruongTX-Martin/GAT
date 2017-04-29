@@ -9,6 +9,7 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.google.android.gms.maps.model.LatLng;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,6 +33,10 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
 
     private final Subject<ServerResponse<ResponseData>> errorSubject;
 
+    private Subject<String> getLocationFromAddressSubject;
+    private Observable<LatLng> addressResult;
+    private UseCase<LatLng> getLocationFromAddressUseCase;
+
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
 
@@ -43,6 +48,8 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
 
         this.updateResultSubject = PublishSubject.create();
         this.updateLocationDataSubject = BehaviorSubject.create();
+
+        this.getLocationFromAddressSubject = BehaviorSubject.create();
 
         this.errorSubject = PublishSubject.create();
     }
@@ -62,10 +69,24 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
     }
 
     @Override
+    public void getLocationFromAdress(String address) {
+        getLocationFromAddressSubject.onNext(address);
+    }
+
+    @Override
+    public Observable<LatLng> addressResult() {
+        return addressResult.observeOn(schedulerFactory.main());
+    }
+
+    private void getLocation(String address) {
+        // TODO
+    }
+
+    @Override
     public void onCreate() {
         compositeDisposable = new CompositeDisposable(
-                updateLocationDataSubject.observeOn(schedulerFactory.main())
-                        .subscribe(this::updateLocation)
+                updateLocationDataSubject.observeOn(schedulerFactory.main()).subscribe(this::updateLocation),
+                getLocationFromAddressSubject.observeOn(schedulerFactory.main()).subscribe(this::getLocation)
         );
     }
 
