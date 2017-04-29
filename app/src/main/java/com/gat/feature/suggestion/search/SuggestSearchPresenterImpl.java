@@ -12,6 +12,7 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.LoginData;
+import com.gat.repository.entity.User;
 
 import java.util.List;
 
@@ -98,15 +99,14 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
             MZDebug.e("____________________________________________ loadHistorySearchBook = false");
             return;
         }
-        // check authentication -> doLoadHistorySearchBook
-        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
-        loginData.executeOn(schedulerFactory.io())
+        // get cached user data
+        UseCase<User> loadLocalUser = useCaseFactory.getUser();
+        loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
-                .onNext(result -> {
-                    if (result.equals(LoginData.EMPTY)) {
-                        return;
+                .onNext(user -> {
+                    if (user.isValid()) {
+                        doLoadHistorySearchBook();
                     }
-                    doLoadHistorySearchBook();
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: loadHistorySearchBook : authentication _______________E: \n\r"
@@ -189,15 +189,15 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
             MZDebug.e("__________________________________________ loadHistorySearchAuthor = false");
             return;
         }
-        // check authentication -> loadHistorySearchAuthor
-        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
-        loginData.executeOn(schedulerFactory.io())
+        // get cached user data
+        UseCase<User> loadLocalUser = useCaseFactory.getUser();
+        loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
-                .onNext(result -> {
-                    if (result.equals(LoginData.EMPTY)) {
-                        return;
+                .onNext(user -> {
+                    MZDebug.w("local login: " + user.isValid());
+                    if (user.isValid()) {
+                        doLoadHistorySearchAuthor();
                     }
-                    doLoadHistorySearchAuthor();
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: loadHistorySearchAuthor : authentication _____________E: \n\r"
@@ -280,15 +280,15 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
             MZDebug.e("_____________________________________________ isCanLoadHistoryUser = false");
             return;
         }
-        // check authentication -> doLoadHistorySearchUser
-        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
-        loginData.executeOn(schedulerFactory.io())
+        // get cached user data
+        UseCase<User> loadLocalUser = useCaseFactory.getUser();
+        loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
-                .onNext(result -> {
-                    if (result.equals(LoginData.EMPTY)) {
-                        return;
+                .onNext(user -> {
+                    MZDebug.w("local login: " + user.isValid());
+                    if (user.isValid()) {
+                        doLoadHistorySearchUser();
                     }
-                    doLoadHistorySearchUser();
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: doLoadHistorySearchUser : authentication _____________E: \n\r"

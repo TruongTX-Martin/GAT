@@ -64,6 +64,8 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
 
     private CompositeDisposable disposables;
 
+    private boolean cameraPermision = false;
+
     @Override
     protected int getLayoutResource() {
         return R.layout.scanbarcode_activity;
@@ -91,18 +93,17 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
                 getPresenter().onError().subscribe(this::onError)
         );
 
-
-        boolean cameraPermission = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            cameraPermission = checkPermission(REQUEST_CAMERA);
+            this.cameraPermision = checkPermission(REQUEST_CAMERA);
         }
-        if (cameraPermission) {
+        if (this.cameraPermision) {
             scannerView.setResultHandler(this);
-            scannerView.setAutoFocus(true);
-            scannerView.startCamera();
-        } else {
-            requestPermission();
+            if (getUserVisibleHint()) {
+                scannerView.startCamera();
+                scannerView.setAutoFocus(true);
+            }
         }
+
         lightBtn.setOnClickListener(v -> {
             // Turn light on
             scannerView.setFlash(!isTorchOn);
@@ -117,6 +118,7 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView");
         scannerView.setFlash(false);
+        isTorchOn = false;
         scannerView.stopCamera();
         super.onDestroyView();
     }
@@ -136,8 +138,10 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
                     boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     if (cameraAccepted){
                         scannerView.setResultHandler(this);
-                        scannerView.setAutoFocus(true);
-                        scannerView.startCamera();
+                        if (getUserVisibleHint()) {
+                            scannerView.setAutoFocus(true);
+                            scannerView.startCamera();
+                        }
                     }else {
                         Toast.makeText(getContext(), "Permission Denied, You cannot access and camera", Toast.LENGTH_LONG).show();
                     }
@@ -172,13 +176,20 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "UserVisibleHint:"+isVisibleToUser);
         if (!isVisibleToUser && scannerView != null) {
-            scannerView.stopCamera();
             scannerView.setFlash(false);
             isTorchOn = false;
+            scannerView.stopCamera();
+            changeBtnText();
         } else if (isVisibleToUser && scannerView != null) {
-            scannerView.startCamera();
-            scannerView.setAutoFocus(true);
+            if (!cameraPermision) {
+                requestPermission();
+            } else {
+                scannerView.startCamera();
+                scannerView.setAutoFocus(true);
+            }
+            changeBtnText();
         }
+
     }
 
     private void changeBtnText() {

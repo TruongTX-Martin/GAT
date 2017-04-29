@@ -1,5 +1,6 @@
 package com.gat.feature.personal;
 
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.PaperUserDataSource;
@@ -199,7 +200,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     requestBookResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    requestBookError.onError(throwable);
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        requestBookError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> requestBooksUsecase = UseCases.release(requestBooksUsecase)
@@ -216,7 +220,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     personalResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    personalError.onError(throwable);
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        personalError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> getPersonalUsecase = UseCases.release(getPersonalUsecase)
@@ -231,8 +238,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     bookInstanceResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    bookInstanceError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        bookInstanceError.onNext(ServerResponse.EXCEPTION);
                 }).onStop(
                 () -> getBookIntanceUsecase = UseCases.release(getBookIntanceUsecase)
         ).execute();
@@ -245,8 +255,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     changeBookSharingStatusResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    changeBookSharingStatusError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        changeBookSharingStatusError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> changeBookSharingStatusUsecase = UseCases.release(changeBookSharingStatusUsecase)
@@ -261,8 +274,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     readingBookResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    readingBookError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        readingBookError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> readingBooksUsecase = UseCases.release(readingBooksUsecase)

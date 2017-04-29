@@ -93,13 +93,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
         disposables = new CompositeDisposable(
                 getPresenter().loginResult().subscribe(this::onLoginResult),
-                getPresenter().onError().subscribe(this::onLoginError),
-                getPresenter().loadLocalLoginData().
-                        filter(loginData -> loginData != LoginData.EMPTY)
-                        .subscribe(loginData -> {
-                            onLogging(true);
-                            getPresenter().setIdentity(loginData);
-                        })
+                getPresenter().onError().subscribe(this::onLoginError)
         );
 
         // login button

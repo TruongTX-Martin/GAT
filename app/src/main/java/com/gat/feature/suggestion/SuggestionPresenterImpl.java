@@ -11,6 +11,7 @@ import com.gat.domain.usecase.UseCase;
 import java.util.List;
 
 import com.gat.repository.entity.LoginData;
+import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import io.reactivex.Observable;
@@ -85,13 +86,13 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     @Override
     public void suggestBooks() {
 
-        // get user login data
-        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
-        loginData.executeOn(schedulerFactory.io())
+        // get cached user data
+        UseCase<User> loadLocalUser = useCaseFactory.getUser();
+        loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
-                .onNext(result -> {
-                    MZDebug.w("local login: " + result.toString());
-                    if (result.equals(LoginData.EMPTY)) {
+                .onNext(user -> {
+                    MZDebug.w("local login: " + user.isValid());
+                    if (user.isValid()) {
                         doSuggestBookWithoutLogin();
                     } else {
                         doSuggestBookAfterLogin();

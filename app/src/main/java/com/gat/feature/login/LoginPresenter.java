@@ -30,5 +30,7 @@ public interface LoginPresenter extends Presenter {
     Observable<ServerResponse<LoginResponseData>> changePasswordResult();
     void changePassword(String password);
 
+    void loadLocalUser();
+
     void init();
 }

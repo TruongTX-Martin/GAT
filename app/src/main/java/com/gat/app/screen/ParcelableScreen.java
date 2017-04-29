@@ -114,6 +114,7 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof LoginScreen) {
             LoginScreen loginScreen = (LoginScreen) screen;
             dest.writeString(loginScreen.email());
+            dest.writeInt(loginScreen.tokenChange() ? 1 : 0);
         } else if (screen instanceof RegisterScreen) {
 
         } else if (screen instanceof AddLocationScreen) {
@@ -166,7 +167,7 @@ public class ParcelableScreen implements Parcelable {
                 screen = SearchScreen.instance(in.readString());
                 break;
             case LOGIN:
-                screen = LoginScreen.instance(in.readString());
+                screen = LoginScreen.instance(in.readString(), (in.readInt() == 0) ? false : true);
                 break;
             case REGISTER:
                 screen = RegisterScreen.instance();

@@ -59,6 +59,9 @@ public class LoginPresenterImpl implements LoginPresenter {
     private UseCase<LoginData> loginDataUseCase;
     private final Subject<LoginData> localLoginData;
 
+    private UseCase<User> loadLocalUserUseCase;
+    private Subject<Integer> loadLocalUserSubject;
+
     private final Subject<ServerResponse<ResponseData>> errorSubject;
 
     // Disposable to store and release observale when it done
@@ -86,6 +89,7 @@ public class LoginPresenterImpl implements LoginPresenter {
         this.resetTokenSubject = BehaviorSubject.create();
         this.verifyTokenResultSubject = PublishSubject.create();
 
+        loadLocalUserSubject = BehaviorSubject.create();
 
         this.localLoginData = BehaviorSubject.create();
 
@@ -131,7 +135,9 @@ public class LoginPresenterImpl implements LoginPresenter {
                             .subscribe(password -> sendPassword(password)),
                     loginDataSubject.observeOn(schedulerFactory.main())
                             .filter(loginData -> checkLoginData(loginData))
-                            .subscribe(loginData -> login(loginData))
+                            .subscribe(loginData -> login(loginData)),
+                    loadLocalUserSubject.observeOn(schedulerFactory.main())
+                            .subscribe(input -> loadLocalUser(input))
             );
             isInitialized = true;
             Log.d(TAG, "IsInitialized");
@@ -191,6 +197,28 @@ public class LoginPresenterImpl implements LoginPresenter {
         Log.d(TAG, "password: " + password);
         if (!isInitialized) init();
         passwordSubject.onNext(password);
+    }
+
+    @Override
+    public void loadLocalUser() {
+        loadLocalUserSubject.onNext(1);
+    }
+
+    private void loadLocalUser(int input) {
+        loadLocalUserUseCase = UseCases.release(loadLocalUserUseCase);
+
+        loadLocalUserUseCase = useCaseFactory.getUser();
+
+        loadLocalUserUseCase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    loginResultSubject.onNext(user);
+                })
+                .onError(throwable -> {
+                    errorSubject.onNext(ServerResponse.EXCEPTION);
+                })
+                .onStop(() -> loadLocalUserUseCase = UseCases.release(loadLocalUserUseCase))
+                .execute();
     }
 
     @Override

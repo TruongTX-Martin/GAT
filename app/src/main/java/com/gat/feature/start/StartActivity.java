@@ -76,12 +76,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
         disposables = new CompositeDisposable(
                 getPresenter().loginResult().subscribe(this::onLoginResult),
-                getPresenter().onError().subscribe(this::onLoginError),
-                getPresenter().loadLocalLoginData().filter(loginData -> loginData != LoginData.EMPTY)
-                        .subscribe(loginData -> {
-                            onLogging(true);
-                            getPresenter().setIdentity(loginData);
-                        })
+                getPresenter().onError().subscribe(this::onLoginError)
         );
 
         // array index of all welcome sliders
@@ -90,6 +85,9 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                 R.layout.activity_intro_slider2,
                 R.layout.activity_intro_slider3
         };
+
+        if (!getScreen().tokenChange())
+            getPresenter().loadLocalUser();
 
         // adding bottom dots
         addBottomDots(0);
@@ -180,13 +178,14 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     }
 
     private void onLoginResult(User user) {
-        onLogging(false);
-        start(this, MainActivity.class, MainScreen.instance());
-        finish();
+        if (user.isValid()) {
+            start(this, MainActivity.class, MainScreen.instance());
+            finish();
+        }
     }
 
     private void onLoginError(ServerResponse<ResponseData> responseData) {
-        onLogging(false);
+        // Do nothing
     }
 
     private void onLogging(boolean enter) {
