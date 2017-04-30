@@ -270,10 +270,9 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         });
     }
 
-    private void onUpdateError(ServerResponse<ResponseData> error) {
+    private void onUpdateError(String error) {
         onUpdating(false);
-        //Toast.makeText(this, getString(R.string.update_location_failed), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, error.message(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     private void onUpdateSuccess(ServerResponse<ResponseData> response) {

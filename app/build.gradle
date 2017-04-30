@@ -32,7 +32,6 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.5.0'
         // Code coverage.
         classpath 'org.jacoco:org.jacoco.core:0.7.6.201602180812'
-        classpath 'io.fabric.tools:gradle:1.+'
 
         classpath 'com.google.gms:google-services:3.0.0'
     }
@@ -230,6 +229,10 @@ dependencies {
 
     // autovalue + gson
     apt 'com.ryanharter.auto.value:auto-value-gson:0.3.1'
+
+    compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
+        transitive = true;
+    }
 
 }
 

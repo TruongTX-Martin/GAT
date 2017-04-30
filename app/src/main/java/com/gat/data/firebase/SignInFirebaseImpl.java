@@ -12,6 +12,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.concurrent.Executor;
@@ -68,6 +70,10 @@ public class SignInFirebaseImpl implements SignInFirebase {
                                 loginWithEmail(loginData);
                             else if (loginData.type() == LoginData.Type.FACE)
                                 loginWithFacebook(loginData);
+                            else if (loginData.type() == LoginData.Type.TWITTER)
+                                loginWithTwitter(loginData);
+                            else if (loginData.type() == LoginData.Type.GOOGLE)
+                                loginWithGoogle(loginData);
                             else
                                 throw new UnsupportedOperationException();
                         });
@@ -86,6 +92,19 @@ public class SignInFirebaseImpl implements SignInFirebase {
     private void loginWithFacebook(LoginData loginData) {
         String token = ((SocialLoginData)loginData).token();
         AuthCredential credential = FacebookAuthProvider.getCredential(token);
+        firebaseAuth.signInWithCredential(credential);
+    }
+
+    private void loginWithTwitter(LoginData loginData) {
+        String token = ((SocialLoginData)loginData).token();
+        String secret = ((SocialLoginData)loginData).secret();
+        AuthCredential credential = TwitterAuthProvider.getCredential(token, secret);
+        firebaseAuth.signInWithCredential(credential);
+    }
+
+    private void loginWithGoogle(LoginData loginData) {
+        String token = ((SocialLoginData)loginData).token();
+        AuthCredential credential = GoogleAuthProvider.getCredential(token, null);
         firebaseAuth.signInWithCredential(credential);
     }
 

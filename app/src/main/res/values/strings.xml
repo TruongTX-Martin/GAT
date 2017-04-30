@@ -6,6 +6,8 @@
 
     <!-- REAL -->
     <string name="facebook_app_id">1937935059771206</string>
+    <string name="twitter_api_secret">KOdLwBjc0UPhPWLzzbivhOfCZytowaArBCc8Jwh9gKtVwaC9H8</string>
+    <string name="google_client_id">177876099439-q6vnk5r2bjv541lkntqmbmi2ekhcmnnc.apps.googleusercontent.com</string>
 
     <!-- DEV -->
     <!--<string name="facebook_app_id">936889173084630</string>-->
@@ -167,6 +169,7 @@
     <string name="ask_remove_from_reading_list">Bạn muốn xóa cuốn sách này khỏi danh sách sách đọc?</string>
     <string name="book_not_found">The ISBN is not found on our system.</string>
     <string name="isbn_invalid_message">Your ISBN is not valid. Please try again with another book.</string>
+    <string name="inputLocationHint">Enter your location</string>
 
 
 </resources>

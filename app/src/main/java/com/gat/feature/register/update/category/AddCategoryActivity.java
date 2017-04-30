@@ -18,6 +18,8 @@ import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.search.SearchActivity;
@@ -162,14 +164,14 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
         }
     }
 
-    private void onUpdateError(ServerResponse<ResponseData> error) {
+    private void onUpdateError(String error) {
         onUpdating(false);
-        Toast.makeText(this, getString(R.string.update_category_failed), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     private void onUpdateSuccess(ServerResponse<ResponseData> response) {
         onUpdating(false);
-        start(this, SearchActivity.class, SearchScreen.instance(Strings.EMPTY));
+        start(this, MainActivity.class, MainScreen.instance());
         finish();
     }
 }

@@ -20,9 +20,11 @@ public class ServerResponse<T> {
         int OK = 200;
         int BAD = 400;
         int TOKEN = 401;
+        int CONFLICT_DATA = 409;
         int SOCKET_EXCEPTION = 600;
         int GENERAL_EXCEPTION = 700;
     }
+
     public static ServerResponse BAD_RESPONSE = new ServerResponse("Bad response.", HTTP_CODE.NONE, ResponseData.NO_RESPONSE);
     public static ServerResponse EXCEPTION = new ServerResponse("Exception occurred.", HTTP_CODE.GENERAL_EXCEPTION, ResponseData.NO_RESPONSE);
     public static ServerResponse NO_LOGIN = new ServerResponse(Strings.EMPTY, HTTP_CODE.NONE, new LoginResponseData(Strings.EMPTY));

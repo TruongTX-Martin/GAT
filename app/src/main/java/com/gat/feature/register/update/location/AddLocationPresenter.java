@@ -15,7 +15,7 @@ import io.reactivex.Observable;
 public interface AddLocationPresenter extends Presenter {
     void setLocation(UserAddressData location);
     Observable<ServerResponse> updateResult();
-    Observable<ServerResponse<ResponseData>> onError();
+    Observable<String> onError();
 
     void getLocationFromAdress(String address);
     Observable<LatLng> addressResult();

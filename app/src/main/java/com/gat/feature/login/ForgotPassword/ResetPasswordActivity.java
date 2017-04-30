@@ -21,6 +21,8 @@ import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 
@@ -87,14 +89,14 @@ public class ResetPasswordActivity extends ScreenActivity<LoginScreen, LoginPres
         return LoginScreen.instance(Strings.EMPTY);
     }
 
-    public void onError(ServerResponse<ResponseData> response) {
+    public void onError(String error) {
         onResetPassword(false);
-        Toast.makeText(this, getString(R.string.reset_pass_failed), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     public void onSuccess(ServerResponse<LoginResponseData> responseDataServerResponse) {
         onResetPassword(false);
-        this.start(getApplicationContext(), SearchActivity.class, SearchScreen.instance(Strings.EMPTY));
+        this.start(getApplicationContext(), MainActivity.class, MainScreen.instance());
         finish();
     }
     @Override

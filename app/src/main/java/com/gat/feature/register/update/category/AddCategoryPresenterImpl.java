@@ -2,6 +2,7 @@ package com.gat.feature.register.update.category;
 
 import android.util.Log;
 
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
@@ -34,7 +35,7 @@ public class AddCategoryPresenterImpl implements AddCategoryPresenter {
     private final SchedulerFactory schedulerFactory;
 
 
-    private final Subject<ServerResponse<ResponseData>> errorSubject;
+    private final Subject<String> errorSubject;
 
     private Disposable disposable;
 
@@ -54,7 +55,7 @@ public class AddCategoryPresenterImpl implements AddCategoryPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onError() {
+    public Observable<String> onError() {
         return errorSubject.observeOn(schedulerFactory.main());
     }
 
@@ -73,13 +74,13 @@ public class AddCategoryPresenterImpl implements AddCategoryPresenter {
         updateCategoryUseCase.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(response -> {
-                    if (response.isOk())
-                        updateResultSubject.onNext(response);
-                    else
-                        errorSubject.onNext(new ServerResponse<ResponseData>(response.message(), response.code(), ResponseData.NO_RESPONSE));
+                    updateResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    errorSubject.onNext(ServerResponse.EXCEPTION);
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> updateCategoryUseCase = UseCases.release(updateCategoryUseCase))
                 .execute();

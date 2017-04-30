@@ -2,6 +2,7 @@ package com.gat.feature.register.update.location;
 
 import android.util.Log;
 
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.UserAddressData;
@@ -31,7 +32,7 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
 
     private UseCase<ServerResponse> updateLocationUseCase;
 
-    private final Subject<ServerResponse<ResponseData>> errorSubject;
+    private final Subject<String> errorSubject;
 
     private Subject<String> getLocationFromAddressSubject;
     private Observable<LatLng> addressResult;
@@ -64,7 +65,7 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onError() {
+    public Observable<String> onError() {
         return errorSubject.observeOn(schedulerFactory.main());
     }
 
@@ -106,13 +107,13 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
         updateLocationUseCase.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(response -> {
-                    if (response.isOk())
-                        updateResultSubject.onNext(response);
-                    else
-                        errorSubject.onNext(new ServerResponse<ResponseData>(response.message(), response.code(), ResponseData.NO_RESPONSE));
+                    updateResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    errorSubject.onNext(ServerResponse.EXCEPTION);
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> updateLocationUseCase = UseCases.release(updateLocationUseCase))
                 .execute();

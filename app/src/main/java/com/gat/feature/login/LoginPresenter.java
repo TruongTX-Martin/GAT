@@ -17,10 +17,9 @@ import io.reactivex.Observable;
 
 public interface LoginPresenter extends Presenter {
     Observable<User> loginResult();
-    Observable<ServerResponse<ResponseData>> onError();
+    Observable<String> onError();
     void setIdentity(LoginData loginData);
-    void login();
-    Observable<LoginData> loadLocalLoginData();
+
     void sendRequestReset(String email);
     Observable<ServerResponse<ResetPasswordResponseData>> resetPasswordResponse();
 
@@ -30,7 +29,10 @@ public interface LoginPresenter extends Presenter {
     Observable<ServerResponse<LoginResponseData>> changePasswordResult();
     void changePassword(String password);
 
+    // No use
     void loadLocalUser();
+    Observable<LoginData> loadLocalLoginData();
+    void login();
 
     void init();
 }

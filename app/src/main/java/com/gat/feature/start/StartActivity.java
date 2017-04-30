@@ -86,8 +86,8 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                 R.layout.activity_intro_slider3
         };
 
-        if (!getScreen().tokenChange())
-            getPresenter().loadLocalUser();
+        //if (!getScreen().tokenChange())
+        //    getPresenter().loadLocalUser();
 
         // adding bottom dots
         addBottomDots(0);
@@ -184,7 +184,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         }
     }
 
-    private void onLoginError(ServerResponse<ResponseData> responseData) {
+    private void onLoginError(String error) {
         // Do nothing
     }
 

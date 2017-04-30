@@ -2,6 +2,9 @@ package com.gat.feature.login;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -23,6 +26,7 @@ import com.facebook.login.LoginResult;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.CommonCheck;
+import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
@@ -34,6 +38,19 @@ import com.gat.feature.main.MainActivity;
 import com.gat.feature.main.MainScreen;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.twitter.sdk.android.core.services.AccountService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,13 +58,17 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import butterknife.BindView;
+import io.fabric.sdk.android.Fabric;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by ducbtsn on 2/22/17.
  */
 
 public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
+
     @BindView(R.id.input_email)
     EditText emailText;
 
@@ -71,9 +92,16 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     private CompositeDisposable disposables;
     private ProgressDialog progressDialog;
+    private Subject<Boolean> progressSubject;
 
     // For facebook login
     private CallbackManager mCallbackManager;
+
+    // For register with google account
+    private GoogleApiClient googleApiClient;
+
+    // For register with twitter account
+    private TwitterAuthClient twitterAuthClient;
 
     @Override
     protected int getLayoutResource() {
@@ -90,12 +118,106 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         super.onCreate(savedInstanceState);
 
         progressDialog = new ProgressDialog(this);
+        progressSubject = BehaviorSubject.create();
 
         disposables = new CompositeDisposable(
                 getPresenter().loginResult().subscribe(this::onLoginResult),
-                getPresenter().onError().subscribe(this::onLoginError)
+                getPresenter().onError().subscribe(this::onLoginError),
+                progressSubject.subscribe(this::onLogging)
         );
 
+
+        loginWithFacebook();
+
+        loginWithEmail();
+
+        loginWithGoogle();
+
+        loginWithTwitter();
+
+        // Forgot password page
+        forgotTextView.setOnClickListener(view -> {
+            start(getApplicationContext(), ForgotPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
+            finish();
+        });
+    }
+
+    private void loginWithGoogle() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.google_client_id))
+                .requestProfile()
+                .build();
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        googleLoginBtn.setOnClickListener(view -> {
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+            startActivityForResult(signInIntent, Constance.RC_SIGN_IN);
+        });
+
+    }
+    private void loginWithTwitter() {
+        ApplicationInfo app = null;
+        try {
+            app = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            Bundle bundle = app.metaData;
+            String apiKey = bundle.getString("io.fabric.ApiKey");
+            String apiSecret = getString(R.string.twitter_api_secret);
+            TwitterAuthConfig authConfig = new TwitterAuthConfig(
+                    apiKey,
+                    apiSecret);
+            Fabric.with(this, new Twitter(authConfig));
+            twitterAuthClient = new TwitterAuthClient();
+            twitterLoginBtn.setOnClickListener(view -> {
+                twitterAuthClient.authorize(this, new Callback<TwitterSession>() {
+                    @Override
+                    public void success(Result<TwitterSession> resultSession) {
+                        TwitterSession session = resultSession.data;
+                        AccountService service = Twitter.getApiClient(session).getAccountService();
+                        service.verifyCredentials(true, true).enqueue(new Callback<com.twitter.sdk.android.core.models.User>() {
+                            @Override
+                            public void success(Result<com.twitter.sdk.android.core.models.User> resultUser) {
+                                String name = resultUser.data.name;
+                                String email = resultUser.data.email != null ? resultUser.data.email : Strings.EMPTY;
+                                String image = resultUser.data.profileImageUrl != null ? resultUser.data.profileImageUrl : Strings.EMPTY;
+                                String userId = Long.toString(resultUser.data.getId());
+                                String token = resultSession.data.getAuthToken().token;
+                                String secret = resultSession.data.getAuthToken().secret;
+                                progressSubject.onNext(true);
+                                // Logging
+                                getPresenter().setIdentity(SocialLoginData.instance(
+                                        userId,
+                                        LoginData.Type.TWITTER,
+                                        email,
+                                        Strings.EMPTY,
+                                        name,
+                                        image,
+                                        token
+                                ));
+                            }
+
+                            @Override
+                            public void failure(TwitterException exception) {
+                                exception.printStackTrace();
+                                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure(TwitterException exception) {
+                        exception.printStackTrace();
+                        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    private void loginWithEmail() {
         // login button
         loginBtn.setOnClickListener(view -> {
             String email = emailText.getText().toString();
@@ -132,27 +254,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                     EmailLoginData.instance(email, password, name, Strings.EMPTY, LoginData.Type.EMAIL)
             );
         });
-
-        loginWithFacebook();
-
-        // Forgot password page
-        forgotTextView.setOnClickListener(view -> {
-            start(getApplicationContext(), ForgotPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
-            finish();
-        });
     }
-
-    private void onLoginResult(User user) {
-        onLogging(false);
-        start(this, MainActivity.class, MainScreen.instance());
-        finish();
-    }
-
-    private void onLoginError(ServerResponse<ResponseData> responseData) {
-        onLogging(false);
-        Toast.makeText(getApplicationContext(), responseData.message(), Toast.LENGTH_SHORT).show();
-    }
-
     private void loginWithFacebook() {
         mCallbackManager = CallbackManager.Factory.create();
 
@@ -217,6 +319,17 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
     }
 
+    private void onLoginResult(User user) {
+        progressSubject.onNext(false);
+        start(this, MainActivity.class, MainScreen.instance());
+        finish();
+    }
+
+    private void onLoginError(String error) {
+        progressSubject.onNext(false);
+        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+    }
+
     private void onLogging(boolean enter) {
         if (enter) {
             Views.hideKeyboard(this);
@@ -243,7 +356,35 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == Constance.RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                String name = acct.getDisplayName();
+                String email = acct.getEmail() != null ? acct.getEmail() : Strings.EMPTY;
+                Uri uri = acct.getPhotoUrl();
+                String image = uri != null ? uri.toString() : Strings.EMPTY;
+                String userId = acct.getId();
+                String token = acct.getIdToken();
+                progressSubject.onNext(true);
+                // Logging
+                getPresenter().setIdentity(SocialLoginData.instance(
+                        userId,
+                        LoginData.Type.GOOGLE,
+                        email,
+                        Strings.EMPTY,
+                        name,
+                        image,
+                        token
+                ));
+            } else {
+                Toast.makeText(getApplicationContext(), "Cannot SignIn.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+            twitterAuthClient.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }
