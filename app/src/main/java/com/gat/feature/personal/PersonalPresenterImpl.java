@@ -121,6 +121,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
+    public void requestPersonalInfor(String input) {
+        personalInputSubject.onNext("");
+    }
+
+    @Override
     public Observable<Data> getResponsePersonal() {
         return personalResultSubject.observeOn(schedulerFactory.main());
     }

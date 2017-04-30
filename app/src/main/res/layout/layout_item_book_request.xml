@@ -55,11 +55,11 @@
 
             <RatingBar
                 android:id="@+id/ratingBar"
-                style="@style/CustomRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/mySwitch"
                 android:layout_below="@+id/txtName"
+                android:visibility="gone"
                 android:numStars="5" />
         </LinearLayout>
 

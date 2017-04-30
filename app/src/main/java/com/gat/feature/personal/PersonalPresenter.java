@@ -17,6 +17,7 @@ import io.reactivex.Observable;
 
 public interface PersonalPresenter extends Presenter{
 
+    void requestPersonalInfor(String input);
     Observable<Data> getResponsePersonal();
     Observable<ServerResponse<ResponseData>> onErrorPersonal();
 

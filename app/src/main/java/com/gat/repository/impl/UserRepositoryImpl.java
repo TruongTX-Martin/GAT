@@ -13,6 +13,7 @@ import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
@@ -178,7 +179,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<Data> updateUserInfo(EditInfoInput input) {
+    public Observable<String> updateUserInfo(EditInfoInput input) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().updateUserInfo(input));
     }
 
@@ -211,6 +212,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<User> getUserPublicInfo(int userId) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().getUserInformation(userId));
+    }
+
+    @Override
+    public Observable<Data> requestBookByBorrowrer(RequestStatusInput input) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByBorrower(input));
     }
 
 }

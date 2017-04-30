@@ -25,6 +25,7 @@ import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
@@ -396,7 +397,7 @@ public class DebugUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> updateUserInfo(EditInfoInput input) {
+    public Observable<String> updateUserInfo(EditInfoInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.updateUserInfo(input.getName(),input.getImageBase64(),input.isChangeImage());
         return responseObservable.map(response -> {
@@ -405,7 +406,7 @@ public class DebugUserDataSource implements UserDataSource {
                 serverResponse = ServerResponse.BAD_RESPONSE;
             }
             serverResponse.code(response.code());
-            return serverResponse.data();
+            return response.message();
         });
     }
 
@@ -433,6 +434,21 @@ public class DebugUserDataSource implements UserDataSource {
                 serverResponse = ServerResponse.BAD_RESPONSE;
             }
             serverResponse.code(response.code());
+            return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<Data> requestBookByBorrower(RequestStatusInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.requestBookByBorrower(input.getRecordId(),input.getCurrentStatus(),input.getNewStatus());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }else {
+                serverResponse.code(response.code());
+            }
             return serverResponse.data();
         });
     }

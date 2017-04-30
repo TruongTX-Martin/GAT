@@ -13,6 +13,7 @@ import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -79,7 +80,8 @@ public interface UserDataSource {
 
     Observable<User> getUserInformation(int userId);
     Observable<List<User>> getListUserInfo(List<Integer> userIdList);
-    Observable<Data> updateUserInfo(EditInfoInput input);
+    Observable<String> updateUserInfo(EditInfoInput input);
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
     Observable<Data> getBookDetail(Integer input);
+    Observable<Data> requestBookByBorrower(RequestStatusInput input);
 }

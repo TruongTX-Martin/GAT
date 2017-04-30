@@ -68,10 +68,19 @@ public class BookSharingEntity {
     @SerializedName("requestingStatus")
     private int requestingStatus;
 
+    private boolean isTitle = false;
 
     public BookSharingEntity() {
     }
 
+
+    public boolean isTitle() {
+        return isTitle;
+    }
+
+    public void setIsTitle(boolean title) {
+        isTitle = title;
+    }
 
     public int getSharingCount() {
         return sharingCount;

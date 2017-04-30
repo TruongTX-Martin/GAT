@@ -1,11 +1,15 @@
 package com.gat.feature.personal.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -75,6 +79,48 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
             if (!Strings.isNullOrEmpty(entity.getImageId())) {
                 ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
             }
+            if(entity.getSharingStatus() == 2 || entity.getSharingStatus() == 1) {
+                if(!fragmentBookSharing.getTitleSharing()){
+                    fragmentBookSharing.setTitleSharing(true);
+                    entity.setIsTitle(true);
+                    fragmentBookSharing.refreshListBook(entity,position);
+                }
+                if(entity.isTitle()) {
+                    holder.layoutTitle.setVisibility(View.VISIBLE);
+                    holder.txtTopTitle.setText("Sách cho mượn");
+                    holder.txtTopNumber.setText("(" + fragmentBookSharing.getNumberSharing() + ")");
+                }else{
+                    holder.layoutTitle.setVisibility(View.GONE);
+                }
+
+            }else if(entity.getSharingStatus() == 0){
+                if(!fragmentBookSharing.getTitleNotSharing()) {
+                    fragmentBookSharing.setTitleNotSharing(true);
+                    entity.setIsTitle(true);
+                    fragmentBookSharing.refreshListBook(entity,position);
+                }
+                if(entity.isTitle()) {
+                    holder.layoutTitle.setVisibility(View.VISIBLE);
+                    holder.txtTopTitle.setText("Sách không cho mượn");
+                    holder.txtTopNumber.setText("(" + fragmentBookSharing.getNumberNotSharing() + ")");
+                }else{
+                    holder.layoutTitle.setVisibility(View.GONE);
+                }
+            }else if(entity.getSharingStatus() == 3){
+                if(!fragmentBookSharing.getTitleLost()) {
+                    fragmentBookSharing.setTitleLost(true);
+                    entity.setIsTitle(true);
+                    fragmentBookSharing.refreshListBook(entity,position);
+                }
+                if(entity.isTitle()) {
+                    holder.layoutTitle.setVisibility(View.VISIBLE);
+                    holder.txtTopTitle.setText("Sách thất lạc");
+                    holder.txtTopNumber.setText("(" + fragmentBookSharing.getNumberLost() + ")");
+                }else{
+                    holder.layoutTitle.setVisibility(View.GONE);
+                }
+            }
+
         }
         holder.mySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             fragmentBookSharing.changeStatusBook(entity,position);
@@ -104,6 +150,8 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
         RatingBar ratingBar;
         Switch mySwitch;
         RelativeLayout viewParrent,layoutDelete;
+        LinearLayout layoutTitle;
+        TextView txtTopTitle,txtTopNumber;
         public BookSharingViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.txtName);
@@ -116,6 +164,9 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
             mySwitch = (Switch) view.findViewById(R.id.mySwitch);
             viewParrent = (RelativeLayout) view.findViewById(R.id.rootView);
             layoutDelete = (RelativeLayout) view.findViewById(R.id.layoutDelete);
+            layoutTitle = (LinearLayout) view.findViewById(R.id.layoutTitle);
+            txtTopTitle = (TextView) view.findViewById(R.id.txtTopTitle);
+            txtTopNumber = (TextView) view.findViewById(R.id.txtTopNumber);
         }
     }
 }

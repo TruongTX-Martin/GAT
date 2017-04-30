@@ -1,6 +1,7 @@
 package com.gat.feature.editinfo;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -64,6 +65,10 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     @BindView(R.id.imgSave)
     ImageView imgSave;
+
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
     private Bitmap currentBitmap;
     private File fileImage;
 
@@ -97,14 +102,25 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             edtName.setFocusable(true);
         });
         imgSave.setOnClickListener(v -> updateProfile());
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               backToPreviousActivity();
+            }
+        });
     }
 
-    private void editInfoError(ServerResponse<ResponseData> error){
+    private void backToPreviousActivity(){
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_OK,intent);
+        finish();
+    }
+    private void editInfoError(String error){
         ClientUtils.showToast("Error");
     }
 
-    private void editInfoSuccess(Data data){
-        ClientUtils.showToast("Success");
+    private void editInfoSuccess(String message){
+        ClientUtils.showToast(message);
     }
     private void updateProfile(){
         String name = edtName.getText().toString().trim();
@@ -248,4 +264,9 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     }
 
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backToPreviousActivity();
+    }
 }

@@ -12,10 +12,10 @@ import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPre
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenterImpl;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenter;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenterImpl;
-import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenter;
-import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenterImpl;
-import com.gat.feature.bookdetailrequest.BookDetailRequestPresenter;
-import com.gat.feature.bookdetailrequest.BookDetailRequestPresenterImpl;
+import com.gat.feature.bookdetailowner.BookDetailOwnerPresenter;
+import com.gat.feature.bookdetailowner.BookDetailOwnerPresenterImpl;
+import com.gat.feature.bookdetailsender.BookDetailSenderPresenter;
+import com.gat.feature.bookdetailsender.BookDetailSenderPresenterImpl;
 import com.gat.feature.editinfo.EditInfoPresenter;
 import com.gat.feature.editinfo.EditInfoPresenterImpl;
 import com.gat.feature.login.LoginPresenter;
@@ -145,9 +145,9 @@ public class PresenterModule {
     }
 
     @Provides
-    BookDetailRequestPresenter provideBookDetailRequestPresenter(UseCaseFactory useCaseFactory,
-                                                          SchedulerFactory schedulerFactory) {
-        return new BookDetailRequestPresenterImpl(useCaseFactory, schedulerFactory);
+    BookDetailSenderPresenter provideBookDetailRequestPresenter(UseCaseFactory useCaseFactory,
+                                                                SchedulerFactory schedulerFactory) {
+        return new BookDetailSenderPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
     @Provides
@@ -186,8 +186,8 @@ public class PresenterModule {
         return new ScanPresenterImpl(useCaseFactory, schedulerFactory);
     }
     @Provides
-    BookDetailBorrowPresenter provideBookDetailBorrowPresenter(UseCaseFactory useCaseFactory,
-                                                         SchedulerFactory schedulerFactory) {
-        return new BookDetailBorrowPresenterImpl(useCaseFactory, schedulerFactory);
+    BookDetailOwnerPresenter provideBookDetailBorrowPresenter(UseCaseFactory useCaseFactory,
+                                                              SchedulerFactory schedulerFactory) {
+        return new BookDetailOwnerPresenterImpl(useCaseFactory, schedulerFactory);
     }
 }

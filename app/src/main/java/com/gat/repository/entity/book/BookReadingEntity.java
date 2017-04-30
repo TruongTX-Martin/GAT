@@ -54,6 +54,7 @@ public class BookReadingEntity {
     @SerializedName("completeDate")
     private String completeDate = Strings.EMPTY;
 
+    private boolean isTitle ;
 
     public String getTitle() {
         return title;
@@ -73,5 +74,17 @@ public class BookReadingEntity {
 
     public double getRateAvg() {
         return rateAvg;
+    }
+
+    public int getReadingStatus() {
+        return readingStatus;
+    }
+
+    public boolean isTitle() {
+        return isTitle;
+    }
+
+    public void setTitle(boolean title) {
+        isTitle = title;
     }
 }

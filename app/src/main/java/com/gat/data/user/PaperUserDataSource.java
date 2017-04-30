@@ -15,6 +15,7 @@ import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
@@ -185,7 +186,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> updateUserInfo(EditInfoInput input) {
+    public Observable<String> updateUserInfo(EditInfoInput input) {
         return null;
     }
 
@@ -196,6 +197,11 @@ public class PaperUserDataSource implements UserDataSource {
 
     @Override
     public Observable<Data> getBookDetail(Integer input) {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> requestBookByBorrower(RequestStatusInput input) {
         return null;
     }
 

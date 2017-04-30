@@ -306,5 +306,22 @@ public interface GatApi {
             @Field("ownerId") int ownerId
     );
 
+    @FormUrlEncoded
+    @POST("share/update_request_by_borrower")
+    Observable<Response<ServerResponse<Data>>> requestBookByBorrower(
+            @Field("recordId") int recordId,
+            @Field("currentStatus") int currentStatus,
+            @Field("newStatus") int newStatus
+    );
+
+
+    @FormUrlEncoded
+    @POST("share/update_request_by_owner")
+    Observable<Response<ServerResponse<Data>>> requestBookByOwner(
+            @Field("recordId") int recordId,
+            @Field("currentStatus") int currentStatus,
+            @Field("newStatus") int newStatus
+    );
+
 
 }

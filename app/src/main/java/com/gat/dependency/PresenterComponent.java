@@ -1,10 +1,9 @@
 package com.gat.dependency;
 
-import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenter;
-import com.gat.feature.bookdetailrequest.BookDetailRequestPresenter;
+import com.gat.feature.bookdetailowner.BookDetailOwnerPresenter;
+import com.gat.feature.bookdetailsender.BookDetailSenderPresenter;
 import com.gat.feature.editinfo.EditInfoPresenter;
 
-import com.gat.feature.book_detail.BookDetailPresenter;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcasePresenter;
 import com.gat.feature.book_detail.comment.CommentPresenter;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenter;
@@ -50,12 +49,12 @@ public interface PresenterComponent {
 
     EditInfoPresenter getEditInfoPresenter();
     PersonalUserPresenter getPersonalUserPresenter();
-    BookDetailRequestPresenter getBookDetailRequestPresenter();
+    BookDetailSenderPresenter getBookDetailRequestPresenter();
     SelfUpdateReadingPresenter getSelfUpdateReadingPresenter();
     ListUserSharingBookPresenter getListUserSharingBookPresenter();
     AddToBookcasePresenter getAddToBookcasePresenter();
     CommentPresenter getCommentPresenter();
-    BookDetailRequestPresenter getBookDetailPresenter();
-    BookDetailBorrowPresenter getBookDetailBorrowPresenter();
+    BookDetailSenderPresenter getBookDetailPresenter();
+    BookDetailOwnerPresenter getBookDetailBorrowPresenter();
     ScanPresenter getScanPresenter();
 }

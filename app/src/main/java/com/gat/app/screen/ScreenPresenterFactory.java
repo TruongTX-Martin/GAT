@@ -1,8 +1,8 @@
 package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
-import com.gat.feature.bookdetailborrow.BookDetailBorrowScreen;
-import com.gat.feature.bookdetailrequest.BookDetailRequestScreen;
+import com.gat.feature.bookdetailowner.BookDetailOwnerScreen;
+import com.gat.feature.bookdetailsender.BookDetailSenderScreen;
 import com.gat.feature.editinfo.EditInfoScreen;
 import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
@@ -10,7 +10,6 @@ import com.gat.feature.book_detail.comment.CommentScreen;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
-import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessageScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.personal.PersonalScreen;
@@ -67,9 +66,9 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getEditInfoPresenter();
         }else if (key instanceof PersonalUserScreen){
             return (P) presenterComponent.getPersonalUserPresenter();
-        }else if (key instanceof BookDetailRequestScreen) {
+        }else if (key instanceof BookDetailSenderScreen) {
             return (P) presenterComponent.getBookDetailPresenter();
-        }else  if(key instanceof BookDetailBorrowScreen) {
+        }else  if(key instanceof BookDetailOwnerScreen) {
             return (P) presenterComponent.getBookDetailBorrowPresenter();
         }
         else if (key instanceof BookDetailScreen)

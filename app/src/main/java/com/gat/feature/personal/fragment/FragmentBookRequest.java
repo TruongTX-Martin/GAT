@@ -21,15 +21,13 @@ import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.common.listener.RecyclerItemClickListener;
-import com.gat.common.util.ClientUtils;
-import com.gat.feature.bookdetailborrow.BookDetailBorrowActivity;
-import com.gat.feature.bookdetailrequest.BookDetailRequestActivity;
+import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
+import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookRequestAdapter;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.book.BookRequestEntity;
-import com.gat.repository.entity.book.BookSharingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,13 +130,13 @@ public class FragmentBookRequest extends Fragment {
                 int recordType = entity.getRecordType();
                 int recodeId = entity.getRecordId();
                 if( recordType == 1 ) {
-                    //sharing
-                    Intent intent = new Intent(MainActivity.instance, BookDetailBorrowActivity.class);
+                    //sharing - user borrower -> request  by owner
+                    Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
                     intent.putExtra("BorrowingRecordId",recodeId);
                     MainActivity.instance.startActivity(intent);
                 }else if (recordType == 2){
-                    //borrowing
-                    Intent intent = new Intent(MainActivity.instance, BookDetailRequestActivity.class);
+                    //borrowing - use owerner -> request by sender
+                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
                     intent.putExtra("BorrowingRecordId",recodeId);
                     MainActivity.instance.startActivity(intent);
                 }
