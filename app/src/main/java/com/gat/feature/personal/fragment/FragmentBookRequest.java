@@ -1,6 +1,7 @@
 package com.gat.feature.personal.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,11 +20,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.listener.RecyclerItemClickListener;
+import com.gat.common.util.ClientUtils;
+import com.gat.feature.bookdetailborrow.BookDetailBorrowActivity;
+import com.gat.feature.bookdetailrequest.BookDetailRequestActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookRequestAdapter;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.repository.entity.book.BookRequestEntity;
+import com.gat.repository.entity.book.BookSharingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +125,30 @@ public class FragmentBookRequest extends Fragment {
 
     private void handleEvent() {
         layoutFilter.setOnClickListener(v -> showDialogFilter());
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                BookRequestEntity entity = listBookRequest.get(position);
+                int recordType = entity.getRecordType();
+                int recodeId = entity.getRecordId();
+                if( recordType == 1 ) {
+                    //sharing
+                    Intent intent = new Intent(MainActivity.instance, BookDetailBorrowActivity.class);
+                    intent.putExtra("BorrowingRecordId",recodeId);
+                    MainActivity.instance.startActivity(intent);
+                }else if (recordType == 2){
+                    //borrowing
+                    Intent intent = new Intent(MainActivity.instance, BookDetailRequestActivity.class);
+                    intent.putExtra("BorrowingRecordId",recodeId);
+                    MainActivity.instance.startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        }));
     }
 
     private void showLoading() {
@@ -373,6 +403,7 @@ public class FragmentBookRequest extends Fragment {
     }
 
     private void searchBook(){
+        if(currentInput == null) return;
         isRequesting = true;
         parrentActivity.requestBookRequest(currentInput);
         if(currentInput.getPage() == 1){

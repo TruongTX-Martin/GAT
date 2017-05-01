@@ -1,10 +1,15 @@
 package com.gat.data;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.util.Log;
 
 import com.gat.common.adapter.Item;
+import com.gat.common.util.ClientUtils;
+import com.gat.common.util.CommonCheck;
 import com.gat.common.util.MZDebug;
+import com.gat.common.util.Strings;
 import com.gat.data.api.GatApi;
 import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
@@ -12,6 +17,7 @@ import com.gat.data.id.LongId;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.SimpleResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
@@ -34,6 +40,8 @@ import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,7 +72,6 @@ public class DebugUserDataSource implements UserDataSource {
         Observable<Response<ServerResponse<Data<User>>>> responseObservable;
         responseObservable = api.getUserPublicInfo(userId);
         return responseObservable.map(response -> {
-            //Log.d(TAG, "UserId" + userId);
             User user = User.NONE;
             ServerResponse<Data<User>> serverResponse = response.body();
             if (serverResponse == null) {
@@ -113,22 +120,8 @@ public class DebugUserDataSource implements UserDataSource {
             response = api.loginBySocial(socialLoginData.socialID(), Integer.toString(socialLoginData.type()));
         }
         return response.map(result -> {
-            ServerResponse<LoginResponseData> sr = result.body();
-            if (sr == null) {
-                Log.d(TAG, result.toString());
-                Log.d(TAG, result.raw().toString());
-                Log.d(TAG, result.message());
-                Log.d(TAG, Integer.toString(result.code()));
-                sr = ServerResponse.BAD_RESPONSE;
-                sr.code(result.code());
-                throw new LoginException(sr);
-            } else {
-                Log.d(TAG, sr.message());
-                Log.d(TAG, sr.data().loginToken());
-                sr.code(result.code());
-                if (!sr.isOk())
-                    throw new LoginException(sr);
-            }
+            ServerResponse<LoginResponseData> sr = CommonCheck.checkResponse(result);
+            sr.code(result.code());
             return sr;
         });
     }
@@ -144,32 +137,21 @@ public class DebugUserDataSource implements UserDataSource {
             response = api.registerByEmail(emailLoginData.email(), emailLoginData.password(), emailLoginData.name());
         } else {
             SocialLoginData socialLoginData = (SocialLoginData) loginData;
+            Bitmap bitmap = ClientUtils.getBitmapFromURL(socialLoginData.image());
             response = api.registerBySocial(
                     socialLoginData.socialID(),
                     Integer.toString(socialLoginData.type()),
                     socialLoginData.name(),
                     socialLoginData.email(),
-                    socialLoginData.password()/*,
-                        image*/);
+                    socialLoginData.password(),
+                    bitmap == null ? Strings.EMPTY : ClientUtils.imageEncode64(bitmap));
         }
         ObservableTransformer<Response<ServerResponse<LoginResponseData>>, ServerResponse<LoginResponseData>> transformer =
                 upstream -> upstream.map(result -> {
-                    ServerResponse<LoginResponseData> sr = result.body();
-                    if (sr == null) {
-                        Log.d(TAG, result.toString());
-                        Log.d(TAG, result.raw().toString());
-                        Log.d(TAG, result.message());
-                        Log.d(TAG, Integer.toString(result.code()));
-                        sr = ServerResponse.BAD_RESPONSE;
-                        sr.code(result.code());
-                        throw new LoginException(sr);
-                    } else {
-                        Log.d(TAG, sr.message());
-                        Log.d(TAG, sr.data().loginToken());
-                        sr.code(result.code());
-                        if (!sr.isOk())
-                            throw new LoginException(sr);
-                    }
+                    ServerResponse<LoginResponseData> sr = CommonCheck.checkResponse(result);
+                    Log.d(TAG, sr.message());
+                    Log.d(TAG, sr.data().loginToken());
+                    sr.code(result.code());
                     return sr;
                 });
         return response.compose(transformer);
@@ -183,10 +165,7 @@ public class DebugUserDataSource implements UserDataSource {
         Observable<Response<ServerResponse<ResetPasswordResponseData>>> responseObservable;
         responseObservable = api.requestResetPassword(email);
         return responseObservable.map(response -> {
-            ServerResponse<ResetPasswordResponseData> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<ResetPasswordResponseData> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse;
         });
@@ -204,10 +183,7 @@ public class DebugUserDataSource implements UserDataSource {
         Log.d(TAG, "code:" + code + ",token:" + tokenReset);
 
         return responseObservable.map(response -> {
-            ServerResponse<VerifyTokenResponseData> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<VerifyTokenResponseData> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse;
         });
@@ -226,10 +202,7 @@ public class DebugUserDataSource implements UserDataSource {
         Log.d(TAG, "password:" + password + ",token:" + tokenVerified);
 
         return responseObservable.map(response -> {
-            ServerResponse<LoginResponseData> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<LoginResponseData> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse;
         });
@@ -241,13 +214,11 @@ public class DebugUserDataSource implements UserDataSource {
         Log.d(TAG, "updateLocation:" + address + "," + longitude + "," + latitude);
         GatApi api = dataComponent.getPrivateGatApi();
 
-        Observable<Response<ServerResponse>> responseObservable;
+        Observable<Response<ServerResponse<SimpleResponse>>> responseObservable;
         responseObservable = api.updateLocation(address, longitude, latitude);
         return responseObservable.map(response -> {
-            ServerResponse serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            // TODO need to check response
+            ServerResponse serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse;
         });
@@ -258,13 +229,10 @@ public class DebugUserDataSource implements UserDataSource {
         Log.d(TAG, "updateCategories");
         GatApi api = dataComponent.getPrivateGatApi();
 
-        Observable<Response<ServerResponse>> responseObservable;
+        Observable<Response<ServerResponse<SimpleResponse>>> responseObservable;
         responseObservable = api.updateCategory(categories);
         return responseObservable.map(response -> {
-            ServerResponse serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse;
         });

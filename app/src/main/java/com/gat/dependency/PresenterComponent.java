@@ -1,6 +1,7 @@
 package com.gat.dependency;
 
-import com.gat.feature.bookdetail.BookDetailRequestPresenter;
+import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenter;
+import com.gat.feature.bookdetailrequest.BookDetailRequestPresenter;
 import com.gat.feature.editinfo.EditInfoPresenter;
 
 import com.gat.feature.book_detail.BookDetailPresenter;
@@ -50,12 +51,11 @@ public interface PresenterComponent {
     EditInfoPresenter getEditInfoPresenter();
     PersonalUserPresenter getPersonalUserPresenter();
     BookDetailRequestPresenter getBookDetailRequestPresenter();
-
-    BookDetailPresenter getBookDetailPresenter();
     SelfUpdateReadingPresenter getSelfUpdateReadingPresenter();
     ListUserSharingBookPresenter getListUserSharingBookPresenter();
     AddToBookcasePresenter getAddToBookcasePresenter();
     CommentPresenter getCommentPresenter();
-
+    BookDetailPresenter getBookDetailPresenter();
+    BookDetailBorrowPresenter getBookDetailBorrowPresenter();
     ScanPresenter getScanPresenter();
 }

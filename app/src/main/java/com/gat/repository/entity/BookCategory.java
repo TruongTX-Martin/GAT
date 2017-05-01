@@ -11,7 +11,8 @@ public abstract class BookCategory {
     public abstract String name();
     public abstract int coverId();
     public abstract boolean favor();
-    public static BookCategory instance(String name, int coverId, boolean favor) {
-        return new AutoValue_BookCategory(name,coverId, favor);
+    public abstract int categoryId();
+    public static BookCategory instance(String name, int coverId, boolean favor, int categoryId) {
+        return new AutoValue_BookCategory(name,coverId, favor, categoryId);
     }
 }

@@ -5,10 +5,13 @@
     <!--<string name="facebook_app_id">1130625350393376</string>-->
 
     <!-- REAL -->
-    <!--<string name="facebook_app_id">213118392506307</string>-->
+    <string name="facebook_app_id">1937935059771206</string>
+    <string name="twitter_api_secret">iiUTGYNsXTpwhtmGVIfxEtkBhVHl6VLNrKD4hDxZ2fwNyk9Jdl</string>
+    <string name="twitter_api_key">gKxGJeazBQC8Mk5AwLZeMUxcC</string>
+    <string name="map_api_key">AIzaSyB6iy69TsVPpstHblohdVn7mGnIrETCSLo</string>
 
     <!-- DEV -->
-    <string name="facebook_app_id">936889173084630</string>
+    <!--<string name="facebook_app_id">936889173084630</string>-->
 
     <string name="hintSearch">Search book</string>
 
@@ -84,18 +87,25 @@
     <string name="updating">Updating...</string>
     <string name="invalid_location">Please select location first.</string>
 
-    <string name="category_1">Category1</string>
-    <string name="category_2">Category2</string>
-    <string name="category_3">Category3</string>
-    <string name="category_4">Category4</string>
-    <string name="category_5">Category5</string>
-    <string name="category_6">Category6</string>
-    <string name="category_7">Category7</string>
-    <string name="category_8">Category8</string>
-    <string name="category_9">Category9</string>
-    <string name="category_10">Category10</string>
+    <!-- Book category -->
+    <string name="category_1">Literary</string>
+    <string name="category_2">Skill</string>
+    <string name="category_3">Business</string>
+    <string name="category_4">History&amp;Geography</string>
+    <string name="category_5">Art&amp;Photography</string>
+    <string name="category_6">Religion&amp;Spirituality</string>
+    <string name="category_7">Children</string>
+    <string name="category_8">Comic</string>
+    <string name="category_9">Science</string>
+    <string name="category_10">Schoolbook</string>
+    <string name="category_11">Textbook</string>
+    <string name="category_12">Language&amp;Dictionary</string>
+    <string name="category_13">Mother&amp;Children</string>
+    <string name="category_14">Magazine</string>
+    <string name="category_15">General</string>
     <string name="btn_add_category">Add category</string>
     <string name="register_category_header">Favourite category</string>
+
     <string name="scan_barcode_header">Scan barcode</string>
     <string name="scan_barcode_guide">Move camera to barcode area\nto scan barcode</string>
     <string name="btn_turn_on_light">Turn on light</string>
@@ -165,6 +175,9 @@
     <string name="post_the_share">ĐĂNG CHIA SẺ</string>
     <string name="remove_from_reading_list">Xóa khỏi danh sách đọc</string>
     <string name="ask_remove_from_reading_list">Bạn muốn xóa cuốn sách này khỏi danh sách sách đọc?</string>
+    <string name="book_not_found">The ISBN is not found on our system.</string>
+    <string name="isbn_invalid_message">Your ISBN is not valid. Please try again with another book.</string>
+    <string name="inputLocationHint">Enter your location</string>
 
 
 </resources>

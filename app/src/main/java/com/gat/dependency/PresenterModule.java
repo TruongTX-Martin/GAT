@@ -2,12 +2,6 @@ package com.gat.dependency;
 
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
-
-import com.gat.feature.bookdetail.BookDetailRequestPresenter;
-import com.gat.feature.bookdetail.BookDetailRequestPresenterImpl;
-import com.gat.feature.editinfo.EditInfoPresenter;
-import com.gat.feature.editinfo.EditInfoPresenterImpl;
-
 import com.gat.feature.book_detail.BookDetailPresenter;
 import com.gat.feature.book_detail.BookDetailPresenterImpl;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcasePresenter;
@@ -18,15 +12,20 @@ import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPre
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenterImpl;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenter;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenterImpl;
-
+import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenter;
+import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenterImpl;
+import com.gat.feature.bookdetailrequest.BookDetailRequestPresenter;
+import com.gat.feature.bookdetailrequest.BookDetailRequestPresenterImpl;
+import com.gat.feature.editinfo.EditInfoPresenter;
+import com.gat.feature.editinfo.EditInfoPresenterImpl;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.main.MainPresenterImpl;
-import com.gat.feature.personal.PersonalPresenter;
-import com.gat.feature.personal.PersonalPresenterImpl;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessagePresenterImpl;
+import com.gat.feature.personal.PersonalPresenter;
+import com.gat.feature.personal.PersonalPresenterImpl;
 import com.gat.feature.personaluser.PersonalUserPresenter;
 import com.gat.feature.personaluser.PersonalUserPresenterImpl;
 import com.gat.feature.register.RegisterPresenter;
@@ -185,5 +184,10 @@ public class PresenterModule {
     ScanPresenter provideScanPresenter (UseCaseFactory useCaseFactory,
                                            SchedulerFactory schedulerFactory) {
         return new ScanPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+    @Provides
+    BookDetailBorrowPresenter provideBookDetailBorrowPresenter(UseCaseFactory useCaseFactory,
+                                                         SchedulerFactory schedulerFactory) {
+        return new BookDetailBorrowPresenterImpl(useCaseFactory, schedulerFactory);
     }
 }
