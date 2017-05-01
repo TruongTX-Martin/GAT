@@ -55,6 +55,10 @@ android {
         }
     }
 
+    dexOptions {
+        // Prevent OutOfMemory with MultiDex during the build phase
+        javaMaxHeapSize "4g"
+    }
     defaultConfig {
         applicationId                   configuration.applicationId
         minSdkVersion                   configuration.minimumSdkVersion

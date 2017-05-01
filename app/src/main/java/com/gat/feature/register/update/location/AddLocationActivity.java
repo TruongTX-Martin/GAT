@@ -2,8 +2,10 @@ package com.gat.feature.register.update.location;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,50 +15,42 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.UserAddressData;
-import com.gat.domain.SchedulerFactory;
-import com.gat.feature.register.RegisterPresenter;
-import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryActivity;
-import com.gat.feature.register.update.category.AddCategoryPresenter;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.drive.query.Filter;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -98,6 +92,7 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
     private static final String KEY_LOCATION = "select_location";
 
     private Marker marker;
+    private Marker currentLocationMarker;
 
     // Used for selecting the current place.
     private String inputAddress = Strings.EMPTY;
@@ -112,6 +107,8 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
     private Subject<List<String>> getLocationSubject;
     private Subject<LatLng> updateLocationSubject;
     private Subject<String> notFoundSubject;
+
+    private String countryCode = "VN";
 
 
     @BindView(R.id.btn_add_location)
@@ -171,9 +168,7 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         if (savedInstanceState != null) {
             selectedLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             inputAddress = savedInstanceState.getParcelable(KEY_ADDRESS);
-            if (selectedLocation != null) {
-                addMarker(true);
-            }
+            updateLocationGUI(false);
         }
 
         // Build the Play services client for use by the Fused Location Provider and the Places API.
@@ -208,8 +203,13 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().trim().length() > 0) {
                     searchBtn.setClickable(true);
+                    searchBtn.setEnabled(true);
                 } else {
                     searchBtn.setClickable(false);
+                    searchBtn.setEnabled(false);
+                    selectedLocation = null;
+                    inputAddress = Strings.EMPTY;
+                    updateLocationGUI(false);
                 }
             }
 
@@ -218,20 +218,36 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
             }
         });
 
+        locationText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String text = this.locationText.getText().toString();
+                if (text != null && !text.trim().isEmpty()) {
+                    getPlaceIdFromAddress(text);
+                    InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(locationText.getWindowToken(), 0);
+                }
+            }
+            return true;
+        });
+
         searchBtn.setOnClickListener(view -> {
-            getPlaceIdFromAddress(locationText.getText().toString());
+            String text = this.locationText.getText().toString();
+            if (text != null && !text.trim().isEmpty())
+                getPlaceIdFromAddress(text);
         });
     }
 
     private void onUpdateLocation(LatLng location) {
         selectedLocation = location;
         inputAddress = locationText.getText().toString();
-        addMarker(true);
-        changeButtonLable();
+        updateLocationGUI(false);
     }
 
     private void placeNotFound(String error) {
-
+        //Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+        selectedLocation = null;
+        inputAddress = locationText.getText().toString();
+        updateLocationGUI(true);
     }
 
     private void getPlaceIdFromAddress(String address)
@@ -239,7 +255,7 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         //Southwest corner to Northeast corner.
         LatLngBounds bounds = new LatLngBounds( new LatLng( 39.906374, -105.122337 ), new LatLng( 39.949552, -105.068779 ) );
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                //.setCountry("VN")
+                .setCountry(countryCode)
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
                 .build();
         Places.GeoDataApi.getAutocompletePredictions(googleApiClient, address, bounds, typeFilter)
@@ -250,11 +266,14 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                             for (Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator(); iterator.hasNext();) {
                                 placeIds.add(iterator.next().getPlaceId());
                             }
-                            getLocationFromPlaceId(placeIds);
+                            if (placeIds.isEmpty())
+                                notFoundSubject.onNext(getString(R.string.no_address_found));
+                            else
+                                getLocationFromPlaceId(placeIds);
                         }
                         autocompletePredictions.release();
                     } else {
-                        notFoundSubject.onNext("Place not found.");
+                        notFoundSubject.onNext(getString(R.string.no_address_found));
                     }
                 });
     }
@@ -265,7 +284,7 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 Place place = places.get(0);
                 updateLocationSubject.onNext(place.getLatLng());
             } else {
-                notFoundSubject.onNext("Place not found.");
+                notFoundSubject.onNext(getString(R.string.no_address_found));
             }
         });
     }
@@ -351,30 +370,6 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
     public void onMapReady(GoogleMap map) {
         googleMap = map;
 
-        // Use a custom info window adapter to handle multiple lines of text in the
-        // info window contents.
-        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            @Override
-            // Return null here, so that getInfoContents() is called next.
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                // Inflate the layouts for the info window, title and snippet.
-                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout)findViewById(R.id.map), false);
-
-                TextView title = ((TextView) infoWindow.findViewById(R.id.title));
-                // Always set title by input address
-                title.setText(inputAddress);
-
-                return infoWindow;
-            }
-        });
-
         /**
          * Handling drag map move
          */
@@ -385,33 +380,27 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 selectedLocation = center;
                 // Move marker to center of map
                 marker.setPosition(center);
-                marker.showInfoWindow();
             }
         });
 
         // Turn on the My Location layer and the related control on the map.
-        updateLocationUI();
+        updateMappingGUI();
     }
 
-    private void addMarker(boolean cameraMove) {
+    private void updateLocationMarker(boolean cameraMove) {
         if (marker != null) marker.remove();
 
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(selectedLocation)
-                .title(inputAddress)
-                .snippet(selectedLocation.toString())
-                .visible(true);
-        marker = googleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
+        if (selectedLocation != null && !Strings.isNullOrEmpty(inputAddress)) {
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(selectedLocation)
+                    .visible(true);
+            marker = googleMap.addMarker(markerOptions);
 
-        if (cameraMove)
-            // Move camera to selected position
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, DEFAULT_ZOOM));
+            if (cameraMove)
+                // Move camera to selected position
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, DEFAULT_ZOOM));
 
-    }
-
-    private void removeMarker() {
-        if (marker != null) marker.remove();
+        }
     }
 
     /**
@@ -432,16 +421,15 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 }
             }
         }
-        updateLocationUI();
+        updateMappingGUI();
     }
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
-    private void updateLocationUI() {
+    private void updateMappingGUI() {
         if (googleMap == null) {
             return;
         }
-
         /*
          * Request location permission, so that we can get the location of the
          * device. The result of the permission request is handled by a callback,
@@ -466,16 +454,17 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
 
             lastKnownLocation = LocationServices.FusedLocationApi
                     .getLastLocation(googleApiClient);
-            if (lastKnownLocation != null) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-            }
         } else {
+            // Cannot search
+            selectedLocation = null;
+            inputAddress = Strings.EMPTY;
+
             googleMap.setMyLocationEnabled(false);
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
             Log.d(TAG, "Cannot get device location");
         }
+        updateLocationGUI(selectedLocation == null ? true : false);
     }
 
     private void changeButtonLable() {
@@ -484,5 +473,58 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         } else {
             addLocationBtn.setText(getString(R.string.btn_pass_over));
         }
+    }
+
+    private void addCurrentLocation(Location lastKnownLocation, boolean move) {
+        if (lastKnownLocation != null) {
+            // add current location = marker icon
+            LatLng currentLatLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_current_location);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(currentLatLng).title("You're here").icon(icon);
+
+            if (currentLocationMarker != null) currentLocationMarker.remove();
+
+            currentLocationMarker = googleMap.addMarker(markerOptions);
+            if (move) {
+                // move camera
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM);
+                googleMap.moveCamera(cameraUpdate);
+            }
+        }
+    }
+
+    private void updateLocationGUI(boolean add) {
+        if (add && lastKnownLocation != null) {
+            // Get current address to display on text edit
+            List<Address> addresses = new ArrayList<>();
+            try {
+                addresses = new Geocoder(this, Locale.getDefault()).getFromLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude(), 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (!addresses.isEmpty()) {
+                String currentAddress = Strings.EMPTY;
+                for (int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++) {
+                    currentAddress += addresses.get(0).getAddressLine(i);
+                }
+                if (!Strings.isNullOrEmpty(currentAddress)) {
+                    locationText.setText(currentAddress);
+                    inputAddress = currentAddress;
+                }
+                countryCode = addresses.get(0).getCountryCode();
+                Log.d(TAG, "CountryCode:"+countryCode);
+            }
+
+            if (!Strings.isNullOrEmpty(inputAddress)) {
+                selectedLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                addCurrentLocation(lastKnownLocation, false);
+            } else {
+                addCurrentLocation(lastKnownLocation, true);
+            }
+        }
+
+        changeButtonLable();
+        updateLocationMarker(true);
     }
 }

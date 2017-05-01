@@ -26,6 +26,11 @@ import com.gat.feature.main.MainScreen;
 import com.gat.feature.message.GroupMessageActivity;
 import com.gat.feature.message.MessageScreen;
 import com.gat.feature.register.RegisterActivity;
+import com.gat.feature.register.RegisterScreen;
+import com.gat.feature.register.update.category.AddCategoryActivity;
+import com.gat.feature.register.update.category.AddCategoryScreen;
+import com.gat.feature.register.update.location.AddLocationActivity;
+import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 import com.gat.repository.entity.LoginData;
@@ -121,18 +126,15 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
 
         skip.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
         });
 
         loginBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), LoginActivity.class, LoginScreen.instance(Strings.EMPTY));
         });
 
         registerBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), RegisterActivity.class, RegisterScreen.instance());
         });
     }
 

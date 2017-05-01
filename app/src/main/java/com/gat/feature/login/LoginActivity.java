@@ -145,7 +145,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     private void loginWithGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestIdToken(getString(R.string.google_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestProfile()
                 .build();
         googleApiClient = new GoogleApiClient.Builder(this)

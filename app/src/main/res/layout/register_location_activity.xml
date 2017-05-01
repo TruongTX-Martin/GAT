@@ -47,6 +47,7 @@
             android:gravity="center_vertical"
             android:hint="@string/inputLocationHint"
             android:inputType="textAutoCorrect"
+            android:imeOptions="actionSearch"
             android:lines="1"
             android:padding="@dimen/paddingNormal"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
