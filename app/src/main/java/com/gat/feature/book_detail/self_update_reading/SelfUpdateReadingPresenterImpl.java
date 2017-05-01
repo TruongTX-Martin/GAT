@@ -26,7 +26,8 @@ public class SelfUpdateReadingPresenterImpl implements SelfUpdateReadingPresente
     private UseCase<ServerResponse> useCaseUpdateReadingStatus;
     private final Subject<String> subjectUpdateReadingStatus;
 
-    private BookReadingInfo mBookReadingInfo;
+    private int mEditionId;
+    private int mReadingStatus;
 
     public SelfUpdateReadingPresenterImpl(UseCaseFactory useCaseFactory,
                                           SchedulerFactory schedulerFactory) {
@@ -47,18 +48,21 @@ public class SelfUpdateReadingPresenterImpl implements SelfUpdateReadingPresente
     }
 
     @Override
-    public void setReadingInfo(BookReadingInfo bookReadingInfo) {
-        mBookReadingInfo = bookReadingInfo;
+    public void setEditionId(int editionId) {
+        mEditionId = editionId;
+    }
+
+    @Override
+    public void setReadingStatus(int readingStatus) {
+        mReadingStatus = readingStatus;
     }
 
     @Override
     public void updateReadingStatus(int state) {
-        if (mBookReadingInfo == null) {
-            return;
-        }
+
         MZDebug.i("__________ updateReadingStatus, reading status = " + state);
 
-        useCaseUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(mBookReadingInfo.getEditionId(), state);
+        useCaseUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(mEditionId, state);
         useCaseUpdateReadingStatus.executeOn(schedulerFactory.io()).
                 returnOn(schedulerFactory.main()).
                 onNext(serverResponse -> {

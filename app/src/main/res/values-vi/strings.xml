@@ -19,7 +19,7 @@
 
     <string name="total_comments">Lượt nhận xét</string>
     <string name="history">Lịch sử</string>
-    <string name="show_count_search_result">Hiển thị %1$s kết quả tìm kiếm</string>
+    <string name="show_count_search_result">Hiển thị %1$d kết quả tìm kiếm</string>
     <string name="tab_book_name">Tên sách</string>
     <string name="tab_book_author">Tác giả</string>
     <string name="tab_user_name">Người dùng</string>

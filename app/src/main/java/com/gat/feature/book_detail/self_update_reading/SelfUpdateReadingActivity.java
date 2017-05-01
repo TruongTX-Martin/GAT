@@ -71,8 +71,9 @@ public class SelfUpdateReadingActivity
 
         radioGroup.setOnCheckedChangeListener(this);
 
-        getPresenter().setReadingInfo(getScreen().bookReadingInfo());
-        mReadingState = getScreen().bookReadingInfo().getReadingStatus();
+        getPresenter().setEditionId(getScreen().editionId());
+        getPresenter().setReadingStatus(getScreen().readingStatus());
+        mReadingState = getScreen().readingStatus();
         setChecked (mReadingState);
     }
 

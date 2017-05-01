@@ -19,6 +19,7 @@
         android:layout_gravity="center_vertical"
         android:textColor="@color/colorTextViewGray"
         android:textSize="@dimen/normal_text_view_size"
-        android:text="Jenifer" android:layout_marginStart="30dp"/>
+        android:text="Jenifer"
+        android:layout_marginStart="30dp"/>
 
 </LinearLayout>

@@ -142,7 +142,9 @@ public class ParcelableScreen implements Parcelable {
             dest.writeInt(bookDetailScreen.editionId());
         } else if (screen instanceof SelfUpdateReadingScreen) {
             SelfUpdateReadingScreen selfUpdateReadingScreen = (SelfUpdateReadingScreen) screen;
-            dest.writeParcelable(selfUpdateReadingScreen.bookReadingInfo(), flags);
+            dest.writeInt(selfUpdateReadingScreen.editionId());
+            dest.writeInt(selfUpdateReadingScreen.readingStatus());
+
         } else if (screen instanceof ListUserSharingBookScreen) {
             ListUserSharingBookScreen userSharingBookScreen = (ListUserSharingBookScreen) screen;
             dest.writeList(userSharingBookScreen.listUser());
@@ -205,7 +207,7 @@ public class ParcelableScreen implements Parcelable {
                 screen = BookDetailScreen.instance(in.readInt());
                 break;
             case SELF_UPDATE_READING:
-                screen = SelfUpdateReadingScreen.instance(in.readParcelable(BookReadingInfo.class.getClassLoader()));
+                screen = SelfUpdateReadingScreen.instance(in.readInt(), in.readInt());
                 break;
             case LIST_USER_SHARING_BOOK:
                 List<UserResponse> myList = null;

@@ -20,11 +20,11 @@ public abstract class NotifyEntity {
     public abstract int sourceId();
     public abstract String sourceName();
     public abstract String sourceImage();
-    public abstract int targetId();
+    public abstract @Nullable String targetId(); // chỗ này là Int, nhưng trả về null nên phải để tạm là string
     public abstract String targetName();
     public abstract int referId();
     public abstract boolean pullFlag();
-    public abstract String modifyTime();
+    public abstract @Nullable String beginTime();
 
 
     public static TypeAdapter<NotifyEntity> typeAdapter(Gson gson) {
@@ -39,11 +39,11 @@ public abstract class NotifyEntity {
                 .sourceId(0)
                 .sourceName("")
                 .sourceImage("")
-                .targetId(0)
+                .targetId("0")
                 .targetName("")
                 .referId(0)
                 .pullFlag(false)
-                .modifyTime("");
+                .beginTime("");
     }
 
     @AutoValue.Builder
@@ -54,11 +54,11 @@ public abstract class NotifyEntity {
         public abstract Builder sourceId(int sourceId);
         public abstract Builder sourceName(String sourceName);
         public abstract Builder sourceImage(String sourceImage);
-        public abstract Builder targetId(int targetId);
+        public abstract Builder targetId(String targetId);
         public abstract Builder targetName(String targetName);
         public abstract Builder referId(int referId);
         public abstract Builder pullFlag(boolean pullFlag);
-        public abstract Builder modifyTime(String modifyTime);
+        public abstract Builder beginTime(String beginTime);
         public abstract NotifyEntity build();
     }
 

@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
-import com.gat.feature.notification.item.DateTimeItem;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,7 +20,7 @@ public class DateTimeItemViewHolder extends ItemViewHolder<DateTimeItem> {
 
     public DateTimeItemViewHolder(ViewGroup parent, @LayoutRes int layoutId) {
         super(parent, layoutId);
-        ButterKnife.bind(this. itemView);
+        ButterKnife.bind(this, itemView);
     }
 
     @Override

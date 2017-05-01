@@ -51,8 +51,8 @@ public class NotificationPresenterImpl implements NotificationPresenter {
 
     @Override
     public void loadUserNotification() {
-
         MZDebug.w("_______________________________________________ loadUserNotification ");
+
         if (mTotalResult > PER_PAGE) {
             if (mCurrentPage * PER_PAGE >= mTotalResult) {
                 return;
@@ -63,7 +63,8 @@ public class NotificationPresenterImpl implements NotificationPresenter {
         useCaseNotifications.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    MZDebug.w("__________________________________ loadUserNotification SUCCESS ");
+                    MZDebug.w("______________________ loadUserNotification SUCCESS, size: " +
+                            data.getResultInfo().size());
                     mCurrentPage ++;
                     mTotalResult = data.getNotifyTotal();
                     subjectLoadNotificationsSuccess.onNext(data.getResultInfo());

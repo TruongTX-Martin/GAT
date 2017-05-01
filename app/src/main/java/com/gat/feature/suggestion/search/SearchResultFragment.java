@@ -103,7 +103,8 @@ public class SearchResultFragment extends Fragment
             return;
         }
 
-        this.textViewTitle.setText("Hiển thị " + list.size() + " kết quả tìm kiếm");
+        String totalString = String.format(getString(R.string.show_count_search_result), list.size());
+        this.textViewTitle.setText(totalString);
 
         this.searchResultAdapter.clearAllItems();
         List<Item> listItems = SearchBuilder.transformListBook(list);

@@ -131,6 +131,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: getSelfReadingStatus _________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectReadingStatusFailure.onNext("Reading info = null");
                 })
                 .execute();
 
