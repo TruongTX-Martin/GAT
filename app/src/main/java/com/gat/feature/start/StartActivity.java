@@ -91,8 +91,8 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                 R.layout.activity_intro_slider3
         };
 
-        //if (!getScreen().tokenChange())
-        //    getPresenter().loadLocalUser();
+        if (!getScreen().tokenChange())
+            getPresenter().loadLocalUser();
 
         // adding bottom dots
         addBottomDots(0);
@@ -126,7 +126,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
 
         skip.setOnClickListener(view -> {
-            start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
+            start(getApplicationContext(), MainActivity.class, MainScreen.instance());
         });
 
         loginBtn.setOnClickListener(view -> {
