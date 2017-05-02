@@ -356,6 +356,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.15"
                 android:orientation="vertical"
+                android:visibility="gone"
                 >
 
                 <View

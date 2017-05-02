@@ -54,7 +54,7 @@ public class BookReadingEntity {
     @SerializedName("completeDate")
     private String completeDate = Strings.EMPTY;
 
-    private boolean isTitle ;
+    private boolean isHeader ;
 
     public String getTitle() {
         return title;
@@ -80,11 +80,11 @@ public class BookReadingEntity {
         return readingStatus;
     }
 
-    public boolean isTitle() {
-        return isTitle;
+    public void setHeader(boolean header) {
+        isHeader = header;
     }
 
-    public void setTitle(boolean title) {
-        isTitle = title;
+    public boolean isHeader() {
+        return isHeader;
     }
 }

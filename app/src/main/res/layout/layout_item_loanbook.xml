@@ -48,7 +48,7 @@
     <RelativeLayout
         android:id="@+id/rootView"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:background="#f7f7f7">
 
         <ImageView
@@ -141,6 +141,14 @@
             android:text="author"
             android:textColor="#000000" />
 
+        <TextView
+            android:id="@+id/txtBorrowFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutRating"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:textColor="#000000" />
+
         <LinearLayout
             android:id="@+id/layoutRating"
             android:layout_width="match_parent"
@@ -150,26 +158,18 @@
             android:layout_toRightOf="@+id/imgAvatar"
             android:orientation="horizontal">
 
-            <!--style="@style/CustomRatingBar"-->
+
             <RatingBar
                 android:id="@+id/ratingBar"
+                style="@style/CustomRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone"
                 android:numStars="5"
                 android:rating="3"
-                android:scaleX="0.5"
-                android:scaleY="0.5" />
+                android:scaleX="0.4"
+                android:visibility="gone"
+                android:scaleY="0.4" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/txtBorrowFrom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layoutRating"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:textColor="#000000" />
     </RelativeLayout>
 
     <View

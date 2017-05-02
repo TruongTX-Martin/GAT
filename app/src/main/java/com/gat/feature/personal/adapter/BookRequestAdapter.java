@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -55,6 +56,26 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                     ClientUtils.setImage(holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getBorrowerImageId(), Constance.IMAGE_SIZE_SMALL));
                 }
                 holder.ratingBar.setNumStars(3);
+                if (entity.getRecordType() == 1) {
+                    //yeu cau toi ban
+                    if(entity.isHeader()){
+                        holder.layoutTitle.setVisibility(View.VISIBLE);
+                        holder.txtTopTitle.setText("Yêu cầu tới bạn");
+                        holder.txtTopNumber.setText("("+fragment.getNumberRequestToYou()+")");
+                    }else{
+                        holder.layoutTitle.setVisibility(View.GONE);
+                    }
+
+                }else {
+                    //yeu cau tu ban
+                    if(entity.isHeader()){
+                        holder.layoutTitle.setVisibility(View.VISIBLE);
+                        holder.txtTopTitle.setText("Yêu cầu từ bạn");
+                        holder.txtTopNumber.setText("("+fragment.getNumberRequestFromYou()+")");
+                    }else{
+                        holder.layoutTitle.setVisibility(View.GONE);
+                    }
+                }
             }
             if(getItemCount() > 9 && position == (getItemCount() -1)){
                 fragment.loadMore();
@@ -71,12 +92,17 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
         TextView txtName,txtAuthor;
         ImageView imgAvatar;
         RatingBar ratingBar;
+        LinearLayout layoutTitle;
+        TextView txtTopTitle,txtTopNumber;
         public BookRequestViewHolder(View itemView) {
             super(itemView);
             txtName = (TextView) itemView.findViewById(R.id.txtName);
             txtAuthor = (TextView) itemView.findViewById(R.id.txtAuthor);
             imgAvatar = (ImageView) itemView.findViewById(R.id.imgAvatar);
             ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
+            layoutTitle = (LinearLayout) itemView.findViewById(R.id.layoutTitle);
+            txtTopTitle = (TextView) itemView.findViewById(R.id.txtTopTitle);
+            txtTopNumber = (TextView) itemView.findViewById(R.id.txtTopNumber);
         }
     }
 }

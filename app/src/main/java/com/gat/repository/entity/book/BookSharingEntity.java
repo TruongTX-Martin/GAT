@@ -68,18 +68,17 @@ public class BookSharingEntity {
     @SerializedName("requestingStatus")
     private int requestingStatus;
 
-    private boolean isTitle = false;
+    private boolean isHeader = false;
 
     public BookSharingEntity() {
     }
 
-
-    public boolean isTitle() {
-        return isTitle;
+    public boolean isHeader() {
+        return isHeader;
     }
 
-    public void setIsTitle(boolean title) {
-        isTitle = title;
+    public void setHeader(boolean header) {
+        isHeader = header;
     }
 
     public int getSharingCount() {

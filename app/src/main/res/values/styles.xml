@@ -70,8 +70,9 @@
     </style>
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
-        <item name="android:minHeight">28dp</item>
-        <item name="android:maxHeight">28dp</item>
+        <item name="android:progressDrawable">@drawable/star_rating_bar_full</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:maxHeight">48dp</item>
     </style>
 
     <style name="RadioButtonStyle" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">

@@ -80,12 +80,7 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
                 ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
             }
             if(entity.getSharingStatus() == 2 || entity.getSharingStatus() == 1) {
-                if(!fragmentBookSharing.getTitleSharing()){
-                    fragmentBookSharing.setTitleSharing(true);
-                    entity.setIsTitle(true);
-                    fragmentBookSharing.refreshListBook(entity,position);
-                }
-                if(entity.isTitle()) {
+                if(entity.isHeader()) {
                     holder.layoutTitle.setVisibility(View.VISIBLE);
                     holder.txtTopTitle.setText("Sách cho mượn");
                     holder.txtTopNumber.setText("(" + fragmentBookSharing.getNumberSharing() + ")");
@@ -94,12 +89,7 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
                 }
 
             }else if(entity.getSharingStatus() == 0){
-                if(!fragmentBookSharing.getTitleNotSharing()) {
-                    fragmentBookSharing.setTitleNotSharing(true);
-                    entity.setIsTitle(true);
-                    fragmentBookSharing.refreshListBook(entity,position);
-                }
-                if(entity.isTitle()) {
+                if(entity.isHeader()) {
                     holder.layoutTitle.setVisibility(View.VISIBLE);
                     holder.txtTopTitle.setText("Sách không cho mượn");
                     holder.txtTopNumber.setText("(" + fragmentBookSharing.getNumberNotSharing() + ")");
@@ -107,12 +97,7 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
                     holder.layoutTitle.setVisibility(View.GONE);
                 }
             }else if(entity.getSharingStatus() == 3){
-                if(!fragmentBookSharing.getTitleLost()) {
-                    fragmentBookSharing.setTitleLost(true);
-                    entity.setIsTitle(true);
-                    fragmentBookSharing.refreshListBook(entity,position);
-                }
-                if(entity.isTitle()) {
+                if(entity.isHeader()) {
                     holder.layoutTitle.setVisibility(View.VISIBLE);
                     holder.txtTopTitle.setText("Sách thất lạc");
                     holder.txtTopNumber.setText("(" + fragmentBookSharing.getNumberLost() + ")");

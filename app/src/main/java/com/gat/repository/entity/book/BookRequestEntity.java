@@ -70,6 +70,15 @@ public class BookRequestEntity {
     @SerializedName("rejectTime")
     private String rejectTime = Strings.EMPTY;
 
+    private boolean isHeader;
+
+    public boolean isHeader() {
+        return isHeader;
+    }
+
+    public void setHeader(boolean header) {
+        isHeader = header;
+    }
 
     public int getRecordId() {
         return recordId;

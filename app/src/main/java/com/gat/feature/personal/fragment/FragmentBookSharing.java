@@ -56,6 +56,7 @@ public class FragmentBookSharing extends Fragment {
     private RecyclerView recyclerView;
     private BookSharingAdapter adapterBookSharing;
     private int numberSharing,numberNotSharing,numberLost;
+
     private boolean setTitleSharing,setTitleNotSharing,setTitleLost;
 
     public void setParrentActivity(PersonalFragment parrentActivity) {
@@ -67,19 +68,32 @@ public class FragmentBookSharing extends Fragment {
     public void setListBook(List<BookSharingEntity> listBook) {
         try {
             if (listBook != null && listBook.size() > 0) {
-                    for (int i=0; i< listBook.size(); i++) {
-                        BookSharingEntity entity = listBook.get(i);
-                        if(entity.getSharingStatus()  == 2 || entity.getSharingStatus() == 1) {
-                            numberSharing ++;
-                        }else if(entity.getSharingStatus() == 0) {
-                            numberNotSharing ++;
-                        }else if(entity.getSharingStatus() == 3) {
-                            numberLost ++;
-                        }
-                    }
                 this.listBook.addAll(listBook);
-                for(int i = 0; i< this.listBook.size(); i++){
-                    this.listBook.get(i).setIsTitle(false);
+            }
+            for(int i = 0; i< this.listBook.size(); i++){
+                this.listBook.get(i).setHeader(false);
+            }
+            numberSharing =0; numberNotSharing =0; numberLost =0;
+            setTitleSharing = false; setTitleNotSharing = false;setTitleLost = false;
+            for (int i=0; i< this.listBook.size(); i++) {
+                if(this.listBook.get(i).getSharingStatus()  == 2 || this.listBook.get(i).getSharingStatus() == 1) {
+                    numberSharing ++;
+                    if(!setTitleSharing){
+                        this.listBook.get(i).setHeader(true);
+                        setTitleSharing = true;
+                    }
+                }else if(this.listBook.get(i).getSharingStatus() == 0) {
+                    numberNotSharing ++;
+                    if(!setTitleNotSharing) {
+                        this.listBook.get(i).setHeader(true);
+                        setTitleNotSharing  = true;
+                    }
+                }else if(this.listBook.get(i).getSharingStatus() == 3) {
+                    numberLost ++;
+                    if(!setTitleLost) {
+                        this.listBook.get(i).setHeader(true);
+                        setTitleLost  = true;
+                    }
                 }
             }
             if (currentInput.getPage() == 1) {
@@ -97,9 +111,9 @@ public class FragmentBookSharing extends Fragment {
             hideLoading();
             hideLoadMore();
             isRequesting = false;
-            setTitleSharing = false; setTitleNotSharing = false;setTitleLost = false;
-            adapterBookSharing = new BookSharingAdapter(this.listBook, getActivity().getApplicationContext(), this);
-            recyclerView.setAdapter(adapterBookSharing);
+            adapterBookSharing.notifyDataSetChanged();
+//            adapterBookSharing = new BookSharingAdapter(this.listBook, getActivity().getApplicationContext(), this);
+//            recyclerView.setAdapter(adapterBookSharing);
 
         } catch (Exception e) {
         }
@@ -115,7 +129,6 @@ public class FragmentBookSharing extends Fragment {
         handleEvent();
         showLoading();
         currentInput = new BookInstanceInput(true, false, false);
-        setTitleSharing = false; setTitleNotSharing = false;setTitleLost = false;
         searchBook(currentInput);
         return rootView;
     }
@@ -305,9 +318,10 @@ public class FragmentBookSharing extends Fragment {
                 txtMessage.setVisibility(View.GONE);
                 showLoading();
                 listBook.clear();
-            }else{
-                setTitleSharing = false;setTitleNotSharing = false;setTitleLost = false;
             }
+//            else{
+//                setTitleSharing = false;setTitleNotSharing = false;setTitleLost = false;
+//            }
         } catch (Exception e) {
         }
     }
@@ -336,29 +350,4 @@ public class FragmentBookSharing extends Fragment {
         return numberLost;
     }
 
-    public boolean getTitleLost() {
-        return setTitleLost;
-    }
-
-    public boolean getTitleSharing() {
-        return setTitleSharing;
-    }
-
-    public boolean getTitleNotSharing() {
-        return setTitleNotSharing;
-    }
-
-    public void setTitleLost(boolean lost){
-        this.setTitleLost = lost;
-    }
-    public void setTitleSharing(boolean setTitleSharing){
-        this.setTitleSharing = setTitleSharing;
-    }
-    public void setTitleNotSharing(boolean setTitleNotSharing){
-        this.setTitleNotSharing = setTitleNotSharing;
-    }
-    public void refreshListBook(BookSharingEntity entity,int position){
-        listBook.remove(position);
-        listBook.add(position,entity);
-    }
 }

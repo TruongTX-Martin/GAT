@@ -53,12 +53,7 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
                 }
                 holder.ratingBar.setNumStars((int)entity.getRateAvg());
                 if(entity.getReadingStatus() == 0) {
-                    if(!fragment.getTitleReaded()){
-                        fragment.setTitleReaded(true);
-                        entity.setTitle(true);
-                        fragment.refreshListBookReading(entity,position);
-                    }
-                    if(entity.isTitle()) {
+                    if(entity.isHeader()) {
                         holder.layoutTitle.setVisibility(View.VISIBLE);
                         holder.layoutTitle.setVisibility(View.VISIBLE);
                         holder.txtTopTitle.setText("Sách đã đọc");
@@ -67,12 +62,7 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
                         holder.layoutTitle.setVisibility(View.GONE);
                     }
                 }else if(entity.getReadingStatus() == 1) {
-                    if(!fragment.getTitleReading()){
-                        fragment.setTitleReading(true);
-                        entity.setTitle(true);
-                        fragment.refreshListBookReading(entity,position);
-                    }
-                    if(entity.isTitle()) {
+                    if(entity.isHeader()) {
                         holder.layoutTitle.setVisibility(View.VISIBLE);
                         holder.layoutTitle.setVisibility(View.VISIBLE);
                         holder.txtTopTitle.setText("Sách đang đọc");
@@ -81,12 +71,7 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
                         holder.layoutTitle.setVisibility(View.GONE);
                     }
                 }else {
-                    if(!fragment.getTitleToRead()){
-                        fragment.setTitleToRead(true);
-                        entity.setTitle(true);
-                        fragment.refreshListBookReading(entity,position);
-                    }
-                    if(entity.isTitle()) {
+                    if(entity.isHeader()) {
                         holder.layoutTitle.setVisibility(View.VISIBLE);
                         holder.layoutTitle.setVisibility(View.VISIBLE);
                         holder.txtTopTitle.setText("Sách sẽ đọc");

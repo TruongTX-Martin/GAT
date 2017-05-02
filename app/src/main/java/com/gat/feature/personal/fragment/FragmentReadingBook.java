@@ -65,39 +65,46 @@ public class FragmentReadingBook extends Fragment {
         try {
             if (currentInput.getPage() == 1) {
                 this.listBookReading.clear();
-                numberReaded = 0;numberReading = 0;numberToRead =0;
             }
             if (currentInput.getPage() > 1 && listBookReading.size() == 0) {
                 isContinueMore = false;
             }
-            if(listBookReading.size() > 0) {
-                for(BookReadingEntity entity : listBookReading) {
-                    if(entity.getReadingStatus() == 0) {
-                        numberReaded++;
-                    }else if (entity.getReadingStatus() == 1) {
-                        numberReading ++;
-                    }else{
-                        numberToRead ++;
-                    }
-                }
-            }
+
             this.listBookReading.addAll(listBookReading);
             for (int i=0; i< this.listBookReading.size(); i++){
-                this.listBookReading.get(i).setTitle(false);
+                this.listBookReading.get(i).setHeader(false);
+            }
+            numberReaded = 0;numberReading = 0;numberToRead =0;
+            setTitleReading(false);setTitleReaded(false);setTitleToRead(false);
+            if( this.listBookReading.size() > 0) {
+                for(int i=0; i<  this.listBookReading.size() ; i++) {
+                    if(this.listBookReading.get(i).getReadingStatus() == 0) {
+                        numberReaded++;
+                        if(!setTitleReaded){
+                            this.listBookReading.get(i).setHeader(true);
+                            setTitleReaded = true;
+                        }
+                    }else if (this.listBookReading.get(i).getReadingStatus() == 1) {
+                        numberReading ++;
+                        if(!setTitleReading){
+                            this.listBookReading.get(i).setHeader(true);
+                            setTitleReading = true;
+                        }
+                    }else{
+                        numberToRead ++;
+                        if(!setTitleToRead){
+                            this.listBookReading.get(i).setHeader(true);
+                            setTitleToRead = true;
+                        }
+                    }
+                }
             }
             isRequesting = false;
             hideLoading();
             hideLoadMore();
-            setTitleReading(false);setTitleReaded(false);setTitleToRead(false);
-            adapter = new BookReadingAdapter(context, this.listBookReading, this);
-            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         } catch (Exception e) {
         }
-    }
-
-    public void refreshListBookReading(BookReadingEntity entity,int position){
-        this.listBookReading.remove(position);
-        this.listBookReading.add(position,entity);
     }
 
     @Override
@@ -283,37 +290,17 @@ public class FragmentReadingBook extends Fragment {
         return numberToRead;
     }
 
-    public void setNumberReaded(int numberReaded) {
-        this.numberReaded = numberReaded;
-    }
 
-    public void setNumberReading(int numberReading) {
-        this.numberReading = numberReading;
-    }
-
-    public void setNumberToRead(int numberToRead) {
-        this.numberToRead = numberToRead;
-    }
-
-    public boolean getTitleReaded() {
-        return setTitleReaded;
-    }
 
     public void setTitleReaded(boolean setTitleReaded) {
         this.setTitleReaded = setTitleReaded;
     }
 
-    public boolean getTitleReading() {
-        return setTitleReading;
-    }
 
     public void setTitleReading(boolean setTitleReading) {
         this.setTitleReading = setTitleReading;
     }
 
-    public boolean getTitleToRead() {
-        return setTitleToRead;
-    }
 
     public void setTitleToRead(boolean setTitleToRead) {
         this.setTitleToRead = setTitleToRead;
