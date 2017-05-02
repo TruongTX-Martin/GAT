@@ -13,6 +13,7 @@ import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
@@ -333,22 +334,22 @@ public class DebugUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<List<String>> getUsersSearchedKeyword() {
+    public Observable<List<Keyword>> getUsersSearchedKeyword() {
         MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
 
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
+        Observable<Response<ServerResponse<ResultInfoList<Keyword>>>> responseObservable;
         responseObservable = api.getUsersSearchedKeyword();
 
-        List<String> list = new ArrayList<String>();
-        list.add("user 1");
-        list.add("user 2");
-        list.add("user 3");
-        list.add("user 4");
-        list.add("user 5");
+//        List<String> list = new ArrayList<String>();
+//        list.add("user 1");
+//        list.add("user 2");
+//        list.add("user 3");
+//        list.add("user 4");
+//        list.add("user 5");
 
         return responseObservable.map(response -> {
-            //            List<String> list = response.body().data().getResultInfo();
+            List<Keyword> list = response.body().data().getResultInfo();
             return list;
         });
     }

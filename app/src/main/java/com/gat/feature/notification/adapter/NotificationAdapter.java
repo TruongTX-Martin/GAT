@@ -70,7 +70,7 @@ public class NotificationAdapter extends ItemAdapter {
                 break;
 
             case Type.NOTIFY_ITEM:
-                viewHolder = new NotificationItemViewHolder(parent, R.layout.item_notification);
+                viewHolder = new NotificationItemViewHolder(parent, R.layout.item_notification, items);
                 viewHolder.itemView.setOnClickListener(view -> {
                     // Tag NotifyEntity đã được gán trong NotificationItemViewHolder
                     NotifyEntity item = (NotifyEntity) view.getTag();

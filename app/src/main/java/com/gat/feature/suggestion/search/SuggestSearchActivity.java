@@ -12,10 +12,13 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
+import com.gat.common.event.LoadingEvent;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
+import com.gat.common.util.Views;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.search.listener.OnFragmentRequestLoadMore;
@@ -33,6 +36,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
+import android.widget.Toast;
 
 /**
  * Created by mryit on 4/9/2017.
@@ -94,11 +98,13 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
                 getPresenter().onLoadHistorySearchUserSuccess().subscribe(this::onLoadHistorySearchUserSuccess),
                 getPresenter().onSearchBookWithTitleSuccess().subscribe(this::onSearchBookWithTitleSuccess),
                 getPresenter().onSearchBookWithAuthorSuccess().subscribe(this::onSearchBookWithAuthorSuccess),
-                getPresenter().onSearchUserWithNameSuccess().subscribe(this::onSearchUserWithNameSuccess)
+                getPresenter().onSearchUserWithNameSuccess().subscribe(this::onSearchUserWithNameSuccess),
+                getPresenter().onError().subscribe(this::onSearchFailure)
         );
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading..");
+        progressDialog.setMessage("Đang tìm kiếm..");
+        progressDialog.setCancelable(false);
 
         setupViewPager(mViewPager);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -118,6 +124,9 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     @Override
     protected void onDestroy() {
+        disposables.dispose();
+        hideProgress();
+        progressDialog = null;
         super.onDestroy();
     }
 
@@ -193,6 +202,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
             return true;
         }
 
+        showProgress();
         switch (mCurrentTab) {
             case TAB_POS.TAB_BOOK:
                 MZDebug.w("_____________________ TAB_BOOK: " + editTextSearch.getText().toString());
@@ -235,28 +245,49 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         }
     }
 
-    private void onLoadHistorySearchBookSuccess (List<String> list) {
+    private void onLoadHistorySearchBookSuccess (List<Keyword> list) {
+        hideProgress();
         onSearchBookHistorySuccess.onLoadHistoryResult(list);
     }
 
-    private void onLoadHistorySearchAuthorSuccess (List<String> list) {
+    private void onLoadHistorySearchAuthorSuccess (List<Keyword> list) {
+        hideProgress();
         onSearchAuthorHistorySuccess.onLoadHistoryResult(list);
     }
 
-    private void onLoadHistorySearchUserSuccess (List<String> list) {
+    private void onLoadHistorySearchUserSuccess (List<Keyword> list) {
         onSearchUserHistorySuccess.onLoadHistoryResult(list);
+        hideProgress();
     }
 
     private void onSearchBookWithTitleSuccess (List<BookResponse> list) {
+        hideProgress();
         onSearchBookResult.onSearchBookResult(list);
     }
 
     private void onSearchBookWithAuthorSuccess (List<BookResponse> list) {
+        hideProgress();
         onSearchAuthorResult.onSearchBookResult(list);
     }
 
     private void onSearchUserWithNameSuccess (List<UserResponse> list) {
+        hideProgress();
         onSearchUserResult.onSearchUserResult(list);
     }
 
+    private void onSearchFailure (String message) {
+        hideProgress();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showProgress () {
+        Views.hideKeyboard(this);
+        progressDialog.show();
+    }
+
+    private void hideProgress () {
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
+    }
 }

@@ -74,7 +74,14 @@ public class SelfUpdateReadingActivity
         getPresenter().setEditionId(getScreen().editionId());
         getPresenter().setReadingStatus(getScreen().readingStatus());
         mReadingState = getScreen().readingStatus();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         setChecked (mReadingState);
+        updateImageState();
     }
 
     @Override

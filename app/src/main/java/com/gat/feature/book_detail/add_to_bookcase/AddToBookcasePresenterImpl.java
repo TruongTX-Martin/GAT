@@ -26,6 +26,7 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
 
     private UseCase<ServerResponse> addBookInstanceUseCase;
     private final Subject<String> subjectAddBookInstance;
+    private final Subject<String> subjectAddBookFailure;
 
     private int mEditionId;
 
@@ -34,6 +35,7 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
         this.schedulerFactory = schedulerFactory;
         subjectBookTotalInstance = PublishSubject.create();
         subjectAddBookInstance = PublishSubject.create();
+        subjectAddBookFailure = PublishSubject.create();
     }
 
 
@@ -63,8 +65,8 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: getBookTotalInstance _________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectAddBookFailure.onNext("Get Book Failed.");
                 }).execute();
-
     }
 
     @Override
@@ -83,6 +85,7 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: addBookInstance ______________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectAddBookFailure.onNext("Add book instance failed");
                 })
                 .execute();
     }
@@ -90,6 +93,11 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
     @Override
     public Observable<String> onAddBookInstanceSuccess() {
         return subjectAddBookInstance.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onAddBookInstanceFailure() {
+        return subjectAddBookFailure.subscribeOn(schedulerFactory.main());
     }
 
 

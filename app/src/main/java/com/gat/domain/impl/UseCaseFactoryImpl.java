@@ -11,6 +11,7 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetGroupList;
@@ -201,17 +202,17 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<String>> getBooksSearchedKeyword() {
+    public UseCase<List<Keyword>> getBooksSearchedKeyword() {
         return new GetBooksSearchedKeyword(bookRepositoryLazy.get());
     }
 
     @Override
-    public UseCase<List<String>> getAuthorsSearchedKeyword() {
+    public UseCase<List<Keyword>> getAuthorsSearchedKeyword() {
         return new GetAuthorsSearchedKeyword(bookRepositoryLazy.get());
     }
 
     @Override
-    public UseCase<List<String>> getUsersSearchedKeyword() {
+    public UseCase<List<Keyword>> getUsersSearchedKeyword() {
         return new GetUsersSearchedKeyword(userRepositoryLazy.get());
     }
 

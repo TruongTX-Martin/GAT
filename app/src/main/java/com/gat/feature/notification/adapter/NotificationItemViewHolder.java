@@ -6,9 +6,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.gat.R;
+import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemViewHolder;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.feature.notification.NotifyType;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,9 +37,13 @@ public class NotificationItemViewHolder extends ItemViewHolder<NotificationItem>
     @BindView(R.id.text_view_message_detail)
     TextView textViewMessageDetail;
 
-    public NotificationItemViewHolder(ViewGroup parent, @LayoutRes int layoutId) {
+
+    private List<Item> listItem;
+
+    public NotificationItemViewHolder(ViewGroup parent, @LayoutRes int layoutId, List<Item> listItem) {
         super(parent, layoutId);
         ButterKnife.bind(this, itemView);
+        this.listItem = listItem;
     }
 
 
@@ -46,6 +53,15 @@ public class NotificationItemViewHolder extends ItemViewHolder<NotificationItem>
 
         textViewTimeAgo.setText(item.notifyEntity().beginTime());
         showMessageContentByType(item.notifyEntity());
+
+        // hide divider at bottom of notice
+        int nextPosition = getAdapterPosition() + 1;
+        if (nextPosition < listItem.size()) {
+            Item nextItem = listItem.get(nextPosition);
+            if (nextItem != null && nextItem instanceof DateTimeItem) {
+                itemView.setBackgroundColor(0xFFFFFFFF);
+            }
+        }
     }
 
     private void showMessageContentByType (NotifyEntity item) {

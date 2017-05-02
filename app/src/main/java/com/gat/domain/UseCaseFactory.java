@@ -11,6 +11,7 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.editinfo.entity.EditInfoInput;
@@ -86,11 +87,11 @@ public interface UseCaseFactory {
 
     UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage);
 
-    UseCase<List<String>> getBooksSearchedKeyword();
+    UseCase<List<Keyword>> getBooksSearchedKeyword();
 
-    UseCase<List<String>> getAuthorsSearchedKeyword();
+    UseCase<List<Keyword>> getAuthorsSearchedKeyword();
 
-    UseCase<List<String>> getUsersSearchedKeyword();
+    UseCase<List<Keyword>> getUsersSearchedKeyword();
 
     UseCase<Data> getBookInstance(BookInstanceInput input);
 

@@ -274,10 +274,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
             case ReadingState.RED:
                 buttonReadingState.setText(getResources().getString(R.string.red_book));
+                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
                 break;
 
             case ReadingState.READING:
                 buttonReadingState.setText(getResources().getString(R.string.reading_book));
+                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
                 break;
 
             case ReadingState.TO_READ:

@@ -134,7 +134,9 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             getPresenter().suggestBooks();
         }
 
-        processLocationToUpdateUserShareNearByDistance();
+        if (llUserNearSuggest.getChildCount() < 2) {
+            processLocationToUpdateUserShareNearByDistance();
+        }
     }
 
     @Override

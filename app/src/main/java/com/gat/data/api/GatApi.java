@@ -9,6 +9,7 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
@@ -194,15 +195,15 @@ public interface GatApi {
     );
 
     @GET("search/get_book_searched_keyword")
-    Observable<Response<ServerResponse<ResultInfoList<String>>>> getBooksSearchedKeyword(
+    Observable<Response<ServerResponse<ResultInfoList<Keyword>>>> getBooksSearchedKeyword(
     );
 
     @GET("search/get_author_searched_keyword")
-    Observable<Response<ServerResponse<ResultInfoList<String>>>> getAuthorsSearchedKeyword(
+    Observable<Response<ServerResponse<ResultInfoList<Keyword>>>> getAuthorsSearchedKeyword(
     );
 
     @GET("search/get_user_searched_keyword")
-    Observable<Response<ServerResponse<ResultInfoList<String>>>> getUsersSearchedKeyword(
+    Observable<Response<ServerResponse<ResultInfoList<Keyword>>>> getUsersSearchedKeyword(
     );
 
     @GET("user/get_user_private_info")
@@ -254,7 +255,7 @@ public interface GatApi {
     );
 
     @GET("book/selfget_reading_stt")
-    Observable<Response<ServerResponse<ResultInfoObject<BookReadingInfo>>>> getReadingStatus (
+    Observable<Response<ServerResponse<BookReadingInfo>>> getReadingStatus (
             @Query("editionId") int editionId
     );
 
@@ -279,7 +280,7 @@ public interface GatApi {
     );
 
     @GET("book/selfget_instance_info")
-    Observable<Response<ServerResponse<ResultInfoObject<BookInstanceInfo>>>> getSelfInstanceInfo (
+    Observable<Response<ServerResponse<BookInstanceInfo>>> getSelfInstanceInfo (
             @Query("editionId") int editionId
     );
 

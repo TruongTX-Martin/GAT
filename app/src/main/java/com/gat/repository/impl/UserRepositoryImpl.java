@@ -6,6 +6,7 @@ import com.gat.data.firebase.SignInFirebase;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
@@ -200,7 +201,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<List<String>> getUsersSearchedKeyword() {
+    public Observable<List<Keyword>> getUsersSearchedKeyword() {
         return Observable.defer(()->networkUserDataSourceLazy.get().getUsersSearchedKeyword());
     }
 

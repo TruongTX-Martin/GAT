@@ -7,6 +7,7 @@ import com.gat.common.util.Strings;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
@@ -206,7 +207,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<List<String>> getUsersSearchedKeyword() {
+    public Observable<List<Keyword>> getUsersSearchedKeyword() {
         return null;
     }
 
