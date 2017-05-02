@@ -33,6 +33,8 @@ public interface UserRepository {
 
     Observable<User> login();
 
+    Observable<Boolean> loginFirebase();
+
     Observable<LoginData> getLoginData();
 
     Observable<User> register(LoginData data);
@@ -65,8 +67,5 @@ public interface UserRepository {
 
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
     Observable<Data> getBookDetail(Integer input);
-
-
-
     Observable<User> getUserPublicInfo(int userId);
 }

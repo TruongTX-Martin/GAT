@@ -45,12 +45,12 @@ public class MessageTable {
         this.timeStamp = timeStamp;
     }
 
-    public boolean isRead() {
+    public boolean getIsRead() {
         return isRead;
     }
 
-    public void setRead(boolean read) {
-        isRead = read;
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
     }
 
     public String getGroupId() {

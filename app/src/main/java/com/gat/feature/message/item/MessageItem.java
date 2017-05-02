@@ -10,8 +10,10 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class MessageItem implements Item {
     public abstract Message message();
+    public abstract boolean displayDate();
+    public abstract boolean displayImage();
 
-    public static MessageItem instance(Message message) {
-        return new AutoValue_MessageItem(message);
+    public static MessageItem instance(Message message, boolean displayDate, boolean displayImage) {
+        return new AutoValue_MessageItem(message, displayDate, displayImage);
     }
 }

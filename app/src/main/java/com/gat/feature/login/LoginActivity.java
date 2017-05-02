@@ -194,7 +194,8 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                                         Strings.EMPTY,
                                         name,
                                         image,
-                                        token
+                                        token,
+                                        secret
                                 ));
                             }
 

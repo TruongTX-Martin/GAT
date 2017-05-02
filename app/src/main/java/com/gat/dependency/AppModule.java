@@ -97,8 +97,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    SignInFirebase provideSignInFirebase(@Named("local") Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
-        return new SignInFirebaseImpl(userDataSourceLazy, schedulerFactory);
+    SignInFirebase provideSignInFirebase(@Named("local") Lazy<UserDataSource> localUserDataSource, @Named("network") Lazy<UserDataSource> networkUserDataSource, FirebaseService firebaseService, SchedulerFactory schedulerFactory) {
+        return new SignInFirebaseImpl(localUserDataSource, networkUserDataSource, firebaseService, schedulerFactory);
     }
     @Provides
     @Singleton

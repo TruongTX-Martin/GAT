@@ -1,22 +1,28 @@
 package com.gat.feature.message;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
 import com.gat.common.listener.LoadMoreScrollListener;
 import com.gat.common.util.Strings;
 import com.gat.feature.message.adapter.MessageAdapter;
+import com.gat.feature.message.item.MessageItem;
+import com.gat.feature.message.presenter.MessagePresenter;
+import com.gat.feature.message.presenter.MessageScreen;
+import com.gat.repository.entity.Message;
 
 import butterknife.BindView;
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,9 +36,6 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     private final String USER_ID = "user_id";
 
-    @BindView(R.id.message_refresh)
-    SwipeRefreshLayout refreshLayout;
-
     @BindView(R.id.message_recycler)
     RecyclerView recyclerView;
 
@@ -42,18 +45,26 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     @BindView(R.id.message_send)
     Button messageSendBtn;
 
+    @BindView(R.id.message_header_text)
+    TextView messageHeader;
+
     private LoadMoreScrollListener loadMoreScrollListener;
     private MessageAdapter messageAdapter;
 
     private CompositeDisposable compositeDisposable;
+    private LinearLayoutManager linearLayoutManager;
 
-    private String groupId;
+    private String userName;
+    private int userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        groupId = getScreen().groupId();
+        userName = getScreen().userName();
+        userId = getScreen().userId();
+
+        messageHeader.setText(userName);
 
         Log.d(TAG, "create");
         compositeDisposable = new CompositeDisposable(
@@ -62,52 +73,87 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
         );
 
-        messageAdapter = new MessageAdapter(56/*TODO*/);
+        messageAdapter = new MessageAdapter();
         recyclerView.setAdapter(messageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         loadMoreScrollListener = new LoadMoreScrollListener(3, false, () -> {
             if (messageAdapter.hasLoadMoreItem())
-                getPresenter().loadMoreMessageList(groupId);
+                getPresenter().loadMoreMessageList(userId);
         });
+
         recyclerView.addOnScrollListener(loadMoreScrollListener);
 
-        getPresenter().refreshMessageList(groupId);
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
-        refreshLayout.setColorSchemeResources(R.color.colorAccent);
-        refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
-        refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(groupId));
+        getPresenter().refreshMessageList(userId);
+
+        messageEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().length() > 0) {
+                    messageSendBtn.setEnabled(true);
+                } else {
+                    messageSendBtn.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
 
         messageSendBtn.setOnClickListener(view -> {
             if (!Strings.isNullOrEmpty(messageEdit.getText().toString())) {
                 getPresenter().sendMessage(messageEdit.getText().toString());
+                messageEdit.setText(Strings.EMPTY);
             }
+        });
+        messageEdit.setOnClickListener(view -> {
+            recyclerView.scrollToPosition((messageAdapter.getItemCount() > 0) ? messageAdapter.getItemCount() - 1 : 0);
         });
     }
 
     private void onItemChanged(ItemResult result) {
         if (messageAdapter.setItem(result.items()) && result.diffResult() != null)
             result.diffResult().dispatchUpdatesTo(messageAdapter);
+        for (int i = result.items().size() - 1; i >= 0; i--) {
+            Item item = result.items().get(i);
+            if (item instanceof MessageItem) {
+                Message message = ((MessageItem) item).message();
+                getPresenter().sawMessage(message.groupId(), message.timeStamp());
+            }
+        }
     }
 
     private void onLoadingEvent(LoadingEvent event) {
         switch (event.status()) {
             case LoadingEvent.Status.BEGIN:
                 loadMoreScrollListener.setEnable(false);
-                refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(!event.refresh() && messageAdapter.getItemCount() > 1);
+                //refreshLayout.setRefreshing(false);
+                //refreshLayout.setEnabled(!event.refresh() && messageAdapter.getItemCount() > 1);
                 break;
             case LoadingEvent.Status.DONE:
                 loadMoreScrollListener.setEnable(messageAdapter.hasLoadMoreItem());
-                refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(true);
+                //refreshLayout.setRefreshing(false);
+                //refreshLayout.setEnabled(true);
                 if (event.refresh())
-                    recyclerView.scrollToPosition(0);
+                    recyclerView.scrollToPosition(messageAdapter.getItemCount()-1);
+
+                break;
+            case LoadingEvent.Status.COMPLETE:
+                recyclerView.scrollToPosition(messageAdapter.getItemCount()-1);
                 break;
             case LoadingEvent.Status.ERROR:
                 loadMoreScrollListener.setEnable(false);
-                refreshLayout.setRefreshing(false);
-                refreshLayout.setEnabled(true);
+                //refreshLayout.setRefreshing(false);
+                //refreshLayout.setEnabled(true);
                 break;
         }
     }
@@ -131,7 +177,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
     @Override
     protected MessageScreen getDefaultScreen() {
-        return MessageScreen.instance(Strings.EMPTY);
+        return MessageScreen.instance(Strings.EMPTY, 0);
     }
 
     @Override

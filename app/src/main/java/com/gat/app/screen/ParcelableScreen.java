@@ -15,8 +15,9 @@ import com.gat.feature.book_detail.comment.CommentScreen;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
-import com.gat.feature.message.MessagePresenter;
-import com.gat.feature.message.MessageScreen;
+import com.gat.feature.message.presenter.GroupMessageScreen;
+import com.gat.feature.message.presenter.MessagePresenter;
+import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
@@ -54,7 +55,8 @@ public class ParcelableScreen implements Parcelable {
     private static final int ADD_TO_BOOKCASE = 14;
     private static final int ADD_COMMENT = 15;
     private static final int MESSAGER = 16;
-    private static final int SCAN = 17;
+    private static final int GROUP_MESSAGER = 17;
+    private static final int SCAN = 18;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -100,6 +102,8 @@ public class ParcelableScreen implements Parcelable {
             return ADD_COMMENT;
         if (screen instanceof MessageScreen)
             return MESSAGER;
+        if (screen instanceof GroupMessageScreen)
+            return GROUP_MESSAGER;
         if (screen instanceof ScanScreen)
             return SCAN;
         throw new IllegalArgumentException("Not support screen " + screen);
@@ -114,7 +118,6 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof LoginScreen) {
             LoginScreen loginScreen = (LoginScreen) screen;
             dest.writeString(loginScreen.email());
-            dest.writeInt(loginScreen.tokenChange() ? 1 : 0);
         } else if (screen instanceof RegisterScreen) {
 
         } else if (screen instanceof AddLocationScreen) {
@@ -125,7 +128,10 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof MessageScreen) {
             MessageScreen messageScreen = (MessageScreen) screen;
-            dest.writeString(messageScreen.groupId());
+            dest.writeInt(messageScreen.userId());
+            dest.writeString(messageScreen.userName());
+        } else if (screen instanceof GroupMessageScreen) {
+
         } else if (screen instanceof MainScreen) {
 
         } else if (screen instanceof ShareNearByUserDistanceScreen) {
@@ -167,7 +173,7 @@ public class ParcelableScreen implements Parcelable {
                 screen = SearchScreen.instance(in.readString());
                 break;
             case LOGIN:
-                screen = LoginScreen.instance(in.readString(), (in.readInt() == 0) ? false : true);
+                screen = LoginScreen.instance(in.readString());
                 break;
             case REGISTER:
                 screen = RegisterScreen.instance();
@@ -191,7 +197,12 @@ public class ParcelableScreen implements Parcelable {
                 screen = MainScreen.instance();
                 break;
             case MESSAGER:
-                screen = MessageScreen.instance(in.readString());
+                int userId = in.readInt();
+                String userName = in.readString();
+                screen = MessageScreen.instance(userName, userId);
+                break;
+            case GROUP_MESSAGER:
+                screen = GroupMessageScreen.instance();
                 break;
             case BOOK_DETAIL:
                 screen = BookDetailScreen.instance(in.readInt());
@@ -210,7 +221,6 @@ public class ParcelableScreen implements Parcelable {
             case ADD_COMMENT:
                 screen = CommentScreen.instance(in.readParcelable(EvaluationItemResponse.class.getClassLoader()));
                 break;
-
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);
         }

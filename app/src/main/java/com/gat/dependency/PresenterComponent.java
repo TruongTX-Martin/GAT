@@ -12,8 +12,9 @@ import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresente
 
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
+import com.gat.feature.message.presenter.GroupMessagePresenter;
 import com.gat.feature.personal.PersonalPresenter;
-import com.gat.feature.message.MessagePresenter;
+import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.personaluser.PersonalUserPresenter;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
@@ -23,6 +24,7 @@ import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.suggestion.SuggestionPresenter;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
 import com.gat.feature.suggestion.search.SuggestSearchPresenter;
+import com.gat.repository.entity.Group;
 
 import dagger.Subcomponent;
 
@@ -43,6 +45,7 @@ public interface PresenterComponent {
     AddCategoryPresenter getAddCategoryPresenter();
     SuggestionPresenter getSuggestionPresenter();
     MessagePresenter getMessagePresenter();
+    GroupMessagePresenter getGroupMessagePresenter();
     MainPresenter getMainPresenter();
     ShareNearByUserDistancePresenter getShareNearByUserDistancePresenter();
     SuggestSearchPresenter getSuggestSearchPresenter();

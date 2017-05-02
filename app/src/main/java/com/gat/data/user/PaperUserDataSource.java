@@ -23,6 +23,8 @@ import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import io.paperdb.Book;
@@ -42,6 +44,10 @@ public class PaperUserDataSource implements UserDataSource {
     private static final String KEY_RESET_TOKEN = "resetToken";
     private static final String KEY_VERIFY_TOKEN = "verifiedToken";
     private static final String KEY_LOGIN_TOKEN = "loginToken";
+    private static final String KEY_USER_LIST = "userList";
+
+    private List<User> userList = new ArrayList<>();
+
     private final Book book = Paper.book(BOOK);
 
     @Override
@@ -109,9 +115,13 @@ public class PaperUserDataSource implements UserDataSource {
         return Observable.fromCallable(() -> book.read(KEY_LOGIN_TOKEN, Strings.EMPTY));
     }
 
+    @Override
+    public Observable<Boolean> messageNotification(int receiver, String message) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
-    public Observable<User> getUserInformation(int userId) {
+    public Observable<Boolean> registerFirebaseToken(String token) {
         throw new UnsupportedOperationException();
     }
 
@@ -182,6 +192,11 @@ public class PaperUserDataSource implements UserDataSource {
     @Override
     public Observable<Data> getReadingBook(BookReadingInput input) {
         return null;
+    }
+
+    @Override
+    public Observable<User> getUserInformation(int userId) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

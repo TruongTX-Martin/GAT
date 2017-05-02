@@ -308,4 +308,16 @@ public interface GatApi {
     );
 
 
+    @FormUrlEncoded
+    @POST("user/firebase_token_register")
+    Observable<Response<ServerResponse<Boolean>>> registerFirebaseToken (
+            @Field("firebaseToken") String firebaseToken
+    );
+
+    @FormUrlEncoded
+    @POST("user/push_message_notification")
+    Observable<Response<ServerResponse<Boolean>>> messageNotification (
+            @Field("receiverId") int receiverId,
+            @Field("Message") String message
+    );
 }

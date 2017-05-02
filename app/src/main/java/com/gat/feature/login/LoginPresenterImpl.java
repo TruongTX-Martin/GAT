@@ -63,6 +63,9 @@ public class LoginPresenterImpl implements LoginPresenter {
     private UseCase<User> loadLocalUserUseCase;
     private Subject<Integer> loadLocalUserSubject;
 
+    private UseCase<Boolean> loginFirebaseUseCase;
+    private Subject<Boolean> loginFirebaseResult;
+
     private final Subject<String> errorSubject;
 
     // Disposable to store and release observale when it done
@@ -90,9 +93,11 @@ public class LoginPresenterImpl implements LoginPresenter {
         this.resetTokenSubject = BehaviorSubject.create();
         this.verifyTokenResultSubject = PublishSubject.create();
 
-        loadLocalUserSubject = BehaviorSubject.create();
+        this.loadLocalUserSubject = BehaviorSubject.create();
 
         this.localLoginData = BehaviorSubject.create();
+
+        this.loginFirebaseResult = BehaviorSubject.create();
 
         this.errorSubject = PublishSubject.create();
     }
@@ -198,6 +203,28 @@ public class LoginPresenterImpl implements LoginPresenter {
         Log.d(TAG, "password: " + password);
         if (!isInitialized) init();
         passwordSubject.onNext(password);
+    }
+
+    @Override
+    public Observable<Boolean> loginFirebase() {
+        return loginFirebaseResult.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void loginOnFirebase() {
+        loginFirebaseUseCase = UseCases.release(loginFirebaseUseCase);
+        loginFirebaseUseCase = useCaseFactory.loginFirebase();
+
+        loginFirebaseUseCase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(isOk -> {
+                    loginFirebaseResult.onNext(isOk);
+                })
+                .onError(throwable -> {
+                    throwable.printStackTrace();
+                })
+                .onStop(() -> loginFirebaseUseCase = UseCases.release(loginFirebaseUseCase))
+                .execute();
     }
 
     @Override

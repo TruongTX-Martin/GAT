@@ -13,7 +13,7 @@ public interface SignInFirebase {
     public void signOut();
     public void register();
 
-    public Observable<FirebaseUser> getLoginResult();
+    public Observable<Boolean> getLoginResult();
 
     public void destroy();
 }

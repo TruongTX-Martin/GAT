@@ -5,7 +5,16 @@
     android:layout_alignParentEnd="true"
     android:background="@color/colorWhite"
     android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/message_date"
+        android:textSize="@dimen/message_message_size"
+        android:textColor="@color/colorGray"
+        android:textAlignment="center">
 
+    </TextView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,10 +31,12 @@
         <TextView
             android:id="@+id/message_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_message_right"
+            android:layout_marginStart="20dp"
             android:background="@drawable/message_shape"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textSize="@dimen/message_message_size"
+            android:maxLines="4"/>
 
     </LinearLayout>
 </LinearLayout>

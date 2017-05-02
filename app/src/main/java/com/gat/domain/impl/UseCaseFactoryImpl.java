@@ -91,7 +91,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Message>> getMessageList(String userId, int page, int size) {
+    public UseCase<List<Message>> getMessageList(int userId, int page, int size) {
         return new GetMessageList(messageRepositoryLazy.get(), userId, page, size);
     }
 
@@ -101,8 +101,28 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Boolean> sendMessage(String toUserId, String message) {
+    public UseCase<Message> messageUpdate(int userId) {
+        return new MessageUpdate(userId, messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Integer> getUnReadGroupMessageCnt() {
+        return new UnReadGroupMessageCnt(messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Group> groupUpdate() {
+        return new GroupUpdate(messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Boolean> sendMessage(int toUserId, String message) {
         return new SendMessage(messageRepositoryLazy.get(), message, toUserId);
+    }
+
+    @Override
+    public UseCase<Boolean> sawMessage(String groupId, long timeStamp) {
+        return new SawMessage(messageRepositoryLazy.get(), groupId, timeStamp);
     }
 
     @Override
@@ -113,6 +133,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<User> login(LoginData data) {
         return new Login(userRepositoryLazy.get(), data);
+    }
+
+    @Override
+    public UseCase<Boolean> loginFirebase() {
+        return new LoginFirebase(userRepositoryLazy.get());
     }
 
     @Override
@@ -303,4 +328,6 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
         return new RequestBorrow(bookRepositoryLazy.get(), editionId, ownerId);
 
     }
+
+
 }

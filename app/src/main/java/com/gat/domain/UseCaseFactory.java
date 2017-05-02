@@ -45,6 +45,8 @@ public interface UseCaseFactory {
 
     UseCase<User> login(LoginData data);
 
+    UseCase<Boolean> loginFirebase();
+
     UseCase<User> register(LoginData data);
 
     UseCase<LoginData> getLoginData();
@@ -61,11 +63,19 @@ public interface UseCaseFactory {
 
     UseCase<Integer> getBookByIsbn(String isbn);
 
-    UseCase<List<Message>> getMessageList(String groupId, int page, int size);
+    UseCase<List<Message>> getMessageList(int userId, int page, int size);
 
     UseCase<List<Group>> getGroupList(int page, int size);
 
-    UseCase<Boolean> sendMessage(String toUserId, String message);
+    UseCase<Integer> getUnReadGroupMessageCnt();
+
+    UseCase<Group> groupUpdate();
+
+    UseCase<Message> messageUpdate(int userId);
+
+    UseCase<Boolean> sendMessage(int toUserId, String message);
+
+    UseCase<Boolean> sawMessage(String groupId, long timeStamp);
 
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);
 
@@ -126,6 +136,4 @@ public interface UseCaseFactory {
     UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
 
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
-
-
 }

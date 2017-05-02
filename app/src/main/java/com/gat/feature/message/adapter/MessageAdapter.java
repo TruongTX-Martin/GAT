@@ -27,10 +27,8 @@ public class MessageAdapter extends ItemAdapter {
         int MESSAGE_LEFT    = 2;
         int MESSAGE_RIGHT    = 3;
     }
-    private final int userId;
-    public MessageAdapter(int userId) {
+    public MessageAdapter() {
         setReady();
-        this.userId = userId;
     }
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -52,7 +50,7 @@ public class MessageAdapter extends ItemAdapter {
         if(item instanceof LoadingMessage)
             return Type.LOADING;
         if(item instanceof MessageItem)
-            if (((MessageItem)item).message().userId() == userId)
+            if (((MessageItem)item).message().isLocal())
                 return Type.MESSAGE_RIGHT;
             else
                 return Type.MESSAGE_LEFT;

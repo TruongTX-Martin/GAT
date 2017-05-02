@@ -95,6 +95,11 @@ public class ClientUtils {
         return bitmap;
     }
 
+
+    public interface OnBitmapLoaded {
+        void onBitmapLoaded (Bitmap bitmap);
+    }
+
     public static @Nullable Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);
@@ -117,10 +122,5 @@ public class ClientUtils {
         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
         return encoded;
     }
-
-    public interface OnBitmapLoaded {
-        void onBitmapLoaded (Bitmap bitmap);
-    }
-
 
 }
