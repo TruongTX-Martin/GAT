@@ -144,8 +144,8 @@ public class SignInFirebaseImpl implements SignInFirebase {
         String email = ((EmailLoginData)loginData).email();
         String password = ((EmailLoginData)loginData).password();
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            firebaseUser = task.getResult().getUser();
-            result.onNext(firebaseUser != null);
+//            firebaseUser = task.getResult().getUser();
+//            result.onNext(firebaseUser != null);
         });
     }
 

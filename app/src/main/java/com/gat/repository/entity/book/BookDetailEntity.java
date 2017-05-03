@@ -243,6 +243,20 @@ public class BookDetailEntity {
         @SerializedName("deleteFlag")
         private int deleteFlag;
 
+        @SerializedName("sharingCount")
+        private int sharingCount;
+
+        @SerializedName("readCount")
+        private int readCount;
+
+        public int getSharingCount() {
+            return sharingCount;
+        }
+
+        public int getReadCount() {
+            return readCount;
+        }
+
         public int getUserId() {
             return userId;
         }
@@ -294,6 +308,19 @@ public class BookDetailEntity {
         @SerializedName("deleteFlag")
         private int deleteFlag;
 
+        @SerializedName("sharingCount")
+        private int sharingCount;
+
+        @SerializedName("readCount")
+        private int readCount;
+
+        public int getSharingCount() {
+            return sharingCount;
+        }
+
+        public int getReadCount() {
+            return readCount;
+        }
 
         public int getUserId() {
             return userId;

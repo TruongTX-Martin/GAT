@@ -67,8 +67,8 @@
 
         <activity android:name="com.gat.feature.editinfo.EditInfoActivity" />
         <activity android:name="com.gat.feature.personaluser.PersonalUserActivity" />
-        <activity android:name="com.gat.feature.bookdetailrequest.BookDetailRequestActivity" />
-        <activity android:name="com.gat.feature.bookdetailborrow.BookDetailBorrowActivity" />
+        <activity android:name="com.gat.feature.bookdetailsender.BookDetailSenderActivity" />
+        <activity android:name="com.gat.feature.bookdetailowner.BookDetailOwnerActivity" />
         <activity android:name=".feature.start.StartActivity"
             android:theme="@style/DefaultScreenTheme"
             android:screenOrientation="portrait">

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_activity_top"/>
+    <include layout="@layout/layout_activity_top" />
 
     <RelativeLayout
         android:id="@+id/layoutTop"
@@ -20,9 +20,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:src="@drawable/ic_profile"
-            app:border_width="1dp"
             app:border_color="#8fc4e0"
-            />
+            app:border_width="1dp" />
 
 
         <RelativeLayout

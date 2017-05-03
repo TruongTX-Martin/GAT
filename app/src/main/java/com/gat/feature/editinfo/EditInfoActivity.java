@@ -1,6 +1,7 @@
 package com.gat.feature.editinfo;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -18,6 +19,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -64,6 +66,12 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     @BindView(R.id.imgSave)
     ImageView imgSave;
+
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     private Bitmap currentBitmap;
     private File fileImage;
 
@@ -97,16 +105,30 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             edtName.setFocusable(true);
         });
         imgSave.setOnClickListener(v -> updateProfile());
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               backToPreviousActivity();
+            }
+        });
     }
 
-    private void editInfoError(ServerResponse<ResponseData> error){
+    private void backToPreviousActivity(){
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_OK,intent);
+        finish();
+    }
+    private void editInfoError(String error){
         ClientUtils.showToast("Error");
     }
 
-    private void editInfoSuccess(Data data){
-        ClientUtils.showToast("Success");
+    private void editInfoSuccess(String message){
+        ClientUtils.showToast(message);
+        progressBar.setVisibility(View.GONE);
+        backToPreviousActivity();
     }
     private void updateProfile(){
+        progressBar.setVisibility(View.VISIBLE);
         String name = edtName.getText().toString().trim();
         if(Strings.isNullOrEmpty(name)) {
             ClientUtils.showToast("Bạn không được để trống tên");
@@ -185,7 +207,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                                     Uri uri = data.getData();
                                     fileImage = new File(getRealPathFromURI(uri));
                                     currentBitmap = bitmap;
-                                    imgAvatar.setImageBitmap(bitmap);
+                                    imgAvatar.setImageURI(uri);
                                 }catch (Exception e){
                                     System.out.println(e.getMessage());
                                 }
@@ -248,4 +270,9 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     }
 
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backToPreviousActivity();
+    }
 }

@@ -1,21 +1,18 @@
 package com.gat.dependency;
 
-import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenter;
-import com.gat.feature.bookdetailrequest.BookDetailRequestPresenter;
-import com.gat.feature.editinfo.EditInfoPresenter;
-
-import com.gat.feature.book_detail.BookDetailPresenter;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcasePresenter;
 import com.gat.feature.book_detail.comment.CommentPresenter;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookPresenter;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresenter;
-
+import com.gat.feature.bookdetailowner.BookDetailOwnerPresenter;
+import com.gat.feature.bookdetailsender.BookDetailSenderPresenter;
+import com.gat.feature.editinfo.EditInfoPresenter;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.message.presenter.GroupMessagePresenter;
+import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.notification.NotificationPresenter;
 import com.gat.feature.personal.PersonalPresenter;
-import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.personaluser.PersonalUserPresenter;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.update.category.AddCategoryPresenter;
@@ -25,7 +22,6 @@ import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.suggestion.SuggestionPresenter;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
 import com.gat.feature.suggestion.search.SuggestSearchPresenter;
-import com.gat.repository.entity.Group;
 
 import dagger.Subcomponent;
 
@@ -54,13 +50,13 @@ public interface PresenterComponent {
 
     EditInfoPresenter getEditInfoPresenter();
     PersonalUserPresenter getPersonalUserPresenter();
-    BookDetailRequestPresenter getBookDetailRequestPresenter();
+    BookDetailSenderPresenter getBookDetailRequestPresenter();
     SelfUpdateReadingPresenter getSelfUpdateReadingPresenter();
     ListUserSharingBookPresenter getListUserSharingBookPresenter();
     AddToBookcasePresenter getAddToBookcasePresenter();
     CommentPresenter getCommentPresenter();
-    BookDetailPresenter getBookDetailPresenter();
-    BookDetailBorrowPresenter getBookDetailBorrowPresenter();
+    BookDetailSenderPresenter getBookDetailPresenter();
+    BookDetailOwnerPresenter getBookDetailBorrowPresenter();
     ScanPresenter getScanPresenter();
     NotificationPresenter getNotificationPresenter();
 }

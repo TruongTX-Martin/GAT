@@ -177,7 +177,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         layoutInfo.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.instance, EditInfoActivity.class);
             intent.putExtra("UserInfo",  userInfo);
-            MainActivity.instance.startActivity(intent);
+            MainActivity.instance.startActivityForResult(intent,Constance.RESULT_UPDATEUSER);
         });
     }
 
@@ -232,6 +232,13 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         viewPager.setAdapter(adapter);
     }
 
+    public void requestPersonalInfo(){
+        try {
+            getPresenter().requestPersonalInfor("");
+        }catch (Exception e){
+
+        }
+    }
 
     //handle data personal return
     private void getUserInfoSuccess(Data<User> data) {
@@ -285,7 +292,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     //handle get bookInstance return
     private void getBookInstanceSuccess(Data data) {
-        if (data != null) {
+       if (data != null) {
             int totalSharing = data.getTotalSharing();
             txtNumberSharing.setText(totalSharing + "");
             int totalNotSharing = data.getTotalNotSharing();
@@ -301,6 +308,10 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         }
     }
+//    private void getBookInstanceError(String error) {
+//        ClientUtils.showToast(error);
+//>>>>>>> features/user_page
+//    }
 
 
     private void changeBookSharingStatusSuccess(Data data) {

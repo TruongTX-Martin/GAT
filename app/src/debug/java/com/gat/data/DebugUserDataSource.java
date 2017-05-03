@@ -1,11 +1,9 @@
 package com.gat.data;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.util.Log;
 
-import com.gat.common.adapter.Item;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
 import com.gat.common.util.MZDebug;
@@ -13,9 +11,8 @@ import com.gat.common.util.Strings;
 import com.gat.data.api.GatApi;
 import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
-import com.gat.data.id.LongId;
-import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
+import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.SimpleResponse;
 import com.gat.data.response.UserResponse;
@@ -23,16 +20,17 @@ import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
-import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
 import com.gat.dependency.DataComponent;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
@@ -42,15 +40,12 @@ import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 import retrofit2.Response;
@@ -364,7 +359,7 @@ public class DebugUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> updateUserInfo(EditInfoInput input) {
+    public Observable<String> updateUserInfo(EditInfoInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.updateUserInfo(input.getName(),input.getImageBase64(),input.isChangeImage());
         return responseObservable.map(response -> {
@@ -373,7 +368,7 @@ public class DebugUserDataSource implements UserDataSource {
                 serverResponse = ServerResponse.BAD_RESPONSE;
             }
             serverResponse.code(response.code());
-            return serverResponse.data();
+            return response.message();
         });
     }
 
@@ -480,6 +475,42 @@ public class DebugUserDataSource implements UserDataSource {
 //            data.setResultInfo(list);
 //            MZDebug.w("getUserNotification, total notifies: " + data.getNotifyTotal());
 //            return data;
+        });
+    }
+
+        @Override
+    public Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.requestBookByBorrower(input.getRecordId(),input.getCurrentStatus(),input.getNewStatus());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }else {
+                serverResponse.code(response.code());
+            }
+            ChangeStatusResponse statusResponse = new ChangeStatusResponse();
+            statusResponse.setMessage(response.message());
+            statusResponse.setStatusCode(response.code());
+            return statusResponse;
+        });
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.requestBookByOwner(input.getRecordId(),input.getCurrentStatus(),input.getNewStatus());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }else {
+                serverResponse.code(response.code());
+            }
+            ChangeStatusResponse statusResponse = new ChangeStatusResponse();
+            statusResponse.setMessage(response.message());
+            statusResponse.setStatusCode(response.code());
+            return statusResponse;
         });
     }
 

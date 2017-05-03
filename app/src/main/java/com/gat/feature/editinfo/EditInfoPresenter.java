@@ -14,7 +14,7 @@ import io.reactivex.Observable;
 
 public interface EditInfoPresenter extends Presenter {
     void requestEditInfo(EditInfoInput input);
-    Observable<Data> getResponseEditInfo();
-    Observable<ServerResponse<ResponseData>> onErrorEditInfo();
+    Observable<String> getResponseEditInfo();
+    Observable<String> onErrorEditInfo();
 
 }
