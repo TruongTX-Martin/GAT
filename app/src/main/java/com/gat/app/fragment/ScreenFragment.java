@@ -41,8 +41,8 @@ public abstract class ScreenFragment<S extends Screen, P extends Presenter> exte
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         unbinder.unbind();
+        super.onDestroy();
     }
 
     @Override

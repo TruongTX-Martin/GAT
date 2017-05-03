@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_header_height"
+    android:background="@drawable/bg_border_top_bottom"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_view_time_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="19 thang 2 nam 2017"
+        android:textColor="@color/colorTextViewGray"
+        android:textSize="@dimen/large_text_view_size"
+        android:gravity="center"/>
+
+</FrameLayout>

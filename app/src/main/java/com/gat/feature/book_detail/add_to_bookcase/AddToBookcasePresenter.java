@@ -18,5 +18,6 @@ public interface AddToBookcasePresenter extends Presenter {
 
     void addBookInstance (int sharingStatus, int numberOfBook);
     Observable<String> onAddBookInstanceSuccess ();
+    Observable<String> onAddBookInstanceFailure ();
 
 }

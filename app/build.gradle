@@ -90,9 +90,9 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion               21
+            minSdkVersion               15
             multiDexEnabled             true
-            buildConfigField            'boolean', 'MULTI_DEX', 'false'
+            buildConfigField            'boolean', 'MULTI_DEX', 'true'
         }
 
         staging{
@@ -144,6 +144,10 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
             exceptionFormat 'full'
         }
+    }
+    dexOptions {
+        // Prevent OutOfMemory with MultiDex during the build phase
+        javaMaxHeapSize "4g"
     }
 }
 

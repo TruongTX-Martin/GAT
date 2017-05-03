@@ -3,6 +3,7 @@ package com.gat.feature.suggestion.search.item;
 import com.gat.common.adapter.Item;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,10 @@ import java.util.List;
 
 public class SearchBuilder {
 
-    public static List<Item> transformListHistory (List<String> list) {
+    public static List<Item> transformListHistory (List<Keyword> list) {
         List<Item> newList = new ArrayList<>();
 
-        for (String keyword : list) {
+        for (Keyword keyword : list) {
             newList.add(SearchHistoryItem.instance(keyword));
         }
 

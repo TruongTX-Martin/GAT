@@ -1,13 +1,11 @@
 package com.gat.feature.suggestion.search;
 
 import android.util.Log;
-
-import com.gat.common.adapter.Item;
-import com.gat.common.adapter.ItemResult;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
@@ -15,9 +13,7 @@ import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 
 import java.util.List;
-
 import io.reactivex.Observable;
-import io.reactivex.ObservableTransformer;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
@@ -27,7 +23,7 @@ import io.reactivex.subjects.Subject;
 
 public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
-    private static final int SIZE_OF_PAGE = 10;
+    private static final int SIZE_OF_PAGE = 20;
     private int mPageAuthor;
     private int mPageBook;
     private int mPageUser;
@@ -45,14 +41,14 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     private final SchedulerFactory schedulerFactory;
 
     // use case history search
-    private UseCase<List<String>> useCaseHistorySearchBook;
-    private final Subject<List<String>> resultHistorySearchBookSubject;
+    private UseCase<List<Keyword>> useCaseHistorySearchBook;
+    private final Subject<List<Keyword>> resultHistorySearchBookSubject;
 
-    private UseCase<List<String>> useCaseHistorySearchAuthor;
-    private final Subject<List<String>> resultHistorySearchAuthorSubject;
+    private UseCase<List<Keyword>> useCaseHistorySearchAuthor;
+    private final Subject<List<Keyword>> resultHistorySearchAuthorSubject;
 
-    private UseCase<List<String>> useCaseHistorySearchUser;
-    private final Subject<List<String>> resultHistorySearchUserSubject;
+    private UseCase<List<Keyword>> useCaseHistorySearchUser;
+    private final Subject<List<Keyword>> resultHistorySearchUserSubject;
 
     // use case search
     private UseCase<DataResultListResponse<BookResponse>> useCaseSearchBookByTitle;
@@ -87,6 +83,16 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         mPageAuthor = 1;
         mPageBook = 1;
         mPageUser = 1;
+
+        UseCase<User> useCaseGetUser = useCaseFactory.getUser();
+        useCaseGetUser.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                   mUserId = user.userId();
+                })
+                .onError(throwable -> {
+                    mUserId = -1;
+                }).execute();
     }
 
     @Override
@@ -131,7 +137,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
 
     @Override
-    public Observable<List<String>> onLoadHistorySearchBookSuccess() {
+    public Observable<List<Keyword>> onLoadHistorySearchBookSuccess() {
         return resultHistorySearchBookSubject.subscribeOn(schedulerFactory.main());
     }
 
@@ -162,6 +168,8 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     }
 
     private void doSearchBookWithTitle (String keyword, int user_id, int page, int size_of_page) {
+        MZDebug.w("doSearchBookWithTitle, user id: " + user_id);
+
         useCaseSearchBookByTitle = useCaseFactory.searchBookByTitle(keyword, user_id, page, size_of_page)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
@@ -172,7 +180,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .onError( throwable -> {
                     MZDebug.e("ERROR: loadHistorySearchBook ________________________________E: \n\r"
                             + Log.getStackTraceString(throwable));
-                    errorSubject.onNext("Error - searchBookWithTitle");
+                    errorSubject.onNext("Không thể tìm kiếm, có lỗi xảy ra.");
                 })
                 .execute();
     }
@@ -223,7 +231,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
 
     @Override
-    public Observable<List<String>> onLoadHistorySearchAuthorSuccess() {
+    public Observable<List<Keyword>> onLoadHistorySearchAuthorSuccess() {
         return resultHistorySearchAuthorSubject.subscribeOn(schedulerFactory.main());
     }
 
@@ -265,6 +273,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .onError( throwable -> {
                     MZDebug.e("ERROR: searchBookWithAuthor _________________________________E: \n\r"
                             + Log.getStackTraceString(throwable));
+                    errorSubject.onNext("Không thể tìm kiếm, có lỗi xảy ra.");
                 })
                 .execute();
     }
@@ -312,7 +321,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     }
 
     @Override
-    public Observable<List<String>> onLoadHistorySearchUserSuccess() {
+    public Observable<List<Keyword>> onLoadHistorySearchUserSuccess() {
         return resultHistorySearchUserSubject.subscribeOn(schedulerFactory.main());
     }
 
@@ -353,6 +362,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: searchUserWithName ___________________________________E: \n\r"
                             + Log.getStackTraceString(throwable));
+                    errorSubject.onNext("Không thể tìm kiếm, có lỗi xảy ra.");
                 })
                 .execute();
     }

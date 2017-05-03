@@ -19,7 +19,9 @@ import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.SimpleResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
@@ -300,22 +302,22 @@ public class DebugUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<List<String>> getUsersSearchedKeyword() {
+    public Observable<List<Keyword>> getUsersSearchedKeyword() {
         MZDebug.i("________________________ getUsersSearchedKeyword ___________________________");
 
         GatApi api = dataComponent.getPrivateGatApi();
-        Observable<Response<ServerResponse<ResultInfoList<String>>>> responseObservable;
+        Observable<Response<ServerResponse<ResultInfoList<Keyword>>>> responseObservable;
         responseObservable = api.getUsersSearchedKeyword();
 
-        List<String> list = new ArrayList<String>();
-        list.add("user 1");
-        list.add("user 2");
-        list.add("user 3");
-        list.add("user 4");
-        list.add("user 5");
+//        List<String> list = new ArrayList<String>();
+//        list.add("user 1");
+//        list.add("user 2");
+//        list.add("user 3");
+//        list.add("user 4");
+//        list.add("user 5");
 
         return responseObservable.map(response -> {
-            //            List<String> list = response.body().data().getResultInfo();
+            List<Keyword> list = response.body().data().getResultInfo();
             return list;
         });
     }
@@ -402,6 +404,84 @@ public class DebugUserDataSource implements UserDataSource {
             }
             serverResponse.code(response.code());
             return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        MZDebug.w("______________________________ getUserNotification ___________________________");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse<NotifyEntity>>>> responseObservable =
+                api.getUserNotification(page, per_page);
+
+        return responseObservable.map(response -> {
+            ServerResponse<DataResultListResponse<NotifyEntity>> serverResponse = response.body();
+
+            if (null == serverResponse)
+                throw new CommonException("Connect to server failed.");
+
+            return serverResponse.data();
+
+//            DataResultListResponse<NotifyEntity> data = new DataResultListResponse<NotifyEntity>();
+//            data.setTotalResult(20);
+//            NotifyEntity today, today0, today2, nextDay;
+//            today0 =  NotifyEntity.builder().notificationId(1)
+//                    .notificationType(0)
+//                    .destId(123)
+//                    .sourceId(2)
+//                    .sourceName("Đây là source ")
+//                    .sourceImage("32507316083")
+//                    .targetId("1")
+//                    .targetName("Đây là target namename")
+//                    .referId(287)
+//                    .pullFlag(false)
+//                    .beginTime("2017-04-25 05:08:10").build();
+//
+//            today =  NotifyEntity.builder().notificationId(1)
+//                    .notificationType(0)
+//                    .destId(123)
+//                    .sourceId(2)
+//                    .sourceName("Đây là source ")
+//                    .sourceImage("32507316083")
+//                    .targetId("1")
+//                    .targetName("Đây là target namename")
+//                    .referId(287)
+//                    .pullFlag(false)
+//                    .beginTime("2017-04-26 05:08:10").build();
+//            today2 =  NotifyEntity.builder().notificationId(1)
+//                    .notificationType(0)
+//                    .destId(123)
+//                    .sourceId(2)
+//                    .sourceName("Đây là source ")
+//                    .sourceImage("32507316083")
+//                    .targetId("1")
+//                    .targetName("Đây là target namename")
+//                    .referId(287)
+//                    .pullFlag(false)
+//                    .beginTime("2017-04-26 08:08:10").build();
+//
+//            nextDay =  NotifyEntity.builder().notificationId(23)
+//                    .notificationType(1)
+//                    .destId(2222)
+//                    .sourceId(2)
+//                    .sourceName("Đây là source ")
+//                    .sourceImage("32507316083")
+//                    .targetId("2") //
+//                    .targetName("Đây là target namename")
+//                    .referId(287)
+//                    .pullFlag(false)
+//                    .beginTime("2017-04-27 12:12:12").build();
+//
+//            List<NotifyEntity> list = new ArrayList<>();
+//            list.add(nextDay);
+//            list.add(today2);
+//            list.add(today);
+//            list.add(today);
+//            list.add(today0);
+//            data.setResultInfo(list);
+//            MZDebug.w("getUserNotification, total notifies: " + data.getNotifyTotal());
+//            return data;
         });
     }
 

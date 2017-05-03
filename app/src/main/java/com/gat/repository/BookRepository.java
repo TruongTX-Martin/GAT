@@ -9,6 +9,7 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.repository.entity.Book;
 import java.util.List;
 import io.reactivex.Observable;
@@ -31,9 +32,9 @@ public interface BookRepository {
     Observable<DataResultListResponse<BookResponse>> searchBookByAuthor
             (String author, long userId, int page, int sizeOfPage);
 
-    Observable<List<String>> getBooksSearchedKeyword();
+    Observable<List<Keyword>> getBooksSearchedKeyword();
 
-    Observable<List<String>> getAuthorsSearchedKeyword();
+    Observable<List<Keyword>> getAuthorsSearchedKeyword();
 
     Observable<BookInfo> getBookInfo (int editionId);
 

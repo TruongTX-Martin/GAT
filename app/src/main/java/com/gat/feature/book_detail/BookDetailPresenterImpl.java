@@ -122,8 +122,12 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
                 .returnOn(schedulerFactory.main())
                 .onNext(readingInfo -> {
                     if (null == readingInfo) {
+                        MZDebug.e("_____________________________ getSelfReadingStatus, editionId = "
+                                + mEditionId + ", reading status NULL");
                         subjectReadingStatusFailure.onNext("Reading info = null");
                     } else {
+                        MZDebug.e("_____________________________ getSelfReadingStatus, editionId = "
+                                + mEditionId + ", reading status = " + readingInfo.getReadingStatus());
                         subjectReadingStatus.onNext(readingInfo);
                     }
 
@@ -131,9 +135,9 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: getSelfReadingStatus _________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectReadingStatusFailure.onNext("Reading info = null");
                 })
                 .execute();
-
     }
 
     @Override
@@ -179,7 +183,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
                     subjectBookEvaluationByUser.onNext(evaluation);
                 })
                 .onError(throwable -> {
-                    MZDebug.e("ERROR: getBookEvaluationByUser _______________________________ E \n\r"
+                    MZDebug.e("ERROR: getBookEvaluationByUser ______________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
                     subjectEvaluationByUserFailure.onNext("Failed");
                 })
@@ -198,20 +202,21 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
 
     @Override
     public void updateReadingStatus() {
-        MZDebug.i("_______________________________ updateReadingStatus, editionId = " + mEditionId);
+        MZDebug.w("________________________________ updateReadingStatus, editionId = "
+                + mEditionId + " TO READ = 2 ");
 
         useCaseSelfUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(mEditionId, ReadingState.TO_READ);
         useCaseSelfUpdateReadingStatus.executeOn(schedulerFactory.io()).
                 returnOn(schedulerFactory.main()).
                 onNext(serverResponse -> {
+                    MZDebug.e("SUCCESS: updateReadingStatus : message = " + serverResponse.message());
                     subjectSelfUpdateReadingStatus.onNext(serverResponse.message());
                 }).
                 onError(throwable -> {
-                    MZDebug.e("ERROR: getBookEvaluationByUser ______________________________ E \n\r"
+                    MZDebug.e("ERROR: updateReadingStatus ______________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
                     subjectSelfUpdateReadingFailure.onNext("Failed");
                 }).execute();
-
     }
 
     @Override

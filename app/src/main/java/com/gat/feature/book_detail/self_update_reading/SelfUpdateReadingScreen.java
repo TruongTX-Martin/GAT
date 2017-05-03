@@ -11,10 +11,11 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class SelfUpdateReadingScreen implements Screen {
 
-    public static SelfUpdateReadingScreen instance (BookReadingInfo bookReadingInfo) {
-        return new AutoValue_SelfUpdateReadingScreen(bookReadingInfo);
+    public static SelfUpdateReadingScreen instance (int editionId, int readingStatus) {
+        return new AutoValue_SelfUpdateReadingScreen(editionId, readingStatus);
     }
 
-    public abstract BookReadingInfo bookReadingInfo();
+    public abstract int editionId ();
+    public abstract int readingStatus();
 
 }

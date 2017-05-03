@@ -140,11 +140,12 @@
     <string name="msg_no_user_near">Không có người chia sẻ gần bạn, nhấp xem thêm để hiển thị nhiều hơn. </string>
     <string name="total_comments">Lượt nhận xét</string>
     <string name="history">Lịch sử</string>
-    <string name="show_count_search_result">Hiển thị %1$s kết quả tìm kiếm</string>
+    <string name="show_count_search_result">Hiển thị %1$d kết quả tìm kiếm</string>
     <string name="tab_book_name">Tên sách</string>
     <string name="tab_book_author">Tác giả</string>
     <string name="tab_user_name">Người dùng</string>
 
+    <!-- book details -->
     <string name="book_detail">Thông tin sách</string>
     <string name="book_description">Nội dung sách</string>
     <string name="comment">Bình luận</string>
@@ -179,5 +180,21 @@
     <string name="isbn_invalid_message">Your ISBN is not valid. Please try again with another book.</string>
     <string name="inputLocationHint">Enter your location</string>
 
+    <!-- notification -->
+    <string name="notice">Thông báo</string>
+    <string name="need_accept_borrow">Muốn mượn sách</string>
+    <string name="message_to_you">Gửi tin nhắn tới bạn</string>
+    <string name="people_count_sharing_book">Có %1$d người đang cho mượn sách </string>
+    <string name="you_have_count_message_read">Bạn có %1$d tin nhắn chưa đọc</string>
+    <string name="someone_request_borrow">Gửi yêu cầu mượn sách \“%1$s\”</string>
+    <string name="borrow_unlucky">Sách <b>"%1$s"</b> đã được cho người khác mượn</string>
+    <string name="borrow_accept">Đồng ý cho bạn mượn sách \“ %1$s \”</string>
+    <string name="notice_has_borrow">Thông báo bạn đã mượn sách \“%1$s \”</string>
+    <string name="notice_borrow_needed">Thông báo bạn trả sách \“%1$s \”</string>
+    <string name="notice_borrow_refuse">Từ chối cho bạn mượn sách \“%1$s \”</string>
+    <string name="notice_lost_book">Thông báo bạn đã làm mất sách \“%1$s \”</string>
+    <string name="notice_your_total">Bạn đang mượn %1$d quyển sách từ người dùng khác.</string>
+    <string name="notice_total_request">Có %1$d người gửi yêu cầu mượn sách \“%2$s \”</string>
+    <string name="notice_borrow_cancel">Huỷ yêu cầu mượn sách \“%1$s \”</string>
 
 </resources>

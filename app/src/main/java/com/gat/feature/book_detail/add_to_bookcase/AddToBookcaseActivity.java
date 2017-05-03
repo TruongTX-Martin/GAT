@@ -77,7 +77,8 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
 
         disposable = new CompositeDisposable(
                 getPresenter().onGetBookTotalInstanceSuccess().subscribe(this::onGetBookTotalInstanceSuccess),
-                getPresenter().onAddBookInstanceSuccess().subscribe(this::onAddBookInstanceSuccess)
+                getPresenter().onAddBookInstanceSuccess().subscribe(this::onAddBookInstanceSuccess),
+                getPresenter().onAddBookInstanceFailure().subscribe(this::onFailure)
         );
 
         setupBookInfoDisplay(getScreen().bookInfo());
@@ -99,6 +100,7 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
 
     @OnClick(R.id.image_view_save)
     void onSave () {
+        imageViewSave.setClickable(false);
         getPresenter().addBookInstance(toggleButton.isChecked() ? 1:0, mNewTotalBook - mTotalBook);
     }
 
@@ -142,11 +144,11 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     private void onGetBookTotalInstanceSuccess(BookInstanceInfo bookInstanceInfo) {
         mTotalBook = bookInstanceInfo.getBorrowingTotal() +
                 bookInstanceInfo.getLostTotal() +
-                bookInstanceInfo.getNotSharingToal() +
+                bookInstanceInfo.getNotSharingTotal() +
                 bookInstanceInfo.getSharingTotal();
         mNewTotalBook = mTotalBook;
         textViewTotalBook.setText(String.valueOf(mTotalBook));
-        if (bookInstanceInfo.getNotSharingToal() > 0) {
+        if (bookInstanceInfo.getNotSharingTotal() > 0) {
             toggleButton.setChecked(false);
         } else {
             toggleButton.setChecked(true);
@@ -154,8 +156,15 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     }
 
     private void onAddBookInstanceSuccess (String message) {
+        imageViewSave.setClickable(true);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+
+    private void onFailure (String message) {
+        imageViewSave.setClickable(true);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 }

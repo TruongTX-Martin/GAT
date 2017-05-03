@@ -1,4 +1,5 @@
 package com.gat.data.response;
+import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -17,7 +18,7 @@ public class BookResponse {
     private String title;
 
     @SerializedName("imageId")
-    private String imageId;
+    private @Nullable String imageId;
 
     @SerializedName("author")
     private String author;

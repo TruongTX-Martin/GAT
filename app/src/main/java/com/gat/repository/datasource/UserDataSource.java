@@ -5,7 +5,9 @@ import android.location.Address;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.feature.editinfo.entity.EditInfoInput;
@@ -68,7 +70,7 @@ public interface UserDataSource {
     Observable<DataResultListResponse<UserResponse>>
     searchUser (String name, int page, int sizeOfPage);
 
-    Observable<List<String>> getUsersSearchedKeyword();
+    Observable<List<Keyword>> getUsersSearchedKeyword();
 
 
     Observable<Data<User>> getPersonalInfo();
@@ -82,4 +84,8 @@ public interface UserDataSource {
     Observable<Data> updateUserInfo(EditInfoInput input);
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
     Observable<Data> getBookDetail(Integer input);
+
+    Observable<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
+
+
 }

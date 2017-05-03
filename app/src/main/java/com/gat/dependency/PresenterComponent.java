@@ -12,6 +12,7 @@ import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresente
 
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
+import com.gat.feature.notification.NotificationPresenter;
 import com.gat.feature.personal.PersonalPresenter;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.personaluser.PersonalUserPresenter;
@@ -58,4 +59,7 @@ public interface PresenterComponent {
     BookDetailPresenter getBookDetailPresenter();
     BookDetailBorrowPresenter getBookDetailBorrowPresenter();
     ScanPresenter getScanPresenter();
+    NotificationPresenter getNotificationPresenter();
+
+
 }

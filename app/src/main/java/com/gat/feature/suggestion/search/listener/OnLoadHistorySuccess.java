@@ -1,5 +1,7 @@
 package com.gat.feature.suggestion.search.listener;
 
+import com.gat.data.response.impl.Keyword;
+
 import java.util.List;
 
 /**
@@ -8,6 +10,6 @@ import java.util.List;
 
 public interface OnLoadHistorySuccess {
 
-    void onLoadHistoryResult (List<String> list);
+    void onLoadHistoryResult (List<Keyword> list);
 
 }

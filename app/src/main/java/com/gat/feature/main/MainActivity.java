@@ -5,11 +5,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.feature.notification.NotificationFragment;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
@@ -99,12 +101,32 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // your dialog to ask if user is going out
+            // ...
+
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // your dialog to ask if user is going out
+        // ...
+
+        moveTaskToBack(true);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
         adapter.addFragment(new PersonalFragment(), "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
-        adapter.addFragment(new Fragment(), "NOTICE");
+        adapter.addFragment(new NotificationFragment(), "NOTICE");
         adapter.addFragment(new Fragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);

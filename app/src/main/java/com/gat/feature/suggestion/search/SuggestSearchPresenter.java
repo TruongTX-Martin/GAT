@@ -2,6 +2,7 @@ package com.gat.feature.suggestion.search;
 
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.rey.mvp2.Presenter;
 import java.util.List;
 import io.reactivex.Observable;
@@ -13,7 +14,7 @@ import io.reactivex.Observable;
 public interface SuggestSearchPresenter extends Presenter {
 
     void loadHistorySearchBook();
-    Observable<List<String>> onLoadHistorySearchBookSuccess();
+    Observable<List<Keyword>> onLoadHistorySearchBookSuccess();
 
     void searchBookWithTitle (String book_title);
     void loadMoreBookWithTitle();
@@ -21,7 +22,7 @@ public interface SuggestSearchPresenter extends Presenter {
 
 
     void loadHistorySearchAuthor();
-    Observable<List<String>> onLoadHistorySearchAuthorSuccess();
+    Observable<List<Keyword>> onLoadHistorySearchAuthorSuccess();
 
     void searchBookWithAuthor (String author);
     void loadMoreBookWithAuthor();
@@ -29,7 +30,7 @@ public interface SuggestSearchPresenter extends Presenter {
 
 
     void loadHistorySearchUser();
-    Observable<List<String>> onLoadHistorySearchUserSuccess();
+    Observable<List<Keyword>> onLoadHistorySearchUserSuccess();
 
     void searchUserWithName (String name);
     void loadMoreUserWithName ();

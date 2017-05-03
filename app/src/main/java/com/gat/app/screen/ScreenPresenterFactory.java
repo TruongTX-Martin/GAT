@@ -13,6 +13,7 @@ import com.gat.feature.login.LoginScreen;
 import com.gat.feature.message.MessagePresenter;
 import com.gat.feature.message.MessageScreen;
 import com.gat.feature.main.MainScreen;
+import com.gat.feature.notification.NotificationScreen;
 import com.gat.feature.personal.PersonalScreen;
 import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.register.RegisterScreen;
@@ -84,6 +85,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getCommentPresenter();
         else if (key instanceof ScanScreen)
             return (P) presenterComponent.getScanPresenter();
+        else if (key instanceof NotificationScreen)
+            return (P) presenterComponent.getNotificationPresenter();
 
         throw new IllegalArgumentException("Not support key " + key);
     }
