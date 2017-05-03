@@ -174,7 +174,7 @@
     <string name="people_count_sharing_book">Có %1$d người đang cho mượn sách </string>
     <string name="you_have_count_message_read">Bạn có %1$d tin nhắn chưa đọc</string>
     <string name="someone_request_borrow">Gửi yêu cầu mượn sách \“%1$s\”</string>
-    <string name="borrow_unlucky">Sách \“%1$s\” đã được cho người khác mượn</string>
+    <string name="borrow_unlucky">Sách <b>"%1$s"</b> đã được cho người khác mượn</string>
     <string name="borrow_accept">Đồng ý cho bạn mượn sách \“ %1$s \”</string>
     <string name="notice_has_borrow">Thông báo bạn đã mượn sách \“%1$s \”</string>
     <string name="notice_borrow_needed">Thông báo bạn trả sách \“%1$s \”</string>

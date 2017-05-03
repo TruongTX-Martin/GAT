@@ -1,6 +1,10 @@
 package com.gat.feature.notification.adapter;
 
+import android.os.Build;
 import android.support.annotation.LayoutRes;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -8,6 +12,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.DateTimeUtil;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.feature.notification.NotifyType;
 
@@ -15,6 +20,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
 /**
  * Created by mozaa on 28/04/2017.
@@ -51,7 +58,9 @@ public class NotificationItemViewHolder extends ItemViewHolder<NotificationItem>
     public void onBindItem(NotificationItem item) {
         super.onBindItem(item);
 
-        textViewTimeAgo.setText(item.notifyEntity().beginTime());
+        String timeAgo = DateTimeUtil.calculateTimeAgo(DateTimeUtil.FORMAT_TYPE_1, item.notifyEntity().beginTime());
+        textViewTimeAgo.setText(timeAgo);
+
         showMessageContentByType(item.notifyEntity());
 
         // hide divider at bottom of notice
@@ -88,7 +97,16 @@ public class NotificationItemViewHolder extends ItemViewHolder<NotificationItem>
 
             case NotifyType.BORROW_UNLUCKY:
                 textViewUserName.setVisibility(View.GONE);
-                textViewMessage.setText(String.format(mContext.getResources().getString(R.string.borrow_unlucky), item.targetName()));
+
+                String text =  String.format(mContext.getResources().getString(R.string.borrow_unlucky), item.targetName());
+                Spanned styledText;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    styledText = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
+                } else {
+                    styledText = Html.fromHtml(text);
+                }
+
+                textViewMessage.setText(styledText);
 
                 break;
 
