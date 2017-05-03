@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
 import com.gat.common.util.ClientUtils;
-import com.gat.common.util.CommonUtil;
+import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Constance;
 import com.gat.feature.message.item.MessageItem;
 import com.gat.repository.entity.Message;
@@ -50,7 +50,7 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
             ClientUtils.setImage(userImage, R.drawable.steve_job, url);
         }
         if (item.displayDate()) {
-            textDate.setText(CommonUtil.getDate(item.message().timeStamp()));
+            textDate.setText(CommonCheck.getDate(item.message().timeStamp()));
         } else {
             textDate.setVisibility(View.GONE);
         }

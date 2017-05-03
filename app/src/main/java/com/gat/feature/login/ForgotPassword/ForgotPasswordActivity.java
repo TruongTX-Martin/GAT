@@ -72,9 +72,9 @@ public class ForgotPasswordActivity extends ScreenActivity<LoginScreen, LoginPre
         });
     }
 
-    public void onError(ServerResponse<ResponseData> responseData) {
+    public void onError(String error) {
         onSending(false);
-        Toast.makeText(getApplicationContext(), getString(R.string.sending_failed), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     public void onSuccess(ServerResponse<ResetPasswordResponseData> responseDataServerResponse) {

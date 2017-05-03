@@ -18,5 +18,5 @@ import io.reactivex.Observable;
 public interface RegisterPresenter extends Presenter {
     Observable<User> getResponse();
     void setIdentity(LoginData loginData);
-    Observable<ServerResponse<ResponseData>> onError();
+    Observable<String> onError();
 }

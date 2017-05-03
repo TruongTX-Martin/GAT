@@ -180,7 +180,7 @@ public class BookDetailEntity {
         private String author = Strings.EMPTY;
 
         @SerializedName("rateAvg")
-        private int rateAvg;
+        private double rateAvg;
 
         @SerializedName("rateCount")
         private int rateCount;
@@ -208,7 +208,7 @@ public class BookDetailEntity {
             return author;
         }
 
-        public int getRateAvg() {
+        public double getRateAvg() {
             return rateAvg;
         }
 

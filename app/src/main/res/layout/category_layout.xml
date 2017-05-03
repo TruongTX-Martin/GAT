@@ -9,21 +9,18 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
         <ImageView
             android:id="@+id/imageview_cover_art"
             android:layout_width="110dp"
             android:layout_height="110dp"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"/>
-
         <ImageView
             android:id="@+id/imageview_favorite"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/check_icon"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-
+            android:layout_gravity="center"/>
     </FrameLayout>
 
     <TextView
@@ -31,8 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
+        android:maxLines="2"
         tools:text="Are You My Mother"
-        android:textStyle="bold"
         android:paddingTop="4dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"

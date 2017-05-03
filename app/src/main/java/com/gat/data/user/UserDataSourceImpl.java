@@ -107,6 +107,16 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
+    public Observable<Boolean> messageNotification(int receiver, String message) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<Boolean> registerFirebaseToken(String token) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Observable<List<Address>> getAddress(LatLng location) {
         return null;
     }

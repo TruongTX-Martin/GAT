@@ -28,12 +28,17 @@ import com.gat.data.response.BookResponse;
 import com.gat.feature.book_detail.BookDetailActivity;
 import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.main.MainActivity;
+import com.gat.feature.message.GroupMessageActivity;
+import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
 import com.gat.feature.suggestion.search.SuggestSearchActivity;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -61,6 +66,12 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
     @BindView(R.id.ll_user_near_suggest)
     LinearLayout llUserNearSuggest;
+
+    @BindView(R.id.group_message)
+    ImageView groupMessage;
+
+    @BindView(R.id.unread_count)
+    TextView unReadGroupMessageCnt;
 
     private CompositeDisposable disposables;
     private BookSuggestAdapter mMostBorrowingAdapter;
@@ -116,8 +127,24 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
                 getPresenter().onTopBorrowingSuccess().subscribe(this::onTopBorrowingSuccess),
                 getPresenter().onBookSuggestSuccess().subscribe(this::onSuggestBooksSuccess),
                 getPresenter().onPeopleNearByUserSuccess().subscribe(this::onPeopleNearByUserByDistanceSuccess),
-                getPresenter().onError().subscribe(this::onError)
+                getPresenter().onError().subscribe(this::onError),
+                getPresenter().unReadCnt().subscribe(cnt -> {
+                    if (cnt > 0) {
+                        unReadGroupMessageCnt.setVisibility(View.VISIBLE);
+                        unReadGroupMessageCnt.setText(cnt + "");
+                    } else {
+                        unReadGroupMessageCnt.setVisibility(View.INVISIBLE);
+                    }
+                })
         );
+
+        groupMessage.setOnClickListener(v -> {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (firebaseUser != null)
+                MainActivity.start(getContext(), GroupMessageActivity.class, GroupMessageScreen.instance());
+        });
+
+        getPresenter().getUnReadGroupMessage();
 
         return view;
     }

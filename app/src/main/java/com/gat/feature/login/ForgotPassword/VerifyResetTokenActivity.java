@@ -76,9 +76,9 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
         return LoginScreen.instance(Strings.EMPTY);
     }
 
-    public void onError(ServerResponse<ResponseData> response) {
+    public void onError(String error) {
         onVerifying(false);
-        Toast.makeText(getApplicationContext(), getString(R.string.verify_failed), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     public void onSuccess(ServerResponse<VerifyTokenResponseData> responseDataServerResponse) {

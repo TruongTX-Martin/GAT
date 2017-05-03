@@ -111,21 +111,29 @@ public class FragmentReadingBook extends Fragment {
     }
 
     private void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
+        try {
+            recyclerView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+        }catch (Exception e){}
     }
 
     private void hideLoading() {
-        progressBar.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
+        try {
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }catch (Exception e){}
     }
 
     private void showLoadMore(){
-        progressBarLoadMore.setVisibility(View.VISIBLE);
+        try {
+            progressBarLoadMore.setVisibility(View.VISIBLE);
+        }catch (Exception e){}
     }
 
     private void hideLoadMore() {
-        progressBarLoadMore.setVisibility(View.GONE);
+        try {
+            progressBarLoadMore.setVisibility(View.GONE);
+        }catch (Exception e){}
     }
     private void showDialogFilter() {
         if(currentInput == null){
@@ -217,6 +225,7 @@ public class FragmentReadingBook extends Fragment {
     }
 
     private void searchBook(BookReadingInput input) {
+        if(input == null) return;
         isRequesting = true;
         parrentActivity.requestReadingBooks(input);
         if(input.getPage() == 1){

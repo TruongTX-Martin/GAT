@@ -11,7 +11,6 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
-import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
@@ -46,6 +45,8 @@ public interface UseCaseFactory {
 
     UseCase<User> login(LoginData data);
 
+    UseCase<Boolean> loginFirebase();
+
     UseCase<User> register(LoginData data);
 
     UseCase<LoginData> getLoginData();
@@ -66,7 +67,11 @@ public interface UseCaseFactory {
 
     UseCase<List<Group>> getGroupList(int page, int size);
 
+    UseCase<Integer> getUnReadGroupMessageCnt();
+
     UseCase<Group> groupUpdate();
+
+    UseCase<Message> messageUpdate(int userId);
 
     UseCase<Boolean> sendMessage(int toUserId, String message);
 
@@ -131,6 +136,4 @@ public interface UseCaseFactory {
     UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
 
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
-
-    UseCase<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
 }

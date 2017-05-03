@@ -4,7 +4,7 @@ import android.support.v7.util.DiffUtil;
 
 import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemResult;
-import com.gat.common.util.CommonUtil;
+import com.gat.common.util.CommonCheck;
 import com.gat.repository.entity.Message;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class MessageItemBuilder extends ItemBuilder<Message>{
         int userId = 0;
         // Add new messages to new list
         for (Message message : messages) {
-            if (CommonUtil.isDiffDay(timeStamp, message.timeStamp()))
+            if (CommonCheck.isDiffDay(timeStamp, message.timeStamp()))
                 newItems.add(MessageItem.instance(message, true, true));
             else if (userId == message.userId())
                 newItems.add(MessageItem.instance(message, false, false));

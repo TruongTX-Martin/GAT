@@ -15,9 +15,10 @@ import io.reactivex.Observable;
  */
 
 public interface FirebaseService {
+    void Init();
     void getMessageList(int userId, int page, int size);
     Observable<List<MessageTable>> messageList();
-    Observable<MessageTable> hasNewMessage();
+    Observable<MessageTable> hasNewMessage(int userId);
 
     Observable<List<GroupTable>> getGroupList(int page, int size);
     Observable<GroupTable> groupUpdated();

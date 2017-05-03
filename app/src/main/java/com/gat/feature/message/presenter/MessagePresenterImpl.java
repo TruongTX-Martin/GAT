@@ -24,6 +24,7 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 import timber.log.Timber;
 
@@ -68,6 +69,11 @@ public class MessagePresenterImpl implements MessagePresenter {
 
     private Subject<Pair<String, Long>> sawMessageSubject;
 
+    // Initialized observer
+    private Subject<Boolean> initializedSubject;
+
+    private UseCase<Message> messageUpdateUseCase;
+
     private CompositeDisposable compositeDisposable;
 
     public MessagePresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
@@ -80,6 +86,8 @@ public class MessagePresenterImpl implements MessagePresenter {
         this.loadSubject = BehaviorSubject.create();
         this.sendMessageSubject = BehaviorSubject.create();
         this.sawMessageSubject = BehaviorSubject.create();
+
+        this.initializedSubject = PublishSubject.create();
 
         pageCnt = 1;
 
@@ -117,7 +125,7 @@ public class MessagePresenterImpl implements MessagePresenter {
                 .onNext(list -> {
                     Log.d(TAG, "Loading message: has new messages");
                     LoadingEvent event = LoadingEvent.builder()
-                            .refresh(false)
+                            .refresh(refresh)
                             .status(LoadingEvent.Status.DONE)
                             .build();
                     loadingEventSubject.onNext(event);
@@ -197,7 +205,13 @@ public class MessagePresenterImpl implements MessagePresenter {
         compositeDisposable = new CompositeDisposable(
                 this.loadSubject.observeOn(schedulerFactory.main()).subscribe(this::getMessage),
                 this.sendMessageSubject.observeOn(schedulerFactory.main()).subscribe(message -> send(message)),
-                this.sawMessageSubject.observeOn(schedulerFactory.main()).subscribe(pair -> setSeenMessage(pair.first, pair.second))
+                this.sawMessageSubject.observeOn(schedulerFactory.main()).subscribe(pair -> setSeenMessage(pair.first, pair.second)),
+                initializedSubject.observeOn(schedulerFactory.io()).subscribe(isInit -> {
+                    Log.d(TAG, "IsInitialized:" + isInit);
+                    if (isInit) {
+                        messageUpdate(userId);
+                    }
+                })
         );
     }
 
@@ -206,6 +220,7 @@ public class MessagePresenterImpl implements MessagePresenter {
         loadMessageUseCase = UseCases.release(loadMessageUseCase);
         getMessageUseCase = UseCases.release(getMessageUseCase);
         loadMoreMessageUseCase = UseCases.release(loadMoreMessageUseCase);
+        messageUpdateUseCase = UseCases.release(messageUpdateUseCase);
         compositeDisposable.dispose();
     }
 
@@ -220,6 +235,8 @@ public class MessagePresenterImpl implements MessagePresenter {
     public void refreshMessageList(int userId) {
         Log.d(TAG, "refreshMessage");
         this.userId = userId;
+        // get update message
+        initializedSubject.onNext(true);
         loadSubject.onNext(TYPE.MESSAGE_REFRESH);
     }
 
@@ -280,8 +297,22 @@ public class MessagePresenterImpl implements MessagePresenter {
                 .execute();
     }
 
-    @Override
-    public Observable<User> loadUser() {
-        return null;
+    private void messageUpdate(int userId) {
+        if (messageUpdateUseCase != null)
+            return;
+        Log.d(TAG, "messageUpdate");
+        messageUpdateUseCase = UseCases.release(messageUpdateUseCase);
+
+        messageUpdateUseCase = useCaseFactory.messageUpdate(userId);
+        messageUpdateUseCase.executeOn(schedulerFactory.io())
+                .executeOn(schedulerFactory.main())
+                .onNext(group -> {
+                    Log.d(TAG, "Group is updated");
+                })
+                .onError(throwable -> {
+                    throwable.printStackTrace();
+                })
+                .onStop(() -> messageUpdateUseCase = UseCases.release(messageUpdateUseCase))
+                .execute();
     }
 }

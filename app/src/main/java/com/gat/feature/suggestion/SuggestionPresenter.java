@@ -26,4 +26,6 @@ public interface SuggestionPresenter extends Presenter{
 
     Observable<String> onError();
 
+    void getUnReadGroupMessage();
+    Observable<Integer> unReadCnt();
 }

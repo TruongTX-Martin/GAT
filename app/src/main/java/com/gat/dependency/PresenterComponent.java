@@ -1,6 +1,7 @@
 package com.gat.dependency;
 
-import com.gat.feature.bookdetail.BookDetailRequestPresenter;
+import com.gat.feature.bookdetailborrow.BookDetailBorrowPresenter;
+import com.gat.feature.bookdetailrequest.BookDetailRequestPresenter;
 import com.gat.feature.editinfo.EditInfoPresenter;
 
 import com.gat.feature.book_detail.BookDetailPresenter;
@@ -12,7 +13,6 @@ import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingPresente
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.message.presenter.GroupMessagePresenter;
-import com.gat.feature.notification.NotificationPresenter;
 import com.gat.feature.personal.PersonalPresenter;
 import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.personaluser.PersonalUserPresenter;
@@ -24,6 +24,7 @@ import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.suggestion.SuggestionPresenter;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
 import com.gat.feature.suggestion.search.SuggestSearchPresenter;
+import com.gat.repository.entity.Group;
 
 import dagger.Subcomponent;
 
@@ -53,15 +54,11 @@ public interface PresenterComponent {
     EditInfoPresenter getEditInfoPresenter();
     PersonalUserPresenter getPersonalUserPresenter();
     BookDetailRequestPresenter getBookDetailRequestPresenter();
-
-    BookDetailPresenter getBookDetailPresenter();
     SelfUpdateReadingPresenter getSelfUpdateReadingPresenter();
     ListUserSharingBookPresenter getListUserSharingBookPresenter();
     AddToBookcasePresenter getAddToBookcasePresenter();
     CommentPresenter getCommentPresenter();
-
+    BookDetailPresenter getBookDetailPresenter();
+    BookDetailBorrowPresenter getBookDetailBorrowPresenter();
     ScanPresenter getScanPresenter();
-    NotificationPresenter getNotificationPresenter();
-
-
 }

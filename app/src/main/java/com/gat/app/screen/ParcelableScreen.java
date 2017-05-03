@@ -3,6 +3,7 @@ package com.gat.app.screen;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.gat.common.util.Strings;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
@@ -14,10 +15,10 @@ import com.gat.feature.book_detail.comment.CommentScreen;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
+import com.gat.feature.message.presenter.GroupMessageScreen;
+import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.main.MainScreen;
-import com.gat.feature.notification.NotificationScreen;
-import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
@@ -49,14 +50,13 @@ public class ParcelableScreen implements Parcelable {
     private static final int SUGGESTION_SEARCH = 8;
     private static final int MAIN = 9;
     private static final int BOOK_DETAIL = 10;
-    private static final int GROUP_MESSAGE = 11;
     private static final int SELF_UPDATE_READING = 12;
     private static final int LIST_USER_SHARING_BOOK = 13;
     private static final int ADD_TO_BOOKCASE = 14;
     private static final int ADD_COMMENT = 15;
     private static final int MESSAGER = 16;
-    private static final int SCAN = 17;
-    private static final int NOTIFICATION = 80;
+    private static final int GROUP_MESSAGER = 17;
+    private static final int SCAN = 18;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -102,12 +102,10 @@ public class ParcelableScreen implements Parcelable {
             return ADD_COMMENT;
         if (screen instanceof MessageScreen)
             return MESSAGER;
+        if (screen instanceof GroupMessageScreen)
+            return GROUP_MESSAGER;
         if (screen instanceof ScanScreen)
             return SCAN;
-        if (screen instanceof NotificationScreen)
-            return NOTIFICATION;
-        if (screen instanceof GroupMessageScreen)
-            return GROUP_MESSAGE;
         throw new IllegalArgumentException("Not support screen " + screen);
     }
 
@@ -130,15 +128,15 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof MessageScreen) {
             MessageScreen messageScreen = (MessageScreen) screen;
-            dest.writeString(messageScreen.userName());
             dest.writeInt(messageScreen.userId());
+            dest.writeString(messageScreen.userName());
+        } else if (screen instanceof GroupMessageScreen) {
+
         } else if (screen instanceof MainScreen) {
 
         } else if (screen instanceof ShareNearByUserDistanceScreen) {
 
         } else if (screen instanceof SuggestSearchScreen) {
-
-        } else if (screen instanceof GroupMessageScreen) {
 
         } else if (screen instanceof BookDetailScreen) {
             BookDetailScreen bookDetailScreen = (BookDetailScreen) screen;
@@ -157,10 +155,7 @@ public class ParcelableScreen implements Parcelable {
             dest.writeParcelable(commentScreen.evaluation(), flags);
         } else if (screen instanceof ScanScreen) {
 
-        } else if (screen instanceof NotificationScreen) {
-
         }
-
 
         else {
             throw new IllegalArgumentException("Not implement serialization for " + screen);
@@ -202,9 +197,11 @@ public class ParcelableScreen implements Parcelable {
                 screen = MainScreen.instance();
                 break;
             case MESSAGER:
-                screen = MessageScreen.instance(in.readString(), in.readInt());
+                int userId = in.readInt();
+                String userName = in.readString();
+                screen = MessageScreen.instance(userName, userId);
                 break;
-            case GROUP_MESSAGE:
+            case GROUP_MESSAGER:
                 screen = GroupMessageScreen.instance();
                 break;
             case BOOK_DETAIL:
@@ -224,11 +221,6 @@ public class ParcelableScreen implements Parcelable {
             case ADD_COMMENT:
                 screen = CommentScreen.instance(in.readParcelable(EvaluationItemResponse.class.getClassLoader()));
                 break;
-
-            case NOTIFICATION:
-                screen = NotificationScreen.instance();
-                break;
-
             default:
                 throw new IllegalArgumentException("Not implement deserialization for type " + type);
         }

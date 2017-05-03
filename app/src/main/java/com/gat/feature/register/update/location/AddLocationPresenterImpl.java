@@ -2,6 +2,7 @@ package com.gat.feature.register.update.location;
 
 import android.util.Log;
 
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.UserAddressData;
@@ -9,6 +10,7 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.google.android.gms.maps.model.LatLng;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,7 +32,11 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
 
     private UseCase<ServerResponse> updateLocationUseCase;
 
-    private final Subject<ServerResponse<ResponseData>> errorSubject;
+    private final Subject<String> errorSubject;
+
+    private Subject<String> getLocationFromAddressSubject;
+    private Observable<LatLng> addressResult;
+    private UseCase<LatLng> getLocationFromAddressUseCase;
 
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
@@ -43,6 +49,8 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
 
         this.updateResultSubject = PublishSubject.create();
         this.updateLocationDataSubject = BehaviorSubject.create();
+
+        this.getLocationFromAddressSubject = BehaviorSubject.create();
 
         this.errorSubject = PublishSubject.create();
     }
@@ -57,15 +65,29 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onError() {
+    public Observable<String> onError() {
         return errorSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void getLocationFromAdress(String address) {
+        getLocationFromAddressSubject.onNext(address);
+    }
+
+    @Override
+    public Observable<LatLng> addressResult() {
+        return addressResult.observeOn(schedulerFactory.main());
+    }
+
+    private void getLocation(String address) {
+        // TODO
     }
 
     @Override
     public void onCreate() {
         compositeDisposable = new CompositeDisposable(
-                updateLocationDataSubject.observeOn(schedulerFactory.main())
-                        .subscribe(this::updateLocation)
+                updateLocationDataSubject.observeOn(schedulerFactory.main()).subscribe(this::updateLocation),
+                getLocationFromAddressSubject.observeOn(schedulerFactory.main()).subscribe(this::getLocation)
         );
     }
 
@@ -85,13 +107,13 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
         updateLocationUseCase.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(response -> {
-                    if (response.isOk())
-                        updateResultSubject.onNext(response);
-                    else
-                        errorSubject.onNext(new ServerResponse<ResponseData>(response.message(), response.code(), ResponseData.NO_RESPONSE));
+                    updateResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    errorSubject.onNext(ServerResponse.EXCEPTION);
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> updateLocationUseCase = UseCases.release(updateLocationUseCase))
                 .execute();

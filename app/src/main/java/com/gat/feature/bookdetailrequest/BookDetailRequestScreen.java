@@ -1,4 +1,4 @@
-package com.gat.feature.bookdetail;
+package com.gat.feature.bookdetailrequest;
 
 import com.gat.app.screen.Screen;
 import com.google.auto.value.AutoValue;

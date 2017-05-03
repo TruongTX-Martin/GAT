@@ -12,8 +12,8 @@ public interface LoginData {
     public @interface Type {
         int NONE        = 0;
         int FACE        = 1;
-        int TWITTER     = 2;
-        int GOOGLE      = 3;
+        int GOOGLE      = 2;
+        int TWITTER     = 3;
         int EMAIL       = 4;
     }
     int type();

@@ -19,6 +19,7 @@ import com.gat.dependency.DataComponent;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Author;
 import com.gat.repository.entity.Book;
+import com.google.gson.internal.LinkedTreeMap;
 
 import org.json.JSONObject;
 
@@ -101,9 +102,9 @@ public class DebugBookDataSource implements BookDataSource {
             ServerResponse serverResponse = response.body();
             if (serverResponse != null) {
                 MZDebug.w("____________________________________________________ searchBookByIsbn");
-                JSONObject jsonObject = (JSONObject) serverResponse.data();
-                if (jsonObject.has("editionId"))
-                    return (int)jsonObject.get("editionId");
+                LinkedTreeMap<String, Double> data = (LinkedTreeMap<String, Double>) serverResponse.data();
+                if (data != null && data.get("editionId") != null)
+                    return data.get("editionId").intValue();
                 else
                     throw new CommonException("Bad response.");
             } else {

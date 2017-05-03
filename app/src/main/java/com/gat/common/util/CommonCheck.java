@@ -1,26 +1,36 @@
 package com.gat.common.util;
 
 import android.support.annotation.IntDef;
+import android.util.Log;
 import android.util.Pair;
 
+import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
+import com.gat.data.response.ServerResponse;
 import com.gat.repository.entity.LoginData;
+import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 /**
  * Created by ducbtsn on 2/24/17.
  */
 
-public class CommonUtil {
+public class CommonCheck {
     public final static int PASSWORD_LENGTH_MIN = 6;
     public final static int TOKEN_LENGTH = 6;
     private static final int ISBN_13 = 13;
@@ -129,6 +139,42 @@ public class CommonUtil {
         }
     }
 
+    public static <T extends Object> ServerResponse<T> checkResponse(Response<ServerResponse<T>> response) {
+        if (response == null) {
+            throw CommonException.FAILED_RESPONSE;
+        } else if (!response.isSuccessful()) {
+            ResponseBody errorBody = response.errorBody();
+            if (errorBody == null) {
+                throw CommonException.FAILED_RESPONSE;
+            } else {
+                try {
+                    JSONObject errorContent = new JSONObject(errorBody.string());
+                    if (errorContent.has("message")) {
+                        if (response.code() == ServerResponse.HTTP_CODE.TOKEN) {
+                            throw new CommonException(errorContent.getString("message"));       // TODO login exception
+                        } else {
+                            throw new CommonException(errorContent.getString("message"));
+                        }
+                    } else {
+                        Log.d("ErrorBody", errorContent.toString());
+                        throw CommonException.FAILED_RESPONSE;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    throw CommonException.FAILED_RESPONSE;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw CommonException.FAILED_RESPONSE;
+                }
+            }
+        } else if (response.body() == null) {
+            throw CommonException.FAILED_RESPONSE;
+        } else {
+            Log.d("Response", "Code: " + response.body().code());
+            return response.body();
+        }
+    }
+
     public static String getGroupId(int user1, int user2) {
         return (user1 < user2) ? (user1 + "" + user2) : (user2 + "" + user1);
     }
@@ -154,5 +200,4 @@ public class CommonUtil {
             return Strings.EMPTY;
         }
     }
-
 }

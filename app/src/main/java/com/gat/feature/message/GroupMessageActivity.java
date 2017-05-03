@@ -46,7 +46,6 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ClientUtils.context = getApplicationContext();  // TODO remove after
         compositeDisposable = new CompositeDisposable(
                 getPresenter().itemsChanged().subscribe(this::onItemChanged),
                 getPresenter().loadingEvents().subscribe(this::onLoadingEvent)

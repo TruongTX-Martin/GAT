@@ -26,7 +26,10 @@ import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.feature.editinfo.EditInfoActivity;
+import com.gat.feature.login.LoginPresenter;
+import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
@@ -34,6 +37,7 @@ import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
+import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.book.BookReadingEntity;
@@ -293,6 +297,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void getBookInstanceError(ServerResponse<ResponseData> error) {
         ClientUtils.showToast(error.message());
+        if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
+            MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }
     }
 
 
@@ -329,6 +336,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     @Override
     public void onDestroy() {
         super.onDestroy();
+        disposablesPersonal.dispose();
+        disposablesBookInstance.dispose();
+        disposablesChangeBookSharingStatus.dispose();
+        disposablesReadingBooks.dispose();
+        disposablesBooksRequest.dispose();
     }
 
 }

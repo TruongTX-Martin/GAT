@@ -3,6 +3,25 @@
 
     <string name="tab_home">Trang Chủ</string>
 
+    <!-- Book category -->
+    <string name="category_1">Sách văn học</string>
+    <string name="category_2">Sách kĩ năng</string>
+    <string name="category_3">Sách kinh tế</string>
+    <string name="category_4">Sách lịch sử-địa lý</string>
+    <string name="category_5">Sách nghệ thuật</string>
+    <string name="category_6">Sách tôn giáo</string>
+    <string name="category_7">Sách thiếu nhi</string>
+    <string name="category_8">Truyện tranh</string>
+    <string name="category_9">Sách khoa học</string>
+    <string name="category_10">Sách giáo khoa</string>
+    <string name="category_11">Sách giáo trình ĐH</string>
+    <string name="category_12">Sách ngoại ngữ</string>
+    <string name="category_13">Mẹ và bé</string>
+    <string name="category_14">Tạp chí</string>
+    <string name="category_15">Tổng hợp</string>
+    <string name="btn_add_category">Thêm vào loại sách</string>
+    <string name="register_category_header">Loại sách yêu thích</string>
+
     <!-- suggession text -->
     <string name="share_near_me">Chia sẻ sách gần bạn</string>
     <string name="cover_content_description">Book Image Cover</string>

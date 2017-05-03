@@ -1,4 +1,4 @@
-package com.gat.feature.bookdetail;
+package com.gat.feature.bookdetailborrow;
 
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
@@ -15,14 +15,15 @@ import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
 /**
- * Created by root on 23/04/2017.
+ * Created by root on 26/04/2017.
  */
 
-public class BookDetailRequestPresenterImpl implements BookDetailRequestPresenter {
+public class BookDetailBorrowPresenterImpl implements BookDetailBorrowPresenter {
 
 
     private UseCaseFactory useCaseFactory;
     private SchedulerFactory schedulerFactory;
+
 
     private CompositeDisposable bookDetailDisposable;
     private final Subject<Data> bookDetailResultSubject;
@@ -31,9 +32,10 @@ public class BookDetailRequestPresenterImpl implements BookDetailRequestPresente
     private UseCase<Data> bookDetailUsecase;
 
 
-    public BookDetailRequestPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
+    public BookDetailBorrowPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
+
 
         this.bookDetailError = PublishSubject.create();
         bookDetailResultSubject = PublishSubject.create();
@@ -67,8 +69,7 @@ public class BookDetailRequestPresenterImpl implements BookDetailRequestPresente
         return bookDetailError.observeOn(schedulerFactory.main());
     }
 
-
-    private void getBookDetail(Integer input){
+    private void getBookDetail(Integer input) {
         bookDetailUsecase = UseCases.release(bookDetailUsecase);
         bookDetailUsecase = useCaseFactory.getBookDetail(input);
         bookDetailUsecase.executeOn(schedulerFactory.io())

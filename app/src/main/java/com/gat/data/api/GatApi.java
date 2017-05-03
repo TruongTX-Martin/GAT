@@ -3,6 +3,7 @@ package com.gat.data.api;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.ResultInfoObject;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.SimpleResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
@@ -71,8 +72,8 @@ public interface GatApi {
             @Field("socialType") String socialType,
             @Field("name") String name,
             @Field("email") String email,
-            @Field("password") String password/*,
-            @Field("image") RequestBody image*/
+            @Field("password") String password,
+            @Field("image") String image
     );
 
     @FormUrlEncoded
@@ -100,15 +101,15 @@ public interface GatApi {
 
     @FormUrlEncoded
     @POST("user/update_usually_location")
-    Observable<Response<ServerResponse>> updateLocation(
+    Observable<Response<ServerResponse<SimpleResponse>>> updateLocation(
             @Field("address") String address,
             @Field("longitude") float longitude,
             @Field("latitude") float latitude
     );
 
     @FormUrlEncoded
-    @POST("user/update_favourite_category")
-    Observable<Response<ServerResponse>> updateCategory(
+    @POST("user/update_favorite_category")
+    Observable<Response<ServerResponse<SimpleResponse>>> updateCategory(
             @Field("categories") List<Integer> categories
     );
 
@@ -313,4 +314,16 @@ public interface GatApi {
     );
 
 
+    @FormUrlEncoded
+    @POST("user/firebase_token_register")
+    Observable<Response<ServerResponse<Boolean>>> registerFirebaseToken (
+            @Field("firebaseToken") String firebaseToken
+    );
+
+    @FormUrlEncoded
+    @POST("user/push_message_notification")
+    Observable<Response<ServerResponse<Boolean>>> messageNotification (
+            @Field("receiverId") int receiverId,
+            @Field("Message") String message
+    );
 }

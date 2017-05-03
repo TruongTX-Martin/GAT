@@ -18,6 +18,8 @@ import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.search.SearchActivity;
@@ -37,7 +39,8 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCategoryPresenter> {
-    private final int MAX_CATE = 10;
+    private final int MAX_CATE = 15;
+
     private final String FAVOR_KEY = "FavouriteIndex";
 
     @BindView(R.id.gridview)
@@ -72,8 +75,9 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
         Resources res = getResources();
         TypedArray icons = res.obtainTypedArray(R.array.category_cover);
         TypedArray names = res.obtainTypedArray(R.array.category_name);
+        TypedArray categoryId = res.obtainTypedArray(R.array.category_id);
         for (int i = 0; i < MAX_CATE; i++) {
-            bookCategories[i] = BookCategory.instance(names.getString(i), icons.getResourceId(i, 0), false);
+            bookCategories[i] = BookCategory.instance(names.getString(i), icons.getResourceId(i, 0), false, categoryId.getInt(i, 0));
         }
 
         CategoryAdapter categoryAdapter = new CategoryAdapter(this, bookCategories);
@@ -84,7 +88,7 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 BookCategory category = bookCategories[position];
-                bookCategories[position] = BookCategory.instance(category.name(), category.coverId(), category.favor() ? false : true);
+                bookCategories[position] = BookCategory.instance(category.name(), category.coverId(), category.favor() ? false : true, category.categoryId());
 
                 // This tells the GridView to redraw itself
                 // in turn calling your BooksAdapter's getView method again for each cell
@@ -97,7 +101,7 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
             List<Integer> listCate = new ArrayList<Integer>();
             for (int i = 0; i < MAX_CATE; i++) {
                 if (bookCategories[i].favor()) {
-                    listCate.add(i);
+                    listCate.add(bookCategories[i].categoryId());
                 }
             }
             onUpdating(true);
@@ -129,7 +133,7 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
         final ArrayList<Integer> favorCategory = new ArrayList<>();
         for (int i = 0; i < MAX_CATE; i++) {
             if (bookCategories[i].favor()) {
-                favorCategory.add(i);
+                favorCategory.add(bookCategories[i].categoryId());
             }
         }
 
@@ -148,7 +152,7 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
         // look at all of your books and figure out which are the favorites
         for (Integer i : favorCategory) {
             BookCategory category = bookCategories[i];
-            bookCategories[i] = BookCategory.instance(category.name(), category.coverId(), true);
+            bookCategories[i] = BookCategory.instance(category.name(), category.coverId(), true, category.categoryId());
         }
     }
 
@@ -162,14 +166,14 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
         }
     }
 
-    private void onUpdateError(ServerResponse<ResponseData> error) {
+    private void onUpdateError(String error) {
         onUpdating(false);
-        Toast.makeText(this, getString(R.string.update_category_failed), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     private void onUpdateSuccess(ServerResponse<ResponseData> response) {
         onUpdating(false);
-        start(this, SearchActivity.class, SearchScreen.instance(Strings.EMPTY));
+        start(this, MainActivity.class, MainScreen.instance());
         finish();
     }
 }

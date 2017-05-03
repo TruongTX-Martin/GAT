@@ -8,7 +8,6 @@ import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
-import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.feature.editinfo.entity.EditInfoInput;
@@ -116,41 +115,19 @@ public class PaperUserDataSource implements UserDataSource {
         return Observable.fromCallable(() -> book.read(KEY_LOGIN_TOKEN, Strings.EMPTY));
     }
 
+    @Override
+    public Observable<Boolean> messageNotification(int receiver, String message) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
-    public Observable<User> getPublicUserInfo(int userId) {
+    public Observable<Boolean> registerFirebaseToken(String token) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Observable<List<User>> getListUserInfo(List<Integer> userIdList) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Observable<User> storePublicUserInfo(User user) {
-        return Observable.fromCallable(() -> book.read(KEY_USER_LIST, new ArrayList<User>()))
-                .doOnNext(list -> list.add(user))
-                .flatMap(list -> Observable.just(user));
-    }
-
-    @Override
-    public Observable<List<User>> storeListUserInfo(List<User> userList) {
-        return null;
-    }
-
-    @Override
-    public Observable<User> loadPublicUserInfo(int userId) {
-        return Observable.fromCallable(() -> book.read(KEY_USER_LIST, new ArrayList<User>()))
-                .flatMap(list -> {
-                    for (Iterator<User> iterator = list.iterator(); iterator.hasNext();) {
-                        User user1 = iterator.next();
-                        if (user1.userId() == userId) {
-                            return Observable.just(user1);
-                        }
-                    }
-                    return Observable.just(User.NONE);
-                });
     }
 
     @Override
@@ -218,6 +195,11 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
+    public Observable<User> getUserInformation(int userId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Observable<Data> updateUserInfo(EditInfoInput input) {
         return null;
     }
@@ -229,11 +211,6 @@ public class PaperUserDataSource implements UserDataSource {
 
     @Override
     public Observable<Data> getBookDetail(Integer input) {
-        return null;
-    }
-
-    @Override
-    public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
         return null;
     }
 

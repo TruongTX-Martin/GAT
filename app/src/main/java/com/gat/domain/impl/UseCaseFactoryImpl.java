@@ -11,7 +11,6 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
-import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetGroupList;
 import com.gat.domain.usecase.*;
@@ -102,6 +101,16 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
+    public UseCase<Message> messageUpdate(int userId) {
+        return new MessageUpdate(userId, messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Integer> getUnReadGroupMessageCnt() {
+        return new UnReadGroupMessageCnt(messageRepositoryLazy.get());
+    }
+
+    @Override
     public UseCase<Group> groupUpdate() {
         return new GroupUpdate(messageRepositoryLazy.get());
     }
@@ -124,6 +133,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<User> login(LoginData data) {
         return new Login(userRepositoryLazy.get(), data);
+    }
+
+    @Override
+    public UseCase<Boolean> loginFirebase() {
+        return new LoginFirebase(userRepositoryLazy.get());
     }
 
     @Override
@@ -313,11 +327,6 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     public UseCase<BorrowResponse> requestBorrow(int editionId, int ownerId) {
         return new RequestBorrow(bookRepositoryLazy.get(), editionId, ownerId);
 
-    }
-
-    @Override
-    public UseCase<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
-        return new GetUserNotifications(userRepositoryLazy.get(), page, per_page);
     }
 
 

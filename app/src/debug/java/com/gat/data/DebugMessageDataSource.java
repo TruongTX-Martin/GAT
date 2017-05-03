@@ -35,6 +35,11 @@ public class DebugMessageDataSource implements MessageDataSource {
     }
 
     @Override
+    public Observable<MessageTable> messageUpdate(int userId) {
+        return firebaseService.hasNewMessage(userId);
+    }
+
+    @Override
     public Observable<List<GroupTable>> getGroupList(int page, int size) {
         return firebaseService.getGroupList(page, size);
     }
@@ -51,12 +56,22 @@ public class DebugMessageDataSource implements MessageDataSource {
     }
 
     @Override
-    public Observable<List<Group>> storeGroupList(List<Group> groupList) {
+    public Observable<List<Group>> loadGroupList() {
+        return null;
+    }
+
+    @Override
+    public Observable<Group> storeGroup(Group group) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Message>> loadMessageList(String groupId) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Observable<List<Message>> storeMessageList(String groupId, List<Message> messageList) {
+    public Observable<Message> storeMessage(String groupId, Message message) {
         throw new UnsupportedOperationException();
     }
 

@@ -90,10 +90,6 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
         getPresenter().refreshMessageList(userId);
 
-        //refreshLayout.setColorSchemeResources(R.color.colorAccent);
-        //refreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
-        //refreshLayout.setOnRefreshListener(() -> getPresenter().refreshMessageList(userId));
-
         messageEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -147,8 +143,8 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
                 loadMoreScrollListener.setEnable(messageAdapter.hasLoadMoreItem());
                 //refreshLayout.setRefreshing(false);
                 //refreshLayout.setEnabled(true);
-                //if (event.refresh())
-                //    recyclerView.scrollToPosition(0);
+                if (event.refresh())
+                    recyclerView.scrollToPosition(messageAdapter.getItemCount()-1);
 
                 break;
             case LoadingEvent.Status.COMPLETE:

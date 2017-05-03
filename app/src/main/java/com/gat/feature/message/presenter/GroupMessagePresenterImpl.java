@@ -99,6 +99,7 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
         ObservableTransformer<List<Group>, ItemResult> transformer =
                 upstream -> upstream
                         .map( groupList -> {
+                            Log.d(TAG, "Transformer");
                             List<Item> items = itemResultSubject.blockingFirst().items();
                             Log.d(TAG, "Transformer:" + groupList.size() + "," + items.size());
                             ItemResult itemResult = new GroupItemBuilder().addList(items, groupList, refresh, groupList.size() >= GROUP_SIZE);
@@ -129,8 +130,8 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
                     // Release all use case
                     loadingUseCase = UseCases.release(loadingUseCase);
                     getGroupUseCase = UseCases.release(getGroupUseCase);
-
-                    initializedSubject.onNext(true);
+                    // TODO #170502
+                    //initializedSubject.onNext(true);
                 })
                 .onStop(() -> {
                     Log.d(TAG, "Loading stopped.");
@@ -192,13 +193,24 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
 
     private void groupUpdate() {
         Log.d(TAG, "groupUpdate");
-        if (loadingUseCase != null) {
-            Log.d(TAG, "Cannot update, loading...");
-            return;
-        }
+        //if (loadingUseCase != null) {
+        //    Log.d(TAG, "Cannot update, loading...");
+        //    return;
+        //}
         groupUpdateUseCase = UseCases.release(groupUpdateUseCase);
 
         groupUpdateUseCase = useCaseFactory.groupUpdate();
+        groupUpdateUseCase.executeOn(schedulerFactory.io())
+                .executeOn(schedulerFactory.main())
+                .onNext(group -> {
+                    Log.d(TAG, "Group is updated");
+                })
+                .onError(throwable -> {
+                    throwable.printStackTrace();
+                })
+                .onStop(() -> groupUpdateUseCase = UseCases.release(groupUpdateUseCase))
+                .execute();
+        /*
         GroupItemBuilder itemBuilder = new GroupItemBuilder();
         ObservableTransformer<Group, ItemResult> transformer =
                 upstream -> upstream
@@ -224,6 +236,7 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
                     groupUpdateUseCase = UseCases.release(groupUpdateUseCase);
                 })
                 .execute();
+                */
 
     }
 
@@ -258,6 +271,8 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
                     }
                 })
         );
+        // TODO #170502
+        initializedSubject.onNext(true);
     }
 
     @Override

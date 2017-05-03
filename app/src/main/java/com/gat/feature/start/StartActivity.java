@@ -2,7 +2,6 @@ package com.gat.feature.start;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -16,15 +15,13 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.Strings;
-import com.gat.data.response.ResponseData;
-import com.gat.data.response.ServerResponse;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
-import com.gat.feature.message.GroupMessageActivity;
-import com.gat.feature.message.presenter.GroupMessageScreen;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterActivity;
-import com.gat.repository.entity.LoginData;
+import com.gat.feature.register.RegisterScreen;
 import com.gat.repository.entity.User;
 
 import butterknife.BindView;
@@ -72,12 +69,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
         disposables = new CompositeDisposable(
                 getPresenter().loginResult().subscribe(this::onLoginResult),
-                getPresenter().onError().subscribe(this::onLoginError),
-                getPresenter().loadLocalLoginData().filter(loginData -> loginData != LoginData.EMPTY)
-                        .subscribe(loginData -> {
-                            onLogging(true);
-                            getPresenter().setIdentity(loginData);
-                        })
+                getPresenter().onError().subscribe(this::onLoginError)
         );
 
         // array index of all welcome sliders
@@ -86,6 +78,9 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                 R.layout.activity_intro_slider2,
                 R.layout.activity_intro_slider3
         };
+
+        if (!getScreen().tokenChange())
+            getPresenter().loadLocalUser();
 
         // adding bottom dots
         addBottomDots(0);
@@ -119,18 +114,15 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
 
         skip.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), MainActivity.class, MainScreen.instance());
         });
 
         loginBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), LoginActivity.class, LoginScreen.instance(Strings.EMPTY));
         });
 
         registerBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), RegisterActivity.class, RegisterScreen.instance());
         });
     }
 
@@ -176,13 +168,15 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     }
 
     private void onLoginResult(User user) {
-        onLogging(false);
-        start(this, MainActivity.class, MainScreen.instance());
-        finish();
+        if (user.isValid()) {
+            getPresenter().loginOnFirebase();
+            start(this, MainActivity.class, MainScreen.instance());
+            finish();
+        }
     }
 
-    private void onLoginError(ServerResponse<ResponseData> responseData) {
-        onLogging(false);
+    private void onLoginError(String error) {
+        // Do nothing
     }
 
     private void onLogging(boolean enter) {

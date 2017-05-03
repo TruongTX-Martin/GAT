@@ -12,12 +12,17 @@
         <item>@drawable/steve_job</item>
         <item>@drawable/steve_job</item>
         <item>@drawable/steve_job</item>
+        <item>@drawable/steve_job</item>
+        <item>@drawable/steve_job</item>
+        <item>@drawable/steve_job</item>
+        <item>@drawable/steve_job</item>
+        <item>@drawable/steve_job</item>
     </array>
 
     <array name="category_name">
         <item>@string/category_1</item>
-        <item>@string/category_2</item>
         <item>@string/category_3</item>
+        <item>@string/category_2</item>
         <item>@string/category_4</item>
         <item>@string/category_5</item>
         <item>@string/category_6</item>
@@ -25,6 +30,28 @@
         <item>@string/category_8</item>
         <item>@string/category_9</item>
         <item>@string/category_10</item>
+        <item>@string/category_11</item>
+        <item>@string/category_12</item>
+        <item>@string/category_13</item>
+        <item>@string/category_14</item>
+        <item>@string/category_15</item>
+    </array>
 
+    <array name="category_id">
+        <item>1</item>
+        <item>5</item>
+        <item>3</item>
+        <item>13</item>
+        <item>15</item>
+        <item>16</item>
+        <item>2</item>
+        <item>10</item>
+        <item>14</item>
+        <item>7</item>
+        <item>11</item>
+        <item>8</item>
+        <item>4</item>
+        <item>12</item>
+        <item>17</item>
     </array>
 </resources>
