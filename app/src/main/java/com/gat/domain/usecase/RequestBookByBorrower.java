@@ -1,5 +1,6 @@
 package com.gat.domain.usecase;
 
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Data;
@@ -10,7 +11,7 @@ import io.reactivex.Observable;
  * Created by root on 29/04/2017.
  */
 
-public class RequestBookByBorrower extends UseCase<Data> {
+public class RequestBookByBorrower extends UseCase<ChangeStatusResponse> {
 
     private UserRepository userRepository;
     private RequestStatusInput input;
@@ -19,7 +20,7 @@ public class RequestBookByBorrower extends UseCase<Data> {
         this.input = input;
     }
     @Override
-    protected Observable<Data> createObservable() {
+    protected Observable<ChangeStatusResponse> createObservable() {
         return userRepository.requestBookByBorrowrer(input);
     }
 }

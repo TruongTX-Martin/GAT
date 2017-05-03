@@ -14,8 +14,8 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
-import com.gat.data.response.ResponseData;
-import com.gat.data.response.ServerResponse;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.book.BookDetailEntity;
 
@@ -194,6 +194,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     private int recordStatus = 0;
     int borrowingRecordId = 0;
     private BookDetailEntity bookDetail;
+    private RequestStatusInput statusInput = new RequestStatusInput();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -228,15 +229,63 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         layoutReturnDate.setVisibility(View.GONE);
         layoutRejectRequest.setVisibility(View.GONE);
         layoutDeletedRequest.setVisibility(View.GONE);
-        getPresenter().requestBookDetail(borrowingRecordId);
+        requestDetailBook();
     }
 
     private void handleEvent(){
         imgBack.setOnClickListener(v -> finish());
+        layoutParrentAgreed.setOnClickListener(v -> {
+            if(recordStatus == 0){
+                statusInput.setCurrentStatus(0);
+                statusInput.setNewStatus(2);
+                statusInput.setRecordId(bookDetail.getRecordId());
+                requestBookOwner(statusInput);
+            }
+        });
+        layoutParrentReject.setOnClickListener(v -> {
+            if(recordStatus == 0){
+                statusInput.setCurrentStatus(0);
+                statusInput.setNewStatus(5);
+                statusInput.setRecordId(bookDetail.getRecordId());
+                requestBookOwner(statusInput);
+            }
+        });
+        layoutParrentBorrowBook.setOnClickListener(v -> {
+            if(recordStatus == 2){
+                statusInput.setCurrentStatus(2);
+                statusInput.setNewStatus(3);
+                statusInput.setRecordId(bookDetail.getRecordId());
+                requestBookOwner(statusInput);
+            }
+        });
+        layoutParrentCancleRequest.setOnClickListener(v -> {
+            if(recordStatus == 2){
+                statusInput.setCurrentStatus(2);
+                statusInput.setNewStatus(6);
+                statusInput.setRecordId(bookDetail.getRecordId());
+                requestBookOwner(statusInput);
+            }
+        });
+        imgBorrower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        imgEditionBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+    private void requestBookOwner(RequestStatusInput statusInput){
+        getPresenter().requestChangeStatus(statusInput);
     }
 
-    private void getBookDetailError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast("Error:" + error.message());
+    private void getBookDetailError(String error) {
+        ClientUtils.showToast("Error:" + error);
     }
 
     private void getBookDetailSuccess(Data data) {
@@ -247,11 +296,20 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         }
     }
 
-    private void requestBookByOwnerSuccess(Data data) {
-        if (data != null) {
+    private void requestDetailBook(){
+        getPresenter().requestBookDetail(borrowingRecordId);
+    }
 
+    private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
+        if (data != null) {
+            if(data.getStatusCode() == 200){
+                initView();
+                requestDetailBook();
+            }
+            ClientUtils.showToast(data.getMessage());
         }
     }
+
 
     private void updateView(){
         BookDetailEntity.EditionInfo editionInfo = bookDetail.getEditionInfo();
@@ -286,7 +344,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
             txtNumberSharing.setText(borrowerInfo.getSharingCount()+"");
             txtNumberReading.setText(borrowerInfo.getReadCount()+"");
         }
-        recordStatus = 7;
+        ClientUtils.showToast("Record status:"+recordStatus);
         switch (recordStatus){
             case 0:
                 //wait to confirm
@@ -297,7 +355,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 layoutBottomLeft.setVisibility(View.GONE);
                 break;
             case 1:
-                //on hold
+                //on hold - not change status
                 layoutSendRequest.setVisibility(View.VISIBLE);
                 txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                 txtWaitForTurnMessage.setVisibility(View.VISIBLE);
@@ -318,7 +376,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 layoutBottomLeft.setVisibility(View.VISIBLE);
                 break;
             case 3:
-                //borrowing
+                //borrowing - can change status
                 layoutSendRequest.setVisibility(View.VISIBLE);
                 layoutStartBorrow.setVisibility(View.VISIBLE);
                 txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
@@ -335,7 +393,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 rltOverLayBorrow.setVisibility(View.INVISIBLE);
                 break;
             case 4:
-                //completted
+                //completted - can't change status
                 layoutSendRequest.setVisibility(View.VISIBLE);
                 layoutStartBorrow.setVisibility(View.VISIBLE);
                 layoutReturnDate.setVisibility(View.VISIBLE);
@@ -357,7 +415,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 layoutReturnBook.setBackground(getResources().getDrawable(R.drawable.bg_layout_filter_book));
                 break;
             case 5:
-                //reject
+                //reject - can't change status
                 layoutSendRequest.setVisibility(View.VISIBLE);
                 txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                 layoutRejectRequest.setVisibility(View.VISIBLE);
@@ -366,7 +424,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 layoutBottomLeft.setVisibility(View.GONE);
                 break;
             case 6:
-                //cancled
+                //cancled - can't change status
                 layoutSendRequest.setVisibility(View.VISIBLE);
                 txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                 layoutDeletedRequest.setVisibility(View.VISIBLE);

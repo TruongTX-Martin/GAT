@@ -8,6 +8,7 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -215,8 +216,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<Data> requestBookByBorrowrer(RequestStatusInput input) {
+    public Observable<ChangeStatusResponse> requestBookByBorrowrer(RequestStatusInput input) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByBorrower(input));
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByOwner(input));
     }
 
 }

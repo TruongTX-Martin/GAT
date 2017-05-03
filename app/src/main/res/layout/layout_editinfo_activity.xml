@@ -36,6 +36,15 @@
             android:text="Thay đổi ảnh đại diện"
             android:textColor="#5396b9"
             android:textSize="16dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:indeterminateDrawable="@drawable/progressbar_indeterminate"
+            />
     </RelativeLayout>
 
     <RelativeLayout

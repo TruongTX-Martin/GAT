@@ -140,24 +140,14 @@
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="author"
             android:textColor="#000000" />
-
-        <TextView
-            android:id="@+id/txtBorrowFrom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layoutRating"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:textColor="#000000" />
-
         <LinearLayout
             android:id="@+id/layoutRating"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtAuthor"
-            android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
-            android:orientation="horizontal">
-
+            android:orientation="horizontal"
+            >
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -165,11 +155,45 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5"
-                android:rating="3"
-                android:scaleX="0.4"
-                android:visibility="gone"
-                android:scaleY="0.4" />
+                android:stepSize="0.01"
+                android:isIndicator="true" />
+            <TextView
+                android:id="@+id/txtRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:layout_marginLeft="5dp"
+                android:textColor="#000000" />
+
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutBorrowFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/layoutRating"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:visibility="gone"
+            >
+            <TextView
+                android:id="@+id/txtBorrowFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mượn từ:"
+                android:textSize="14dp"
+                android:layout_marginRight="5dp"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/txtBorrowName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#5297ba"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                />
+        </LinearLayout>
+
     </RelativeLayout>
 
     <View

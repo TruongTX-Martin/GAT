@@ -19,6 +19,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -69,6 +70,8 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     @BindView(R.id.imgBack)
     ImageView imgBack;
 
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     private Bitmap currentBitmap;
     private File fileImage;
 
@@ -121,8 +124,11 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     private void editInfoSuccess(String message){
         ClientUtils.showToast(message);
+        progressBar.setVisibility(View.GONE);
+        backToPreviousActivity();
     }
     private void updateProfile(){
+        progressBar.setVisibility(View.VISIBLE);
         String name = edtName.getText().toString().trim();
         if(Strings.isNullOrEmpty(name)) {
             ClientUtils.showToast("Bạn không được để trống tên");
@@ -201,7 +207,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                                     Uri uri = data.getData();
                                     fileImage = new File(getRealPathFromURI(uri));
                                     currentBitmap = bitmap;
-                                    imgAvatar.setImageBitmap(bitmap);
+                                    imgAvatar.setImageURI(uri);
                                 }catch (Exception e){
                                     System.out.println(e.getMessage());
                                 }

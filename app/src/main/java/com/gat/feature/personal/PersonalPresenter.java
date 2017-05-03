@@ -19,22 +19,22 @@ public interface PersonalPresenter extends Presenter{
 
     void requestPersonalInfor(String input);
     Observable<Data> getResponsePersonal();
-    Observable<ServerResponse<ResponseData>> onErrorPersonal();
+    Observable<String> onErrorPersonal();
 
 
     void requestBookInstance(BookInstanceInput input);
     Observable<Data> getResponseBookInstance();
-    Observable<ServerResponse<ResponseData>> onErrorBookInstance();
+    Observable<String> onErrorBookInstance();
 
     void requestChangeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getResponseBookSharingStatus();
-    Observable<ServerResponse<ResponseData>> onErrorBookSharingStatus();
+    Observable<String> onErrorBookSharingStatus();
 
     void requestReadingBooks(BookReadingInput input);
     Observable<Data> getResponseReadingBooks();
-    Observable<ServerResponse<ResponseData>> onErrorReadingBooks();
+    Observable<String> onErrorReadingBooks();
 
     void requestBookRequests(BookRequestInput input);
     Observable<Data> getResponseBookRequest();
-    Observable<ServerResponse<ResponseData>> onErrorBookRequest();
+    Observable<String> onErrorBookRequest();
 }

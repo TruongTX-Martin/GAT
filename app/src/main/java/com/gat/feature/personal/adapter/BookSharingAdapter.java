@@ -73,9 +73,13 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
                 holder.txtAuthor.setText(entity.getAuthor());
             }
             if(!Strings.isNullOrEmpty(entity.getBorrowingUserName())){
-                holder.txtBorrowFrom.setText("Người mượn:"+entity.getBorrowingUserName());
+                holder.layoutBorrowFrom.setVisibility(View.VISIBLE);
+                holder.txtBorrowName.setText(entity.getBorrowingUserName());
+            }else{
+                holder.layoutBorrowFrom.setVisibility(View.GONE);
             }
             holder.ratingBar.setNumStars((int)entity.getRateAvg());
+            holder.txtRating.setText(entity.getRateAvg()+"");
             if (!Strings.isNullOrEmpty(entity.getImageId())) {
                 ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
             }
@@ -136,12 +140,12 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
         Switch mySwitch;
         RelativeLayout viewParrent,layoutDelete;
         LinearLayout layoutTitle;
-        TextView txtTopTitle,txtTopNumber;
+        TextView txtTopTitle,txtTopNumber,txtBorrowName,txtRating;
+        LinearLayout layoutBorrowFrom;
         public BookSharingViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.txtName);
             txtAuthor = (TextView) view.findViewById(R.id.txtAuthor);
-            txtBorrowFrom = (TextView) view.findViewById(R.id.txtBorrowFrom);
             txtShared = (TextView) view.findViewById(R.id.txtShared);
             imgBook = (ImageView) view.findViewById(R.id.imgAvatar);
             imgExtend = (ImageView) view.findViewById(R.id.imgExtend);
@@ -152,6 +156,10 @@ public class BookSharingAdapter extends  RecyclerView.Adapter<BookSharingAdapter
             layoutTitle = (LinearLayout) view.findViewById(R.id.layoutTitle);
             txtTopTitle = (TextView) view.findViewById(R.id.txtTopTitle);
             txtTopNumber = (TextView) view.findViewById(R.id.txtTopNumber);
+            txtBorrowFrom = (TextView) view.findViewById(R.id.txtBorrowFrom);
+            txtBorrowName = (TextView) view.findViewById(R.id.txtBorrowName);
+            txtRating = (TextView) view.findViewById(R.id.txtRating);
+            layoutBorrowFrom = (LinearLayout) view.findViewById(R.id.layoutBorrowFrom);
         }
     }
 }

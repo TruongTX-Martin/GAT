@@ -1,5 +1,6 @@
 package com.gat.feature.personal;
 
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.PaperUserDataSource;
@@ -34,7 +35,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private CompositeDisposable personalDisposable;
     private final Subject<Data> personalResultSubject;
     private final Subject<String> personalInputSubject;
-    private final Subject<ServerResponse<ResponseData>> personalError;
+    private final Subject<String> personalError;
     private UseCase<Data<User>> getPersonalUsecase;
 
     //get book instance
@@ -42,7 +43,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private UseCase<Data> getBookIntanceUsecase;
     private Subject<Data> bookInstanceResultSubject;
     private Subject<BookInstanceInput> bookInstanceInputSubject;
-    private final Subject<ServerResponse<ResponseData>> bookInstanceError;
+    private final Subject<String> bookInstanceError;
 
 
     //change book sharing status
@@ -50,21 +51,21 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private UseCase<Data> changeBookSharingStatusUsecase;
     private Subject<Data> changeBookSharingStatusResultSubject;
     private Subject<BookChangeStatusInput> changeBookSharingStatusInputSubject;
-    private Subject<ServerResponse<ResponseData>> changeBookSharingStatusError;
+    private Subject<String> changeBookSharingStatusError;
 
     //get data readingbook
     private CompositeDisposable readingBooksDisposable;
     private UseCase<Data> readingBooksUsecase;
     private Subject<Data> readingBookResultSubject;
     private Subject<BookReadingInput> readingBookInputSubject;
-    private Subject<ServerResponse<ResponseData>> readingBookError;
+    private Subject<String> readingBookError;
 
     //get data book request
     private CompositeDisposable requestBooksDisposable;
     private UseCase<Data> requestBooksUsecase;
     private Subject<Data> requestBookResultSubject;
     private Subject<BookRequestInput> requestBookInputSubject;
-    private Subject<ServerResponse<ResponseData>> requestBookError;
+    private Subject<String> requestBookError;
 
     public PersonalPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
@@ -131,7 +132,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorPersonal() {
+    public Observable<String> onErrorPersonal() {
         return personalError.observeOn(schedulerFactory.main());
     }
 
@@ -146,7 +147,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorBookInstance() {
+    public Observable<String> onErrorBookInstance() {
         return bookInstanceError.observeOn(schedulerFactory.main());
     }
 
@@ -161,7 +162,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorBookSharingStatus() {
+    public Observable<String> onErrorBookSharingStatus() {
         return changeBookSharingStatusError.observeOn(schedulerFactory.main());
     }
 
@@ -176,7 +177,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorReadingBooks() {
+    public Observable<String> onErrorReadingBooks() {
         return readingBookError.observeOn(schedulerFactory.main());
     }
 
@@ -191,7 +192,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorBookRequest() {
+    public Observable<String> onErrorBookRequest() {
         return requestBookError.observeOn(schedulerFactory.main());
     }
 
@@ -204,7 +205,12 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     requestBookResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    requestBookError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        requestBookError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        requestBookError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> requestBooksUsecase = UseCases.release(requestBooksUsecase)
@@ -221,7 +227,12 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     personalResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    personalError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        personalError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        personalError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> getPersonalUsecase = UseCases.release(getPersonalUsecase)
@@ -236,8 +247,13 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     bookInstanceResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    bookInstanceError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof CommonException)
+                        bookInstanceError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        bookInstanceError.onNext("Exception occurred.");
+                    }
                 }).onStop(
                 () -> getBookIntanceUsecase = UseCases.release(getBookIntanceUsecase)
         ).execute();
@@ -250,8 +266,13 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     changeBookSharingStatusResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    changeBookSharingStatusError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof CommonException)
+                        changeBookSharingStatusError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        changeBookSharingStatusError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> changeBookSharingStatusUsecase = UseCases.release(changeBookSharingStatusUsecase)
@@ -266,8 +287,13 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     readingBookResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    readingBookError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof CommonException)
+                        readingBookError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        readingBookError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> readingBooksUsecase = UseCases.release(readingBooksUsecase)

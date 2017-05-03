@@ -8,6 +8,7 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -171,7 +172,12 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> requestBookByBorrower(RequestStatusInput input) {
+    public Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+        return null;
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
         return null;
     }
 

@@ -14,8 +14,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
-import com.gat.data.response.ResponseData;
-import com.gat.data.response.ServerResponse;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.book.BookDetailEntity;
@@ -23,7 +22,6 @@ import com.gat.repository.entity.book.BookDetailEntity;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by root on 23/04/2017.
  */
@@ -160,8 +158,6 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     @BindView(R.id.rltOverLayUnreturn)
     RelativeLayout rltOverLayUnreturn;
 
-
-
     @BindView(R.id.layoutContactingBorder)
     RelativeLayout layoutContactingBorder;
 
@@ -225,26 +221,41 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         layoutReturnDate.setVisibility(View.GONE);
         layoutRejectRequest.setVisibility(View.GONE);
         layoutDeletedRequest.setVisibility(View.GONE);
-        getPresenter().requestBookDetail(borrowingRecordId);
+        requestDetailData();
     }
 
     private void handleEvent(){
         imgBack.setOnClickListener(v -> finish());
-        layoutParrentCancleRequest.setOnClickListener(new View.OnClickListener() {
+        layoutParrentCancleRequest.setOnClickListener(v -> {
+            if(recordStatus == 0){
+                statusInput.setCurrentStatus(0);
+                statusInput.setNewStatus(6);
+                statusInput.setRecordId(bookDetail.getRecordId());
+                requestBookBorrower(statusInput);
+            }
+        });
+        layoutParrentCancleRequest.setOnClickListener(v -> {
+            statusInput.setCurrentStatus(2);
+            statusInput.setNewStatus(6);
+            statusInput.setRecordId(bookDetail.getRecordId());
+            requestBookBorrower(statusInput);
+        });
+        imgEditionBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(recordStatus == 0){
-                    statusInput.setCurrentStatus(0);
-                    statusInput.setNewStatus(6);
-                    statusInput.setRecordId(bookDetail.getRecordId());
-                    requestBookBorrower(statusInput);
-                }
+
+            }
+        });
+        imgBorrower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
 
-    private void getBookDetailError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast("Error:" + error.message());
+    private void getBookDetailError(String error) {
+        ClientUtils.showToast("Error:" + error);
     }
 
     private void requestBookBorrower(RequestStatusInput input){
@@ -259,10 +270,18 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         }
     }
 
-    private void requestBookByBorrowerSuccess(Data data) {
+    private void requestBookByBorrowerSuccess(ChangeStatusResponse data) {
         if (data != null) {
-            System.out.println(data);
+            if(data.getStatusCode() == 200){
+                ClientUtils.showToast(data.getMessage());
+                initView();
+                requestDetailData();
+            }
         }
+    }
+
+    private void requestDetailData(){
+        getPresenter().requestBookDetail(borrowingRecordId);
     }
 
 
@@ -330,7 +349,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     rltCheckCancel.setVisibility(View.GONE);
                     break;
                 case 3:
-                    //borrowing
+                    //borrowing - sender cannot change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
                     layoutStartBorrow.setVisibility(View.VISIBLE);
                     txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
@@ -348,7 +367,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
 
                     break;
                 case 4:
-                    //completted
+                    //completted - can't change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
                     layoutStartBorrow.setVisibility(View.VISIBLE);
                     layoutReturnDate.setVisibility(View.VISIBLE);
@@ -369,7 +388,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     layoutReturnBook.setBackground(getResources().getDrawable(R.drawable.bg_layout_filter_book));
                     break;
                 case 5:
-                    //reject
+                    //reject - can't change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
                     txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                     layoutRejectRequest.setVisibility(View.VISIBLE);
@@ -378,7 +397,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     layoutBottomLeft.setVisibility(View.GONE);
                     break;
                 case 6:
-                    //cancled
+                    //cancled - can't change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
                     txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                     layoutDeletedRequest.setVisibility(View.VISIBLE);
@@ -388,7 +407,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     layoutParrentCancleRequest.setVisibility(View.VISIBLE);
                     break;
                 case 7:
-                    //unreturnd
+                    //unreturnd - can't change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
                     txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
                     layoutStartBorrow.setVisibility(View.VISIBLE);

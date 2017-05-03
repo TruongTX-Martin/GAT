@@ -12,6 +12,7 @@ import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -128,7 +129,8 @@ public interface UseCaseFactory {
 
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
 
-    UseCase<Data> requestBookByBorrower(RequestStatusInput input);
+    UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input);
+    UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
 
 
 

@@ -2,6 +2,7 @@ package com.gat.feature.bookdetailowner;
 
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.Data;
 import com.rey.mvp2.Presenter;
@@ -16,9 +17,9 @@ public interface BookDetailOwnerPresenter extends Presenter{
 
     void requestBookDetail(int input);
     Observable<Data> getResponseBookDetail();
-    Observable<ServerResponse<ResponseData>> onErrorBookDetail();
+    Observable<String> onErrorBookDetail();
 
     void requestChangeStatus(RequestStatusInput input);
-    Observable<Data> getResponseChangeStatus();
-    Observable<ServerResponse<ResponseData>> onErrorChangeStatus();
+    Observable<ChangeStatusResponse> getResponseChangeStatus();
+    Observable<String> onErrorChangeStatus();
 }

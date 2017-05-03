@@ -37,6 +37,7 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -306,8 +307,13 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Data> requestBookByBorrower(RequestStatusInput input) {
+    public UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
         return new RequestBookByBorrower(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
+        return new RequestBookByOwner(userRepositoryLazy.get(),input);
     }
 
 }

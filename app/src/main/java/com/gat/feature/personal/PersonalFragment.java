@@ -229,7 +229,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     public void requestPersonalInfo(){
-        getPresenter().requestPersonalInfor("");
+        try {
+            getPresenter().requestPersonalInfor("");
+        }catch (Exception e){
+
+        }
     }
 
     //handle data personal return
@@ -256,8 +260,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         }
     }
 
-    private void getUserInfoError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(error.message());
+    private void getUserInfoError(String error) {
+        ClientUtils.showToast(error);
     }
 
 
@@ -294,8 +298,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         }
     }
 
-    private void getBookInstanceError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(error.message());
+    private void getBookInstanceError(String error) {
+        ClientUtils.showToast(error);
     }
 
 

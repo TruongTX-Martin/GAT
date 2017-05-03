@@ -1,11 +1,13 @@
 package com.gat.feature.bookdetailowner;
 
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.Data;
 
@@ -29,15 +31,15 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
     private CompositeDisposable bookDetailDisposable;
     private final Subject<Data> bookDetailResultSubject;
     private final Subject<Integer> bookDetailInputSubject;
-    private final Subject<ServerResponse<ResponseData>> bookDetailError;
+    private final Subject<String> bookDetailError;
     private UseCase<Data> bookDetailUsecase;
 
 
     private CompositeDisposable changeStatusDisposable;
-    private final Subject<Data> changeStatusResultSubject;
+    private final Subject<ChangeStatusResponse> changeStatusResultSubject;
     private final Subject<RequestStatusInput> changeStatusInputSubject;
-    private final Subject<ServerResponse<ResponseData>> changeStatusError;
-    private UseCase<Data> changeStatusUsecase;
+    private final Subject<String> changeStatusError;
+    private UseCase<ChangeStatusResponse> changeStatusUsecase;
 
 
     public BookDetailOwnerPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
@@ -82,7 +84,7 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorBookDetail() {
+    public Observable<String> onErrorBookDetail() {
         return bookDetailError.observeOn(schedulerFactory.main());
     }
 
@@ -92,25 +94,30 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
     }
 
     @Override
-    public Observable<Data> getResponseChangeStatus() {
+    public Observable<ChangeStatusResponse> getResponseChangeStatus() {
         return changeStatusResultSubject.observeOn(schedulerFactory.main());
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorChangeStatus() {
+    public Observable<String> onErrorChangeStatus() {
         return changeStatusError.observeOn(schedulerFactory.main());
     }
 
     private void getChangeStatus(RequestStatusInput input){
         changeStatusUsecase = UseCases.release(changeStatusUsecase);
-        changeStatusUsecase = useCaseFactory.requestBookByBorrower(input);
+        changeStatusUsecase = useCaseFactory.requestBookByOwner(input);
         changeStatusUsecase.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(response -> {
                     changeStatusResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    changeStatusError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        changeStatusError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        changeStatusError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> changeStatusUsecase = UseCases.release(changeStatusUsecase)
@@ -126,7 +133,13 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
                     bookDetailResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    bookDetailError.onError(throwable);
+//                    bookDetailError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        bookDetailError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        bookDetailError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> bookDetailUsecase = UseCases.release(bookDetailUsecase)

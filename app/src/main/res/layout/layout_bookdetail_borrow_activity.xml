@@ -192,14 +192,14 @@
 
                 <RatingBar
                     android:id="@+id/ratingBar"
-                    android:layout_width="match_parent"
+                    style="@style/CustomRatingBar"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/mySwitch"
-                    android:layout_below="@+id/txtName"
+                    android:layout_below="@+id/txtAuthor"
+                    android:layout_toRightOf="@+id/imgAvatar"
                     android:numStars="5"
-                    android:scaleX="0.5"
-                    android:scaleY="0.5"
-                    />
+                    android:stepSize="0.01"
+                    android:isIndicator="true" />
             </LinearLayout>
 
 

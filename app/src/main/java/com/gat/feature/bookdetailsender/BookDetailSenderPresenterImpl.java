@@ -1,11 +1,13 @@
 package com.gat.feature.bookdetailsender;
 
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.Data;
 
@@ -28,14 +30,14 @@ public class BookDetailSenderPresenterImpl implements BookDetailSenderPresenter 
     private CompositeDisposable bookDetailDisposable;
     private final Subject<Data> bookDetailResultSubject;
     private final Subject<Integer> bookDetailInputSubject;
-    private final Subject<ServerResponse<ResponseData>> bookDetailError;
+    private final Subject<String> bookDetailError;
     private UseCase<Data> bookDetailUsecase;
 
     private CompositeDisposable senderChangeStatusDisposable;
-    private final Subject<Data> senderChangeStatusResultSubject;
+    private final Subject<ChangeStatusResponse> senderChangeStatusResultSubject;
     private final Subject<RequestStatusInput> senderChangeStatusInputSubject;
-    private final Subject<ServerResponse<ResponseData>> senderChangeStatusError;
-    private UseCase<Data> senderChangeStatusUsecase;
+    private final Subject<String> senderChangeStatusError;
+    private UseCase<ChangeStatusResponse> senderChangeStatusUsecase;
 
 
 
@@ -80,7 +82,7 @@ public class BookDetailSenderPresenterImpl implements BookDetailSenderPresenter 
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorBookDetail() {
+    public Observable<String> onErrorBookDetail() {
         return bookDetailError.observeOn(schedulerFactory.main());
     }
 
@@ -90,12 +92,12 @@ public class BookDetailSenderPresenterImpl implements BookDetailSenderPresenter 
     }
 
     @Override
-    public Observable<Data> getResponseSenderChangeStatus() {
+    public Observable<ChangeStatusResponse> getResponseSenderChangeStatus() {
         return senderChangeStatusResultSubject.observeOn(schedulerFactory.main());
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorSenderChangeStatus() {
+    public Observable<String> onErrorSenderChangeStatus() {
         return senderChangeStatusError.observeOn(schedulerFactory.main());
     }
 
@@ -108,7 +110,12 @@ public class BookDetailSenderPresenterImpl implements BookDetailSenderPresenter 
                     senderChangeStatusResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    senderChangeStatusError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        senderChangeStatusError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        senderChangeStatusError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> senderChangeStatusUsecase = UseCases.release(senderChangeStatusUsecase)
@@ -125,7 +132,12 @@ public class BookDetailSenderPresenterImpl implements BookDetailSenderPresenter 
                     bookDetailResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    bookDetailError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        bookDetailError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        bookDetailError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> bookDetailUsecase = UseCases.release(bookDetailUsecase)
