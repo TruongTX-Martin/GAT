@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.common.util.CommonUtil;
+import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
@@ -56,7 +56,7 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
 
         btnVerify.setOnClickListener(view -> {
             String token = tokenText.getText().toString();
-            if (!CommonUtil.checkToken(token)) {
+            if (!CommonCheck.checkToken(token)) {
                 tokenText.setError(getString(R.string.forgot_inputtoken_length));
                 return;
             }

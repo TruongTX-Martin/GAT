@@ -88,10 +88,4 @@ public interface UserDataSource {
     Observable<Data> getBookDetail(Integer input);
 
     Observable<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
-
-
-
-    Observable<User> storePublicUserInfo(User user);
-    Observable<List<User>> storeListUserInfo(List<User> userList);
-    Observable<User> loadPublicUserInfo(int userId);
 }

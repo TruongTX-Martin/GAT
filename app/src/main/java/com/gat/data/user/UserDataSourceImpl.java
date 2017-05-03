@@ -186,21 +186,6 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<User> storePublicUserInfo(User user) {
-        return null;
-    }
-
-    @Override
-    public Observable<List<User>> storeListUserInfo(List<User> userList) {
-        return null;
-    }
-
-    @Override
-    public Observable<User> loadPublicUserInfo(int userId) {
-        return null;
-    }
-
-    @Override
     public Observable<List<String>> getUsersSearchedKeyword() {
         return null;
     }

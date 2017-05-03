@@ -183,7 +183,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                         if (userId != localUser)
                             break;
                     }
-                    return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId)
+                    return netWorkUserDataSourceLazy.get().getUserInformation(userId)
                             .flatMap(newUser -> Observable.just(Group.builder()
                                     .groupId(groupTable.groupId())
                                     .isRead(groupTable.isRead())
@@ -251,7 +251,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                                             .users(groupTable.users())
                                             .build());
                                 } else {
-                                    return netWorkUserDataSourceLazy.get().getPublicUserInfo(userId)
+                                    return netWorkUserDataSourceLazy.get().getUserInformation(userId)
                                             .flatMap(newUser -> Observable.just(Group.builder()
                                                     .groupId(groupTable.groupId())
                                                     .isRead(groupTable.isRead())

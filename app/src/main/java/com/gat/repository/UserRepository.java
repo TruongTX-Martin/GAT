@@ -5,6 +5,7 @@ import android.location.Address;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
@@ -68,4 +69,5 @@ public interface UserRepository {
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
     Observable<Data> getBookDetail(Integer input);
     Observable<User> getUserPublicInfo(int userId);
+    Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page);
 }

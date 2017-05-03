@@ -26,6 +26,8 @@ import com.gat.feature.message.presenter.GroupMessagePresenter;
 import com.gat.feature.message.presenter.GroupMessagePresenterImpl;
 import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.message.presenter.MessagePresenterImpl;
+import com.gat.feature.notification.NotificationPresenter;
+import com.gat.feature.notification.NotificationPresenterImpl;
 import com.gat.feature.personal.PersonalPresenter;
 import com.gat.feature.personal.PersonalPresenterImpl;
 import com.gat.feature.personaluser.PersonalUserPresenter;
@@ -194,5 +196,10 @@ public class PresenterModule {
     BookDetailBorrowPresenter provideBookDetailBorrowPresenter(UseCaseFactory useCaseFactory,
                                                          SchedulerFactory schedulerFactory) {
         return new BookDetailBorrowPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+    @Provides
+    NotificationPresenter provideNotificationPresenter (UseCaseFactory useCaseFactory,
+                                                        SchedulerFactory schedulerFactory) {
+        return new NotificationPresenterImpl(useCaseFactory, schedulerFactory);
     }
 }

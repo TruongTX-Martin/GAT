@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.common.util.CommonUtil;
+import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
@@ -53,12 +53,12 @@ public class ResetPasswordActivity extends ScreenActivity<LoginScreen, LoginPres
 
         btnVerify.setOnClickListener(view -> {
             String password = passwordText.getText().toString();
-            Pair<Boolean, Integer> result = CommonUtil.validatePassword(password);
+            Pair<Boolean, Integer> result = CommonCheck.validatePassword(password);
             if (!result.first) {
                 String error;
-                if (result.second == CommonUtil.Error.FIELD_EMPTY) {
+                if (result.second == CommonCheck.Error.FIELD_EMPTY) {
                     error = getString(R.string.login_password_empty);
-                } else if (result.second == CommonUtil.Error.EMAIL_INVALID) {
+                } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
                     error = getString(R.string.login_password_length);
                 } else {
                     error = Strings.EMPTY;
