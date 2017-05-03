@@ -41,6 +41,9 @@ public interface UserDataSource {
     void storeLoginToken(String token);
     Observable<String> getLoginToken();
 
+    Observable<Boolean> messageNotification(int receiver, String message);
+    Observable<Boolean> registerFirebaseToken(String token);
+
     Observable<ServerResponse<LoginResponseData>> register(LoginData data);
 
 
@@ -86,6 +89,4 @@ public interface UserDataSource {
     Observable<Data> getBookDetail(Integer input);
 
     Observable<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
-
-
 }

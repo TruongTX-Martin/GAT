@@ -57,4 +57,14 @@ public class GroupMessageAdapter extends ItemAdapter {
         Item item = items.get(items.size() - 1);
         return item instanceof LoadingMessage && !((LoadingMessage)item).fullHeight();
     }
+
+    public void completeLoading() {
+        if (!items.isEmpty()) {
+            int size = items.size() - 1;
+            Item item = items.get(size);
+            if (item instanceof  LoadingMessage && !((LoadingMessage)item).fullHeight()) {
+                items.remove(size);
+            }
+        }
+    }
 }

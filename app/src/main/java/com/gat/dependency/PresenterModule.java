@@ -22,12 +22,12 @@ import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginPresenterImpl;
 import com.gat.feature.main.MainPresenter;
 import com.gat.feature.main.MainPresenterImpl;
+import com.gat.feature.message.presenter.GroupMessagePresenter;
+import com.gat.feature.message.presenter.GroupMessagePresenterImpl;
+import com.gat.feature.message.presenter.MessagePresenter;
+import com.gat.feature.message.presenter.MessagePresenterImpl;
 import com.gat.feature.notification.NotificationPresenter;
 import com.gat.feature.notification.NotificationPresenterImpl;
-import com.gat.feature.personal.PersonalPresenter;
-import com.gat.feature.personal.PersonalPresenterImpl;
-import com.gat.feature.message.MessagePresenter;
-import com.gat.feature.message.MessagePresenterImpl;
 import com.gat.feature.personal.PersonalPresenter;
 import com.gat.feature.personal.PersonalPresenterImpl;
 import com.gat.feature.personaluser.PersonalUserPresenter;
@@ -92,22 +92,25 @@ public class PresenterModule {
     @Provides
     AddCategoryPresenter provideAddCategoryPresenter(UseCaseFactory useCaseFactory,
                                                      SchedulerFactory schedulerFactory) {
-        return new AddCategoryPresenterImpl(useCaseFactory, schedulerFactory) {
-        };
+        return new AddCategoryPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
     @Provides
     SuggestionPresenter provideSuggestionPresenter(UseCaseFactory useCaseFactory,
                                                    SchedulerFactory schedulerFactory) {
-        return new SuggestionPresenterImpl(useCaseFactory, schedulerFactory) {
-        };
+        return new SuggestionPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
     @Provides
     MessagePresenter provideMessagePresenter(UseCaseFactory useCaseFactory,
                                              SchedulerFactory schedulerFactory){
-        return new MessagePresenterImpl(useCaseFactory, schedulerFactory) {
-        };
+        return new MessagePresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    GroupMessagePresenter provideGroupMessagePresenter(UseCaseFactory useCaseFactory,
+                                                  SchedulerFactory schedulerFactory){
+        return new GroupMessagePresenterImpl(useCaseFactory, schedulerFactory);
     }
 
     @Provides
@@ -189,7 +192,6 @@ public class PresenterModule {
                                            SchedulerFactory schedulerFactory) {
         return new ScanPresenterImpl(useCaseFactory, schedulerFactory);
     }
-
     @Provides
     BookDetailBorrowPresenter provideBookDetailBorrowPresenter(UseCaseFactory useCaseFactory,
                                                          SchedulerFactory schedulerFactory) {

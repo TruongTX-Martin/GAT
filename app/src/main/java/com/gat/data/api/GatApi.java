@@ -98,7 +98,7 @@ public interface GatApi {
     );
 
     @GET("user/get_user_information")
-    Observable<User> getUserInformation();
+    Observable<User> getPublicUserInfo();
 
     @FormUrlEncoded
     @POST("user/update_usually_location")
@@ -315,4 +315,16 @@ public interface GatApi {
     );
 
 
+    @FormUrlEncoded
+    @POST("user/firebase_token_register")
+    Observable<Response<ServerResponse<Boolean>>> registerFirebaseToken (
+            @Field("firebaseToken") String firebaseToken
+    );
+
+    @FormUrlEncoded
+    @POST("user/push_message_notification")
+    Observable<Response<ServerResponse<Boolean>>> messageNotification (
+            @Field("receiverId") int receiverId,
+            @Field("Message") String message
+    );
 }

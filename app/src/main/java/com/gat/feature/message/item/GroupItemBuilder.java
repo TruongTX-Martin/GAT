@@ -41,4 +41,17 @@ public class GroupItemBuilder extends ItemBuilder<Group> {
 
         return ItemResult.instance(newItems, DiffUtil.calculateDiff(new Comparator(items, newItems)));
     }
+
+    @Override
+    public ItemResult updateList(List<Item> items, Group data) {
+        List<Item> newItems = new ArrayList<>();
+
+        for (Item item : items) {
+            if (item instanceof  GroupItem && !((GroupItem) item).group().groupId().equals(data.groupId())) {
+                newItems.add(item);
+            }
+        }
+        newItems.add(0, GroupItem.instance(data));
+        return ItemResult.instance(newItems, DiffUtil.calculateDiff(new Comparator(items, newItems)));
+    }
 }

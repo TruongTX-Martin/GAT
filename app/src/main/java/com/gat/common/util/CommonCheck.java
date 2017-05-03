@@ -18,6 +18,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -32,6 +35,12 @@ public class CommonCheck {
     public final static int TOKEN_LENGTH = 6;
     private static final int ISBN_13 = 13;
     private static final int ISBN_10 = 10;
+    private static final int LOCAL_LOCALE = 2;
+
+    public @interface LOCALE {
+        int VN = 1;
+        int US = 2;
+    }
 
     @IntDef({Error.NO_ERROR, Error.FIELD_EMPTY, Error.EMAIL_INVALID, Error.PASSWORD_LENGTH})
     @Retention(RetentionPolicy.SOURCE)
@@ -163,6 +172,32 @@ public class CommonCheck {
         } else {
             Log.d("Response", "Code: " + response.body().code());
             return response.body();
+        }
+    }
+
+    public static String getGroupId(int user1, int user2) {
+        return (user1 < user2) ? (user1 + "" + user2) : (user2 + "" + user1);
+    }
+
+    public static boolean isDiffDay(long time1, long time2) {
+        if (Math.abs(time1 - time2) > 1000 * 60 * 60 * 24 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String getDate(long time) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        cal.setTimeInMillis(time);
+        if (LOCAL_LOCALE == LOCALE.VN) {
+            return (cal.get(Calendar.DAY_OF_MONTH) + " tháng" + (cal.get(Calendar.MONTH) + 1) + " năm "
+                    + cal.get(Calendar.YEAR));
+        } else if (LOCAL_LOCALE == LOCALE.US){
+            return (cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + ", " +cal.get(Calendar.YEAR));
+        } else {
+            return Strings.EMPTY;
         }
     }
 }

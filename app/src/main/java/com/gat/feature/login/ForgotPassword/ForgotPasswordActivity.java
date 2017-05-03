@@ -19,11 +19,7 @@ import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by ducbtsn on 2/26/17.

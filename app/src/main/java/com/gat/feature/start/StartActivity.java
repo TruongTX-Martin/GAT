@@ -2,7 +2,6 @@ package com.gat.feature.start;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -16,24 +15,13 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.Strings;
-import com.gat.data.response.ResponseData;
-import com.gat.data.response.ServerResponse;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.main.MainScreen;
-import com.gat.feature.message.GroupMessageActivity;
-import com.gat.feature.message.MessageScreen;
 import com.gat.feature.register.RegisterActivity;
 import com.gat.feature.register.RegisterScreen;
-import com.gat.feature.register.update.category.AddCategoryActivity;
-import com.gat.feature.register.update.category.AddCategoryScreen;
-import com.gat.feature.register.update.location.AddLocationActivity;
-import com.gat.feature.register.update.location.AddLocationScreen;
-import com.gat.feature.search.SearchActivity;
-import com.gat.feature.search.SearchScreen;
-import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 
 import butterknife.BindView;
@@ -181,6 +169,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     private void onLoginResult(User user) {
         if (user.isValid()) {
+            getPresenter().loginOnFirebase();
             start(this, MainActivity.class, MainScreen.instance());
             finish();
         }

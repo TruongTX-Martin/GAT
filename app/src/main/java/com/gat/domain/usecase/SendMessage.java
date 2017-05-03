@@ -10,10 +10,10 @@ import io.reactivex.Observable;
 
 public class SendMessage extends UseCase<Boolean> {
     private final String message;
-    private final String toUserId;
+    private final int toUserId;
     private final MessageRepository repository;
 
-    public SendMessage(MessageRepository messageRepository, String message, String toUserId) {
+    public SendMessage(MessageRepository messageRepository, String message, int toUserId) {
         this.repository = messageRepository;
         this.message = message;
         this.toUserId = toUserId;

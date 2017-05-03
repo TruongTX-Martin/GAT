@@ -1,5 +1,6 @@
 package com.gat.feature.message.viewholder;
 
+import android.graphics.Typeface;
 import android.support.annotation.LayoutRes;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -48,6 +49,8 @@ public class GroupMessageViewHolder extends ItemViewHolder<GroupItem> {
         group = item.group();
         name.setText(group.userName());
         text.setText(group.lastMessage());
+        if (!group.isRead())
+            text.setTypeface(null, Typeface.BOLD);
         time.setText(getDateDisplay(group.timeStamp()));
         String url = ClientUtils.getUrlImage(group.userImage(), Constance.IMAGE_SIZE_ORIGINAL);
         ClientUtils.setImage(userImage, R.drawable.steve_job, url);

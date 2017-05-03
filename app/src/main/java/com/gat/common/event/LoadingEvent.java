@@ -14,12 +14,13 @@ import java.lang.annotation.RetentionPolicy;
 @AutoValue
 public abstract class LoadingEvent {
 
-    @IntDef({Status.BEGIN, Status.DONE, Status.ERROR})
+    @IntDef({Status.BEGIN, Status.DONE, Status.ERROR, Status.COMPLETE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Status{
         int BEGIN   = 0;
         int DONE    = 1;
         int ERROR   = 2;
+        int COMPLETE    = 3;
     }
 
     public abstract boolean refresh();

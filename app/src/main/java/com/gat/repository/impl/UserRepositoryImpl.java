@@ -55,6 +55,7 @@ public class UserRepositoryImpl implements UserRepository {
     public Observable<User> getUser() {
         return Observable.defer(() -> localUserDataSourceLazy.get().loadUser()
                 .concatWith(userSubject)
+                .doOnNext(user ->signInFirebase.login())
                 .distinctUntilChanged());
     }
 
@@ -82,6 +83,19 @@ public class UserRepositoryImpl implements UserRepository {
                 .doOnNext(userSubject::onNext)
                 .doOnNext(user -> signInFirebase.login())
         );
+    }
+
+    @Override
+    public Observable<Boolean> loginFirebase() {
+        return Observable.defer(() -> localUserDataSourceLazy.get().loadUser()
+                .flatMap(user -> {
+                    if (user.isValid()) {
+                        signInFirebase.login();
+                        return signInFirebase.getLoginResult();
+                    } else {
+                        return Observable.just(false);
+                    }
+                }));
     }
 
     @Override
@@ -212,7 +226,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<User> getUserPublicInfo(int userId) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().getUserInformation(userId));
+        return Observable.defer(() -> networkUserDataSourceLazy.get().getUserInformation(userId))
+                /*.flatMap(user -> localUserDataSourceLazy.get().storePublicUserInfo(user))*/;
     }
 
     @Override

@@ -106,7 +106,6 @@ public class DebugUserDataSource implements UserDataSource {
 
         return userListSubject;
     }
-
     @Override
     public Observable<ServerResponse<LoginResponseData>> login(LoginData data) {
         GatApi api = dataComponent.getPublicGatApi();
@@ -219,7 +218,6 @@ public class DebugUserDataSource implements UserDataSource {
         Observable<Response<ServerResponse<SimpleResponse>>> responseObservable;
         responseObservable = api.updateLocation(address, longitude, latitude);
         return responseObservable.map(response -> {
-            // TODO need to check response
             ServerResponse serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse;
@@ -494,6 +492,28 @@ public class DebugUserDataSource implements UserDataSource {
     @Override
     public Observable<String> getLoginToken() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<Boolean> messageNotification(int receiver, String message) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Boolean>>> responseObservable = api.messageNotification(receiver, message);
+        return responseObservable.map(response -> {
+            ServerResponse serverResponse = CommonCheck.checkResponse(response);
+            serverResponse.code(response.code());
+            return serverResponse.isOk();
+        });
+    }
+
+    @Override
+    public Observable<Boolean> registerFirebaseToken(String token) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Boolean>>> responseObservable = api.registerFirebaseToken(token);
+        return responseObservable.map(response -> {
+            ServerResponse serverResponse = CommonCheck.checkResponse(response);
+            serverResponse.code(response.code());
+            return serverResponse.isOk();
+        });
     }
 
     @Override
