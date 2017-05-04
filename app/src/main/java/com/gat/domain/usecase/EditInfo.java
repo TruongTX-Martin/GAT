@@ -11,7 +11,7 @@ import io.reactivex.Observable;
  * Created by root on 19/04/2017.
  */
 
-public class EditInfo extends UseCase<Data> {
+public class EditInfo extends UseCase<String> {
 
     private UserRepository userRepository;
     private EditInfoInput input;
@@ -21,7 +21,7 @@ public class EditInfo extends UseCase<Data> {
     }
 
     @Override
-    protected Observable<Data> createObservable() {
+    protected Observable<String> createObservable() {
         return  userRepository.updateUserInfo(input);
     }
 

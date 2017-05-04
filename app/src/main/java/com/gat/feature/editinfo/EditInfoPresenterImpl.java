@@ -1,5 +1,6 @@
 package com.gat.feature.editinfo;
 
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
@@ -27,10 +28,10 @@ public class EditInfoPresenterImpl implements EditInfoPresenter {
 
     //edit info
     private CompositeDisposable editinfoDisposable;
-    private final Subject<Data> editinfoResultSubject;
+    private final Subject<String> editinfoResultSubject;
     private final Subject<EditInfoInput> editinfoInputSubject;
-    private final Subject<ServerResponse<ResponseData>> editinfoError;
-    private UseCase<Data> editinfoUsecase;
+    private final Subject<String> editinfoError;
+    private UseCase<String> editinfoUsecase;
 
     public EditInfoPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
@@ -59,7 +60,12 @@ public class EditInfoPresenterImpl implements EditInfoPresenter {
                     editinfoResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    editinfoError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        editinfoError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        editinfoError.onNext("Exception occurred.");
+                    }
                 })
                 .onStop(
                         () -> editinfoUsecase = UseCases.release(editinfoUsecase)
@@ -77,12 +83,12 @@ public class EditInfoPresenterImpl implements EditInfoPresenter {
     }
 
     @Override
-    public Observable<Data> getResponseEditInfo() {
+    public Observable<String> getResponseEditInfo() {
         return editinfoResultSubject.observeOn(schedulerFactory.main());
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorEditInfo() {
+    public Observable<String> onErrorEditInfo() {
         return editinfoError.observeOn(schedulerFactory.main());
     }
 }

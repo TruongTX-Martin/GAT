@@ -39,11 +39,13 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.MessageRepository;
@@ -267,7 +269,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Data> updateInfo(EditInfoInput input) {
+    public UseCase<String> updateInfo(EditInfoInput input) {
         return new EditInfo(userRepositoryLazy.get(), input);
     }
 
@@ -334,6 +336,14 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
         return new GetUserNotifications(userRepositoryLazy.get(), page, per_page);
+    }
+    public UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+        return new RequestBookByBorrower(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
+        return new RequestBookByOwner(userRepositoryLazy.get(),input);
     }
 
 }

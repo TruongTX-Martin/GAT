@@ -14,11 +14,13 @@ import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
@@ -113,7 +115,7 @@ public interface UseCaseFactory {
 
     UseCase<Data<User>> getUserInfo();
 
-    UseCase<Data> updateInfo(EditInfoInput input);
+    UseCase<String> updateInfo(EditInfoInput input);
 
     UseCase<Data> getBookUserSharing(BookSharingUserInput input);
 
@@ -140,4 +142,9 @@ public interface UseCaseFactory {
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
 
     UseCase<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
+    UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input);
+    UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
+
+
+
 }

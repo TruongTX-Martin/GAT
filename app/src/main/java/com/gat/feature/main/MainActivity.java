@@ -1,5 +1,6 @@
 package com.gat.feature.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -12,6 +13,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.feature.notification.NotificationFragment;
+import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
@@ -43,6 +45,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     TabLayout mTabLayout;
 
     public static MainActivity instance;
+    private PersonalFragment personalFragment;
 
     @Override
     protected int getLayoutResource() {
@@ -122,9 +125,10 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        personalFragment = new PersonalFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
-        adapter.addFragment(new PersonalFragment(), "PERSONAL");
+        adapter.addFragment(personalFragment, "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
         adapter.addFragment(new NotificationFragment(), "NOTICE");
         adapter.addFragment(new Fragment(), "SETTING");
@@ -162,4 +166,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Constance.RESULT_UPDATEUSER){
+            personalFragment.requestPersonalInfo();
+        }
+    }
 }

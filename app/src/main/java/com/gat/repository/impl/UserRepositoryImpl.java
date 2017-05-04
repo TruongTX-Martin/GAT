@@ -10,11 +10,13 @@ import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
@@ -194,7 +196,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<Data> updateUserInfo(EditInfoInput input) {
+    public Observable<String> updateUserInfo(EditInfoInput input) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().updateUserInfo(input));
     }
 
@@ -233,6 +235,16 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().getUserNotification(page, per_page));
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> requestBookByBorrowrer(RequestStatusInput input) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByBorrower(input));
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByOwner(input));
     }
 
 }

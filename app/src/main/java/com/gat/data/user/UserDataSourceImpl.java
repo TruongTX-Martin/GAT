@@ -10,11 +10,13 @@ import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
@@ -141,6 +143,12 @@ public class UserDataSourceImpl implements UserDataSource {
     public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
         return null;
     }
+
+    @Override
+    public Observable<List<Keyword>> getUsersSearchedKeyword() {
+        return null;
+    }
+
     @Override
     public Observable<Data> getBookRequest(BookRequestInput instanceInput) {
         return null;
@@ -167,7 +175,7 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> updateUserInfo(EditInfoInput input) {
+    public Observable<String> updateUserInfo(EditInfoInput input) {
         return null;
     }
 
@@ -183,13 +191,17 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        return  null;
+    }
+    public Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
         return null;
     }
 
     @Override
-    public Observable<List<Keyword>> getUsersSearchedKeyword() {
+    public Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
         return null;
     }
+
 
     @Override
     public Observable<Data<User>> getPersonalInfo() {

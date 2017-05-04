@@ -311,7 +311,23 @@ public interface GatApi {
     @GET("user/get_user_notification")
     Observable<Response<ServerResponse<DataResultListResponse<NotifyEntity>>>> getUserNotification (
             @Query("page") int page,
-            @Query("per_page") int per_page
+            @Query("per_page") int per_page);
+
+    @FormUrlEncoded
+    @POST("share/update_request_by_borrower")
+    Observable<Response<ServerResponse<Data>>> requestBookByBorrower(
+            @Field("recordId") int recordId,
+            @Field("currentStatus") int currentStatus,
+            @Field("newStatus") int newStatus
+    );
+
+
+    @FormUrlEncoded
+    @POST("share/update_request_by_owner")
+    Observable<Response<ServerResponse<Data>>> requestBookByOwner(
+            @Field("recordId") int recordId,
+            @Field("currentStatus") int currentStatus,
+            @Field("newStatus") int newStatus
     );
 
 

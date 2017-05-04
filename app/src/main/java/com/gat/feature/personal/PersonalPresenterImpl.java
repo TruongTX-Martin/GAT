@@ -1,6 +1,7 @@
 package com.gat.feature.personal;
 
 import com.gat.data.exception.LoginException;
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.PaperUserDataSource;
@@ -119,6 +120,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         bookInstanceDisposable.dispose();
         changeBookSharingStatusDisposable.dispose();
         requestBooksDisposable.dispose();
+    }
+
+    @Override
+    public void requestPersonalInfor(String input) {
+        personalInputSubject.onNext("");
     }
 
     @Override

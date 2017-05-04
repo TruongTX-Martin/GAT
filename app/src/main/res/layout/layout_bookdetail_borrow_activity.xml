@@ -17,6 +17,132 @@
 
 
         <RelativeLayout
+            android:id="@+id/layoutBorrower"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgBorrower"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/ic_profile"
+                app:border_color="#8fc4e0"
+                app:border_width="1dp" />
+
+            <TextView
+                android:id="@+id/txtBorrowerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_toRightOf="@+id/imgBorrower"
+                android:textColor="#000000"
+                android:textSize="17dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtBorrowerAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtBorrowerName"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/imgBorrower"
+                android:textColor="#000000"
+                android:textSize="14dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtBorrowerAddress"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/imgBorrower"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_circle_loanbook">
+
+                    <TextView
+                        android:id="@+id/txtNumberSharing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="0"
+                        android:textColor="#ffffff" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txtBookSharing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="Sách cho mượn"
+                    android:textColor="#000000" />
+
+                <RelativeLayout
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/ic_circle_readingbook">
+
+                    <TextView
+                        android:id="@+id/txtNumberReading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="0"
+                        android:textColor="#ffffff" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txtBookReading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="Sách đang đọc"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutNumber"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/imgBorrower"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgChat"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_chat_green" />
+
+                <TextView
+                    android:id="@+id/txtChat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#5396b9"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="#CACACA" />
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
@@ -27,7 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="Bạn gửi yêu cầu mượn sách"
+                android:text="Gửi yêu cầu mượn sách"
                 android:textColor="#202020" />
 
             <ImageView
@@ -46,7 +172,6 @@
                 android:layout_below="@+id/txtRequest"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/imgEditionBook"
-                android:text="name"
                 android:textColor="#202020" />
 
             <TextView
@@ -55,7 +180,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtEditionName"
                 android:layout_toRightOf="@+id/imgEditionBook"
-                android:text="author"
                 android:textColor="#919191" />
 
             <LinearLayout
@@ -69,11 +193,13 @@
                 <RatingBar
                     android:id="@+id/ratingBar"
                     style="@style/CustomRatingBar"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/mySwitch"
-                    android:layout_below="@+id/txtName"
-                    android:numStars="5" />
+                    android:layout_below="@+id/txtAuthor"
+                    android:layout_toRightOf="@+id/imgAvatar"
+                    android:numStars="5"
+                    android:stepSize="0.01"
+                    android:isIndicator="true" />
             </LinearLayout>
 
 
@@ -214,136 +340,9 @@
             </LinearLayout>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="#CACACA" />
 
-        <RelativeLayout
-            android:id="@+id/layoutBorrower"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imgBorrower"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="25dp"
-                android:src="@drawable/ic_profile"
-                app:border_color="#8fc4e0"
-                app:border_width="1dp" />
 
-            <TextView
-                android:id="@+id/txtBorrowerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_toRightOf="@+id/imgBorrower"
-                android:text="borrow name"
-                android:textColor="#000000"
-                android:textSize="17dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtBorrowerAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtBorrowerName"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/imgBorrower"
-                android:text="address"
-                android:textColor="#000000"
-                android:textSize="14dp" />
-
-            <LinearLayout
-                android:id="@+id/layoutNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtBorrowerAddress"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/imgBorrower"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/ic_circle_loanbook">
-
-                    <TextView
-                        android:id="@+id/txtNumberBorrowing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="10"
-                        android:textColor="#ffffff" />
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/txtBookSharing"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:text="Sách cho mượn"
-                    android:textColor="#000000" />
-
-                <RelativeLayout
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/ic_circle_readingbook">
-
-                    <TextView
-                        android:id="@+id/txtNumberReading"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="10"
-                        android:textColor="#ffffff" />
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/txtBookReading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:text="Sách đang đọc"
-                    android:textColor="#000000" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutChat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/layoutNumber"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/imgBorrower"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imgChat"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_chat_green" />
-
-                <TextView
-                    android:id="@+id/txtChat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:text="nhan tin cho xxxx"
-                    android:textColor="#5396b9"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-        </RelativeLayout>
 
 
         <LinearLayout
@@ -356,8 +355,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.15"
-                android:visibility="gone"
                 android:orientation="vertical"
+                android:visibility="gone"
                 >
 
                 <View
@@ -370,7 +369,7 @@
                     android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="30dp"
                     android:layout_marginTop="20dp"
                     android:background="#5396b9" />
 
@@ -617,7 +616,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/layoutParrentLost"
+                    android:id="@+id/layoutParrentCancleRequest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
@@ -627,7 +626,7 @@
                     android:background="@android:color/transparent">
 
                     <RelativeLayout
-                        android:id="@+id/rltLostClose"
+                        android:id="@+id/rltDeleteRequestClose"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentLeft="true"
@@ -635,7 +634,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/ellipse_red"
-                        android:visibility="gone">
+                        android:visibility="gone"
+                        >
 
                         <ImageView
                             android:layout_width="10dp"
@@ -645,17 +645,17 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/layoutLost"
+                        android:id="@+id/layoutCancleRequest"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_centerVertical="true"
                         android:layout_margin="5dp"
-                        android:layout_toRightOf="@+id/rltLostClose"
+                        android:layout_toRightOf="@+id/rltDeleteRequestClose"
                         android:background="@drawable/bg_layout_filter_book_lost">
 
 
                         <TextView
-                            android:id="@+id/txtLost"
+                            android:id="@+id/txtCancleRequest"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -667,7 +667,47 @@
 
 
                     <RelativeLayout
-                        android:id="@+id/layoutLostBorder"
+                        android:id="@+id/layoutCancleRequestBorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_layout_filter_book"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutParrentLostBook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:color/transparent">
+
+
+                    <RelativeLayout
+                        android:id="@+id/layoutLostBook"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book_lost">
+
+
+                        <TextView
+                            android:id="@+id/txtLostBook"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Bị thất lạc"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/layoutLostBookBorder"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@drawable/border_layout_filter_book"
@@ -756,7 +796,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/layoutParrentRejected"
+                    android:id="@+id/layoutParrentRejectedRequest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
@@ -865,7 +905,7 @@ chuyển sang trạng thái “Đợi đồng ý” sau khi sách được trả
                     android:textColor="#000000" />
 
                 <RelativeLayout
-                    android:id="@+id/layoutParrentDeleteRequest"
+                    android:id="@+id/layoutParrentReject"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
