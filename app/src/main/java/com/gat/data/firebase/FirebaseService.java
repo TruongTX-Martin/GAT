@@ -23,6 +23,8 @@ public interface FirebaseService {
     Observable<List<GroupTable>> getGroupList(int page, int size);
     Observable<GroupTable> groupUpdated();
 
+    Observable<Boolean> makeNewGroup(int userId);
+
     void sawMessage(String groupId, long timeStamp);
 
     void sendMessage(/*long fromUserId, */long toUserId, String message);

@@ -90,9 +90,9 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion               15
+            minSdkVersion               21
             multiDexEnabled             true
-            buildConfigField            'boolean', 'MULTI_DEX', 'true'
+            buildConfigField            'boolean', 'MULTI_DEX', 'false'
         }
 
         staging{

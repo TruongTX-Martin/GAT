@@ -59,7 +59,7 @@
     <dimen name="message_image_width">50.9dp</dimen>
     <dimen name="message_image_height">50.4dp</dimen>
     <dimen name="message_name_size">18.7sp</dimen>
-    <dimen name="margin_message_left">40dp</dimen>
+    <dimen name="margin_message_left">60dp</dimen>
     <dimen name="margin_message_right">40dp</dimen>
     <dimen name="margin_message_bottom">20dp</dimen>
 </resources>

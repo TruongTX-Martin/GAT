@@ -76,6 +76,11 @@ public class DebugMessageDataSource implements MessageDataSource {
     }
 
     @Override
+    public Observable<List<Message>> storeMessageList(String groupId, List<Message> messageList) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void sawMessage(String groupId, long timeStamp) {
         firebaseService.sawMessage(groupId, timeStamp);
     }

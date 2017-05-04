@@ -15,6 +15,8 @@ public interface GroupMessagePresenter extends Presenter{
 
     void loadMoreGroupList();
 
+    void update();
+
     Observable<LoadingEvent> loadingEvents();
 
     Observable<ItemResult> itemsChanged();

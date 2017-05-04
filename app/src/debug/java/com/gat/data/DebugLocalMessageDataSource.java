@@ -140,6 +140,22 @@ public class DebugLocalMessageDataSource implements MessageDataSource {
     }
 
     @Override
+    public Observable<List<Message>> storeMessageList(String groupId, List<Message> messageList) {
+        return Observable.fromCallable(() -> {
+            int size = messageList.size();
+            Log.d(TAG, "--------StoreMessageList:" + groupId + "," + size);
+            if (size <= 0)
+                return messageList;
+
+            for (int i = 0; i < size; i++) {
+                Paper.book(groupId).write(Integer.toString(i + 1), messageList.get(i));
+            }
+            messageBook.write(groupId, messageList.size());
+            return messageList;
+        });
+    }
+
+    @Override
     public void sawMessage(String groupId, long timeStamp) {
 
     }

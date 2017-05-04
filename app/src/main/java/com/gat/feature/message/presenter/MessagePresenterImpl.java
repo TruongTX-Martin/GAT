@@ -86,6 +86,7 @@ public class MessagePresenterImpl implements MessagePresenter {
         this.loadSubject = BehaviorSubject.create();
         this.sendMessageSubject = BehaviorSubject.create();
         this.sawMessageSubject = BehaviorSubject.create();
+        this.sendMessageResult = BehaviorSubject.create();
 
         this.initializedSubject = PublishSubject.create();
 
@@ -103,17 +104,16 @@ public class MessagePresenterImpl implements MessagePresenter {
 
         pageCnt = refresh ? 1 : (pageCnt+1);
 
-        showLoadingItem(refresh, clear, LoadingMessage.Message.LOADING);
-
-        MessageItemBuilder itemBuilder = new MessageItemBuilder();
+        //showLoadingItem(refresh, clear, LoadingMessage.Message.LOADING);
 
         getMessageUseCase = useCaseFactory.getMessageList(userId, pageCnt, MESSAGE_LIST_SIZE);
         ObservableTransformer<List<Message>, ItemResult> transformer =
                 upstream -> upstream
                         .map(messages -> {
+                            Log.d(TAG, "Transformer");
                             List<Item> items = itemResultSubject.blockingFirst().items();
                             Log.d(TAG, "Transformer:" + messages.size() + "," + items.size());
-                            ItemResult result = itemBuilder.addList(items, messages,
+                            ItemResult result = new MessageItemBuilder().addList(items, messages,
                                     refresh,
                                     /*messages.size() >= MESSAGE_LIST_SIZE*/false);
                             itemResultSubject.onNext(result);
@@ -129,6 +129,7 @@ public class MessagePresenterImpl implements MessagePresenter {
                             .status(LoadingEvent.Status.DONE)
                             .build();
                     loadingEventSubject.onNext(event);
+                    initializedSubject.onNext(true);
                 })
                 .onError(throwable -> {
                     throwable.printStackTrace();
@@ -206,7 +207,7 @@ public class MessagePresenterImpl implements MessagePresenter {
                 this.loadSubject.observeOn(schedulerFactory.main()).subscribe(this::getMessage),
                 this.sendMessageSubject.observeOn(schedulerFactory.main()).subscribe(message -> send(message)),
                 this.sawMessageSubject.observeOn(schedulerFactory.main()).subscribe(pair -> setSeenMessage(pair.first, pair.second)),
-                initializedSubject.observeOn(schedulerFactory.io()).subscribe(isInit -> {
+                initializedSubject.observeOn(schedulerFactory.io()).distinctUntilChanged().subscribe(isInit -> {
                     Log.d(TAG, "IsInitialized:" + isInit);
                     if (isInit) {
                         messageUpdate(userId);
@@ -235,8 +236,6 @@ public class MessagePresenterImpl implements MessagePresenter {
     public void refreshMessageList(int userId) {
         Log.d(TAG, "refreshMessage");
         this.userId = userId;
-        // get update message
-        initializedSubject.onNext(true);
         loadSubject.onNext(TYPE.MESSAGE_REFRESH);
     }
 
@@ -280,6 +279,7 @@ public class MessagePresenterImpl implements MessagePresenter {
         sendMessageUseCase.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(result -> {
+                    Log.d(TAG, Thread.currentThread().getName());
                     Log.d(TAG, result ? "SendOK":"NG");
                     sendMessageResult.onNext(result);
                     loadingEventSubject.onNext(LoadingEvent.builder().refresh(false)
@@ -305,7 +305,7 @@ public class MessagePresenterImpl implements MessagePresenter {
 
         messageUpdateUseCase = useCaseFactory.messageUpdate(userId);
         messageUpdateUseCase.executeOn(schedulerFactory.io())
-                .executeOn(schedulerFactory.main())
+                .returnOn(schedulerFactory.main())
                 .onNext(group -> {
                     Log.d(TAG, "Group is updated");
                 })

@@ -18,11 +18,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import dagger.Lazy;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -87,6 +89,19 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Observable<List<Message>> getMessageList(int userId, int page, int size) {
+        localDataSource.get().loadMessageList(CommonCheck.getGroupId(userId, mUserId))
+                .subscribeOn(Schedulers.io())
+                .delay(100, TimeUnit.MILLISECONDS)
+                .subscribe(list -> {
+                    Log.d(TAG, "LocalThread:" + Thread.currentThread().getName());
+                    synchronized (messageList) {
+                        Log.d(TAG, "Clear message list:" + userId);
+                        messageList.clear();
+                        messageList.addAll(list);
+                        Log.d(TAG, "Add local list:" + userId + "," + messageList.size());
+                        messageListSubject.onNext(messageList);
+                    }
+                });
         return messageListSubject;
         /*return Observable.defer(() -> networkDataSource.get().getMessageList(userId, page, size))
                 .flatMap(list -> {
@@ -119,55 +134,35 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Observable<Message> messageUpdate(int userId) {
-        return Observable.defer(() -> localDataSource.get().loadMessageList(CommonCheck.getGroupId(mUserId, userId)))
-                .flatMap(list -> {
-                    synchronized (messageList) {
-                        Log.d(TAG, "Clear message list:" + userId);
-                        messageList.clear();
-                        messageList.addAll(list);
-                        Log.d(TAG, "Add local list:" + userId + "," + messageList.size());
-                        messageListSubject.onNext(messageList);
-                    }
-                    return networkDataSource.get().messageUpdate(userId)
+        return Observable.defer(() -> networkDataSource.get().messageUpdate(userId)
+                            .filter(messageTable -> filterMessage(messageTable))
                             .flatMap(messageTable -> {
                                 Log.d(TAG, "new message:" + messageTable.getMessage());
-                                if (messageList.isEmpty()) {
-                                    return netWorkUserDataSourceLazy.get().getUserInformation(userId).flatMap(user -> Observable.just(Message.builder()
-                                                .groupId(CommonCheck.getGroupId(mUserId, userId))
-                                                .isRead(messageTable.getIsRead())
-                                                .message(messageTable.getMessage())
-                                                .imageId(messageTable.getUserId() == mUserId ? Strings.EMPTY : user.imageId())
-                                                .timeStamp(messageTable.getTimeStamp())
-                                                .userId(messageTable.getUserId())
-                                                .isLocal(messageTable.getUserId() == mUserId)
-                                                .build()));
-                                } else {
+                                if (messageTable.getUserId() == mUserId || CommonCheck.isAdmin((int)messageTable.getUserId())) {
                                     return Observable.just(Message.builder()
                                             .groupId(CommonCheck.getGroupId(mUserId, userId))
                                             .isRead(messageTable.getIsRead())
                                             .message(messageTable.getMessage())
-                                            .imageId(messageTable.getUserId() == mUserId ? Strings.EMPTY : messageList.get(0).imageId())
+                                            .imageId(Strings.EMPTY)
                                             .timeStamp(messageTable.getTimeStamp())
                                             .userId(messageTable.getUserId())
                                             .isLocal(messageTable.getUserId() == mUserId)
                                             .build());
-                                }
-                            })
-                            .filter(message -> {
-                                Log.d(TAG, "MessageSize:" +messageList.size());
-                                if (!messageList.isEmpty())
-                                    Log.d(TAG, "CheckLasMessage:" + messageList.get(messageList.size()-1).toString());
-                                if ((messageList.isEmpty() || (messageList.get(messageList.size()-1).timeStamp() < message.timeStamp()))) {
-                                    return true;
                                 } else {
-                                    Log.d(TAG, message.toString());
-                                    return false;
+                                    return netWorkUserDataSourceLazy.get().getUserInformation(userId).flatMap(user -> Observable.just(Message.builder()
+                                            .groupId(CommonCheck.getGroupId(mUserId, userId))
+                                            .isRead(messageTable.getIsRead())
+                                            .message(messageTable.getMessage())
+                                            .imageId(user.isValid() ? user.imageId() : getLocalUserImage(userId))
+                                            .timeStamp(messageTable.getTimeStamp())
+                                            .userId(messageTable.getUserId())
+                                            .isLocal(messageTable.getUserId() == mUserId)
+                                            .build()));
                                 }
                             })
                             .flatMap(message -> localDataSource.get().storeMessage(CommonCheck.getGroupId(userId,mUserId),message))
                             .doOnNext(message -> messageList.add(message))
-                            .doOnNext(message -> messageListSubject.onNext(messageList));
-                });
+                            .doOnNext(message -> messageListSubject.onNext(messageList)));
     }
 
     @Override
@@ -316,8 +311,14 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Observable<Boolean> sendMessage(int toUserId, String message) {
-        return Observable.defer(() -> networkDataSource.get().sendMessage(toUserId, message))
-                .flatMap(result -> netWorkUserDataSourceLazy.get().messageNotification(toUserId, message));
+        return Observable.defer(() -> {
+                    Log.d(TAG, "SendFirebaseThread:" + Thread.currentThread().getName());
+                    return networkDataSource.get().sendMessage(toUserId, message);
+                }).observeOn(Schedulers.io())
+                .flatMap(result -> {
+                    Log.d(TAG, "CurrentThread:" + Thread.currentThread().getName());
+                    return netWorkUserDataSourceLazy.get().messageNotification(toUserId, message);
+                });
     }
 
     @Override
@@ -339,7 +340,6 @@ public class MessageRepositoryImpl implements MessageRepository {
         return user;
     }
 
-    // TODO #170502
     private @Nullable Group getGroup(GroupTable groupTable) {
         synchronized (groupList) {
             for (Iterator<Group> iterator = groupList.iterator(); iterator.hasNext();) {
@@ -400,12 +400,49 @@ public class MessageRepositoryImpl implements MessageRepository {
         }
     }
 
-    private void addMessage(int userId, Message message) {
+    private boolean filterMessage(MessageTable message) {
+        Log.d(TAG, "MessageSize:" +messageList.size());
         synchronized (messageList) {
-            if (messageList.isEmpty() || messageList.get(messageList.size()-1).timeStamp() < message.timeStamp()) {
-                Log.d(TAG, messageList.size() + "," + message.timeStamp());
-                messageList.add(message);
+            if (!messageList.isEmpty())
+                Log.d(TAG, "CheckLasMessage:" + messageList.get(messageList.size() - 1).toString());
+            boolean ret = false;
+            if (messageList.isEmpty()) {
+                ret = true;
+            } else {
+                Log.d(TAG, message.toString());
+                boolean isFound = false;
+                for (Iterator<Message> iterator = messageList.iterator(); iterator.hasNext();) {
+                    Message mes = iterator.next();
+                    if((mes.timeStamp() == message.getTimeStamp()) && mes.message().equals(message.getMessage()) && (mes.userId() == message.getUserId())) {
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (isFound) {
+                    ret = false;
+                } else {
+                    ret = true;
+                }
             }
+            return ret;
+        }
+    }
+
+    private String getLocalUserImage(int userId) {
+        synchronized (messageList) {
+            String imageId = Strings.EMPTY;
+            if (messageList.isEmpty()) {
+
+            } else {
+                for (Iterator<Message> iterator = messageList.iterator(); iterator.hasNext();) {
+                    Message mes = iterator.next();
+                    if(mes.userId() == userId && !Strings.isNullOrEmpty(mes.imageId())) {
+                        imageId = mes.imageId();
+                        break;
+                    }
+                }
+            }
+            return imageId;
         }
     }
 }

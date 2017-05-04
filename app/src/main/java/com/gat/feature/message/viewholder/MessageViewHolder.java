@@ -46,8 +46,12 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
         if (isRight || !item.displayImage()) {
             userImage.setVisibility(View.INVISIBLE);
         } else {
-            String url = ClientUtils.getUrlImage(message.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
-            ClientUtils.setImage(userImage, R.drawable.steve_job, url);
+            if (CommonCheck.isAdmin((int)message.userId())) {
+                userImage.setImageResource(R.drawable.android);       // TODO change to admin image
+            } else {
+                String url = ClientUtils.getUrlImage(message.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
+                ClientUtils.setImage(userImage, R.drawable.steve_job, url);
+            }
         }
         if (item.displayDate()) {
             textDate.setText(CommonCheck.getDate(item.message().timeStamp()));

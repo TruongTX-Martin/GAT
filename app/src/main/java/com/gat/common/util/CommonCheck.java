@@ -33,9 +33,13 @@ import retrofit2.Response;
 public class CommonCheck {
     public final static int PASSWORD_LENGTH_MIN = 6;
     public final static int TOKEN_LENGTH = 6;
+
+    private final static int ADMIN_USER_ID = 1;
+
     private static final int ISBN_13 = 13;
     private static final int ISBN_10 = 10;
     private static final int LOCAL_LOCALE = 2;
+
 
     public @interface LOCALE {
         int VN = 1;
@@ -199,5 +203,9 @@ public class CommonCheck {
         } else {
             return Strings.EMPTY;
         }
+    }
+
+    public static boolean isAdmin(int userId) {
+        return userId == ADMIN_USER_ID;
     }
 }

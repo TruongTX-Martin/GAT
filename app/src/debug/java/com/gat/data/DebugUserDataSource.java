@@ -496,9 +496,11 @@ public class DebugUserDataSource implements UserDataSource {
 
     @Override
     public Observable<Boolean> messageNotification(int receiver, String message) {
+        Log.d(TAG, "mesNoti:" + Thread.currentThread().getName());
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Boolean>>> responseObservable = api.messageNotification(receiver, message);
         return responseObservable.map(response -> {
+            Log.d(TAG, "mesNotiRes:" + Thread.currentThread().getName());
             ServerResponse serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse.isOk();

@@ -47,6 +47,7 @@ public class SignInFirebaseImpl implements SignInFirebase {
     private Subject<Boolean> result;
     private Subject<Integer> loginSubject;
     private FirebaseAuth.AuthStateListener authStateListener;
+    private OnCompleteListener<AuthResult> onCompleteListener;
     private CompositeDisposable disposable;
 
     public SignInFirebaseImpl(Lazy<UserDataSource> localUserDataSourceLazy, Lazy<UserDataSource> networkUserDataSourceLazy, FirebaseService firebaseService, SchedulerFactory scheduler) {
@@ -73,6 +74,15 @@ public class SignInFirebaseImpl implements SignInFirebase {
 
         firebaseAuth.addAuthStateListener(authStateListener);
 
+        onCompleteListener = task -> {
+            if (task.isSuccessful() && task.isComplete()) {
+                firebaseUser = task.getResult().getUser();
+            } else {
+                Log.d(TAG, task.getException().getMessage());
+            }
+            result.onNext(firebaseUser != null);
+        };
+
         disposable = new CompositeDisposable(
                 loginSubject.subscribeOn(scheduler.main()).subscribe(type -> {
                     if (type == TYPE_LOGIN) {
@@ -97,7 +107,7 @@ public class SignInFirebaseImpl implements SignInFirebase {
                         });
                     }
                 }),
-                result.observeOn(scheduler.io()).subscribe(isLogged -> {
+                result.distinctUntilChanged().observeOn(scheduler.io()).subscribe(isLogged -> {
                     Log.d(TAG, "IsLogged:" + isLogged);
                     if (isLogged) {
                         firebaseService.Init();
@@ -115,47 +125,32 @@ public class SignInFirebaseImpl implements SignInFirebase {
     private void loginWithFacebook(LoginData loginData) {
         String token = ((SocialLoginData)loginData).token();
         AuthCredential credential = FacebookAuthProvider.getCredential(token);
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-            firebaseUser = task.getResult().getUser();
-            result.onNext(firebaseUser != null);
-        });
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(onCompleteListener);
     }
 
     private void loginWithTwitter(LoginData loginData) {
         String token = ((SocialLoginData)loginData).token();
         String secret = ((SocialLoginData)loginData).secret();
         AuthCredential credential = TwitterAuthProvider.getCredential(token, secret);
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-            firebaseUser = task.getResult().getUser();
-            result.onNext(firebaseUser != null);
-        });
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(onCompleteListener);
     }
 
     private void loginWithGoogle(LoginData loginData) {
         String token = ((SocialLoginData)loginData).token();
         AuthCredential credential = GoogleAuthProvider.getCredential(token, null);
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-            firebaseUser = task.getResult().getUser();
-            result.onNext(firebaseUser != null);
-        });
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(onCompleteListener);
     }
 
     private void loginWithEmail(LoginData loginData) {
         String email = ((EmailLoginData)loginData).email();
         String password = ((EmailLoginData)loginData).password();
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            firebaseUser = task.getResult().getUser();
-            result.onNext(firebaseUser != null);
-        });
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(onCompleteListener);
     }
 
     private void registerWithEmail(LoginData loginData) {
         String email = ((EmailLoginData)loginData).email();
         String password = ((EmailLoginData)loginData).password();
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                firebaseUser = task.getResult().getUser();
-                result.onNext(firebaseUser != null);
-        });
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(onCompleteListener);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
     private Subject<Integer> loadSubject;
 
     // Initialized observer
-    private Subject<Boolean> initializedSubject;
+    private Subject<Boolean> updateGroupSubject;
 
     private UseCase<List<Group>> getGroupUseCase;
     private UseCase<Group> groupUpdateUseCase;
@@ -71,7 +71,7 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
         this.loadingEventSubject = BehaviorSubject.create();
         this.itemResultSubject = BehaviorSubject.createDefault(ItemBuilder.defaultItems());
         this.loadSubject = BehaviorSubject.create();
-        this.initializedSubject = PublishSubject.create();
+        this.updateGroupSubject = PublishSubject.create();
 
         this.loadingPageCnt = 0;
     }
@@ -130,8 +130,6 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
                     // Release all use case
                     loadingUseCase = UseCases.release(loadingUseCase);
                     getGroupUseCase = UseCases.release(getGroupUseCase);
-                    // TODO #170502
-                    //initializedSubject.onNext(true);
                 })
                 .onStop(() -> {
                     Log.d(TAG, "Loading stopped.");
@@ -193,10 +191,6 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
 
     private void groupUpdate() {
         Log.d(TAG, "groupUpdate");
-        //if (loadingUseCase != null) {
-        //    Log.d(TAG, "Cannot update, loading...");
-        //    return;
-        //}
         groupUpdateUseCase = UseCases.release(groupUpdateUseCase);
 
         groupUpdateUseCase = useCaseFactory.groupUpdate();
@@ -210,34 +204,12 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
                 })
                 .onStop(() -> groupUpdateUseCase = UseCases.release(groupUpdateUseCase))
                 .execute();
-        /*
-        GroupItemBuilder itemBuilder = new GroupItemBuilder();
-        ObservableTransformer<Group, ItemResult> transformer =
-                upstream -> upstream
-                        .map(group -> {
-                            List<Item> items = itemResultSubject.blockingFirst().items();
-                            Log.d(TAG, "Transformer:" + items.size() + "," + group.groupId());
-                            ItemResult result = itemBuilder.updateList(items, group);
-                            itemResultSubject.onNext(result);
-                            return result;}
-                        );
 
-        loadingUseCase = useCaseFactory.transform(groupUpdateUseCase, transformer, worker)
-                .executeOn(schedulerFactory.io())
-                .onNext(list -> {
+    }
 
-                })
-                .onError(throwable -> {
-                    throwable.printStackTrace();
-                    Log.d(TAG, "UpdateGroup error.");
-                    showLoadingItem(false, false, LoadingMessage.Message.ERROR);
-                })
-                .onStop(() -> {
-                    groupUpdateUseCase = UseCases.release(groupUpdateUseCase);
-                })
-                .execute();
-                */
-
+    @Override
+    public void update() {
+        updateGroupSubject.onNext(true);
     }
 
     @Override
@@ -264,15 +236,11 @@ public class GroupMessagePresenterImpl implements GroupMessagePresenter {
     public void onCreate() {
         compositeDisposable = new CompositeDisposable(
                 loadSubject.observeOn(schedulerFactory.main()).subscribe(this::getGroupList),
-                initializedSubject.observeOn(schedulerFactory.io()).subscribe(isInit -> {
-                    Log.d(TAG, "IsInitialized:" + isInit);
-                    if (isInit) {
-                        groupUpdate();
-                    }
+                updateGroupSubject.observeOn(schedulerFactory.io()).subscribe(isInit -> {
+                    groupUpdate();
                 })
         );
-        // TODO #170502
-        initializedSubject.onNext(true);
+        updateGroupSubject.onNext(true);
     }
 
     @Override

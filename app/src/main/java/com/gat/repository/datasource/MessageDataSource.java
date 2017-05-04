@@ -26,5 +26,6 @@ public interface MessageDataSource {
     public Observable<Group> storeGroup(Group group);
     public Observable<List<Message>> loadMessageList(String groupId);
     public Observable<Message> storeMessage(String groupId, Message message);
+    public Observable<List<Message>> storeMessageList(String groupId, List<Message> messageList);
     public void sawMessage(String groupId, long timeStamp);
 }
