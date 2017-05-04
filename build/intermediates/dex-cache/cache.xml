@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/root/.android/build-cache/458cc603b0b5840872100c24454107671726d68e/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="005d20a198159b87f65812fc5c51b2d84c5eba0a">
+        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/classes_86d4a2d4186287c04d0848affcfcdf0274d80215/classes.dex" />
+    </item>
+
+</items>

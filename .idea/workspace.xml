@@ -23,15 +23,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b063841-0e56-4720-bf32-f55091726bde" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/multidex_1_0_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/multidex_instrumentation_1_0_1.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/gat/feature/personal/PersonalFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/gat/feature/personal/PersonalFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_personaluser_activity.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_personaluser_activity.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailsender/BookDetailSenderActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailsender/BookDetailSenderActivity.java" />
     </list>
     <ignored path="gat-android-1.0.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -63,106 +61,47 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PersonalFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/personal/PersonalFragment.java">
+      <file leaf-file-name="BookDetailSenderActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailsender/BookDetailSenderActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="699">
-              <caret line="263" column="0" selection-start-line="263" selection-start-column="0" selection-end-line="263" selection-end-column="0" />
+            <state relative-caret-position="125">
+              <caret line="208" column="63" selection-start-line="207" selection-start-column="8" selection-end-line="208" selection-end-column="63" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Data.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/repository/entity/Data.java">
+      <file leaf-file-name="BookDetailOwnerActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="505">
-              <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+            <state relative-caret-position="402">
+              <caret line="215" column="63" selection-start-line="215" selection-start-column="63" selection-end-line="215" selection-end-column="63" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FragmentBookRequest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/personal/fragment/FragmentBookRequest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
-              <caret line="451" column="0" selection-start-line="451" selection-start-column="0" selection-end-line="451" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FragmentBookSharing.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/personal/fragment/FragmentBookSharing.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-230">
-              <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SearchResultFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/suggestion/search/SearchResultFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="503">
-              <caret line="158" column="91" selection-start-line="158" selection-start-column="91" selection-end-line="158" selection-end-column="91" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PersonalUserActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/personaluser/PersonalUserActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="489">
-              <caret line="212" column="39" selection-start-line="212" selection-start-column="39" selection-end-line="212" selection-end-column="39" />
-              <folding>
-                <element signature="method#setupTabIcons#0;class#PersonalUserActivity#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="layout_personaluser_activity.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/layout_personaluser_activity.xml">
+      <file leaf-file-name="layout_bookdetail_request_activity.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/layout_bookdetail_request_activity.xml">
           <provider editor-type-id="android-designer2">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="58" column="39" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
+            <state relative-caret-position="345">
+              <caret line="15" column="42" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PaperUserDataSource.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/data/user/PaperUserDataSource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="141" column="13" selection-start-line="141" selection-start-column="13" selection-end-line="141" selection-end-column="13" />
-              <folding />
-            </state>
+      <file leaf-file-name="layout_activity_top.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/layout_activity_top.xml">
+          <provider editor-type-id="android-designer2">
+            <state />
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DebugUserDataSource.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/debug/java/com/gat/data/DebugUserDataSource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="322" column="72" selection-start-line="322" selection-start-column="72" selection-end-line="322" selection-end-column="72" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GatApi.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/data/api/GatApi.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="209" column="36" selection-start-line="209" selection-start-column="15" selection-end-line="209" selection-end-column="36" />
+            <state relative-caret-position="105">
+              <caret line="9" column="32" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -4876,8 +4815,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailsender/BookDetailSenderPresenterImpl.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/layout_bookdetail_request_activity.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/layout_bookdetail_borrow_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailsender/BookDetailSenderActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/star_rating_bar_full.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/layout_item_loanbook.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/gat/feature/personal/adapter/BookSharingAdapter.java" />
@@ -4919,6 +4856,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/gat/feature/personal/fragment/FragmentBookRequest.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/gat/feature/personal/PersonalFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/layout_personaluser_activity.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailsender/BookDetailSenderActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerActivity.java" />
       </list>
     </option>
   </component>
@@ -5294,11 +5233,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="personal" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fragment" />
+              <option name="myItemId" value="bookdetailsender" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -5336,7 +5271,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="editinfo" />
+              <option name="myItemId" value="bookdetailowner" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -5932,7 +5867,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.02970297" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20490928" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20490928" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22112212" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32893288" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2849285" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -6027,33 +5962,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerPresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="21" column="4" selection-start-line="21" selection-start-column="4" selection-end-line="23" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerPresenterImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="655">
-          <caret line="125" column="5" selection-start-line="105" selection-start-column="3" selection-end-line="125" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="248" column="66" selection-start-line="246" selection-start-column="16" selection-end-line="248" selection-end-column="66" />
-          <folding>
-            <element signature="e#8753#8754#0" expanded="false" />
-            <element signature="e#8808#8809#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/layout_fragment_book_request.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -6277,17 +6185,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/layout_activity_top.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="667">
-          <caret line="35" column="34" selection-start-line="35" selection-start-column="34" selection-end-line="35" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/repository/entity/User.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-467">
@@ -6323,7 +6220,7 @@
         <state relative-caret-position="472">
           <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
           <folding>
-            <element signature="e#4047#4048#0" expanded="true" />
+            <element signature="e#4047#4048#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -6349,8 +6246,8 @@
         <state relative-caret-position="368">
           <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
           <folding>
-            <element signature="e#392#393#0" expanded="true" />
-            <element signature="e#436#437#0" expanded="true" />
+            <element signature="e#392#393#0" expanded="false" />
+            <element signature="e#436#437#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -6476,6 +6373,44 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="368">
           <caret line="58" column="39" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/layout_bookdetail_request_activity.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" column="42" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/layout_activity_top.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="9" column="32" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailsender/BookDetailSenderActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="208" column="63" selection-start-line="207" selection-start-column="8" selection-end-line="208" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/gat/feature/bookdetailowner/BookDetailOwnerActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="402">
+          <caret line="215" column="63" selection-start-line="215" selection-start-column="63" selection-end-line="215" selection-end-column="63" />
           <folding />
         </state>
       </provider>
