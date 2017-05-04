@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by mozaa on 11/04/2017.
  */
 
-public class UserResponse implements Parcelable {
+public class UserResponse implements Parcelable{
     @SerializedName("userId")
     private int userId;
 

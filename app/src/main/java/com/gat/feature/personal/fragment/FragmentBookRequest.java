@@ -1,7 +1,6 @@
 package com.gat.feature.personal.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,13 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
-import com.gat.common.listener.RecyclerItemClickListener;
-import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
-import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookRequestAdapter;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.book.BookRequestEntity;
 
 import java.util.ArrayList;
@@ -44,10 +41,8 @@ public class FragmentBookRequest extends Fragment {
     private RelativeLayout layoutFilter;
     private List<BookRequestEntity> listBookRequest = new ArrayList<>();
     private BookRequestAdapter adapter;
-    private PersonalFragment parrentActivity;
-    private BookRequestInput currentInput;
-
-
+    private PersonalFragment parrentFragment;
+    private BookRequestInput currentInput = new  BookRequestInput(true,true,true,true);
     //layout for popup filter
     private RelativeLayout layoutWaitingBorder, layoutWaitingOverlay, layoutContactingBorder, layoutContactingOverlay;
     private RelativeLayout layoutBorrowingBorder, layoutBorrowingOverlay, layoutOtherBorder, layoutOtherOverlay;
@@ -121,8 +116,8 @@ public class FragmentBookRequest extends Fragment {
         isRequesting = false;
     }
 
-    public void setParrentActivity(PersonalFragment parrentActivity) {
-        this.parrentActivity = parrentActivity;
+    public void setParrentFragment(PersonalFragment parrentFragment) {
+        this.parrentFragment = parrentFragment;
     }
 
     @Override
@@ -134,6 +129,7 @@ public class FragmentBookRequest extends Fragment {
         initView();
         handleEvent();
         isInitView = true;
+        searchBook();
         return rootView;
     }
 
@@ -154,30 +150,46 @@ public class FragmentBookRequest extends Fragment {
 
     private void handleEvent() {
         layoutFilter.setOnClickListener(v -> showDialogFilter());
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                BookRequestEntity entity = listBookRequest.get(position);
-                int recordType = entity.getRecordType();
-                int recodeId = entity.getRecordId();
-                if (recordType == 1) {
-                    //sharing - user borrower -> request  by owner
-                    Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
-                    intent.putExtra("BorrowingRecordId", recodeId);
-                    MainActivity.instance.startActivity(intent);
-                } else if (recordType == 2) {
-                    //borrowing - use owerner -> request by sender
-                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
-                    intent.putExtra("BorrowingRecordId", recodeId);
-                    MainActivity.instance.startActivity(intent);
-                }
-            }
+//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                BookRequestEntity entity = listBookRequest.get(position);
+//                int recordType = entity.getRecordType();
+//                int recodeId = entity.getRecordId();
+//                if (recordType == 1) {
+//                    //sharing - user borrower -> request  by owner
+//                    Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
+//                    intent.putExtra("BorrowingRecordId", recodeId);
+//                    MainActivity.instance.startActivity(intent);
+//                } else if (recordType == 2) {
+//                    //borrowing - use owerner -> request by sender
+//                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
+//                    intent.putExtra("BorrowingRecordId", recodeId);
+//                    MainActivity.instance.startActivity(intent);
+//                }
+//            }
+//
+//            @Override
+//            public void onItemLongClick(View view, int position) {
+//
+//            }
+//        }));
+    }
 
-            @Override
-            public void onItemLongClick(View view, int position) {
+    public void agreedRequest(BookRequestEntity entity){
+        RequestStatusInput statusInput = new RequestStatusInput();
+        statusInput.setCurrentStatus(0);
+        statusInput.setNewStatus(2);
+        statusInput.setRecordId(entity.getRecordId());
+        parrentFragment.requestBookOwner(statusInput);
+    }
 
-            }
-        }));
+    public void rejectRequest(BookRequestEntity entity){
+        RequestStatusInput statusInput = new RequestStatusInput();
+        statusInput.setCurrentStatus(0);
+        statusInput.setNewStatus(5);
+        statusInput.setRecordId(entity.getRecordId());
+        parrentFragment.requestBookOwner(statusInput);
     }
 
     private void showLoading() {
@@ -439,7 +451,7 @@ public class FragmentBookRequest extends Fragment {
     private void searchBook() {
         if (currentInput == null) return;
         isRequesting = true;
-        parrentActivity.requestBookRequest(currentInput);
+        parrentFragment.requestBookRequest(currentInput);
         if (currentInput.getPage() == 1) {
             txtMessage.setVisibility(View.GONE);
             showLoading();

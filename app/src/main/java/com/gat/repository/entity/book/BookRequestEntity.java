@@ -103,4 +103,60 @@ public class BookRequestEntity {
     public String getBorrowerImageId() {
         return borrowerImageId;
     }
+
+    public int getRecordStatus() {
+        return recordStatus;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public int getBorrowerId() {
+        return borrowerId;
+    }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public String getOwnerImageId() {
+        return ownerImageId;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public String getApproveTime() {
+        return approveTime;
+    }
+
+    public String getRequestTime() {
+        return requestTime;
+    }
+
+    public String getBorrowTime() {
+        return borrowTime;
+    }
+
+    public String getCompleteTime() {
+        return completeTime;
+    }
+
+    public String getCancelTime() {
+        return cancelTime;
+    }
+
+    public String getRejectTime() {
+        return rejectTime;
+    }
 }

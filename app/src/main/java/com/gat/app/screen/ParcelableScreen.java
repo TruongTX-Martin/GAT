@@ -20,6 +20,7 @@ import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.notification.NotificationScreen;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
@@ -28,6 +29,7 @@ import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
+import com.gat.repository.entity.User;
 
 import java.lang.annotation.ElementType;
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ public class ParcelableScreen implements Parcelable {
     private static final int MESSAGER = 16;
     private static final int GROUP_MESSAGER = 17;
     private static final int SCAN = 18;
+    private static final int USER_PERSONAL = 66;
 
     private static final int NOTIFICATION = 80;
 
@@ -111,6 +114,8 @@ public class ParcelableScreen implements Parcelable {
             return SCAN;
         if (screen instanceof NotificationScreen)
             return NOTIFICATION;
+        if(screen instanceof PersonalUserScreen)
+            return USER_PERSONAL;
         throw new IllegalArgumentException("Not support screen " + screen);
     }
 
@@ -164,6 +169,9 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof NotificationScreen) {
 
+        }else if (screen instanceof PersonalUserScreen) {
+            PersonalUserScreen commentScreen = (PersonalUserScreen) screen;
+            dest.writeParcelable(commentScreen.userResponse(), flags);
         }
 
         else {
@@ -233,6 +241,9 @@ public class ParcelableScreen implements Parcelable {
 
             case NOTIFICATION:
                 screen = NotificationScreen.instance();
+                break;
+            case USER_PERSONAL:
+                screen = PersonalUserScreen.instance(in.readParcelable(UserResponse.class.getClassLoader()));
                 break;
 
             default:
