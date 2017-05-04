@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:background="#F6F6F6">
 
         <de.hdodenhof.circleimageview.CircleImageView
