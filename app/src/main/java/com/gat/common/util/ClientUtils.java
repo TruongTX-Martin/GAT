@@ -66,6 +66,9 @@ public class ClientUtils {
         }
     }
 
+    public static String formatColor(String input,String color){
+        return "<font color=\""+ color +"\">" + input + "</font>";
+    }
     public static String getDateFromString(String input){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat formatBack = new SimpleDateFormat("dd-MM-yyyy");

@@ -9,10 +9,12 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
 
@@ -68,6 +70,14 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private Subject<BookRequestInput> requestBookInputSubject;
     private Subject<ServerResponse<ResponseData>> requestBookError;
 
+
+    //change status book
+    private CompositeDisposable changeStatusDisposable;
+    private final Subject<ChangeStatusResponse> changeStatusResultSubject;
+    private final Subject<RequestStatusInput> changeStatusInputSubject;
+    private final Subject<String> changeStatusError;
+    private UseCase<ChangeStatusResponse> changeStatusUsecase;
+
     public PersonalPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
@@ -92,6 +102,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         this.requestBookError = PublishSubject.create();
         requestBookResultSubject = PublishSubject.create();
         requestBookInputSubject =  BehaviorSubject.create();
+
+
+        this.changeStatusError = PublishSubject.create();
+        changeStatusResultSubject = PublishSubject.create();
+        changeStatusInputSubject = BehaviorSubject.create();
     }
 
     @Override
@@ -110,6 +125,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
         requestBooksDisposable = new CompositeDisposable(requestBookInputSubject.
                 observeOn(schedulerFactory.main()).subscribe(this::getRequestBookData));
+
+        changeStatusDisposable = new CompositeDisposable(
+                changeStatusInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getChangeStatus)
+        );
         //start get personal data
         personalInputSubject.onNext("");
     }
@@ -120,6 +139,22 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         bookInstanceDisposable.dispose();
         changeBookSharingStatusDisposable.dispose();
         requestBooksDisposable.dispose();
+        changeStatusDisposable.dispose();
+    }
+
+    @Override
+    public void requestChangeStatus(RequestStatusInput input) {
+        changeStatusInputSubject.onNext(input);
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> getResponseChangeStatus() {
+        return changeStatusResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onErrorChangeStatus() {
+        return changeStatusError.observeOn(schedulerFactory.main());
     }
 
     @Override
@@ -195,6 +230,28 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorBookRequest() {
         return requestBookError.observeOn(schedulerFactory.main());
+    }
+
+    private void getChangeStatus(RequestStatusInput input){
+        changeStatusUsecase = UseCases.release(changeStatusUsecase);
+        changeStatusUsecase = useCaseFactory.requestBookByOwner(input);
+        changeStatusUsecase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(response -> {
+                    changeStatusResultSubject.onNext(response);
+                })
+                .onError(throwable -> {
+                    if (throwable instanceof CommonException)
+                        changeStatusError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        changeStatusError.onNext("Exception occurred.");
+                    }
+                })
+                .onStop(
+                        () -> changeStatusUsecase = UseCases.release(changeStatusUsecase)
+                )
+                .execute();
     }
 
     private void getRequestBookData(BookRequestInput input) {

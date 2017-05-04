@@ -56,6 +56,7 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                 holder.txtAuthor.setText(entity.getAuthor());
             }
             holder.ratingBar.setNumStars((int) entity.getRateAvg());
+            holder.txtRating.setText(entity.getRateAvg() +"");
             if (!Strings.isNullOrEmpty(entity.getImageId())) {
                 ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
             }
@@ -67,6 +68,7 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                 holder.btnWaitBorrow.setVisibility(View.VISIBLE);
                 holder.btnBorrow.setVisibility(View.GONE);
                 holder.imgExtend.setVisibility(View.INVISIBLE);
+                holder.txtStatus.setVisibility(View.VISIBLE);
             } else if (entity.getAvailableStatus() == 1 && entity.getRequestingStatus() == 1) {
                 holder.txtWaitAgreed.setVisibility(View.VISIBLE);
                 holder.imgExtend.setVisibility(View.VISIBLE);
@@ -85,7 +87,7 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
     }
 
     public class BookSharingViewHolder extends RecyclerView.ViewHolder {
-        TextView txtTitle, txtAuthor, txtBorrowFrom, txtShared, txtWaitAgreed;
+        TextView txtTitle, txtAuthor, txtStatus, txtShared, txtWaitAgreed,txtRating;
         ImageView imgBook, imgExtend;
         RatingBar ratingBar;
         Button btnBorrow, btnWaitBorrow;
@@ -94,12 +96,13 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.txtName);
             txtAuthor = (TextView) view.findViewById(R.id.txtAuthor);
-            txtBorrowFrom = (TextView) view.findViewById(R.id.txtBorrowFrom);
+            txtStatus = (TextView) view.findViewById(R.id.txtStatus);
             txtShared = (TextView) view.findViewById(R.id.txtShared);
             imgBook = (ImageView) view.findViewById(R.id.imgAvatar);
             imgExtend = (ImageView) view.findViewById(R.id.imgExtend);
             ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
             txtWaitAgreed = (TextView) view.findViewById(R.id.txtWaitAgreed);
+            txtRating = (TextView) view.findViewById(R.id.txtRating);
             btnBorrow = (Button) view.findViewById(R.id.btnBorrow);
             btnWaitBorrow = (Button) view.findViewById(R.id.btnWaitBorrow);
         }

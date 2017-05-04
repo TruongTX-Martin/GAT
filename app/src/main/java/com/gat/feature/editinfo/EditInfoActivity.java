@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -70,12 +72,21 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     @BindView(R.id.imgBack)
     ImageView imgBack;
 
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout layoutMenutop;
+
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+
+
+
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     private Bitmap currentBitmap;
     private File fileImage;
 
     private CompositeDisposable disposablesEditInfo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +98,9 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     }
 
     private void initView() {
+        txtTitle.setText("SỬA THÔNG TIN CÁ NHÂN");
+        txtTitle.setTextColor(Color.parseColor("#000000"));
+        imgBack.setImageResource(R.drawable.narrow_back_black);
         edtName.setFocusableInTouchMode(false);
         edtName.setFocusable(false);
         if (!Strings.isNullOrEmpty(user.imageId())) {
@@ -95,6 +109,9 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         }
         if (!Strings.isNullOrEmpty(user.name())) {
             edtName.setText(user.name());
+        }
+        if (!Strings.isNullOrEmpty(user.email())) {
+            txtAddress.setText(user.email());
         }
     }
 
@@ -105,36 +122,33 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             edtName.setFocusable(true);
         });
         imgSave.setOnClickListener(v -> updateProfile());
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               backToPreviousActivity();
-            }
-        });
+        imgBack.setOnClickListener(v -> backToPreviousActivity());
     }
 
-    private void backToPreviousActivity(){
+    private void backToPreviousActivity() {
         Intent intent = new Intent();
-        setResult(Activity.RESULT_OK,intent);
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
-    private void editInfoError(String error){
+
+    private void editInfoError(String error) {
         ClientUtils.showToast("Error");
     }
 
-    private void editInfoSuccess(String message){
+    private void editInfoSuccess(String message) {
         ClientUtils.showToast(message);
         progressBar.setVisibility(View.GONE);
         backToPreviousActivity();
     }
-    private void updateProfile(){
+
+    private void updateProfile() {
         progressBar.setVisibility(View.VISIBLE);
         String name = edtName.getText().toString().trim();
-        if(Strings.isNullOrEmpty(name)) {
+        if (Strings.isNullOrEmpty(name)) {
             ClientUtils.showToast("Bạn không được để trống tên");
             return;
         }
-        if(currentBitmap != null) {
+        if (currentBitmap != null) {
             currentBitmap = getResizedBitmap(currentBitmap, 400);
         }
         //update profile
@@ -182,7 +196,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         }
     }
 
-    private void chooseImage(){
+    private void chooseImage() {
         try {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
@@ -207,8 +221,11 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                                     Uri uri = data.getData();
                                     fileImage = new File(getRealPathFromURI(uri));
                                     currentBitmap = bitmap;
-                                    imgAvatar.setImageURI(uri);
-                                }catch (Exception e){
+                                    if (currentBitmap != null) {
+                                        currentBitmap = getResizedBitmap(currentBitmap, 400);
+                                    }
+                                    imgAvatar.setImageBitmap(currentBitmap);
+                                } catch (Exception e) {
                                     System.out.println(e.getMessage());
                                 }
                             }
@@ -235,14 +252,15 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             return cursor.getString(idx);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case Constance.REQUEST_ACCESS_PERMISSION_WRITESTORAGE:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     chooseImage();
-                }else{
+                } else {
                     ClientUtils.showToast("User rejected");
                 }
                 break;
@@ -252,6 +270,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        disposablesEditInfo.dispose();
     }
 
     @Override
@@ -275,4 +294,6 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         super.onBackPressed();
         backToPreviousActivity();
     }
+
+
 }

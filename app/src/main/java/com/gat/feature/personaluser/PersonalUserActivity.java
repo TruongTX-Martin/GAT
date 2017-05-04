@@ -1,6 +1,7 @@
 package com.gat.feature.personaluser;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -8,18 +9,21 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.user.PaperUserDataSource;
+import com.gat.feature.book_detail.comment.CommentScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.entity.BookReadingInput;
@@ -36,6 +40,7 @@ import com.gat.repository.entity.book.BookSharingEntity;
 import java.util.List;
 
 import butterknife.BindView;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -58,6 +63,21 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     @BindView(R.id.viewpager)
     NonSwipeableViewPager viewPager;
 
+    @BindView(R.id.imgAvatar)
+    CircleImageView imgAvatar;
+
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
+
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout layoutMenutop;
+
     private Context context;
 
 
@@ -73,7 +93,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userResponse = (UserResponse) getIntent().getSerializableExtra("UserInfo");
+        userResponse = getScreen().userResponse();
         context = getApplicationContext();
         disposablesBookUserSharing = new CompositeDisposable(getPresenter().getResponseBookUserSharing().subscribe(this::getBookUserSharingSuccess),
                 getPresenter().onErrorBookUserSharing().subscribe(this::getBookUserSharingError));
@@ -81,9 +101,13 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         disposablesBookUserReading = new CompositeDisposable(getPresenter().getResponseBookUserReading().subscribe(this::getBookUserReadingSuccess),
                 getPresenter().onErrorBookUserReading().subscribe(this::getBookUserSharingError));
         initView();
+        handleEvent();
     }
 
     private void initView() {
+        layoutMenutop.setBackgroundColor(Color.parseColor("#8ec3df"));
+        txtTitle.setText("CÁ NHÂN");
+        imgSave.setImageResource(R.drawable.ic_chat_white);
         if(userResponse != null) {
             if(!Strings.isNullOrEmpty(userResponse.getName())) {
                 txtName.setText(userResponse.getName());
@@ -91,12 +115,20 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             if(!Strings.isNullOrEmpty(userResponse.getAddress())) {
                 txtAddress.setText(userResponse.getAddress());
             }
+            if (!Strings.isNullOrEmpty(userResponse.getImageId())) {
+                String url = ClientUtils.getUrlImage(userResponse.getImageId(), Constance.IMAGE_SIZE_ORIGINAL);
+                ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
+            }
         }
+
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
     }
 
+    private void handleEvent(){
+        imgBack.setOnClickListener(v -> finish());
+    }
 
     private void setupTabIcons() {
         View tabOne = LayoutInflater.from(context).inflate(R.layout.layout_tab_book, null);
@@ -123,17 +155,20 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         if (fragmentBookUserSharing == null) {
             fragmentBookUserSharing = new FragmentBookUserSharing();
             fragmentBookUserSharing.setParrentActivity(this);
-            BookSharingUserInput input = new BookSharingUserInput();
-            input.setOwnerId((int)userResponse.getUserId());
-//            input.setUserId(56);
-            fragmentBookUserSharing.setCurrentInput(input);
+            try {
+                BookSharingUserInput input = new BookSharingUserInput();
+                input.setOwnerId(userResponse.getUserId());
+                fragmentBookUserSharing.setCurrentInput(input);
+            }catch (Exception e){}
         }
         if (fragmentBookUserReading == null) {
             fragmentBookUserReading = new FragmentBookUserReading();
             fragmentBookUserReading.setParrentActivity(this);
-            BookReadingInput currentInput = new BookReadingInput(false,true,false);
-            currentInput.setUserId((int)userResponse.getUserId());
-            fragmentBookUserReading.setCurrentInput(currentInput);
+            try {
+                BookReadingInput currentInput = new BookReadingInput(false,true,false);
+                currentInput.setUserId(userResponse.getUserId());
+                fragmentBookUserReading.setCurrentInput(currentInput);
+            }catch (Exception e){}
         }
         adapter.addFragment(fragmentBookUserSharing, "");
         adapter.addFragment(fragmentBookUserReading, "");
@@ -185,7 +220,12 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
     @Override
     protected PersonalUserScreen getDefaultScreen() {
-        return PersonalUserScreen.instance();
+        return PersonalUserScreen.instance(getScreen().userResponse());
+    }
+
+    @Override
+    protected Object getPresenterKey() {
+        return PersonalUserScreen.instance(getScreen().userResponse());
     }
 
     @Override
