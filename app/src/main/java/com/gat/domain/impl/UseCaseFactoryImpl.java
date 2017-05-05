@@ -47,6 +47,7 @@ import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
@@ -344,6 +345,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
         return new RequestBookByOwner(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<Data> requestBorrowBook(BorrowRequestInput input) {
+        return new RequestBorrowBook(userRepositoryLazy.get(),input);
     }
 
 }

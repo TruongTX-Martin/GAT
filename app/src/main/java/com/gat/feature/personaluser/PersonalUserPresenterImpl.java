@@ -1,13 +1,16 @@
 package com.gat.feature.personaluser;
 
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.entity.Data;
 
 import io.reactivex.Observable;
@@ -42,6 +45,13 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
     private Subject<BookReadingInput> bookUserReadingInputSubject;
     private Subject<ServerResponse<ResponseData>> bookUserReadingError;
 
+    //request borrow book
+    private CompositeDisposable requestBorrowBookDisposable;
+    private UseCase<Data> requestBorrowBookUsecase;
+    private Subject<Data> requestBorrowBookResultSubject;
+    private Subject<BorrowRequestInput> requestBorrowBookInputSubject;
+    private Subject<String> requestBorrowBookError;
+
     public PersonalUserPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
@@ -55,6 +65,10 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         bookUserReadingResultSubject = PublishSubject.create();
         bookUserReadingInputSubject = BehaviorSubject.create();
 
+        this.requestBorrowBookError = PublishSubject.create();
+        requestBorrowBookResultSubject = PublishSubject.create();
+        requestBorrowBookInputSubject = BehaviorSubject.create();
+
 
     }
 
@@ -67,11 +81,17 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         bookUserReadingDisposable = new CompositeDisposable(
                 bookUserReadingInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getBookUserReading)
         );
+
+        requestBorrowBookDisposable = new CompositeDisposable(
+                requestBorrowBookInputSubject.observeOn(schedulerFactory.main()).subscribe(this::requestBook)
+        );
     }
 
     @Override
     public void onDestroy() {
         bookUserSharingDisposable.dispose();
+        bookUserReadingDisposable.dispose();
+        requestBorrowBookDisposable.dispose();
     }
 
     @Override
@@ -103,6 +123,44 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorBookUserReading() {
         return bookUserReadingError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestBorrowBook(BorrowRequestInput input) {
+        requestBorrowBookInputSubject.onNext(input);
+    }
+
+    @Override
+    public Observable<Data> getResponseBorrowBook() {
+        return requestBorrowBookResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onErrorBorrowBook() {
+        return requestBorrowBookError.observeOn(schedulerFactory.main());
+    }
+
+
+    private void requestBook(BorrowRequestInput input){
+        requestBorrowBookUsecase = UseCases.release(requestBorrowBookUsecase);
+        requestBorrowBookUsecase = useCaseFactory.requestBorrowBook(input);
+        requestBorrowBookUsecase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(response -> {
+                    requestBorrowBookResultSubject.onNext(response);
+                })
+                .onError(throwable -> {
+                    if (throwable instanceof CommonException)
+                        requestBorrowBookError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        requestBorrowBookError.onNext("Exception occurred.");
+                    }
+                })
+                .onStop(
+                        () -> requestBorrowBookUsecase = UseCases.release(requestBorrowBookUsecase)
+                )
+                .execute();
     }
 
     private void getBookUserSharing(BookSharingUserInput input) {

@@ -12,6 +12,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.feature.notification.NotificationFragment;
 import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
@@ -39,7 +40,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     }
 
     @BindView(R.id.viewPager)
-    ViewPager mViewPager;
+    NonSwipeableViewPager mViewPager;
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;

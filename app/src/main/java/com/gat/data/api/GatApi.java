@@ -343,4 +343,11 @@ public interface GatApi {
             @Field("receiverId") int receiverId,
             @Field("Message") String message
     );
+
+    @FormUrlEncoded
+    @POST("/share/create_request")
+    Observable<Response<ServerResponse<Data>>> requestBorrowBook (
+            @Field("editionId") int editionId,
+            @Field("ownerId") int ownerId
+    );
 }
