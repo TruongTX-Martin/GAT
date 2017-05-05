@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGrayF6"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_border_top_bottom"
+        android:orientation="vertical"
+        android:paddingBottom="1dp"
+        android:paddingLeft="@dimen/paddingLarge"
+        android:paddingTop="1dp">
+
+        <Button
+            android:id="@+id/button_add_email_password"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_large"
+            android:background="@color/colorWhite"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:text="@string/add_email_password"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextViewDark" />
+
+        <Button
+            android:id="@+id/button_edit_profile"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_large"
+            android:background="@color/colorWhite"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:text="@string/edit_profile"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextViewDark" />
+
+        <Button
+            android:id="@+id/button_change_password"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_large"
+            android:background="@color/colorWhite"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:text="@string/change_password"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextViewDark" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_bottom_large"
+        android:background="@drawable/bg_white_border_top_bottom"
+        android:orientation="vertical"
+        android:paddingBottom="1dp"
+        android:paddingLeft="@dimen/paddingLarge"
+        android:paddingTop="1dp">
+
+
+        <RelativeLayout
+            android:id="@+id/button_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_large">
+
+            <TextView
+                android:id="@+id/text_view_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height_large"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorWhite"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/paddingLarge"
+                android:text="@string/facebook"
+                android:textAllCaps="false"
+                android:textColor="@color/colorTextViewDark" />
+
+            <ImageView
+                android:id="@+id/arrow_fb"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_right" />
+
+            <TextView
+                android:id="@+id/text_view_facebook_account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/arrow_fb"
+                android:layout_toRightOf="@+id/text_view_facebook"
+                android:gravity="right|center_vertical"
+                android:text="tranducthanhtb1z"
+                android:textColor="@color/colorTextViewGray" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/button_twitter"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_large">
+
+            <TextView
+                android:id="@+id/text_view_twitter"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height_large"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorWhite"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/paddingLarge"
+                android:text="@string/twitter"
+                android:textAllCaps="false"
+                android:textColor="@color/colorTextViewDark" />
+
+            <ImageView
+                android:id="@+id/arrow_tw"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_right" />
+
+            <TextView
+                android:id="@+id/text_view_twitter_account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/arrow_tw"
+                android:layout_toRightOf="@+id/text_view_twitter"
+                android:gravity="right|center_vertical"
+                android:text="tranducthanhtb1z"
+                android:textColor="@color/colorTextViewGray" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/button_google"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_large">
+
+            <TextView
+                android:id="@+id/text_view_google"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height_large"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorWhite"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/paddingLarge"
+                android:text="@string/google"
+                android:textAllCaps="false"
+                android:textColor="@color/colorTextViewDark" />
+
+            <ImageView
+                android:id="@+id/arrow_gg"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_right" />
+
+            <TextView
+                android:id="@+id/text_view_google_account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/arrow_gg"
+                android:layout_toRightOf="@+id/text_view_google"
+                android:gravity="right|center_vertical"
+                android:text="tranducthanhtb1z"
+                android:textColor="@color/colorTextViewGray" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/button_logout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_top_bottom_large"
+        android:background="@drawable/bg_white_border_top_bottom"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/paddingLarge"
+        android:text="@string/logout"
+        android:textAllCaps="false" />
+
+</LinearLayout>

@@ -40,6 +40,10 @@ import com.gat.feature.scanbarcode.ScanPresenterImpl;
 import com.gat.feature.search.SearchItemBuilder;
 import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.search.SearchPresenterImpl;
+import com.gat.feature.setting.add_email_password.AddEmailPasswordPresenter;
+import com.gat.feature.setting.add_email_password.AddEmailPasswordPresenterImpl;
+import com.gat.feature.setting.main.MainSettingPresenter;
+import com.gat.feature.setting.main.MainSettingPresenterImpl;
 import com.gat.feature.suggestion.SuggestionPresenter;
 import com.gat.feature.suggestion.SuggestionPresenterImpl;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
@@ -186,4 +190,18 @@ public class PresenterModule {
                                            SchedulerFactory schedulerFactory) {
         return new ScanPresenterImpl(useCaseFactory, schedulerFactory);
     }
+
+    @Provides
+    MainSettingPresenter provideMainSettingPresenter (UseCaseFactory useCaseFactory,
+                                                      SchedulerFactory schedulerFactory) {
+        return new MainSettingPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    AddEmailPasswordPresenter provideAddEmailPasswordPresenter (UseCaseFactory useCaseFactory,
+                                                                SchedulerFactory schedulerFactory)  {
+        return new AddEmailPasswordPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+
 }

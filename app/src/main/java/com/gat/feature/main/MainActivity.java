@@ -12,6 +12,7 @@ import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
+import com.gat.feature.setting.SettingFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
 
 import java.lang.annotation.Retention;
@@ -105,7 +106,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         adapter.addFragment(new PersonalFragment(), "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
         adapter.addFragment(new Fragment(), "NOTICE");
-        adapter.addFragment(new Fragment(), "SETTING");
+        adapter.addFragment(new SettingFragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
     }
