@@ -7,13 +7,13 @@
     <RelativeLayout
         android:id="@+id/rootView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:background="#f7f7f7">
 
         <ImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="55dp"
-            android:layout_height="80dp"
+            android:layout_width="45dp"
+            android:layout_height="67dp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:src="@drawable/twitter_btn" />
@@ -86,6 +86,7 @@
             android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="name"
+            android:textSize="13dp"
             android:textColor="#000000" />
 
         <TextView
@@ -96,6 +97,7 @@
             android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="author"
+            android:textSize="9dp"
             android:textColor="#919191" />
 
         <LinearLayout
@@ -131,6 +133,7 @@
             android:layout_below="@+id/layoutRating"
             android:layout_toRightOf="@+id/imgAvatar"
             android:visibility="gone"
+            android:textSize="10dp"
             android:text="Đang được mượn"
             android:textColor="#000000" />
     </RelativeLayout>

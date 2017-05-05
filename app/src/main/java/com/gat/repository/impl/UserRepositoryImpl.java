@@ -20,6 +20,7 @@ import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
@@ -282,6 +283,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByOwner(input));
+    }
+
+    @Override
+    public Observable<Data> requestBorrowBook(BorrowRequestInput input) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBorrowBook(input));
     }
 
 }

@@ -188,6 +188,10 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     @BindView(R.id.rltCheckUnreturn)
     RelativeLayout rltCheckUnreturn;
 
+    @BindView(R.id.layoutChat)
+    LinearLayout layoutChat;
+
+
 
 
     private CompositeDisposable disposablesBookDetail;
@@ -282,6 +286,12 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
             }
         });
 
+        layoutChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
     private void requestBookOwner(RequestStatusInput statusInput){
         getPresenter().requestChangeStatus(statusInput);

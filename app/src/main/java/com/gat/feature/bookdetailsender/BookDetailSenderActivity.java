@@ -180,6 +180,9 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     @BindView(R.id.rltCheckUnreturn)
     RelativeLayout rltCheckUnreturn;
 
+    @BindView(R.id.layoutChat)
+    LinearLayout layoutChat;
+
 
 
 
@@ -250,6 +253,12 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
             }
         });
         imgBorrower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        layoutChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

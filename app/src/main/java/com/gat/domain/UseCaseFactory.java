@@ -22,6 +22,7 @@ import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.Group;
@@ -145,6 +146,7 @@ public interface UseCaseFactory {
     UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input);
     UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
 
+    UseCase<Data> requestBorrowBook(BorrowRequestInput input);
 
 
 }

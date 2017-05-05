@@ -18,6 +18,7 @@ import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -204,6 +205,11 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
+        return null;
+    }
+
+    @Override
+    public Observable<Data> requestBorrowBook(BorrowRequestInput input) {
         return null;
     }
 
