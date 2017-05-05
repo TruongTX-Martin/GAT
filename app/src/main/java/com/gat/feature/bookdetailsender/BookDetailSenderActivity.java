@@ -1,5 +1,6 @@
 package com.gat.feature.bookdetailsender;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -204,6 +205,8 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
 
     private void initView() {
         txtTitle.setText("CHI TIẾT YÊU CẦU");
+        txtTitle.setTextColor(Color.parseColor("#000000"));
+        imgBack.setImageResource(R.drawable.narrow_back_black);
         imgSave.setVisibility(View.GONE);
         borrowingRecordId = getIntent().getIntExtra("BorrowingRecordId", 0);
         layoutParrentContacting.setVisibility(View.GONE);

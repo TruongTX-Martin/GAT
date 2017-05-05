@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -52,6 +53,13 @@ public class BookUserReadingAdapter extends RecyclerView.Adapter<BookUserReading
                     ClientUtils.setImage(holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getEditionImageId(), Constance.IMAGE_SIZE_SMALL));
                 }
                 holder.ratingBar.setNumStars((int)entity.getRateAvg());
+                holder.txtRating.setText(entity.getRateAvg() + "");
+                if(!Strings.isNullOrEmpty(entity.getBorrowFromUserName())) {
+                    holder.layoutBorrowFrom.setVisibility(View.VISIBLE);
+                    holder.txtBorrowName.setText(entity.getBorrowFromUserName());
+                }else{
+                    holder.layoutBorrowFrom.setVisibility(View.GONE);
+                }
             }
             if(getItemCount() > 9 && position == (getItemCount() -1)){
                 fragment.loadMore();
@@ -65,13 +73,18 @@ public class BookUserReadingAdapter extends RecyclerView.Adapter<BookUserReading
 
 
     public class  BookReadingViewHolder extends RecyclerView.ViewHolder{
-        TextView txtName,txtAuthor;
+        TextView txtName,txtAuthor,txtRating,txtBorrowFrom,txtBorrowName;
         ImageView imgAvatar;
         RatingBar ratingBar;
+        LinearLayout layoutBorrowFrom;
         public BookReadingViewHolder(View itemView) {
             super(itemView);
             txtName = (TextView) itemView.findViewById(R.id.txtName);
             txtAuthor = (TextView) itemView.findViewById(R.id.txtAuthor);
+            txtRating = (TextView) itemView.findViewById(R.id.txtRating);
+            txtBorrowFrom = (TextView) itemView.findViewById(R.id.txtBorrowFrom);
+            txtBorrowName = (TextView) itemView.findViewById(R.id.txtBorrowName);
+            layoutBorrowFrom = (LinearLayout) itemView.findViewById(R.id.layoutBorrowFrom);
             imgAvatar = (ImageView) itemView.findViewById(R.id.imgAvatar);
             ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
         }

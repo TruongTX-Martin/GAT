@@ -172,6 +172,7 @@
             android:layout_toLeftOf="@+id/imgExtend1"
             android:layout_toRightOf="@+id/imgFavorit"
             android:gravity="left"
+            android:text="Danh mục sách ưa thích"
             android:textColor="#000000"
             android:textSize="15dp" />
 

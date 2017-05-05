@@ -5,10 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/layout_activity_top" />
+
     <RelativeLayout
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:background="#F6F6F6">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -28,6 +30,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:visibility="gone"
             android:layout_marginRight="10dp">
 
             <ImageView

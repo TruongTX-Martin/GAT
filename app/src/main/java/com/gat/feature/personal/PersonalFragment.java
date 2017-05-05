@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,15 +22,15 @@ import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.EditInfoActivity;
-import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
-import com.gat.feature.main.MainScreen;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
@@ -45,11 +42,8 @@ import com.gat.repository.entity.book.BookRequestEntity;
 import com.gat.repository.entity.book.BookSharingEntity;
 import com.google.gson.Gson;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -76,6 +70,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private CompositeDisposable disposablesChangeBookSharingStatus;
     private CompositeDisposable disposablesReadingBooks;
     private CompositeDisposable disposablesBooksRequest;
+    private CompositeDisposable disposablesRequestBookByOwner;
 
     //init fragment
     private FragmentBookSharing fragmentBookSharing;
@@ -84,7 +79,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private TextView txtNumberSharing;
     private TextView txtNumberReading;
     private TextView txtNumberRequest;
-    private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
+//    private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
 
     private User userInfo;
     private Context context;
@@ -129,6 +124,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
         disposablesBooksRequest = new CompositeDisposable(getPresenter().getResponseBookRequest().subscribe(this::getBookRequestSuccess),
                 getPresenter().onErrorBookRequest().subscribe(this::getBookInstanceError));
+
+        disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
+                getPresenter().onErrorChangeStatus().subscribe(this::getBookDetailError));
 
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
@@ -224,7 +222,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         }
         if (fragmentBookRequest == null) {
             fragmentBookRequest = new FragmentBookRequest();
-            fragmentBookRequest.setParrentActivity(this);
+            fragmentBookRequest.setParrentFragment(this);
         }
         adapter.addFragment(fragmentBookSharing, "");
         adapter.addFragment(fragmentBookReading, "");
@@ -264,8 +262,22 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         }
     }
 
+    private void getBookDetailError(String error) {
+        ClientUtils.showToast("Error:" + error);
+    }
     private void getUserInfoError(ServerResponse<ResponseData> error) {
         ClientUtils.showToast(error.message());
+    }
+
+    public void requestBookOwner(RequestStatusInput statusInput){
+        getPresenter().requestChangeStatus(statusInput);
+    }
+    private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
+        if (data != null) {
+            if(data.getStatusCode() == 200){
+            }
+            ClientUtils.showToast(data.getMessage());
+        }
     }
 
 
@@ -308,10 +320,6 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         }
     }
-//    private void getBookInstanceError(String error) {
-//        ClientUtils.showToast(error);
-//>>>>>>> features/user_page
-//    }
 
 
     private void changeBookSharingStatusSuccess(Data data) {
@@ -330,12 +338,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             fragmentBookReading.setListBookReading(listReading);
         }
 
-        requestBookRequest(bookRequestInput);
-        fragmentBookRequest.setCurrentInput(bookRequestInput);
+//        requestBookRequest(bookRequestInput);
+//        fragmentBookRequest.setCurrentInput(bookRequestInput);
     }
 
     private void getBookRequestSuccess(Data data) {
-        System.out.println(data);
         if(data != null) {
             int totalBrowing = data.getBorrowingTotal();
             txtNumberRequest.setText(totalBrowing+"");

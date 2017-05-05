@@ -3,66 +3,12 @@
 
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/09c57462d242cee945dfd6867731b43932f6254c/output/jars/classes.jar"
+        jar="/root/.android/build-cache/458cc603b0b5840872100c24454107671726d68e/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
-        sha1="ff55c890cd296762bd453dc5c19c1c662cd101ed">
-        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/classes_92832bc8a1cfbe054dd65661a9bc7103dca82414/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/d90b307de6f1767ff243c75056d35ed092c40c7b/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="8ad6b90e6ddffa59aaa35fce8d5c2f29624ae251">
-        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/classes_8a0c842fad1d9510d6ff615541c928fc4a987e17/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/a96208a7a64f929c74efd40c7e1e196b3d9facf0/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="f205ba5f15b7b1d65ae41c4ae40087a1d4825fe0">
-        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/classes_4d13183c5a055580db8b1330211abe93af083fe2/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/2a0d2473ebbca9fb71433774c907770657883289/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="393af63066510aacf05c7adcc3e4a3aab058b5f4">
-        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/classes_c47f61c01391bb9d396f92897c4737e10f09ec95/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/5dc10b3216a48d6f84fcc1ac6759e3425fccfde3/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="263c1c941f603469ecbaf8745f7b2d18ae85c5c0">
-        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/classes_cb7df59d2d64997f63d12be78964ab14f0f02f86/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.gradle/caches/modules-2/files-2.1/com.twitter/twitter-text/1.13.0/78415b95ae3184c5926d593feab64bfc0b73b2dd/twitter-text-1.13.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="78415b95ae3184c5926d593feab64bfc0b73b2dd">
-        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/twitter-text-1.13.0_38a617e1df4bc30cb7c35ebe8cb69a91ef06b20f/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
-        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/picasso-2.5.2_f07471cc8daabba9b33b6c2492a169834e3c6749/classes.dex" />
+        sha1="005d20a198159b87f65812fc5c51b2d84c5eba0a">
+        <dex dex="/home/truongtechno/GAT/GAT/gat-android-1.0/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/classes_86d4a2d4186287c04d0848affcfcdf0274d80215/classes.dex" />
     </item>
 
 </items>

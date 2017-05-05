@@ -1,5 +1,6 @@
 package com.gat.feature.bookdetailowner;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -211,6 +212,8 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     private void initView(){
         txtTitle.setText("CHI TIẾT YÊU CẦU");
         imgSave.setVisibility(View.GONE);
+        txtTitle.setTextColor(Color.parseColor("#000000"));
+        imgBack.setImageResource(R.drawable.narrow_back_black);
         borrowingRecordId = getIntent().getIntExtra("BorrowingRecordId", 0);
 
         layoutParrentContacting.setVisibility(View.GONE);

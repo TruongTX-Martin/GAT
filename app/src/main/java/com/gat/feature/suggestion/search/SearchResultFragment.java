@@ -22,6 +22,7 @@ import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.Keyword;
 import com.gat.feature.personaluser.PersonalUserActivity;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.suggestion.search.item.SearchBookResultItem;
 import com.gat.feature.suggestion.search.item.SearchBuilder;
 import com.gat.feature.suggestion.search.item.SearchHistoryItem;
@@ -155,10 +156,8 @@ public class SearchResultFragment extends Fragment
         } else if (item instanceof SearchUserResultItem) {
 
             SearchUserResultItem userItem = (SearchUserResultItem) item;
-//            Toast.makeText(getActivity(), "User id: " + userItem.userResponse().getUserId(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(SuggestSearchActivity.instance, PersonalUserActivity.class);
-            intent.putExtra("UserInfo",userItem.userResponse());
-            SuggestSearchActivity.instance.startActivity(intent);
+            SuggestSearchActivity.start(getActivity().getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(userItem.userResponse()));
+
         }
     }
 
