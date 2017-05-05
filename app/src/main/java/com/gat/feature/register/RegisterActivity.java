@@ -24,6 +24,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
@@ -328,7 +329,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
     }
     private void onRegisterError(String error) {
         progressSubject.onNext(false);
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+        ClientUtils.showErrorDialog(getString(R.string.register_error_header), error, this);
     }
 
     private void onRegisterSuccess(User user) {

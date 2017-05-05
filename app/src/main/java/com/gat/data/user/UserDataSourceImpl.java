@@ -70,7 +70,12 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken(ServerResponse<ResetPasswordResponseData> data) {
+    public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken(String email, ServerResponse<ResetPasswordResponseData> data) {
+        return null;
+    }
+
+    @Override
+    public Observable<String> getEmailLogin() {
         return null;
     }
 

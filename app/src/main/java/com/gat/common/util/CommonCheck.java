@@ -34,7 +34,7 @@ public class CommonCheck {
     public final static int PASSWORD_LENGTH_MIN = 6;
     public final static int TOKEN_LENGTH = 6;
 
-    private final static int ADMIN_USER_ID = 1;
+    private final static int ADMIN_USER_ID = 0;
 
     private static final int ISBN_13 = 13;
     private static final int ISBN_10 = 10;

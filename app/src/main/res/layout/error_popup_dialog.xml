@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="300dp"
+    android:layout_width="@dimen/error_popup_width"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/layout_rounded">
     <TextView
+        android:id="@+id/error_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_fail_title"
         android:textSize="@dimen/header_textsize"
+        android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="30dp"/>
     <TextView
+        android:id="@+id/error_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login_fail_mes"
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
+        android:paddingStart="@dimen/padding_start"
+        android:paddingEnd="@dimen/padding_start"
         android:textSize="@dimen/normal_textsize"/>
     <Button
         android:id="@+id/btn_popup_ok"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_rounded_blue"
         android:textColor="@color/colorWhite"
+        android:textSize="@dimen/normal_textsize"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="30dp"
         android:layout_marginTop="30dp"
-        android:text="OK"/>
+        android:text="@string/error_ok_btn"/>
 </LinearLayout>

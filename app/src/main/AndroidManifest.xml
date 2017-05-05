@@ -15,7 +15,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/gat_app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -42,16 +42,21 @@
         <activity android:name=".feature.search.SearchActivity">
         </activity>
 
-        <activity android:name=".feature.login.LoginActivity">
+        <activity android:name=".feature.login.LoginActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".feature.register.update.location.AddLocationActivity">
+
+        <activity android:name=".feature.register.RegisterActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".feature.register.update.location.AddLocationActivity"
+            android:screenOrientation="portrait">
 
         </activity>
 
-        <activity android:name=".feature.register.update.category.AddCategoryActivity">
-
-        </activity>
-        <activity android:name=".feature.register.RegisterActivity">
+        <activity android:name=".feature.register.update.category.AddCategoryActivity"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity android:name=".feature.register.update.info.UpdateInfoActivity" >

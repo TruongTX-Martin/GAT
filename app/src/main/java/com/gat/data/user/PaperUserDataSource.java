@@ -48,6 +48,7 @@ public class PaperUserDataSource implements UserDataSource {
     private static final String KEY_RESET_TOKEN = "resetToken";
     private static final String KEY_VERIFY_TOKEN = "verifiedToken";
     private static final String KEY_LOGIN_TOKEN = "loginToken";
+    private static final String EMAIL = "email";
     private static final String KEY_USER_LIST = "userList";
 
     private List<User> userList = new ArrayList<>();
@@ -83,11 +84,17 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken(ServerResponse<ResetPasswordResponseData> data) {
+    public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken(String email, ServerResponse<ResetPasswordResponseData> data) {
         return Observable.fromCallable(() -> {
             book.write(KEY_RESET_TOKEN, data);
+            book.write(EMAIL, email);
             return data;
         });
+    }
+
+    @Override
+    public Observable<String> getEmailLogin() {
+        return Observable.fromCallable(() -> book.read(EMAIL));
     }
 
     @Override

@@ -582,8 +582,13 @@ public class DebugUserDataSource implements UserDataSource {
 
     @Override
     public Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken
-            (ServerResponse<ResetPasswordResponseData> data) {
+            (String email, ServerResponse<ResetPasswordResponseData> data) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<String> getEmailLogin() {
+        return null;
     }
 
     @Override

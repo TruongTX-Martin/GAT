@@ -143,13 +143,13 @@ public class SignInFirebaseImpl implements SignInFirebase {
 
     private void loginWithEmail(LoginData loginData) {
         String email = ((EmailLoginData)loginData).email();
-        String password = ((EmailLoginData)loginData).password();
+        String password = ((EmailLoginData)loginData).firebasePassword();
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(onCompleteListener);
     }
 
     private void registerWithEmail(LoginData loginData) {
         String email = ((EmailLoginData)loginData).email();
-        String password = ((EmailLoginData)loginData).password();
+        String password = ((EmailLoginData)loginData).firebasePassword();
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(onCompleteListener);
     }
 
@@ -160,7 +160,7 @@ public class SignInFirebaseImpl implements SignInFirebase {
 
     @Override
     public void signOut() {
-
+        firebaseAuth.signOut();
     }
 
     @Override

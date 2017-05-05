@@ -2,6 +2,7 @@ package com.gat.repository.impl;
 
 import android.location.Address;
 
+import com.gat.common.util.Strings;
 import com.gat.data.firebase.SignInFirebase;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
@@ -10,6 +11,7 @@ import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.data.user.EmailLoginData;
 import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
@@ -66,7 +68,19 @@ public class UserRepositoryImpl implements UserRepository {
         return Observable.defer(() -> networkUserDataSourceLazy.get().login(data)
                 .flatMap(response -> {
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
-                    localUserDataSourceLazy.get().saveLoginData(data);
+                    if (data.type() == LoginData.Type.EMAIL) {
+                        EmailLoginData emailLoginData = EmailLoginData.instance(
+                                ((EmailLoginData)data).email(),
+                                ((EmailLoginData)data).password(),
+                                ((EmailLoginData)data).name(),
+                                ((EmailLoginData)data).image(),
+                                ((EmailLoginData)data).type(),
+                                response.data().getFirebasePassword()
+                        );
+                        localUserDataSourceLazy.get().saveLoginData(emailLoginData);
+                    } else {
+                        localUserDataSourceLazy.get().saveLoginData(data);
+                    }
                     return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
@@ -110,8 +124,20 @@ public class UserRepositoryImpl implements UserRepository {
     public Observable<User> register(LoginData data) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().register(data)
                 .flatMap(response -> {
-                    localUserDataSourceLazy.get().saveLoginData(data);
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
+                    if (data.type() == LoginData.Type.EMAIL) {
+                        EmailLoginData emailLoginData = EmailLoginData.instance(
+                                ((EmailLoginData)data).email(),
+                                ((EmailLoginData)data).password(),
+                                ((EmailLoginData)data).name(),
+                                ((EmailLoginData)data).image(),
+                                ((EmailLoginData)data).type(),
+                                response.data().getFirebasePassword()
+                        );
+                        localUserDataSourceLazy.get().saveLoginData(emailLoginData);
+                    } else {
+                        localUserDataSourceLazy.get().saveLoginData(data);
+                    }
                     return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
@@ -124,7 +150,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<ServerResponse> sendRequestResetPassword(String email) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().sendRequestResetPassword(email)
-                .flatMap(response -> localUserDataSourceLazy.get().storeResetToken(response))
+                .flatMap(response -> localUserDataSourceLazy.get().storeResetToken(email, response))
         );
     }
 
@@ -142,9 +168,20 @@ public class UserRepositoryImpl implements UserRepository {
         return Observable.defer(() -> networkUserDataSourceLazy.get()
                 .changePassword(password, storeVerifyData.blockingFirst().data().tokenVerify())
                 .map(response -> {
+                    String email = localUserDataSourceLazy.get().getEmailLogin().blockingFirst();
+                    EmailLoginData emailLoginData = EmailLoginData.instance(
+                            email,
+                            password,
+                            email.substring(0, email.indexOf('@')),
+                            Strings.EMPTY,
+                            LoginData.Type.EMAIL,
+                            response.data().getFirebasePassword()
+                    );
+                    localUserDataSourceLazy.get().saveLoginData(emailLoginData);
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
                     return response;
-                }));
+                })
+        );
     }
 
     @Override

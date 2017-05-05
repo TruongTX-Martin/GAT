@@ -51,7 +51,9 @@ public interface UserDataSource {
 
     Observable<ServerResponse<ResetPasswordResponseData>> sendRequestResetPassword(String email);
 
-    Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken(ServerResponse<ResetPasswordResponseData> data);
+    Observable<ServerResponse<ResetPasswordResponseData>> storeResetToken(String email, ServerResponse<ResetPasswordResponseData> data);
+
+    Observable<String> getEmailLogin();
 
     Observable<ServerResponse<ResetPasswordResponseData>> getResetToken();
 
