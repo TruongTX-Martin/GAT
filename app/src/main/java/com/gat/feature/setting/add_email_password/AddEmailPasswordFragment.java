@@ -1,9 +1,11 @@
 package com.gat.feature.setting.add_email_password;
 
 import android.annotation.SuppressLint;
+
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.feature.setting.ISettingDelegate;
+
 import butterknife.OnClick;
 
 /**
@@ -13,9 +15,9 @@ import butterknife.OnClick;
 @SuppressLint("ValidFragment")
 public class AddEmailPasswordFragment extends ScreenFragment<AddEmailPasswordScreen, AddEmailPasswordPresenter> {
 
-    private  ISettingDelegate delegate;
+    private ISettingDelegate delegate;
 
-    public AddEmailPasswordFragment (ISettingDelegate delegate) {
+    public AddEmailPasswordFragment(ISettingDelegate delegate) {
         this.delegate = delegate;
     }
 
@@ -24,11 +26,25 @@ public class AddEmailPasswordFragment extends ScreenFragment<AddEmailPasswordScr
         return R.layout.frame_add_email_password;
     }
 
-    @OnClick(R.id.image_view_back)
-    void onBackPress () {
-        delegate.goToMainSetting();
+    @Override
+    protected AddEmailPasswordScreen getDefaultScreen() {
+        return AddEmailPasswordScreen.instance();
     }
 
+    @Override
+    protected Class<AddEmailPasswordPresenter> getPresenterClass() {
+        return AddEmailPasswordPresenter.class;
+    }
+
+    @Override
+    protected Object getPresenterKey() {
+        return AddEmailPasswordScreen.instance();
+    }
+
+    @OnClick(R.id.image_view_back)
+    void onBackPress() {
+        delegate.goToMainSetting();
+    }
 
 
 }

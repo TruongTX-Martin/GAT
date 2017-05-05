@@ -26,6 +26,20 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         return R.layout.frame_setting_main;
     }
 
+    @Override
+    protected Object getPresenterKey() {
+        return MainSettingScreen.instance();
+    }
+
+    @Override
+    protected Class<MainSettingPresenter> getPresenterClass() {
+        return MainSettingPresenter.class;
+    }
+
+    @Override
+    protected MainSettingScreen getDefaultScreen() {
+        return MainSettingScreen.instance();
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
