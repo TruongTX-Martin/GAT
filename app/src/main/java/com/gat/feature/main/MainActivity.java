@@ -1,6 +1,5 @@
 package com.gat.feature.main;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,9 +11,9 @@ import android.view.KeyEvent;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.app.receiver.NotificationReceiver;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.common.util.NotificationConfig;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.firebase.entity.NotificationParcelable;
@@ -48,7 +47,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     }
 
     @BindView(R.id.viewPager)
-    ViewPager mViewPager;
+    NonSwipeableViewPager mViewPager;
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;

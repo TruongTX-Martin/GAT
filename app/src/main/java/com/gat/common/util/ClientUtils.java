@@ -3,16 +3,18 @@ package com.gat.common.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,10 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.signature.StringSignature;
 import com.gat.R;
-import com.gat.dependency.AppModule;
-import com.gat.feature.main.MainActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,7 +32,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
+
 
 /**
  * Created by truongtechno on 29/03/2017.
@@ -139,13 +138,30 @@ public class ClientUtils {
         View view = layoutInflater.inflate(R.layout.error_popup_dialog, null);
         builder.setView(view);
         AlertDialog dialog = builder.create();
-        TextView textHeader = (TextView)view.findViewById(R.id.error_header);
+        TextView textHeader = (TextView) view.findViewById(R.id.error_header);
         textHeader.setText(header);
         TextView textContent = (TextView) view.findViewById(R.id.error_text);
         textContent.setText(content);
         Button button = (Button) view.findViewById(R.id.btn_popup_ok);
         button.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+    public static boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public static void showViewNotInternet(View view) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        ViewGroup viewGroup = (ViewGroup) view;
+        View viewChild =  inflater.inflate(R.layout.layout_intenet_notconnect,null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        viewChild.setLayoutParams(params);
+        viewGroup.removeAllViews();
+        viewGroup.addView(viewChild);
     }
 
 }

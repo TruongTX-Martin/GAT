@@ -32,6 +32,7 @@ import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -479,6 +480,20 @@ public class DebugUserDataSource implements UserDataSource {
             statusResponse.setMessage(response.message());
             statusResponse.setStatusCode(response.code());
             return statusResponse;
+        });
+    }
+
+    @Override
+    public Observable<Data> requestBorrowBook(BorrowRequestInput input) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.requestBorrowBook(input.getEditionId(),input.getOwnerId());
+        return responseObservable.map(response -> {
+            ServerResponse<Data> serverResponse = response.body();
+            if (serverResponse == null) {
+                serverResponse = ServerResponse.BAD_RESPONSE;
+            }
+            serverResponse.code(response.code());
+            return serverResponse.data();
         });
     }
 

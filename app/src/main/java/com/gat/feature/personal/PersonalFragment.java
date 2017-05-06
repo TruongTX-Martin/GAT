@@ -281,6 +281,10 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     //get book instance
     public void requestBookInstance(BookInstanceInput input) {
+        if(!ClientUtils.isOnline()) {
+            ClientUtils.showViewNotInternet(layoutTop);
+            return;
+        }
         getPresenter().requestBookInstance(input);
     }
 

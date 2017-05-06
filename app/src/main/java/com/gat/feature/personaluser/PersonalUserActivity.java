@@ -22,15 +22,9 @@ import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
-import com.gat.data.user.PaperUserDataSource;
-import com.gat.feature.book_detail.comment.CommentScreen;
-import com.gat.feature.main.MainActivity;
-import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.entity.BookReadingInput;
-import com.gat.feature.personal.fragment.FragmentBookRequest;
-import com.gat.feature.personal.fragment.FragmentBookSharing;
-import com.gat.feature.personal.fragment.FragmentReadingBook;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.feature.personaluser.fragment.FragmentBookUserReading;
 import com.gat.feature.personaluser.fragment.FragmentBookUserSharing;
 import com.gat.repository.entity.Data;
@@ -70,7 +64,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     ImageView imgBack;
 
     @BindView(R.id.imgSave)
-    ImageView imgSave;
+    ImageView imgChat;
 
     @BindView(R.id.txtTitle)
     TextView txtTitle;
@@ -89,6 +83,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
     private CompositeDisposable disposablesBookUserSharing;
     private CompositeDisposable disposablesBookUserReading;
+    private CompositeDisposable disposableBorrowBook;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +95,11 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
         disposablesBookUserReading = new CompositeDisposable(getPresenter().getResponseBookUserReading().subscribe(this::getBookUserReadingSuccess),
                 getPresenter().onErrorBookUserReading().subscribe(this::getBookUserSharingError));
+
+        disposableBorrowBook = new CompositeDisposable(getPresenter().getResponseBorrowBook().subscribe(this::borrowBookSuccess),
+                getPresenter().onErrorBorrowBook().subscribe(this::borrowBookError));
+
+
         initView();
         handleEvent();
     }
@@ -107,7 +107,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     private void initView() {
         layoutMenutop.setBackgroundColor(Color.parseColor("#8ec3df"));
         txtTitle.setText("CÁ NHÂN");
-        imgSave.setImageResource(R.drawable.ic_chat_white);
+        imgChat.setImageResource(R.drawable.ic_chat_white);
         if(userResponse != null) {
             if(!Strings.isNullOrEmpty(userResponse.getName())) {
                 txtName.setText(userResponse.getName());
@@ -128,6 +128,14 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
     private void handleEvent(){
         imgBack.setOnClickListener(v -> finish());
+
+        //event chating
+        imgChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void setupTabIcons() {
@@ -192,6 +200,13 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         ClientUtils.showToast(error.message());
     }
 
+    private void borrowBookError(String  error) {
+        ClientUtils.showToast(error);
+    }
+
+    private void borrowBookSuccess(Data data){
+        System.out.println(data);
+    }
     private void getBookUserReadingSuccess(Data data){
         if(data != null){
             List<BookReadingEntity> list = data.getListDataReturn(BookReadingEntity.class);
@@ -199,6 +214,11 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             int totalReading = data.getReadingTotal();
             txtNumberReading.setText(totalReading+"");
         }
+    }
+
+    public void requestBorrowBook(BorrowRequestInput input){
+        input.setOwnerId(userResponse.getUserId());
+        getPresenter().requestBorrowBook(input);
     }
 
 
@@ -233,5 +253,6 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         super.onDestroy();
         disposablesBookUserSharing.dispose();
         disposablesBookUserReading.dispose();
+        disposableBorrowBook.dispose();
     }
 }

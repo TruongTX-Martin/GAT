@@ -19,6 +19,7 @@ import com.gat.common.util.ClientUtils;
 import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.personaluser.adapter.BookUserSharingAdapter;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.entity.book.BookSharingEntity;
 
 import java.util.ArrayList;
@@ -111,6 +112,10 @@ public class FragmentBookUserSharing extends Fragment {
 
             }
         }));
+    }
+
+    public void requestBorrowBook(BorrowRequestInput input){
+        parrentActivity.requestBorrowBook(input);
     }
 
     private void showLoadMore(){

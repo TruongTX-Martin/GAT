@@ -15,6 +15,7 @@ import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.feature.personaluser.fragment.FragmentBookUserSharing;
 import com.gat.repository.entity.book.BookSharingEntity;
 
@@ -75,6 +76,14 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                 holder.btnBorrow.setVisibility(View.GONE);
                 holder.btnWaitBorrow.setVisibility(View.GONE);
             }
+            holder.btnBorrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BorrowRequestInput input = new BorrowRequestInput();
+                    input.setEditionId(entity.getEditionId());
+                    fragmentBookSharing.requestBorrowBook(input);
+                }
+            });
         }
         if (getItemCount() > 9 && position == (getItemCount() - 1)) {
             fragmentBookSharing.loadMore();
