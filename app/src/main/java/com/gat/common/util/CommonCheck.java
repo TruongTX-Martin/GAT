@@ -155,7 +155,9 @@ public class CommonCheck {
                     JSONObject errorContent = new JSONObject(errorBody.string());
                     if (errorContent.has("message")) {
                         if (response.code() == ServerResponse.HTTP_CODE.TOKEN) {
-                            throw new CommonException(errorContent.getString("message"));       // TODO login exception
+                            ServerResponse serverResponse = ServerResponse.TOKEN_CHANGED;
+                            serverResponse.message(errorContent.getString("message"));
+                            throw new LoginException(serverResponse);
                         } else {
                             throw new CommonException(errorContent.getString("message"));
                         }
@@ -180,7 +182,7 @@ public class CommonCheck {
     }
 
     public static String getGroupId(int user1, int user2) {
-        return (user1 < user2) ? (user1 + "" + user2) : (user2 + "" + user1);
+        return (user1 < user2) ? (user1 + ":" + user2) : (user2 + ":" + user1);
     }
 
     public static boolean isDiffDay(long time1, long time2) {

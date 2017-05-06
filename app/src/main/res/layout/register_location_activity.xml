@@ -53,13 +53,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:layout_marginEnd="10dp"/>
 
-        <ImageButton
+        <!--<ImageButton
             android:id="@+id/search_location_btn"
             android:layout_width="70dp"
             android:layout_height="40dp"
             android:background="@drawable/bg_rounded_white"
             android:src="@drawable/forma_1_copy_7"
-            android:clickable="false"/>
+            android:clickable="false"/>-->
     </LinearLayout>
 
     <FrameLayout

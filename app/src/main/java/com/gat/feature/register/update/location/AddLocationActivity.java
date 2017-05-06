@@ -117,8 +117,9 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
     @BindView(R.id.search_location_edit)
     EditText locationText;
 
-    @BindView(R.id.search_location_btn)
-    ImageButton searchBtn;
+    // TODO 170505 remove search button
+    //@BindView(R.id.search_location_btn)
+    //ImageButton searchBtn;
 
     @Override
     protected int getLayoutResource() {
@@ -202,11 +203,13 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().trim().length() > 0) {
-                    searchBtn.setClickable(true);
-                    searchBtn.setEnabled(true);
+                    // TODO 170505 remove search button
+                    //searchBtn.setClickable(true);
+                    //searchBtn.setEnabled(true);
                 } else {
-                    searchBtn.setClickable(false);
-                    searchBtn.setEnabled(false);
+                    // TODO 170505 remove search button
+                    //searchBtn.setClickable(false);
+                    //searchBtn.setEnabled(false);
                     selectedLocation = null;
                     inputAddress = Strings.EMPTY;
                     updateLocationGUI(false);
@@ -230,11 +233,12 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
             return true;
         });
 
-        searchBtn.setOnClickListener(view -> {
-            String text = this.locationText.getText().toString();
-            if (text != null && !text.trim().isEmpty())
-                getPlaceIdFromAddress(text);
-        });
+        // TODO 170505 remove search button
+        //searchBtn.setOnClickListener(view -> {
+        //    String text = this.locationText.getText().toString();
+        //    if (text != null && !text.trim().isEmpty())
+        //        getPlaceIdFromAddress(text);
+        //});
     }
 
     private void onUpdateLocation(LatLng location) {

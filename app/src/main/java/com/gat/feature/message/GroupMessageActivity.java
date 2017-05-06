@@ -64,7 +64,17 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Item item = groupMessageAdapter.getItemAt(position);
+                if (!(item instanceof GroupItem))
+                    return;
+                Log.d(TAG, "clicked:" + position);
+                start(getApplicationContext(),
+                        MessageActivity.class,
+                        MessageScreen.instance(
+                                ((GroupItem)item).group().userName(),
+                                Integer.parseInt(((GroupItem)item).group().users().get(0))
+                        )
+                );
             }
 
             @Override
@@ -72,7 +82,7 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
                 Item item = groupMessageAdapter.getItemAt(position);
                 if (!(item instanceof GroupItem))
                     return;
-                Log.d(TAG, "clicked:" + position);
+                Log.d(TAG, "LongClicked:" + position);
                 start(getApplicationContext(),
                         MessageActivity.class,
                         MessageScreen.instance(
