@@ -89,13 +89,6 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
         );
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            NotificationParcelable parcelable = intent.getExtras() != null ? intent.getExtras().getParcelable("data") : null;
-            if (parcelable != null) Log.d("Parcelable", parcelable.toString());
-                //processNotification(parcelable.getNotification());
-        }
-
         // array index of all welcome sliders
         arrLayoutIdx = new int[]{
                 R.layout.activity_intro_slider1,

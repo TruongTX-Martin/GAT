@@ -77,13 +77,6 @@ public class ResultActivity extends ScreenActivity<MainScreen, MainPresenter> {
 
         ClientUtils.context = getApplicationContext();
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            NotificationParcelable parcelable = intent.getExtras().getParcelable("data");
-            if (parcelable != null)
-                processNotification(parcelable.getNotification());
-        }
-
         // setup view pager
         setupViewPager(mViewPager);
         // setup tab layout
@@ -182,34 +175,6 @@ public class ResultActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Constance.RESULT_UPDATEUSER){
             personalFragment.requestPersonalInfo();
-        }
-    }
-
-    private void processNotification(Notification notification) {
-        switch (notification.pushType()) {
-            case NotificationConfig.PushType.PRIVATE_MESSAGE:
-                String message = notification.message();
-                String userName = message.substring(0, message.indexOf(":"));
-                Log.d("ReceiveNotification", message);
-                start(this, MessageActivity.class, MessageScreen.instance(userName, notification.senderID()));
-            case NotificationConfig.PushType.BOOK_ACCEPTED:
-                break;
-            case NotificationConfig.PushType.REQUEST_BORROW:
-            case NotificationConfig.PushType.BOOK_BORROWED:
-            case NotificationConfig.PushType.BOOK_INFORM_LENT:
-            case NotificationConfig.PushType.BOOK_INFORM_RETURN:
-            case NotificationConfig.PushType.BOOK_REJECTED:
-            case NotificationConfig.PushType.BOOK_INFORM_LOST:
-            case NotificationConfig.PushType.BOOK_REQUEST_CANCEL:
-
-                break;
-            case NotificationConfig.PushType.BOOK_INFORM_BORROW:
-            case NotificationConfig.PushType.BOOK_REQUESTED_QUANTITY:
-
-                break;
-            default:
-                break;
-
         }
     }
 }

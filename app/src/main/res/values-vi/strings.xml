@@ -1,41 +1,143 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">GAT</string>
 
-    <string name="tab_home">Trang Chủ</string>
+    <!-- facebook login strings for GatEx-->
+    <!--<string name="facebook_app_id">1130625350393376</string>-->
+
+    <!-- REAL -->
+    <string name="facebook_app_id">1937935059771206</string>
+    <string name="twitter_api_secret">iiUTGYNsXTpwhtmGVIfxEtkBhVHl6VLNrKD4hDxZ2fwNyk9Jdl</string>
+    <string name="twitter_api_key">gKxGJeazBQC8Mk5AwLZeMUxcC</string>
+    <string name="map_api_key">AIzaSyB6iy69TsVPpstHblohdVn7mGnIrETCSLo</string>
+
+    <!-- DEV -->
+    <!--<string name="facebook_app_id">936889173084630</string>-->
+
+    <string name="hintSearch">Search book</string>
+
+    <string name="start_login_btn">Login</string>
+    <string name="start_register_btn">Register</string>
+
+    <string name="login_title">Login</string>
+    <string name="login_bysocial_title">Login by social account</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_button">Login</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+
+    <string name="login_email_empty">Email is empty</string>
+    <string name="login_email_invalid">Email is invalid</string>
+    <string name="login_password_empty">Password is empty</string>
+    <string name="login_password_length">Password length is not valid</string>
+
+    <string name="login_fail_title">Login failed</string>
+    <string name="login_fail_mes">User name or password is wrong. Check it again</string>
+    <string name="login_forgot_title">Forgot password</string>
+    <string name="forgot_sendreq_btn">Send request</string>
+    <string name="forgot_sendreq_message">Request will be sent to email</string>
+    <string name="forgot_inputtoken_message">Please input token sent to email</string>
+    <string name="forgot_inputpass_message">Please input new password</string>
+    <string name="forgot_inputtoken_hint">Token has 6 numbers</string>
+    <string name="forgot_inputtoken_length">Correct token</string>
+    <string name="verify_token_btn">Verify token</string>
+    <string name="reset_pass_btn">Change password</string>
+
+    <string name="register_title">Register</string>
+    <string name="register_btn">Register</string>
+    <string name="register_google_btn">Register with google account</string>
+    <string name="register_face_btn">Register with facebook account</string>
+    <string name="register_twitter_btn">Register with twitter account</string>
+
+    <string name="login_social_cancel">Login failed.</string>
+    <string name="register_policy">GAT terms and policy</string>
+    <string name="authenticating">Authenticating...</string>
+    <string name="register_update_info_btn">Finish register</string>
+    <string name="name_field_null">Name is required</string>
+    <string name="btn_add_location">Save location</string>
+    <string name="btn_pass_over">Next</string>
+
+    <!-- For map -->
+    <string name="title_activity_maps">Current Place Details</string>
+    <string name="default_info_title">Hanoi Capital</string>
+    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
+    <string name="option_get_place">Get place</string>
+    <string name="pick_place">Choose a place</string>
+    <string name="app_tour"><u>Tour the application without account</u></string>
+    <string name="intro_title_1">Reader connection</string>
+    <string name="intro_content_1">Discover the potential book shelf around you by using GaT.</string>
+    <string name="intro_title_2">Book sharing</string>
+    <string name="intro_content_2">Share your bookcase to get more new readers and exchange good books.</string>
+    <string name="intro_title_3">Sharing book information</string>
+    <string name="intro_content_3">You can get review of the other reader and recommends from GaT to choose the right book.</string>
+    <string name="sending_failed">Sending failed</string>
+    <string name="sending">Sending...</string>
+    <string name="verifying">Verifying...</string>
+    <string name="verify_failed">Token verify failed</string>
+    <string name="pass_reseting">Changing...</string>
+    <string name="reset_pass_failed">Reset password failed.</string>
+    <string name="register_failed">Register failed</string>
+    <string name="map_connection_failed">Cannot connect to map service.</string>
+    <string name="error_auto_place">Cannot detect place.</string>
+    <string name="service_not_available">Service is not availabe</string>
+    <string name="invalid_lat_long_used">Location is invalid</string>
+    <string name="no_address_found">Address is not found</string>
+    <string name="error_detect_location">Cannot detect current location.</string>
+    <string name="update_location_failed">Cannot update location</string>
+    <string name="update_category_failed">Cannot update category</string>
+    <string name="updating">Updating...</string>
+    <string name="invalid_location">Please select location first.</string>
 
     <!-- Book category -->
-    <string name="category_1">Sách văn học</string>
-    <string name="category_2">Sách kĩ năng</string>
-    <string name="category_3">Sách kinh tế</string>
-    <string name="category_4">Sách lịch sử-địa lý</string>
-    <string name="category_5">Sách nghệ thuật</string>
-    <string name="category_6">Sách tôn giáo</string>
-    <string name="category_7">Sách thiếu nhi</string>
-    <string name="category_8">Truyện tranh</string>
-    <string name="category_9">Sách khoa học</string>
-    <string name="category_10">Sách giáo khoa</string>
-    <string name="category_11">Sách giáo trình ĐH</string>
-    <string name="category_12">Sách ngoại ngữ</string>
-    <string name="category_13">Mẹ và bé</string>
-    <string name="category_14">Tạp chí</string>
-    <string name="category_15">Tổng hợp</string>
-    <string name="btn_add_category">Thêm vào loại sách</string>
-    <string name="register_category_header">Loại sách yêu thích</string>
+    <string name="category_1">Literary</string>
+    <string name="category_2">Skill</string>
+    <string name="category_3">Business</string>
+    <string name="category_4">History&amp;Geography</string>
+    <string name="category_5">Art&amp;Photography</string>
+    <string name="category_6">Religion&amp;Spirituality</string>
+    <string name="category_7">Children</string>
+    <string name="category_8">Comic</string>
+    <string name="category_9">Science</string>
+    <string name="category_10">Schoolbook</string>
+    <string name="category_11">Textbook</string>
+    <string name="category_12">Language&amp;Dictionary</string>
+    <string name="category_13">Mother&amp;Children</string>
+    <string name="category_14">Magazine</string>
+    <string name="category_15">General</string>
+    <string name="btn_add_category">Add category</string>
+    <string name="register_category_header">Favourite category</string>
 
-    <!-- suggession text -->
+    <string name="scan_barcode_header">Scan barcode</string>
+    <string name="scan_barcode_guide">Move camera to barcode area\nto scan barcode</string>
+    <string name="btn_turn_on_light">Turn on light</string>
+    <string name="has_no_flash">Device has no compatible flash.</string>
+    <string name="btn_turn_off_light">Turn off flash</string>
+    <string name="isbn_invalid">Barcode is not valid.</string>
+    <string name="error_throw">Error happened.</string>
+    <string name="tab_home">Home page</string>
+    <string name="tab_personal">Personal</string>
+    <string name="tab_scanbarcode">Scan ISBN</string>
+    <string name="tab_notification">Notification</string>
+    <string name="tab_setting">Setting</string>
+    <string name="message_header">Message</string>
+    <string name="send_message_btn">Send</string>
+
+    <!-- suggestion text -->
     <string name="share_near_me">Chia sẻ sách gần bạn</string>
     <string name="cover_content_description">Book Image Cover</string>
+    <string name="iv_back_description">Back</string>
+    <string name="iv_share_description">Share</string>
     <string name="most_search_by_user">Sách tìm kiếm nhiều nhất</string>
     <string name="suggest">Đề xuất</string>
-    <string name="view_more">Xem thêm </string>
+    <string name="view_more">View more </string>
+    <string name="ic_chat_description">Chat</string>
     <string name="book_lend">Sách cho mượn</string>
     <string name="book_reading">Sách đang đọc</string>
 
-    <string name="cancel">Hủy</string>
+    <string name="cancel">Cancel</string>
 
-    <string name="msg_allow_location">Để thấy được người chia sẻ sách ở gần, ứng dụng cần bạn cho phép truy cập vị trí.</string>
+
+    <string name="msg_allow_location">To see all of users sharing book around of you. You need enable location permission!</string>
     <string name="msg_no_user_near">Không có người chia sẻ gần bạn, nhấp xem thêm để hiển thị nhiều hơn. </string>
-
     <string name="total_comments">Lượt nhận xét</string>
     <string name="history">Lịch sử</string>
     <string name="show_count_search_result">Hiển thị %1$d kết quả tìm kiếm</string>
@@ -43,6 +145,7 @@
     <string name="tab_book_author">Tác giả</string>
     <string name="tab_user_name">Người dùng</string>
 
+    <!-- book details -->
     <string name="book_detail">Thông tin sách</string>
     <string name="book_description">Nội dung sách</string>
     <string name="comment">Bình luận</string>
@@ -55,7 +158,6 @@
     <string name="book_in_sharing">Đang được mượn</string>
     <string name="borrow_book">Mượn sách</string>
     <string name="wait_to_borrow">Đợi mượn</string>
-
     <string name="add_to_list_reading_book">Thêm vào danh sách đọc</string>
     <string name="want_to_read">Muốn đọc</string>
     <string name="reading_book">Đang đọc</string>
@@ -74,6 +176,29 @@
     <string name="post_the_share">ĐĂNG CHIA SẺ</string>
     <string name="remove_from_reading_list">Xóa khỏi danh sách đọc</string>
     <string name="ask_remove_from_reading_list">Bạn muốn xóa cuốn sách này khỏi danh sách sách đọc?</string>
+    <string name="book_not_found">The ISBN is not found on our system.</string>
+    <string name="isbn_invalid_message">Your ISBN is not valid. Please try again with another book.</string>
+    <string name="inputLocationHint">Enter your location</string>
 
+    <!-- notification -->
+    <string name="notice">Thông báo</string>
+    <string name="need_accept_borrow">Muốn mượn sách</string>
+    <string name="message_to_you">Gửi tin nhắn tới bạn</string>
+    <string name="people_count_sharing_book">Có %1$d người đang cho mượn sách </string>
+    <string name="you_have_count_message_read">Bạn có %1$d tin nhắn chưa đọc</string>
+    <string name="someone_request_borrow">Gửi yêu cầu mượn sách \“%1$s\”</string>
+    <string name="borrow_unlucky">Sách <b>"%1$s"</b> đã được cho người khác mượn</string>
+    <string name="borrow_accept">Đồng ý cho bạn mượn sách \“ %1$s \”</string>
+    <string name="notice_has_borrow">Thông báo bạn đã mượn sách \“%1$s \”</string>
+    <string name="notice_borrow_needed">Thông báo bạn trả sách \“%1$s \”</string>
+    <string name="notice_borrow_refuse">Từ chối cho bạn mượn sách \“%1$s \”</string>
+    <string name="notice_lost_book">Thông báo bạn đã làm mất sách \“%1$s \”</string>
+    <string name="notice_your_total">Bạn đang mượn %1$d quyển sách từ người dùng khác.</string>
+    <string name="notice_total_request">Có %1$d người gửi yêu cầu mượn sách \“%2$s \”</string>
+    <string name="notice_borrow_cancel">Huỷ yêu cầu mượn sách \“%1$s \”</string>
+    <string name="login_error_header">Login failed</string>
+    <string name="register_error_header">Register failed</string>
+    <string name="twitter_description">Login with twitter</string>
+    <string name="error_ok_btn">OK</string>
 
 </resources>

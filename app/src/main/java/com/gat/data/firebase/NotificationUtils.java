@@ -122,15 +122,11 @@ public class NotificationUtils {
     }
 
     private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, long timeStamp, RemoteViews remoteViews) {
-
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
-        inboxStyle.addLine(message);
-
         Notification notification;
         notification = mBuilder.setSmallIcon(icon)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setContent(remoteViews)
+                .setAutoCancel(true)
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

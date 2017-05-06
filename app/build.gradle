@@ -53,6 +53,12 @@ android {
             keyAlias                    "androiddebugkey"
             keyPassword                 "android"
         }
+        release {
+            storeFile                   file("release.jks")
+            storePassword               "android"
+            keyAlias                    "androidreleasekey"
+            keyPassword                 "android"
+        }
     }
 
     dexOptions {
@@ -103,7 +109,7 @@ android {
 
         prod {
             minSdkVersion               configuration.minimumSdkVersion
-            multiDexEnabled             false
+            multiDexEnabled             true
             buildConfigField            'boolean', 'MULTI_DEX', 'false'
         }
     }
