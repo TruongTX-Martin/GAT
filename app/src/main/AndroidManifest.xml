@@ -84,6 +84,7 @@
         </activity>
 
         <activity android:name=".feature.main.MainActivity" >
+
         </activity>
 
         <activity android:name=".feature.suggestion.nearby_user.ShareNearByUserDistanceActivity" >

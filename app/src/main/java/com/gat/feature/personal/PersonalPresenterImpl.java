@@ -1,5 +1,8 @@
 package com.gat.feature.personal;
 
+import android.util.Log;
+
+import com.gat.common.util.MZDebug;
 import com.gat.data.exception.LoginException;
 import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
@@ -78,6 +81,9 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private final Subject<String> changeStatusError;
     private UseCase<ChangeStatusResponse> changeStatusUsecase;
 
+    private final UseCase<User> loadLocalUser;
+    private boolean isLogin;
+
     public PersonalPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
@@ -107,6 +113,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         this.changeStatusError = PublishSubject.create();
         changeStatusResultSubject = PublishSubject.create();
         changeStatusInputSubject = BehaviorSubject.create();
+
+        loadLocalUser = useCaseFactory.getUser();
+
+        isLogin = false;
     }
 
     @Override
@@ -129,8 +139,24 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         changeStatusDisposable = new CompositeDisposable(
                 changeStatusInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getChangeStatus)
         );
+        // TODO 170506 do not start get personal information here
         //start get personal data
-        personalInputSubject.onNext("");
+        //personalInputSubject.onNext("");
+        loadLocalUser.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    MZDebug.w("local login: " + user.isValid());
+                    if (user.isValid()) {
+                        isLogin = true;
+                    } else {
+                        isLogin = false;
+                    }
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
     }
 
     @Override
@@ -144,7 +170,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestChangeStatus(RequestStatusInput input) {
-        changeStatusInputSubject.onNext(input);
+        if (isLogin)
+            changeStatusInputSubject.onNext(input);
     }
 
     @Override
@@ -159,7 +186,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestPersonalInfor(String input) {
-        personalInputSubject.onNext("");
+        if (isLogin)
+            personalInputSubject.onNext("");
     }
 
     @Override
@@ -174,7 +202,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestBookInstance(BookInstanceInput input) {
-        bookInstanceInputSubject.onNext(input);
+        if (isLogin)
+            bookInstanceInputSubject.onNext(input);
     }
 
     @Override
@@ -189,7 +218,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestChangeBookSharingStatus(BookChangeStatusInput input) {
-        changeBookSharingStatusInputSubject.onNext(input);
+        if (isLogin)
+            changeBookSharingStatusInputSubject.onNext(input);
     }
 
     @Override
@@ -204,7 +234,9 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestReadingBooks(BookReadingInput input) {
-        readingBookInputSubject.onNext(input);
+        if (isLogin)
+            readingBookInputSubject.onNext(input);
+
     }
 
     @Override
@@ -219,7 +251,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestBookRequests(BookRequestInput input) {
-        requestBookInputSubject.onNext(input);
+        if (isLogin)
+            requestBookInputSubject.onNext(input);
     }
 
     @Override

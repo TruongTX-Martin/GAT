@@ -58,12 +58,12 @@ public class SignInFirebaseImpl implements SignInFirebase {
 
         firebaseAuth = FirebaseAuth.getInstance();
         result = PublishSubject.create();
-        loginSubject = BehaviorSubject.create();
+        loginSubject = PublishSubject.create();
 
         authStateListener = firebaseAuth12 -> {
             Log.d(TAG, "StateChanged");
             firebaseUser = firebaseAuth12.getCurrentUser();
-            if (firebaseUser != null) {
+            if (firebaseUser != null && localUserDataSourceLazy.get().loadUser().blockingFirst().isValid()) {
                 result.onNext(true);
                 String fireBaseToken = FirebaseInstanceId.getInstance().getToken();
                 Log.d("FireBaseToken:", fireBaseToken);
@@ -117,6 +117,8 @@ public class SignInFirebaseImpl implements SignInFirebase {
                         }, throwable -> {
                             throwable.printStackTrace();
                         });
+                    } else {
+                        firebaseAuth.signOut();
                     }
                 })
         );

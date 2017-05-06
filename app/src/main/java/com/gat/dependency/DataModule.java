@@ -66,6 +66,11 @@ public class DataModule {
                                 requestBuilder.addHeader("Accept-Language", language);
                             Request request = requestBuilder.build();
                             okhttp3.Response response = chain.proceed(request);
+                            if (response.code() == ServerResponse.HTTP_CODE.TOKEN) {
+                                userDataSource.persitUser(null).subscribe();
+                                userDataSource.storeLoginToken(null);
+                                throw new LoginException(ServerResponse.TOKEN_CHANGED);
+                            }
                             return response;
                         } catch (SocketTimeoutException socketEx) {
                             socketEx.printStackTrace();

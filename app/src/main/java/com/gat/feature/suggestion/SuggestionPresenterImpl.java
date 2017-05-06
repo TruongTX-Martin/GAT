@@ -98,7 +98,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
                 .returnOn(schedulerFactory.main())
                 .onNext(user -> {
                     MZDebug.w("local login: " + user.isValid());
-                    if (user.isValid()) {
+                    if (!user.isValid()) {
                         doSuggestBookWithoutLogin();
                     } else {
                         doSuggestBookAfterLogin();

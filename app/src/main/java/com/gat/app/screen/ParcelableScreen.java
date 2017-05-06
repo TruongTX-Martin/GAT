@@ -169,11 +169,13 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof NotificationScreen) {
 
-        }else if (screen instanceof PersonalUserScreen) {
+        } else if (screen instanceof PersonalUserScreen) {
             PersonalUserScreen commentScreen = (PersonalUserScreen) screen;
             dest.writeParcelable(commentScreen.userResponse(), flags);
+        } else if (screen instanceof BookDetailScreen) {
+            BookDetailScreen bookDetailScreen = (BookDetailScreen)screen;
+            dest.writeInt(bookDetailScreen.editionId());
         }
-
         else {
             throw new IllegalArgumentException("Not implement serialization for " + screen);
         }

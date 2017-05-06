@@ -46,7 +46,6 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
 
-
         this.bookUserSharingError = PublishSubject.create();
         bookUserSharingResultSubject = PublishSubject.create();
         bookUserSharingInputSubject = BehaviorSubject.create();
@@ -54,8 +53,6 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         this.bookUserReadingError = PublishSubject.create();
         bookUserReadingResultSubject = PublishSubject.create();
         bookUserReadingInputSubject = BehaviorSubject.create();
-
-
     }
 
     @Override

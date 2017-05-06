@@ -486,7 +486,7 @@ public class FirebaseServiceImpl implements FirebaseService{
     private void sendMes(Pair<Integer, MessageTable> mes) {
         int toUserId = mes.first;
         int fromUserId = (int)mes.second.getUserId();
-        String groupId = (fromUserId < toUserId) ? (fromUserId + "" + toUserId) : (toUserId + "" + fromUserId);
+        String groupId = CommonCheck.getGroupId(fromUserId, toUserId);
 
         if (databaseReference.child(GROUP_LEVEL).child(groupId) != null) {
 
@@ -514,7 +514,7 @@ public class FirebaseServiceImpl implements FirebaseService{
             if (checkFirebaseIntialized()) {
                 int fromUserId = mUserId;
                 int toUserId = userId;
-                String groupId = (fromUserId < toUserId) ? (fromUserId + "" + toUserId) : (toUserId + "" + fromUserId);
+                String groupId = CommonCheck.getGroupId(fromUserId, toUserId);
                 // Add groups
                 databaseReference.child(GROUP_LEVEL).push().setValue(groupId);
                 databaseReference.child(GROUP_LEVEL).child(groupId).child(Integer.toString(fromUserId)).setValue(true);

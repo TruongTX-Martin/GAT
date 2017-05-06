@@ -96,8 +96,10 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.cameraPermision = checkPermission(REQUEST_CAMERA);
         }
+
+        scannerView.setResultHandler(this);
+
         if (this.cameraPermision) {
-            scannerView.setResultHandler(this);
             if (getUserVisibleHint()) {
                 scannerView.startCamera();
                 scannerView.setAutoFocus(true);
@@ -131,13 +133,15 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
         ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, REQUEST_CAMERA);
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CAMERA:
+                Log.d(TAG, "RequestCameraResult:" + grantResults.length);
                 if (grantResults.length > 0) {
                     boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     if (cameraAccepted){
-                        scannerView.setResultHandler(this);
+                        cameraPermision = true;
                         if (getUserVisibleHint()) {
                             scannerView.setAutoFocus(true);
                             scannerView.startCamera();
@@ -174,7 +178,7 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d(TAG, "UserVisibleHint:"+isVisibleToUser);
+        Log.d(TAG, "UserVisibleHint:"+isVisibleToUser + "," + cameraPermision);
         if (!isVisibleToUser && scannerView != null) {
             scannerView.setFlash(false);
             isTorchOn = false;

@@ -271,10 +271,7 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookRequest(input.getParamSharing(), input.getParamBorrow(), input.getPage(), input.getPer_page());
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse.data();
         });
@@ -285,10 +282,7 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.changeBookSharingStatus(input.getInstanceId(), input.getSharingStatus());
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse.data();
         });
@@ -320,10 +314,7 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data<User>>>> responseObservable = api.getPersonalInformation();
         return responseObservable.map(response -> {
-            ServerResponse<Data<User>> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<Data<User>> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse.data();
         });
@@ -334,10 +325,7 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookInstance(input.isSharingFilter(), input.isNotSharingFilter(), input.isLostFilter(), input.getPage(), input.getPer_page());
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse.data();
         });
@@ -348,10 +336,7 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.getReadingBooks(input.getUserId(), input.isReadingFilter(), input.isToReadFilter(), input.isReadFilter(), input.getPage(), input.getPer_page());
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse.data();
         });
@@ -363,10 +348,7 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.updateUserInfo(input.getName(),input.getImageBase64(),input.isChangeImage());
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return response.message();
         });
@@ -377,10 +359,7 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookUserSharing(input.getUserId(),input.getOwnerId(),input.getPage(),input.getPer_page());
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse.data();
         });
@@ -391,10 +370,7 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.getBookDetail(input);
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
             return serverResponse.data();
         });
@@ -483,12 +459,8 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.requestBookByBorrower(input.getRecordId(),input.getCurrentStatus(),input.getNewStatus());
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }else {
-                serverResponse.code(response.code());
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
+            serverResponse.code(response.code());
             ChangeStatusResponse statusResponse = new ChangeStatusResponse();
             statusResponse.setMessage(response.message());
             statusResponse.setStatusCode(response.code());
@@ -501,12 +473,8 @@ public class DebugUserDataSource implements UserDataSource {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.requestBookByOwner(input.getRecordId(),input.getCurrentStatus(),input.getNewStatus());
         return responseObservable.map(response -> {
-            ServerResponse<Data> serverResponse = response.body();
-            if (serverResponse == null) {
-                serverResponse = ServerResponse.BAD_RESPONSE;
-            }else {
-                serverResponse.code(response.code());
-            }
+            ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
+            serverResponse.code(response.code());
             ChangeStatusResponse statusResponse = new ChangeStatusResponse();
             statusResponse.setMessage(response.message());
             statusResponse.setStatusCode(response.code());

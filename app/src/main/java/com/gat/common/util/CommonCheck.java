@@ -207,6 +207,15 @@ public class CommonCheck {
         }
     }
 
+    public static String getNameFromEmail(String email) {
+        if (validateEmail(email).first) {
+            return email.substring(0, email.indexOf('@'));
+        } else {
+            return Strings.EMPTY;
+        }
+    }
+
+
     public static boolean isAdmin(int userId) {
         return userId == ADMIN_USER_ID;
     }

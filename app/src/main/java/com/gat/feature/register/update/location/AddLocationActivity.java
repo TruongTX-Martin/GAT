@@ -510,6 +510,7 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
             if (!addresses.isEmpty()) {
                 String currentAddress = Strings.EMPTY;
                 for (int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++) {
+                    if (i > 0) currentAddress += ",";
                     currentAddress += addresses.get(0).getAddressLine(i);
                 }
                 if (!Strings.isNullOrEmpty(currentAddress)) {

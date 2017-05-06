@@ -232,7 +232,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                 String error;
                 if (result.second == CommonCheck.Error.FIELD_EMPTY) {
                     error = getString(R.string.login_password_empty);
-                } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
+                } else if (result.second == CommonCheck.Error.PASSWORD_LENGTH) {
                     error = getString(R.string.login_password_length);
                 } else {
                     error = Strings.EMPTY;
@@ -241,7 +241,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                 return;
             }
             // Get sender from head of email
-            String name = email.substring(0, email.indexOf('@'));
+            String name = CommonCheck.getNameFromEmail(email);
             progressSubject.onNext(true);
             getPresenter().setIdentity(
                     EmailLoginData.instance(email, password, name, Strings.EMPTY, LoginData.Type.EMAIL)

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/header"
-        android:background="@color/colorWhite">
+        android:background="@drawable/bg_border_bottom">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +20,6 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/shape_line_1dp"
             android:id="@+id/message_header_text"/>
     </LinearLayout>
     <RelativeLayout

@@ -1,6 +1,5 @@
 package com.gat.feature.main;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,17 +11,15 @@ import android.view.KeyEvent;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.app.receiver.NotificationReceiver;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.util.Constance;
 import com.gat.common.util.NotificationConfig;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.firebase.entity.NotificationParcelable;
 import com.gat.feature.message.MessageActivity;
-import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.notification.NotificationFragment;
-import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
@@ -33,11 +30,10 @@ import java.lang.annotation.RetentionPolicy;
 import butterknife.BindView;
 
 /**
- * Created by mryit on 3/26/2017.
+ * Created by ducbtsn on 5/6/17.
  */
 
-public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
-
+public class ResultActivity extends ScreenActivity<MainScreen, MainPresenter> {
     @Retention(RetentionPolicy.SOURCE)
     public @interface TAB_POS {
         int TAB_HOME            = 0;
@@ -53,7 +49,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
 
-    public static MainActivity instance;
     private PersonalFragment personalFragment;
 
     @Override
@@ -81,7 +76,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onCreate(savedInstanceState);
 
         ClientUtils.context = getApplicationContext();
-        instance = this;
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -96,7 +90,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         mTabLayout.setupWithViewPager(mViewPager);
         setupTabLayoutIcons(mTabLayout);
         // set up icon high light
-        mTabLayout.getTabAt(TAB_POS.TAB_HOME).setIcon(R.drawable.home_ic_selected);
+        mTabLayout.getTabAt(MainActivity.TAB_POS.TAB_HOME).setIcon(R.drawable.home_ic_selected);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -154,28 +148,28 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     }
 
     private void setupTabLayoutIcons (TabLayout tabLayout) {
-        tabLayout.getTabAt(TAB_POS.TAB_HOME).setIcon(R.drawable.home_ic);
-        tabLayout.getTabAt(TAB_POS.TAB_PERSONAL).setIcon(R.drawable.personal_ic);
-        tabLayout.getTabAt(TAB_POS.TAB_SCAN).setIcon(R.drawable.scan_ic);
-        tabLayout.getTabAt(TAB_POS.TAB_NOTIFICATION).setIcon(R.drawable.notic_ic);
-        tabLayout.getTabAt(TAB_POS.TAB_SETTING).setIcon(R.drawable.setting_ic);
+        tabLayout.getTabAt(MainActivity.TAB_POS.TAB_HOME).setIcon(R.drawable.home_ic);
+        tabLayout.getTabAt(MainActivity.TAB_POS.TAB_PERSONAL).setIcon(R.drawable.personal_ic);
+        tabLayout.getTabAt(MainActivity.TAB_POS.TAB_SCAN).setIcon(R.drawable.scan_ic);
+        tabLayout.getTabAt(MainActivity.TAB_POS.TAB_NOTIFICATION).setIcon(R.drawable.notic_ic);
+        tabLayout.getTabAt(MainActivity.TAB_POS.TAB_SETTING).setIcon(R.drawable.setting_ic);
     }
 
     private void selectTab(TabLayout.Tab tab, boolean select) {
         switch (tab.getPosition()) {
-            case TAB_POS.TAB_HOME:
+            case MainActivity.TAB_POS.TAB_HOME:
                 tab.setIcon(select ? R.drawable.home_ic_selected : R.drawable.home_ic);
                 break;
-            case TAB_POS.TAB_PERSONAL:
+            case MainActivity.TAB_POS.TAB_PERSONAL:
                 tab.setIcon(select ? R.drawable.personal_ic_selected : R.drawable.personal_ic);
                 break;
-            case TAB_POS.TAB_SCAN:
+            case MainActivity.TAB_POS.TAB_SCAN:
                 tab.setIcon(select ? R.drawable.scan_ic_selected : R.drawable.scan_ic);
                 break;
-            case TAB_POS.TAB_NOTIFICATION:
+            case MainActivity.TAB_POS.TAB_NOTIFICATION:
                 tab.setIcon(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
                 break;
-            case TAB_POS.TAB_SETTING:
+            case MainActivity.TAB_POS.TAB_SETTING:
                 tab.setIcon(select ? R.drawable.setting_ic_selected : R.drawable.setting_ic);
                 break;
             default:

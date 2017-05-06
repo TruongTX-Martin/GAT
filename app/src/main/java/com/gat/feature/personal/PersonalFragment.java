@@ -107,7 +107,6 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         context = getActivity().getApplicationContext();
         rootView = inflater.inflate(R.layout.layout_personal_activity,
                 container, false);
-        initView();
 
         disposablesPersonal = new CompositeDisposable(getPresenter().getResponsePersonal().subscribe(this::getUserInfoSuccess),
                 getPresenter().onErrorPersonal().subscribe(this::getUserInfoError));
@@ -128,11 +127,14 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
                 getPresenter().onErrorChangeStatus().subscribe(this::getBookDetailError));
 
+        initView();
+
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
         handleEvent();
+
         return rootView;
     }
 
@@ -231,11 +233,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     public void requestPersonalInfo(){
-        try {
-            getPresenter().requestPersonalInfor("");
-        }catch (Exception e){
-
-        }
+        getPresenter().requestPersonalInfor("");
     }
 
     //handle data personal return

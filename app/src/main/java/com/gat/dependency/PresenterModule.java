@@ -151,8 +151,14 @@ public class PresenterModule {
         return new PersonalUserPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
+    //@Provides
+    //BookDetailPresenter provideBookDetailRequestPresenter(UseCaseFactory useCaseFactory,
+    //                                                            SchedulerFactory schedulerFactory) {
+    //    return new BookDetailPresenterImpl(useCaseFactory, schedulerFactory);
+    //}
+
     @Provides
-    BookDetailSenderPresenter provideBookDetailRequestPresenter(UseCaseFactory useCaseFactory,
+    BookDetailSenderPresenter getBookDetailSenderPresenter( UseCaseFactory useCaseFactory,
                                                                 SchedulerFactory schedulerFactory) {
         return new BookDetailSenderPresenterImpl(useCaseFactory, schedulerFactory);
     }

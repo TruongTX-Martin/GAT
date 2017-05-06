@@ -2,6 +2,7 @@ package com.gat.feature.start;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Strings;
+import com.gat.data.firebase.entity.NotificationParcelable;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
@@ -86,6 +88,13 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
                 })
 
         );
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            NotificationParcelable parcelable = intent.getExtras() != null ? intent.getExtras().getParcelable("data") : null;
+            if (parcelable != null) Log.d("Parcelable", parcelable.toString());
+                //processNotification(parcelable.getNotification());
+        }
 
         // array index of all welcome sliders
         arrLayoutIdx = new int[]{

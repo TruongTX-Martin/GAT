@@ -2,6 +2,7 @@ package com.gat.repository.impl;
 
 import android.location.Address;
 
+import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
 import com.gat.data.firebase.SignInFirebase;
 import com.gat.data.response.DataResultListResponse;
@@ -59,7 +60,6 @@ public class UserRepositoryImpl implements UserRepository {
     public Observable<User> getUser() {
         return Observable.defer(() -> localUserDataSourceLazy.get().loadUser()
                 .concatWith(userSubject)
-                .doOnNext(user ->signInFirebase.login())
                 .distinctUntilChanged());
     }
 
@@ -172,7 +172,7 @@ public class UserRepositoryImpl implements UserRepository {
                     EmailLoginData emailLoginData = EmailLoginData.instance(
                             email,
                             password,
-                            email.substring(0, email.indexOf('@')),
+                            CommonCheck.getNameFromEmail(email),
                             Strings.EMPTY,
                             LoginData.Type.EMAIL,
                             response.data().getFirebasePassword()

@@ -71,10 +71,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getEditInfoPresenter();
         }else if (key instanceof PersonalUserScreen){
             return (P) presenterComponent.getPersonalUserPresenter();
-        }else if (key instanceof BookDetailSenderPresenter) {
-            return (P) (P) presenterComponent.getBookDetailPresenter();
-        }else if (key instanceof BookDetailSenderScreen) {
-            return (P) presenterComponent.getBookDetailPresenter();
+        } else if (key instanceof BookDetailSenderScreen) {
+            return (P) presenterComponent.getBookDetailSenderPresenter();
         }else  if(key instanceof BookDetailOwnerScreen) {
             return (P) presenterComponent.getBookDetailBorrowPresenter();
         }
