@@ -89,7 +89,7 @@
     </style>
 
 
-    <style name="ButtonDrawLeftRight" parent="Base.TextAppearance.AppCompat.Button" >
+    <style name="ButtonDrawLeftRight" >
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:paddingRight">@dimen/paddingLarge</item>
         <item name="android:drawablePadding">24dp</item>

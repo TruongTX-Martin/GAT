@@ -4,8 +4,12 @@
 
     <item
         android:id="@+id/draw_right_arrow"
-        android:height="18dp"
         android:width="10dp"
-        android:drawable="@drawable/ic_arrow_right" />
+        android:height="18dp">
+
+        <bitmap android:src="@drawable/ic_arrow_right"
+            android:gravity="fill_horizontal|fill_vertical"/>
+
+    </item>
 
 </layer-list>

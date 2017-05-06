@@ -29,6 +29,12 @@ public class SettingFragment extends Fragment implements ISettingDelegate {
     @BindView(R.id.fl_setting)
     FrameLayout frameLayout;
 
+    private MainSettingFragment mainSettingFragment;
+    private AddEmailPasswordFragment addEmailPasswordFragment;
+    private ChangePasswordFragment changePasswordFragment;
+    private SocialConnectedFragment socialFacebook;
+    private SocialConnectedFragment socialTwitter;
+    private SocialConnectedFragment socialGoogle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,21 +52,20 @@ public class SettingFragment extends Fragment implements ISettingDelegate {
         // first page is main fragment page
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fl_setting, new MainSettingFragment(this));
+        transaction.replace(R.id.fl_setting, getMainSettingFragment());
         transaction.commit();
     }
 
-
     @Override
     public void goToMainSetting() {
-        Views.navigationToView(getActivity(), new MainSettingFragment(this), R.id.fl_setting,
-                R.anim.slide_in_right, R.anim.slide_out_left);
+        Views.navigationToView(getActivity(), getMainSettingFragment(),
+                R.id.fl_setting, R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override
     public void goToAddEmailPassword() {
-        Views.navigationToView(getActivity(), new AddEmailPasswordFragment(this), R.id.fl_setting,
-                R.anim.slide_in_left, R.anim.slide_out_right);
+        Views.navigationToView(getActivity(), getAddEmailPasswordFragment(),
+                R.id.fl_setting, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
@@ -70,31 +75,74 @@ public class SettingFragment extends Fragment implements ISettingDelegate {
 
     @Override
     public void goToChangePassword() {
-        Views.navigationToView(getActivity(), new ChangePasswordFragment(this), R.id.fl_setting,
-                R.anim.slide_in_left, R.anim.slide_out_right);
+        Views.navigationToView(getActivity(), getChangePasswordFragment(),
+                R.id.fl_setting, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
     public void goToFacebook() {
-        Views.navigationToView(getActivity(), new SocialConnectedFragment(this, TypeSocial.FACEBOOK), R.id.fl_setting,
-                R.anim.slide_in_left, R.anim.slide_out_right);
+        Views.navigationToView(getActivity(), getSocialFacebook(),
+                R.id.fl_setting, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
     public void goToTwitter() {
-        Views.navigationToView(getActivity(), new SocialConnectedFragment(this, TypeSocial.TWITTER), R.id.fl_setting,
-                R.anim.slide_in_left, R.anim.slide_out_right);
+        Views.navigationToView(getActivity(), getSocialTwitter(),
+                R.id.fl_setting, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
     public void goToGoogle() {
-        Views.navigationToView(getActivity(), new SocialConnectedFragment(this, TypeSocial.GOOGLE), R.id.fl_setting,
-                R.anim.slide_in_left, R.anim.slide_out_right);
+        Views.navigationToView(getActivity(), getSocialGoogle(),
+                R.id.fl_setting, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
     public void logout() {
 
+    }
+
+
+    private MainSettingFragment getMainSettingFragment() {
+        if (null == mainSettingFragment) {
+            mainSettingFragment = new  MainSettingFragment(this);
+        }
+        return mainSettingFragment;
+    }
+
+    private AddEmailPasswordFragment getAddEmailPasswordFragment() {
+        if (null == addEmailPasswordFragment) {
+            addEmailPasswordFragment = new AddEmailPasswordFragment(this);
+        }
+        return addEmailPasswordFragment;
+    }
+
+    private ChangePasswordFragment getChangePasswordFragment() {
+        if (null == changePasswordFragment) {
+            changePasswordFragment = new ChangePasswordFragment(this);
+        }
+        return changePasswordFragment;
+    }
+
+    private SocialConnectedFragment getSocialFacebook() {
+        if (null == socialFacebook) {
+            socialFacebook = new SocialConnectedFragment(this, TypeSocial.FACEBOOK);
+        }
+        return socialFacebook;
+    }
+
+    private SocialConnectedFragment getSocialTwitter() {
+        if (null == socialTwitter) {
+            socialTwitter = new SocialConnectedFragment(this, TypeSocial.TWITTER);
+        }
+        return socialTwitter;
+    }
+
+    private SocialConnectedFragment getSocialGoogle() {
+        if (null == socialGoogle) {
+            socialGoogle = new SocialConnectedFragment(this, TypeSocial.GOOGLE);
+        }
+        return socialGoogle;
     }
 
 
