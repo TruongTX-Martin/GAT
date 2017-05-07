@@ -27,22 +27,24 @@ public class NotificationAdapter extends ItemAdapter {
     @Retention(RetentionPolicy.SOURCE)
     @interface Type {
         int LOADING = 1;
-        int TIME_DISPLAY  = 2;
+        int TIME_DISPLAY = 2;
         int NOTIFY_ITEM = 3;
     }
 
     private OnItemNotifyClickListener listener;
 
-    public NotificationAdapter () {
+    public NotificationAdapter() {
         setReady();
     }
 
-    public void setOnItemNotifyClick (OnItemNotifyClickListener listener) {
+    public void setOnItemNotifyClick(OnItemNotifyClickListener listener) {
         this.listener = listener;
     }
 
     @Override
-    public @Type int getItemViewType(int position) {
+    public
+    @Type
+    int getItemViewType(int position) {
         Item item = getItemAt(position);
 
         if (item instanceof LoadingItem) {
@@ -85,44 +87,47 @@ public class NotificationAdapter extends ItemAdapter {
 
     public boolean setItems(List<NotifyEntity> list) {
 
-        if (list == null || list.isEmpty()) {
-            return false;
-        }
-
-        List<Item> listItems = new ArrayList<>();
-        NotificationItem item;
-        DateTimeItem timeHeader;
-
-        // add first item
-        String timeToday = DateTimeUtil.transformDate(list.get(0).beginTime());
-        timeHeader = DateTimeItem.instance(timeToday);
-        listItems.add(timeHeader);
-
-        item = NotificationItem.instance(list.get(0));
-        listItems.add(item);
-
-        // add next item to end of list.
-        for (int i=1, z=list.size(); i< z; i++) {
-            String[] string = list.get(i).beginTime().split(" ");
-            String[] stringPrev = list.get(i-1).beginTime().split(" ");
-
-            if ( ! string[0].equals(stringPrev[0])) {
-                timeHeader = DateTimeItem.instance(DateTimeUtil.transformDate(list.get(i).beginTime()));
-                listItems.add(timeHeader);
+        try {
+            if (list == null || list.isEmpty()) {
+                return false;
             }
 
-            item = NotificationItem.instance(list.get(i));
-            listItems.add(item);
-        }
+            List<Item> listItems = new ArrayList<>();
+            NotificationItem item;
+            DateTimeItem timeHeader;
 
-        setItem(listItems);
-        notifyDataSetChanged();
+            // add first item
+            String timeToday = DateTimeUtil.transformDate(list.get(0).beginTime());
+            timeHeader = DateTimeItem.instance(timeToday);
+            listItems.add(timeHeader);
+
+            item = NotificationItem.instance(list.get(0));
+            listItems.add(item);
+
+            // add next item to end of list.
+            for (int i = 1, z = list.size(); i < z; i++) {
+                String[] string = list.get(i).beginTime().split(" ");
+                String[] stringPrev = list.get(i - 1).beginTime().split(" ");
+
+                if (!string[0].equals(stringPrev[0])) {
+                    timeHeader = DateTimeItem.instance(DateTimeUtil.transformDate(list.get(i).beginTime()));
+                    listItems.add(timeHeader);
+                }
+
+                item = NotificationItem.instance(list.get(i));
+                listItems.add(item);
+            }
+
+            setItem(listItems);
+            notifyDataSetChanged();
+        } catch (Exception e) {
+        }
 
         return true;
     }
 
     public interface OnItemNotifyClickListener {
-        void onItemNotifyClick (NotifyEntity item);
+        void onItemNotifyClick(NotifyEntity item);
     }
 
 

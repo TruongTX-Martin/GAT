@@ -345,7 +345,7 @@ public interface GatApi {
     );
 
     @FormUrlEncoded
-    @POST("/share/create_request")
+    @POST("share/create_request")
     Observable<Response<ServerResponse<Data>>> requestBorrowBook (
             @Field("editionId") int editionId,
             @Field("ownerId") int ownerId
