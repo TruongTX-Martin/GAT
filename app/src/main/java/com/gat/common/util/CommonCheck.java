@@ -195,7 +195,7 @@ public class CommonCheck {
 
     public static String getDate(long time) {
         Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.setTimeInMillis(time);
         if (LOCAL_LOCALE == LOCALE.VN) {
             return (cal.get(Calendar.DAY_OF_MONTH) + " tháng" + (cal.get(Calendar.MONTH) + 1) + " năm "

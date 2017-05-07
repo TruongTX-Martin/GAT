@@ -16,8 +16,8 @@ public abstract class Notification {
     public abstract int pushType();
     public abstract String sound();
     public abstract int badge();
-    public abstract @Nullable Integer senderID();
-    public abstract @Nullable Integer requestID();
+    public abstract @Nullable Integer senderId();
+    public abstract @Nullable Integer requestId();
 
     public static Notification instance(String title, String message, int pushType, String sound, int badge, int senderId, int requestId) {
         return new AutoValue_Notification(title, message, pushType, sound, badge, senderId, requestId);

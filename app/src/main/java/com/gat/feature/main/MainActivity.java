@@ -196,7 +196,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
                 String message = notification.message();
                 String userName = message.substring(0, message.indexOf(":"));
                 Log.d("ReceiveNotification", message);
-                start(this, MessageActivity.class, MessageScreen.instance(userName, notification.senderID()));
+                start(this, MessageActivity.class, MessageScreen.instance(userName, notification.senderId()));
             case NotificationConfig.PushType.BOOK_ACCEPTED:
                 break;
             case NotificationConfig.PushType.REQUEST_BORROW:

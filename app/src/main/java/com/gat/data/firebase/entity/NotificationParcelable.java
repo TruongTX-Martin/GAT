@@ -50,8 +50,8 @@ public class NotificationParcelable implements Parcelable {
         dest.writeInt(notification.pushType());
         dest.writeString(notification.sound());
         dest.writeInt(notification.badge());
-        dest.writeInt(notification.senderID());
-        dest.writeInt(notification.requestID());
+        dest.writeInt(notification.senderId());
+        dest.writeInt(notification.requestId());
     }
 
     public Notification getNotification() {

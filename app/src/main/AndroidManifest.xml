@@ -32,7 +32,9 @@
             android:value="@string/twitter_api_key"
             />
         <activity android:name=".feature.message.MessageActivity">
-
+            <intent-filter>
+                <action android:name="com.gat.private_message"/>
+            </intent-filter>
         </activity>
 
         <activity android:name=".feature.message.GroupMessageActivity">

@@ -20,6 +20,7 @@ import com.google.gson.TypeAdapter;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,7 +59,15 @@ public class MessagingService extends FirebaseMessagingService {
 
         Intent pushNotification;
         NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-        pushNotification = new Intent(getApplicationContext(), MainActivity.class);
+        if (notification.pushType() == NotificationConfig.PushType.PRIVATE_MESSAGE) {
+            pushNotification = new Intent();
+            pushNotification.setAction("com.gat.private_message");
+            if (pushNotification.resolveActivity(getPackageManager()) != null) {
+                // TODO
+            }
+        } else {
+            pushNotification = new Intent(getApplicationContext(), MainActivity.class);
+        }
         pushNotification.putExtra("data", new NotificationParcelable(notification));
         notificationUtils.showNotificationMessage(message.getNotification().getTitle(),
                 message.getNotification().getBody(),
@@ -71,17 +80,19 @@ public class MessagingService extends FirebaseMessagingService {
     Notification parseNotification(RemoteMessage remoteMessage) {
         Notification notification = null;
         Map<String, String> data = remoteMessage.getData();
+        RemoteMessage.Notification noti = remoteMessage.getNotification();
+
         String title = remoteMessage.getNotification().getTitle();
         String message = remoteMessage.getNotification().getBody();
+        String sound = remoteMessage.getNotification().getSound();
+        int badge = data.containsKey("badge") ? Integer.parseInt(data.get("badge")) : 0;
         int pushType = data.containsKey("pushType") ? Integer.parseInt(data.get("pushType"))  : 0;
-        String sound = data.containsKey("sound") ? data.get("sound") : "default";
-        int badge = Integer.parseInt(data.containsKey("badge") ? data.get("badge") : "0");
-        Log.d(TAG, "RemoveMessage:" + data.toString());
+        Log.d(TAG, "RemoteMessage:" + data.toString());
         switch (pushType) {
             case NotificationConfig.PushType.PRIVATE_MESSAGE:
             case NotificationConfig.PushType.BOOK_ACCEPTED:
-                if (data.containsKey("senderID")) {
-                    int senderId = Integer.parseInt(data.get("senderID"));
+                if (data.containsKey("senderId")) {
+                    int senderId = Integer.parseInt(data.get("senderId"));
                     notification = Notification.instance(title, message, pushType, sound, badge, senderId, 0);
                 }
                 break;
@@ -92,8 +103,8 @@ public class MessagingService extends FirebaseMessagingService {
             case NotificationConfig.PushType.BOOK_REJECTED:
             case NotificationConfig.PushType.BOOK_INFORM_LOST:
             case NotificationConfig.PushType.BOOK_REQUEST_CANCEL:
-                if (data.containsKey("requestID")) {
-                    int requestId = Integer.parseInt(data.get("requestID"));
+                if (data.containsKey("requestId")) {
+                    int requestId = Integer.parseInt(data.get("requestId"));
                     notification = Notification.instance(title, message, pushType, sound, badge, 0, requestId);
                 }
                 break;
