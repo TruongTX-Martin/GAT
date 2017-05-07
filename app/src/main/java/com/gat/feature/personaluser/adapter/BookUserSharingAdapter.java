@@ -75,6 +75,19 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                 holder.imgExtend.setVisibility(View.VISIBLE);
                 holder.btnBorrow.setVisibility(View.GONE);
                 holder.btnWaitBorrow.setVisibility(View.GONE);
+                if(entity.getRecordStatus() == 0) {
+                    holder.txtStatus.setVisibility(View.VISIBLE);
+                    holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.wait_for_accept_borrow));
+                }else if(entity.getRecordStatus() == 1) {
+                    holder.txtStatus.setVisibility(View.VISIBLE);
+                    holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.wait_your_turn));
+                }else if (entity.getRecordStatus() == 2) {
+                    holder.txtStatus.setVisibility(View.VISIBLE);
+                    holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.is_connecting));
+                }else if (entity.getRecordStatus() == 3) {
+                    holder.txtStatus.setVisibility(View.VISIBLE);
+                    holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.is_borrowing));
+                }
             }
             holder.btnBorrow.setOnClickListener(new View.OnClickListener() {
                 @Override

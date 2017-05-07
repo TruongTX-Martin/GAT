@@ -68,6 +68,25 @@ public class BookSharingEntity {
     @SerializedName("requestingStatus")
     private int requestingStatus;
 
+    @SerializedName("recordStatus")
+    private int recordStatus;
+
+    public void setAvailableStatus(int availableStatus) {
+        this.availableStatus = availableStatus;
+    }
+
+    public void setRequestingStatus(int requestingStatus) {
+        this.requestingStatus = requestingStatus;
+    }
+
+    public void setRecordStatus(int recordStatus) {
+        this.recordStatus = recordStatus;
+    }
+
+    public int getRecordStatus() {
+        return recordStatus;
+    }
+
     private boolean isHeader = false;
 
     public BookSharingEntity() {

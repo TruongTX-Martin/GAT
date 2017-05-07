@@ -205,7 +205,16 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     private void borrowBookSuccess(Data data){
-        System.out.println(data);
+        if(data != null) {
+            if (!Strings.isNullOrEmpty(data.getMessage())) {
+                ClientUtils.showToast(data.getMessage());
+            }
+            BookSharingEntity entity = (BookSharingEntity) data.getDataReturn(BookSharingEntity.class);
+            if (entity != null) {
+                int editionId = entity.getEditionId();
+                fragmentBookUserSharing.refreshAdapterSharingBook(editionId);
+            }
+        }
     }
     private void getBookUserReadingSuccess(Data data){
         if(data != null){

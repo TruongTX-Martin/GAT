@@ -152,4 +152,8 @@ public class ClientUtils {
 
     }
 
+    public static String getStringLanguage(int i){
+        return context.getResources().getString(i);
+    }
+
 }
