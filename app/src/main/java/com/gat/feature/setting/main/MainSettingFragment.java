@@ -23,6 +23,8 @@ import io.reactivex.disposables.CompositeDisposable;
 @SuppressLint("ValidFragment")
 public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainSettingPresenter> {
 
+    public static final String KEY_BACK_TO_MAIN = "key_back_to_main";
+
     @BindView(R.id.button_add_email_password)
     RelativeLayout buttonAddEmailPassword;
 
@@ -73,6 +75,10 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         );
 
         getPresenter().loadUserInfo();
+
+        // update ui after back from another fragment
+        int key = getArguments().getInt(KEY_BACK_TO_MAIN);
+        Toast.makeText(mContext, "key: " + key, Toast.LENGTH_SHORT).show();
     }
 
     @Override

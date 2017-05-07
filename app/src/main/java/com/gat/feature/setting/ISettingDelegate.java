@@ -8,7 +8,7 @@ import com.gat.repository.entity.User;
 
 public interface ISettingDelegate {
 
-    void goToMainSetting ();
+    void goToMainSetting (int keyBackToMain);
 
     void goToAddEmailPassword ();
 

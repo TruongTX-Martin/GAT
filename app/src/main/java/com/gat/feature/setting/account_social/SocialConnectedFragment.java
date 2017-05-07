@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.feature.setting.ISettingDelegate;
+import com.gat.feature.setting.KeyBackToMain;
 
 import butterknife.OnClick;
 
@@ -67,7 +68,7 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
 
     @OnClick(R.id.image_view_back)
     void onBackPress() {
-        delegate.goToMainSetting();
+        delegate.goToMainSetting(KeyBackToMain.BACK_BUTTON);
     }
 
 

@@ -58,14 +58,25 @@ public class SettingFragment extends Fragment implements ISettingDelegate {
         // first page is main fragment page
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
+        Bundle args = new Bundle();
+        args.putInt(MainSettingFragment.KEY_BACK_TO_MAIN, KeyBackToMain.DO_NOTHING);
+        getMainSettingFragment().setArguments(args);
         transaction.replace(R.id.fl_setting, getMainSettingFragment());
         transaction.commit();
     }
 
     @Override
-    public void goToMainSetting() {
-        Views.navigationToView(getActivity(), getMainSettingFragment(),
-                R.id.fl_setting, R.anim.slide_in_right, R.anim.slide_out_left);
+    public void goToMainSetting(int key) {
+
+        //mainSettingFragment = new MainSettingFragment(this);
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        Bundle args = new Bundle();
+        args.putInt(MainSettingFragment.KEY_BACK_TO_MAIN, key);
+        getMainSettingFragment().setArguments(args);
+        transaction.replace(R.id.fl_setting, getMainSettingFragment());
+        transaction.commit();
     }
 
     @Override
