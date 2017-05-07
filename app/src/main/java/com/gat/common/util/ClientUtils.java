@@ -164,4 +164,8 @@ public class ClientUtils {
         viewGroup.addView(viewChild);
     }
 
+    public static String getStringLanguage(int i){
+        return context.getResources().getString(i);
+    }
+
 }
