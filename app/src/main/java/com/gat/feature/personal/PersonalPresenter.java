@@ -42,5 +42,5 @@ public interface PersonalPresenter extends Presenter{
 
     void requestChangeStatus(RequestStatusInput input);
     Observable<ChangeStatusResponse> getResponseChangeStatus();
-    Observable<String> onErrorChangeStatus();
+    Observable<ServerResponse<ResponseData>> onErrorChangeStatus();
 }

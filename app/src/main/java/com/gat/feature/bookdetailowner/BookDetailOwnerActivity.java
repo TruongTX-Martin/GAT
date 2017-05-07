@@ -15,8 +15,16 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.data.response.ResponseData;
+import com.gat.data.response.ServerResponse;
+import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
 import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
+import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.RequestStatusInput;
+import com.gat.feature.personaluser.PersonalUserActivity;
+import com.gat.feature.personaluser.PersonalUserScreen;
+import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.book.BookDetailEntity;
 
@@ -276,7 +284,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         imgBorrower.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                BookDetailSenderActivity.start(getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(bookDetail.getBorrowerInfo().getUserId()));
             }
         });
         imgEditionBook.setOnClickListener(new View.OnClickListener() {
@@ -297,8 +305,11 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         getPresenter().requestChangeStatus(statusInput);
     }
 
-    private void getBookDetailError(String error) {
-        ClientUtils.showToast("Error:" + error);
+    private void getBookDetailError(ServerResponse<ResponseData> error) {
+        ClientUtils.showToast(error.message());
+        if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
+            MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }
     }
 
     private void getBookDetailSuccess(Data data) {

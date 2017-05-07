@@ -171,7 +171,7 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof PersonalUserScreen) {
             PersonalUserScreen commentScreen = (PersonalUserScreen) screen;
-            dest.writeParcelable(commentScreen.userResponse(), flags);
+            dest.writeInt(commentScreen.userId());
         } else if (screen instanceof BookDetailScreen) {
             BookDetailScreen bookDetailScreen = (BookDetailScreen)screen;
             dest.writeInt(bookDetailScreen.editionId());
@@ -245,7 +245,7 @@ public class ParcelableScreen implements Parcelable {
                 screen = NotificationScreen.instance();
                 break;
             case USER_PERSONAL:
-                screen = PersonalUserScreen.instance(in.readParcelable(UserResponse.class.getClassLoader()));
+                screen = PersonalUserScreen.instance(in.readInt());
                 break;
 
             default:

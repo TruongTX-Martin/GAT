@@ -7,7 +7,11 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 
+import org.json.JSONArray;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Rey on 2/23/2017.
@@ -16,11 +20,14 @@ import java.io.Serializable;
 public abstract class User implements Serializable {
 
     public static int INVALID_USERID = 0;
-    public static User NONE = builder().userId(INVALID_USERID).name(Strings.EMPTY).build();
+    public static User NONE = builder().userId(INVALID_USERID).name(Strings.EMPTY)
+//            .usuallyLocation(new ArrayList<>())
+            .build();
     public static User DEFAULT = builder().userId(INVALID_USERID)       // TODO make default user
             .name("Invalid user")
             .email("")
             .imageId("33328625223")
+//            .usuallyLocation(new ArrayList<>())
             .build();
     public boolean isValid() {
         return userId() != INVALID_USERID;
@@ -45,6 +52,8 @@ public abstract class User implements Serializable {
     public abstract @Nullable String twitterId();
     public abstract @Nullable String twitterName();
 
+//    public abstract List<UsuallyLocation> usuallyLocation();
+
     public static Builder builder(){
         return new AutoValue_User.Builder()
                 .email(Strings.EMPTY)
@@ -65,7 +74,6 @@ public abstract class User implements Serializable {
 
     @AutoValue.Builder
     public abstract static class Builder {
-
         public abstract Builder userId(int userId);
         public abstract Builder name(String name);
         public abstract Builder email(String email);
@@ -82,7 +90,10 @@ public abstract class User implements Serializable {
         public abstract Builder googleName(String googleName);
         public abstract Builder twitterId(String twitterId);
         public abstract Builder twitterName(String twitterName);
+//        public abstract Builder usuallyLocation(List<UsuallyLocation> list);
         public abstract User build();
-
     }
+
+
+
 }

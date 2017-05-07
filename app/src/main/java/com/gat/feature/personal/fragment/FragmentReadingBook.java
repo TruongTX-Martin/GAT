@@ -176,9 +176,7 @@ public class FragmentReadingBook extends Fragment {
     }
 
     private void showDialogFilter() {
-        if (currentInput == null) {
-            return;
-        }
+        if (currentInput == null) return;
         isReaded = currentInput.isReadFilter();
         isReading = currentInput.isReadingFilter();
         isToRead = currentInput.isToReadFilter();

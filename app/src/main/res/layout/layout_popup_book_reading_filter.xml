@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Đã đọc"
+                android:text="Sách đã đọc"
                 android:textColor="@color/colorWhite"
                 android:textSize="15dp"
                 android:textStyle="bold" />
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Đang đọc"
+                android:text="Sách đang đọc"
                 android:textColor="@color/colorWhite"
                 android:textSize="15dp"
                 android:textStyle="bold" />
@@ -214,7 +214,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Sẽ đọc"
+                android:text="Sách sẽ đọc"
                 android:textColor="@color/colorWhite"
                 android:textSize="15dp"
                 android:textStyle="bold" />

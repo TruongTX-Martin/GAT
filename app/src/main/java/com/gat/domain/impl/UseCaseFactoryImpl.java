@@ -352,4 +352,9 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
         return new RequestBorrowBook(userRepositoryLazy.get(),input);
     }
 
+    @Override
+    public UseCase<User> getVisitorInfor(int userId) {
+        return new GetVisitorInfo(userRepositoryLazy.get(),userId);
+    }
+
 }

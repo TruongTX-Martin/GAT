@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="150dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -46,8 +46,9 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:id="@+id/rootView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="#f7f7f7">
 
         <ImageView
@@ -58,22 +59,86 @@
             android:layout_margin="10dp"
             android:src="@drawable/twitter_btn" />
 
-        <ImageView
-            android:id="@+id/imgExtend"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+
+        <RelativeLayout
+            android:id="@+id/layoutRight"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/ic_extend" />
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/layoutLeft"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true">
+
+                <ImageView
+                    android:id="@+id/imgExtend"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/ic_extend" />
+
+                <Switch
+                    android:id="@+id/mySwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imgExtend"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:thumb="@drawable/switch_custom_selector"
+                    android:track="@drawable/switch_custom_track" />
+
+                <TextView
+                    android:id="@+id/txtShared"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mySwitch"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:text="Cho mượn"
+                    android:textColor="#000000" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutDelete"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/layoutLeft"
+                android:background="#ff0000"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:id="@+id/imgDelete"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_delete" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imgDelete"
+                    android:textColor="#ffffff"
+                    android:text="Xóa"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center_horizontal"
+                    />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@+id/imgExtend"
+            android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
+            android:textSize="12dp"
             android:text="name"
             android:textColor="#000000" />
 
@@ -82,19 +147,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtName"
-            android:layout_toLeftOf="@+id/imgExtend"
+            android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
+            android:textSize="10dp"
             android:text="author"
-            android:textColor="#000000" />
-
+            android:textColor="#919191" />
         <LinearLayout
             android:id="@+id/layoutRating"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtAuthor"
-            android:layout_toLeftOf="@+id/imgExtend"
             android:layout_toRightOf="@+id/imgAvatar"
-            android:orientation="horizontal">
+            
+            android:orientation="horizontal"
+            >
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -108,26 +174,26 @@
                 android:id="@+id/txtRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="10dp"
                 android:layout_marginLeft="5dp"
-                android:textColor="#000000" />
+                android:textColor="#202020" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layoutBorrowFrom"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_below="@+id/layoutRating"
             android:layout_toRightOf="@+id/imgAvatar"
-            android:visibility="gone"
+            android:layout_marginRight="80dp"
             >
             <TextView
                 android:id="@+id/txtBorrowFrom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mượn từ "
+                android:text="Người mượn :"
                 android:textSize="14dp"
                 android:layout_marginRight="5dp"
                 android:textColor="#000000" />
@@ -140,12 +206,14 @@
                 android:textSize="15dp"
                 />
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#CACACA"
-            android:layout_alignParentBottom="true"
-            />
+
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:background="#CACACA" />
 
 </LinearLayout>

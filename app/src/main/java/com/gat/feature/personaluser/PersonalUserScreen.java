@@ -11,9 +11,9 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class PersonalUserScreen implements Screen{
 
-    public static PersonalUserScreen instance(UserResponse userResponse) {
-        return new AutoValue_PersonalUserScreen(userResponse);
+    public static PersonalUserScreen instance(int userId) {
+        return new AutoValue_PersonalUserScreen(userId);
     }
 
-    public abstract UserResponse userResponse();
+    public abstract int userId();
 }

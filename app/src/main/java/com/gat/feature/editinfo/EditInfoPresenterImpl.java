@@ -1,6 +1,7 @@
 package com.gat.feature.editinfo;
 
 import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
@@ -30,7 +31,7 @@ public class EditInfoPresenterImpl implements EditInfoPresenter {
     private CompositeDisposable editinfoDisposable;
     private final Subject<String> editinfoResultSubject;
     private final Subject<EditInfoInput> editinfoInputSubject;
-    private final Subject<String> editinfoError;
+    private final Subject<ServerResponse<ResponseData>> editinfoError;
     private UseCase<String> editinfoUsecase;
 
     public EditInfoPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
@@ -60,12 +61,10 @@ public class EditInfoPresenterImpl implements EditInfoPresenter {
                     editinfoResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    if (throwable instanceof CommonException)
-                        editinfoError.onNext(((CommonException)throwable).getMessage());
-                    else {
-                        throwable.printStackTrace();
-                        editinfoError.onNext("Exception occurred.");
-                    }
+                    if (throwable instanceof LoginException)
+                        editinfoError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        editinfoError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> editinfoUsecase = UseCases.release(editinfoUsecase)
@@ -88,7 +87,7 @@ public class EditInfoPresenterImpl implements EditInfoPresenter {
     }
 
     @Override
-    public Observable<String> onErrorEditInfo() {
+    public Observable<ServerResponse<ResponseData>> onErrorEditInfo() {
         return editinfoError.observeOn(schedulerFactory.main());
     }
 }

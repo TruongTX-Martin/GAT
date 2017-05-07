@@ -17,9 +17,9 @@ public interface BookDetailOwnerPresenter extends Presenter{
 
     void requestBookDetail(int input);
     Observable<Data> getResponseBookDetail();
-    Observable<String> onErrorBookDetail();
+    Observable<ServerResponse<ResponseData>> onErrorBookDetail();
 
     void requestChangeStatus(RequestStatusInput input);
     Observable<ChangeStatusResponse> getResponseChangeStatus();
-    Observable<String> onErrorChangeStatus();
+    Observable<ServerResponse<ResponseData>> onErrorChangeStatus();
 }

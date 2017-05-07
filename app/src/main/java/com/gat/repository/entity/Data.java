@@ -42,7 +42,7 @@ public class Data<T> {
         T t1 = null;
         try {
             t1 = t.fromJson(json);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return t1;

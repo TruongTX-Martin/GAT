@@ -148,5 +148,7 @@ public interface UseCaseFactory {
 
     UseCase<Data> requestBorrowBook(BorrowRequestInput input);
 
+    UseCase<User> getVisitorInfor(int userId);
+
 
 }

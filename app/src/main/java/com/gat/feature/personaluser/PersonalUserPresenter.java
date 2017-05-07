@@ -8,6 +8,7 @@ import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.User;
 import com.rey.mvp2.Presenter;
 
 import io.reactivex.Observable;
@@ -30,5 +31,9 @@ public interface PersonalUserPresenter extends Presenter{
     void requestBorrowBook(BorrowRequestInput input);
     Observable<Data> getResponseBorrowBook();
     Observable<String> onErrorBorrowBook();
+
+    void requestVisitorInfo(int userId);
+    Observable<User> getResponseVisitorInfo();
+    Observable<ServerResponse<ResponseData>> onErrorVisitorInfo();
 
 }

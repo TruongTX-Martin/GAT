@@ -78,7 +78,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private CompositeDisposable changeStatusDisposable;
     private final Subject<ChangeStatusResponse> changeStatusResultSubject;
     private final Subject<RequestStatusInput> changeStatusInputSubject;
-    private final Subject<String> changeStatusError;
+    private final Subject<ServerResponse<ResponseData>> changeStatusError;
     private UseCase<ChangeStatusResponse> changeStatusUsecase;
 
     private final UseCase<User> loadLocalUser;
@@ -141,7 +141,6 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         );
         // TODO 170506 do not start get personal information here
         //start get personal data
-        //personalInputSubject.onNext("");
         loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(user -> {
@@ -151,6 +150,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     } else {
                         isLogin = false;
                     }
+                    personalInputSubject.onNext("");
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"
@@ -180,7 +180,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<String> onErrorChangeStatus() {
+    public Observable<ServerResponse<ResponseData>> onErrorChangeStatus() {
         return changeStatusError.observeOn(schedulerFactory.main());
     }
 
@@ -274,12 +274,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     changeStatusResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    if (throwable instanceof CommonException)
-                        changeStatusError.onNext(((CommonException)throwable).getMessage());
-                    else {
-                        throwable.printStackTrace();
-                        changeStatusError.onNext("Exception occurred.");
-                    }
+                    if (throwable instanceof LoginException)
+                        changeStatusError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        changeStatusError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> changeStatusUsecase = UseCases.release(changeStatusUsecase)

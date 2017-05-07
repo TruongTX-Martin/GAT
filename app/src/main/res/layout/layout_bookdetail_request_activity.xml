@@ -545,7 +545,8 @@
                         android:layout_height="40dp"
                         android:layout_centerVertical="true"
                         android:layout_margin="5dp"
-                        android:background="@drawable/bg_layout_filter_book">
+                        android:background="@drawable/bg_layout_filter_book"
+                        >
 
 
                         <TextView

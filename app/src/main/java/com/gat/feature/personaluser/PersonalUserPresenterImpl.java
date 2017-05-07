@@ -12,6 +12,7 @@ import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.User;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -52,6 +53,13 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
     private Subject<BorrowRequestInput> requestBorrowBookInputSubject;
     private Subject<String> requestBorrowBookError;
 
+    //request visitor information
+    private CompositeDisposable visitorInfoDisposable;
+    private final Subject<User> visitorInfoResultSubject;
+    private final Subject<Integer> visitorInfoInputSubject;
+    private final Subject<ServerResponse<ResponseData>> visitorInfoError;
+    private UseCase<User> getVisitorUsecase;
+
     public PersonalUserPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
@@ -69,6 +77,10 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         requestBorrowBookResultSubject = PublishSubject.create();
         requestBorrowBookInputSubject = BehaviorSubject.create();
 
+        this.visitorInfoError = PublishSubject.create();
+        visitorInfoResultSubject = PublishSubject.create();
+        visitorInfoInputSubject = BehaviorSubject.create();
+
 
     }
 
@@ -85,6 +97,10 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         requestBorrowBookDisposable = new CompositeDisposable(
                 requestBorrowBookInputSubject.observeOn(schedulerFactory.main()).subscribe(this::requestBook)
         );
+
+        visitorInfoDisposable = new CompositeDisposable(
+                visitorInfoInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getVisitorInfo)
+        );
     }
 
     @Override
@@ -92,6 +108,7 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         bookUserSharingDisposable.dispose();
         bookUserReadingDisposable.dispose();
         requestBorrowBookDisposable.dispose();
+        visitorInfoDisposable.dispose();
     }
 
     @Override
@@ -140,6 +157,36 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         return requestBorrowBookError.observeOn(schedulerFactory.main());
     }
 
+    @Override
+    public void requestVisitorInfo(int userId) {
+        visitorInfoInputSubject.onNext(userId);
+    }
+
+    @Override
+    public Observable<User> getResponseVisitorInfo() {
+        return visitorInfoResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<ServerResponse<ResponseData>> onErrorVisitorInfo() {
+        return visitorInfoError.observeOn(schedulerFactory.main());
+    }
+
+    private void getVisitorInfo(int userId) {
+        getVisitorUsecase = UseCases.release(getVisitorUsecase);
+        getVisitorUsecase = useCaseFactory.getVisitorInfor(userId);
+        getVisitorUsecase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(response -> {
+                    visitorInfoResultSubject.onNext(response);
+                })
+                .onError(throwable -> {
+                })
+                .onStop(
+                        () -> getVisitorUsecase = UseCases.release(getVisitorUsecase)
+                )
+                .execute();
+    }
 
     private void requestBook(BorrowRequestInput input){
         requestBorrowBookUsecase = UseCases.release(requestBorrowBookUsecase);
