@@ -38,6 +38,7 @@ import com.gat.feature.personal.fragment.FragmentReadingBook;
 import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
+import com.gat.repository.entity.UsuallyLocation;
 import com.gat.repository.entity.book.BookReadingEntity;
 import com.gat.repository.entity.book.BookRequestEntity;
 import com.gat.repository.entity.book.BookSharingEntity;
@@ -126,7 +127,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
                 getPresenter().onErrorBookRequest().subscribe(this::getBookInstanceError));
 
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
-                getPresenter().onErrorChangeStatus().subscribe(this::getBookDetailError));
+                getPresenter().onErrorChangeStatus().subscribe(this::getBookInstanceError));
 
         initView();
 
@@ -135,7 +136,6 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         setupTabIcons();
 
         handleEvent();
-
         return rootView;
     }
 
@@ -167,7 +167,6 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
             @Override
             public void onPageSelected(int position) {
-
             }
 
             @Override
@@ -241,14 +240,18 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private void getUserInfoSuccess(Data<User> data) {
         if (data != null) {
             userInfo = data.getDataReturn(User.typeAdapter(new Gson()));
+//            List<UsuallyLocation> list = userInfo.usuallyLocation();
             if (userInfo == null)
                 userInfo = User.NONE;
             if (!Strings.isNullOrEmpty(userInfo.name())) {
                 txtName.setText(userInfo.name());
+                txtAddress.setText(userInfo.name());
             }
-            if (!Strings.isNullOrEmpty(userInfo.email())) {
-                txtAddress.setText(userInfo.email());
-            }
+//            if(userInfo.usuallyLocation().size() > 0){
+//                if(!Strings.isNullOrEmpty(userInfo.usuallyLocation().get(0).getAddress())){
+//                    txtAddress.setText(userInfo.usuallyLocation().get(0).getAddress());
+//                }
+//            }
             if (!Strings.isNullOrEmpty(userInfo.imageId())) {
                 String url = ClientUtils.getUrlImage(userInfo.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
                 ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
@@ -257,6 +260,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
                 BookReadingInput readingInput = new BookReadingInput(true, false, false);
                 readingInput.setUserId(userInfo.userId());
                 requestReadingBooks(readingInput);
+                BookInstanceInput currentInput = new BookInstanceInput(true, false, false);
+                fragmentBookSharing.setCurrentInput(currentInput);
+                requestBookInstance(currentInput);
             }
         }
     }

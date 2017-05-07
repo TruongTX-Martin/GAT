@@ -11,7 +11,7 @@
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F6F6F6">
+        android:background="#ffffff">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgAvatar"
@@ -43,6 +43,7 @@
             android:layout_toLeftOf="@+id/layoutEdit"
             android:layout_toRightOf="@+id/imgAvatar"
             android:layout_below="@+id/txtName"
+            android:visibility="gone"
             >
 
             <ImageView

@@ -30,6 +30,9 @@ public class BookSharingEntity {
     @SerializedName("borrowingRecordId")
     private int borrowingRecordId;
 
+    @SerializedName("borrowingUserId")
+    private int borrowingUserId;
+
     @SerializedName("borrowingUserName")
     private String borrowingUserName;
 
@@ -77,6 +80,10 @@ public class BookSharingEntity {
 
     public void setRequestingStatus(int requestingStatus) {
         this.requestingStatus = requestingStatus;
+    }
+
+    public int getBorrowingUserId() {
+        return borrowingUserId;
     }
 
     public void setRecordStatus(int recordStatus) {
@@ -163,6 +170,8 @@ public class BookSharingEntity {
     public String getBorrowingUserName() {
         return borrowingUserName;
     }
+
+
 
     public void setBorrowingUserName(String borrowingUserName) {
         this.borrowingUserName = borrowingUserName;

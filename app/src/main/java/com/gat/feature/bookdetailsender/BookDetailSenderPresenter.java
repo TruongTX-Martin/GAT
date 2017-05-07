@@ -16,10 +16,10 @@ public interface BookDetailSenderPresenter extends Presenter{
 
     void requestBookDetail(int input);
     Observable<Data> getResponseBookDetail();
-    Observable<String> onErrorBookDetail();
+    Observable<ServerResponse<ResponseData>> onErrorBookDetail();
 
 
     void requestSenderChangeStatus(RequestStatusInput input);
     Observable<ChangeStatusResponse> getResponseSenderChangeStatus();
-    Observable<String> onErrorSenderChangeStatus();
+    Observable<ServerResponse<ResponseData>> onErrorSenderChangeStatus();
 }

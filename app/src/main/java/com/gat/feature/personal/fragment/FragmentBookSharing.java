@@ -2,13 +2,24 @@ package com.gat.feature.personal.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -55,44 +67,50 @@ public class FragmentBookSharing extends Fragment {
 
     private RecyclerView recyclerView;
     private BookSharingAdapter adapterBookSharing;
-    private int numberSharing,numberNotSharing,numberLost;
+    private int numberSharing, numberNotSharing, numberLost;
 
-    private boolean setTitleSharing,setTitleNotSharing,setTitleLost;
+    private boolean setTitleSharing, setTitleNotSharing, setTitleLost;
 
     public void setParrentActivity(PersonalFragment parrentActivity) {
         this.parrentActivity = parrentActivity;
     }
 
-
+    public void setCurrentInput(BookInstanceInput currentInput) {
+        this.currentInput = currentInput;
+    }
 
     public void setListBook(List<BookSharingEntity> listBook) {
         try {
             if (listBook != null && listBook.size() > 0) {
                 this.listBook.addAll(listBook);
             }
-            for(int i = 0; i< this.listBook.size(); i++){
+            for (int i = 0; i < this.listBook.size(); i++) {
                 this.listBook.get(i).setHeader(false);
             }
-            numberSharing =0; numberNotSharing =0; numberLost =0;
-            setTitleSharing = false; setTitleNotSharing = false;setTitleLost = false;
-            for (int i=0; i< this.listBook.size(); i++) {
-                if(this.listBook.get(i).getSharingStatus()  == 2 || this.listBook.get(i).getSharingStatus() == 1) {
-                    numberSharing ++;
-                    if(!setTitleSharing){
+            numberSharing = 0;
+            numberNotSharing = 0;
+            numberLost = 0;
+            setTitleSharing = false;
+            setTitleNotSharing = false;
+            setTitleLost = false;
+            for (int i = 0; i < this.listBook.size(); i++) {
+                if (this.listBook.get(i).getSharingStatus() == 2 || this.listBook.get(i).getSharingStatus() == 1) {
+                    numberSharing++;
+                    if (!setTitleSharing) {
                         this.listBook.get(i).setHeader(true);
                         setTitleSharing = true;
                     }
-                }else if(this.listBook.get(i).getSharingStatus() == 0) {
-                    numberNotSharing ++;
-                    if(!setTitleNotSharing) {
+                } else if (this.listBook.get(i).getSharingStatus() == 0) {
+                    numberNotSharing++;
+                    if (!setTitleNotSharing) {
                         this.listBook.get(i).setHeader(true);
-                        setTitleNotSharing  = true;
+                        setTitleNotSharing = true;
                     }
-                }else if(this.listBook.get(i).getSharingStatus() == 3) {
-                    numberLost ++;
-                    if(!setTitleLost) {
+                } else if (this.listBook.get(i).getSharingStatus() == 3) {
+                    numberLost++;
+                    if (!setTitleLost) {
                         this.listBook.get(i).setHeader(true);
-                        setTitleLost  = true;
+                        setTitleLost = true;
                     }
                 }
             }
@@ -128,8 +146,9 @@ public class FragmentBookSharing extends Fragment {
         initView();
         handleEvent();
         showLoading();
-        currentInput = new BookInstanceInput(true, false, false);
-        searchBook(currentInput);
+        if (currentInput != null) {
+            searchBook(currentInput);
+        }
         return rootView;
     }
 
@@ -146,35 +165,84 @@ public class FragmentBookSharing extends Fragment {
         txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
         layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
         recyclerView.setAdapter(adapterBookSharing);
+//        initSwipe();
     }
 
+
+    private Paint p = new Paint();
+    private void initSwipe(){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                Bitmap icon;
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    final RelativeLayout layoutDelete = (RelativeLayout) itemView.findViewById(R.id.layoutDelete);
+                    TextView txtName = (TextView) itemView.findViewById(R.id.txtName);
+                    TextView txtAuthor = (TextView) itemView.findViewById(R.id.txtAuthor);
+                    ImageView imgExtend = (ImageView) itemView.findViewById(R.id.imgExtend);
+                    Switch mySwitch = (Switch) itemView.findViewById(R.id.mySwitch);
+                    TextView txtShared = (TextView) itemView.findViewById(R.id.txtShared);
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    if(dX < 0){
+                        p.setColor(Color.parseColor("#ff0000"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        Log.e("Heigt Swipe Left:", background.width()+"");
+                        if(background.width() > 250) {
+                            layoutDelete.setVisibility(View.VISIBLE);
+                        }
+                        if(background.width() > 300) {
+                            p.setColor(Color.parseColor("#ffffff"));
+                            c.drawRect(background,p);
+                        }
+                    }
+                }
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
     private void handleEvent() {
         layoutBottom.setOnClickListener(v -> {
             showDialogFilter();
         });
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                BookSharingEntity entity = listBook.get(position);
-                int borrowingRecordId = entity.getBorrowingRecordId();
-                int sharingStatus = entity.getSharingStatus();
-                ClientUtils.showToast("Sharing status:" + sharingStatus);
-                if (sharingStatus == 1) {
-                    //sharing
 
-                } else if (sharingStatus == 2) {
-                    //borrowing
-                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
-                    intent.putExtra("BorrowingRecordId", borrowingRecordId);
-                    MainActivity.instance.startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-
-            }
-        }));
+//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                BookSharingEntity entity = listBook.get(position);
+//                int borrowingRecordId = entity.getBorrowingRecordId();
+//                int sharingStatus = entity.getSharingStatus();
+//                ClientUtils.showToast("Sharing status:" + sharingStatus);
+//                if (sharingStatus == 1) {
+//                    //sharing
+//
+//                } else if (sharingStatus == 2) {
+//                    //borrowing
+//                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
+//                    intent.putExtra("BorrowingRecordId", borrowingRecordId);
+//                    MainActivity.instance.startActivity(intent);
+//                }
+//            }
+//
+//            @Override
+//            public void onItemLongClick(View view, int position) {
+//
+//            }
+//        }));
     }
 
     public void loadMore() {
@@ -217,6 +285,7 @@ public class FragmentBookSharing extends Fragment {
     }
 
     private void showDialogFilter() {
+        if(currentInput == null) return;
         isSharing = currentInput.isSharingFilter();
         isNotSharing = currentInput.isNotSharingFilter();
         isLost = currentInput.isLostFilter();
@@ -245,7 +314,9 @@ public class FragmentBookSharing extends Fragment {
                 currentInput.setLostFilter(isLost);
                 currentInput.setPage(1);
                 isContinueMore = true;
-                numberSharing =0;numberNotSharing = 0; numberLost =0;
+                numberSharing = 0;
+                numberNotSharing = 0;
+                numberLost = 0;
                 searchBook(currentInput);
             }
             currentInput.setSharingFilter(isSharing);

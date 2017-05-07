@@ -156,7 +156,7 @@ public class SearchResultFragment extends Fragment
         } else if (item instanceof SearchUserResultItem) {
 
             SearchUserResultItem userItem = (SearchUserResultItem) item;
-            SuggestSearchActivity.start(getActivity().getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(userItem.userResponse()));
+            SuggestSearchActivity.start(getActivity().getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(userItem.userResponse().getUserId()));
 
         }
     }

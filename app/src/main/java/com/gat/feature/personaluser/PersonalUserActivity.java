@@ -28,6 +28,7 @@ import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.feature.personaluser.fragment.FragmentBookUserReading;
 import com.gat.feature.personaluser.fragment.FragmentBookUserSharing;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.User;
 import com.gat.repository.entity.book.BookReadingEntity;
 import com.gat.repository.entity.book.BookSharingEntity;
 
@@ -42,8 +43,6 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, PersonalUserPresenter> {
-
-    UserResponse userResponse;
 
     @BindView(R.id.txtName)
     TextView txtName;
@@ -74,21 +73,27 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
     private Context context;
 
-
     //init fragment
     private FragmentBookUserSharing fragmentBookUserSharing;
+
+
     private FragmentBookUserReading fragmentBookUserReading;
     private TextView txtNumberSharing,txtNumberReading;
-
-
     private CompositeDisposable disposablesBookUserSharing;
+
+
     private CompositeDisposable disposablesBookUserReading;
     private CompositeDisposable disposableBorrowBook;
+    private CompositeDisposable disposableUserVisitorInfo;
+    private User currentUser;
+
+    int userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userResponse = getScreen().userResponse();
+        userId = getScreen().userId();
+
         context = getApplicationContext();
         disposablesBookUserSharing = new CompositeDisposable(getPresenter().getResponseBookUserSharing().subscribe(this::getBookUserSharingSuccess),
                 getPresenter().onErrorBookUserSharing().subscribe(this::getBookUserSharingError));
@@ -99,24 +104,25 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         disposableBorrowBook = new CompositeDisposable(getPresenter().getResponseBorrowBook().subscribe(this::borrowBookSuccess),
                 getPresenter().onErrorBorrowBook().subscribe(this::borrowBookError));
 
-
-        initView();
-        handleEvent();
+        disposableUserVisitorInfo = new CompositeDisposable(getPresenter().getResponseVisitorInfo().subscribe(this::getUserVisitorInfoSuccess),
+                getPresenter().onErrorVisitorInfo().subscribe(this::getBookUserSharingError));
+        requestUserVisitorInfo(userId);
     }
 
     private void initView() {
         layoutMenutop.setBackgroundColor(Color.parseColor("#8ec3df"));
         txtTitle.setText("CÁ NHÂN");
         imgChat.setImageResource(R.drawable.ic_chat_white);
-        if(userResponse != null) {
-            if(!Strings.isNullOrEmpty(userResponse.getName())) {
-                txtName.setText(userResponse.getName());
+        if(currentUser != null) {
+            if(!Strings.isNullOrEmpty(currentUser.name())) {
+                txtName.setText(currentUser.name());
+                txtAddress.setText(currentUser.name());
             }
-            if(!Strings.isNullOrEmpty(userResponse.getAddress())) {
-                txtAddress.setText(userResponse.getAddress());
-            }
-            if (!Strings.isNullOrEmpty(userResponse.getImageId())) {
-                String url = ClientUtils.getUrlImage(userResponse.getImageId(), Constance.IMAGE_SIZE_ORIGINAL);
+//            if(!Strings.isNullOrEmpty(currentUser.ad())) {
+//                txtAddress.setText(userResponse.getAddress());
+//            }
+            if (!Strings.isNullOrEmpty(currentUser.imageId())) {
+                String url = ClientUtils.getUrlImage(currentUser.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
                 ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
             }
         }
@@ -124,6 +130,10 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+    }
+
+    private void requestUserVisitorInfo(int userId) {
+        getPresenter().requestVisitorInfo(userId);
     }
 
     private void handleEvent(){
@@ -165,7 +175,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             fragmentBookUserSharing.setParrentActivity(this);
             try {
                 BookSharingUserInput input = new BookSharingUserInput();
-                input.setOwnerId(userResponse.getUserId());
+                input.setOwnerId(currentUser.userId());
                 fragmentBookUserSharing.setCurrentInput(input);
             }catch (Exception e){}
         }
@@ -174,7 +184,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             fragmentBookUserReading.setParrentActivity(this);
             try {
                 BookReadingInput currentInput = new BookReadingInput(false,true,false);
-                currentInput.setUserId(userResponse.getUserId());
+                currentInput.setUserId(currentUser.userId());
                 fragmentBookUserReading.setCurrentInput(currentInput);
             }catch (Exception e){}
         }
@@ -204,6 +214,14 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         ClientUtils.showToast(error);
     }
 
+    private void getUserVisitorInfoSuccess(User user) {
+        if(user != null){
+            currentUser = user;
+            initView();
+            handleEvent();
+        }
+    }
+
     private void borrowBookSuccess(Data data){
         if(data != null) {
             if (!Strings.isNullOrEmpty(data.getMessage())) {
@@ -226,7 +244,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     public void requestBorrowBook(BorrowRequestInput input){
-        input.setOwnerId(userResponse.getUserId());
+        input.setOwnerId(currentUser.userId());
         getPresenter().requestBorrowBook(input);
     }
 
@@ -249,12 +267,12 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
     @Override
     protected PersonalUserScreen getDefaultScreen() {
-        return PersonalUserScreen.instance(getScreen().userResponse());
+        return PersonalUserScreen.instance(getScreen().userId());
     }
 
     @Override
     protected Object getPresenterKey() {
-        return PersonalUserScreen.instance(getScreen().userResponse());
+        return PersonalUserScreen.instance(getScreen().userId());
     }
 
     @Override

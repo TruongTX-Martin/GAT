@@ -32,6 +32,9 @@ import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
+import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
 
@@ -109,10 +112,13 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         }
         if (!Strings.isNullOrEmpty(user.name())) {
             edtName.setText(user.name());
+            txtAddress.setText(user.name());
         }
-        if (!Strings.isNullOrEmpty(user.email())) {
-            txtAddress.setText(user.email());
-        }
+//        if(user.usuallyLocation().size() > 0){
+//            if(!Strings.isNullOrEmpty(user.usuallyLocation().get(0).getAddress())){
+//                txtAddress.setText(user.usuallyLocation().get(0).getAddress());
+//            }
+//        }
     }
 
     private void handleEvent() {
@@ -131,10 +137,13 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         finish();
     }
 
-    private void editInfoError(String error) {
-        ClientUtils.showToast("Error");
-    }
 
+    private void editInfoError(ServerResponse<ResponseData> error) {
+        ClientUtils.showToast(error.message());
+        if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
+            MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }
+    }
     private void editInfoSuccess(String message) {
         ClientUtils.showToast(message);
         progressBar.setVisibility(View.GONE);

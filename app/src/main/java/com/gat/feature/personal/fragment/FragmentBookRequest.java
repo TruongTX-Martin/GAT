@@ -225,6 +225,7 @@ public class FragmentBookRequest extends Fragment {
     }
 
     private void showDialogFilter() {
+        if(currentInput == null) return;
         sharingWaitToConfirm = currentInput.isSharingWaitConfirm();
         sharingContacting = currentInput.isSharingContacting();
         sharingBorrowing = currentInput.isSharingBorrowing();

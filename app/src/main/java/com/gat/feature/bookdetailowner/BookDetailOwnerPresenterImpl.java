@@ -1,6 +1,7 @@
 package com.gat.feature.bookdetailowner;
 
 import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
@@ -31,14 +32,14 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
     private CompositeDisposable bookDetailDisposable;
     private final Subject<Data> bookDetailResultSubject;
     private final Subject<Integer> bookDetailInputSubject;
-    private final Subject<String> bookDetailError;
+    private final Subject<ServerResponse<ResponseData>> bookDetailError;
     private UseCase<Data> bookDetailUsecase;
 
 
     private CompositeDisposable changeStatusDisposable;
     private final Subject<ChangeStatusResponse> changeStatusResultSubject;
     private final Subject<RequestStatusInput> changeStatusInputSubject;
-    private final Subject<String> changeStatusError;
+    private final Subject<ServerResponse<ResponseData>> changeStatusError;
     private UseCase<ChangeStatusResponse> changeStatusUsecase;
 
 
@@ -84,7 +85,7 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
     }
 
     @Override
-    public Observable<String> onErrorBookDetail() {
+    public Observable<ServerResponse<ResponseData>> onErrorBookDetail() {
         return bookDetailError.observeOn(schedulerFactory.main());
     }
 
@@ -99,7 +100,7 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
     }
 
     @Override
-    public Observable<String> onErrorChangeStatus() {
+    public Observable<ServerResponse<ResponseData>> onErrorChangeStatus() {
         return changeStatusError.observeOn(schedulerFactory.main());
     }
 
@@ -112,12 +113,10 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
                     changeStatusResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    if (throwable instanceof CommonException)
-                        changeStatusError.onNext(((CommonException)throwable).getMessage());
-                    else {
-                        throwable.printStackTrace();
-                        changeStatusError.onNext("Exception occurred.");
-                    }
+                    if (throwable instanceof LoginException)
+                        changeStatusError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        changeStatusError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> changeStatusUsecase = UseCases.release(changeStatusUsecase)
@@ -133,13 +132,10 @@ public class BookDetailOwnerPresenterImpl implements BookDetailOwnerPresenter {
                     bookDetailResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-//                    bookDetailError.onError(throwable);
-                    if (throwable instanceof CommonException)
-                        bookDetailError.onNext(((CommonException)throwable).getMessage());
-                    else {
-                        throwable.printStackTrace();
-                        bookDetailError.onNext("Exception occurred.");
-                    }
+                    if (throwable instanceof LoginException)
+                        bookDetailError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        bookDetailError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> bookDetailUsecase = UseCases.release(bookDetailUsecase)
