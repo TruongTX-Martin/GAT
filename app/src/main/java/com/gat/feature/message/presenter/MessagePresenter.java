@@ -25,4 +25,6 @@ public interface MessagePresenter extends Presenter{
     void sawMessage(String groupId, long timeStamp);
 
     Observable<Boolean> sendMessageResult();
+
+    Observable<User> getUserInfo(int userId);
 }

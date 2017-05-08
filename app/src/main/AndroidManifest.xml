@@ -34,6 +34,8 @@
         <activity android:name=".feature.message.MessageActivity">
             <intent-filter>
                 <action android:name="com.gat.private_message"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
 

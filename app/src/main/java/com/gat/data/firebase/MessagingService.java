@@ -1,5 +1,6 @@
 package com.gat.data.firebase;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -30,17 +31,12 @@ import java.util.Map;
 public class MessagingService extends FirebaseMessagingService {
     private static final String TAG = MessagingService.class.getSimpleName();
 
-    public static final String PUSH_NOTIFICATION = "Notification";
-
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
         if (remoteMessage == null)
             return;
-
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Message:" + remoteMessage.getNotification().getBody());
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null && remoteMessage.getData() != null) {
@@ -61,30 +57,30 @@ public class MessagingService extends FirebaseMessagingService {
         NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
         if (notification.pushType() == NotificationConfig.PushType.PRIVATE_MESSAGE) {
             pushNotification = new Intent();
-            pushNotification.setAction("com.gat.private_message");
-            if (pushNotification.resolveActivity(getPackageManager()) != null) {
-                // TODO
-            }
+            pushNotification.setAction(NotificationConfig.NOTIFICATION_SERVICE);
+            pushNotification.setType("text/plain");
+            pushNotification.putExtra("data", new NotificationParcelable(notification));
+            // If notification is private message type --> only send broadcast message
+            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
         } else {
             pushNotification = new Intent(getApplicationContext(), MainActivity.class);
+            pushNotification.putExtra("data", new NotificationParcelable(notification));
+            notificationUtils.showNotificationMessage(message.getNotification().getTitle(),
+                    message.getNotification().getBody(),
+                    new Date().getTime(),
+                    pushNotification);
         }
-        pushNotification.putExtra("data", new NotificationParcelable(notification));
-        notificationUtils.showNotificationMessage(message.getNotification().getTitle(),
-                message.getNotification().getBody(),
-                new Date().getTime(),
-                pushNotification,
-                contentView);
     }
 
     private @Nullable
     Notification parseNotification(RemoteMessage remoteMessage) {
         Notification notification = null;
         Map<String, String> data = remoteMessage.getData();
-        RemoteMessage.Notification noti = remoteMessage.getNotification();
+        RemoteMessage.Notification remoteMessageNotification = remoteMessage.getNotification();
 
-        String title = remoteMessage.getNotification().getTitle();
-        String message = remoteMessage.getNotification().getBody();
-        String sound = remoteMessage.getNotification().getSound();
+        String title = remoteMessageNotification.getTitle() == null ? "" : remoteMessageNotification.getTitle();
+        String message = remoteMessageNotification.getBody();
+        String sound = remoteMessageNotification.getSound();
         int badge = data.containsKey("badge") ? Integer.parseInt(data.get("badge")) : 0;
         int pushType = data.containsKey("pushType") ? Integer.parseInt(data.get("pushType"))  : 0;
         Log.d(TAG, "RemoteMessage:" + data.toString());
@@ -117,14 +113,5 @@ public class MessagingService extends FirebaseMessagingService {
 
         }
         return notification;
-        /*TypeAdapter<Notification> typeAdapter = Notification.typeAdapter(new Gson());
-        String data = remoteMessage.getData().toString();
-        try {
-            Notification notification = typeAdapter.fromJson(data);
-            return notification;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }*/
     }
 }

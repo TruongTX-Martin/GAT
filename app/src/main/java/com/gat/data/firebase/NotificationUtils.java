@@ -40,7 +40,6 @@ import java.util.List;
 public class NotificationUtils {
 
     private static final int NOTIFICATION_ID = 1000;
-    private static final int NOTIFICATION_ID_BIG_IMAGE = 1001;
 
     private static String TAG = NotificationUtils.class.getSimpleName();
 
@@ -54,8 +53,6 @@ public class NotificationUtils {
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
-
-
         // notification icon
         final int icon = R.drawable.gat_app_icon;
 
@@ -114,7 +111,6 @@ public class NotificationUtils {
                 .setContentIntent(resultPendingIntent)
                 .setStyle(inboxStyle)
                 .setWhen(timeStamp)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .build();
@@ -172,5 +168,11 @@ public class NotificationUtils {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    // Clears notification tray messages
+    public static void clearNotifications(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 }

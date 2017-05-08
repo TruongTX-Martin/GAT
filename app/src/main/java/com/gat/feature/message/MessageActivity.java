@@ -1,7 +1,12 @@
 package com.gat.feature.message;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -17,12 +22,20 @@ import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemResult;
 import com.gat.common.event.LoadingEvent;
 import com.gat.common.listener.LoadMoreScrollListener;
+import com.gat.common.util.CommonCheck;
+import com.gat.common.util.NotificationConfig;
 import com.gat.common.util.Strings;
+import com.gat.data.firebase.NotificationUtils;
+import com.gat.data.firebase.entity.Notification;
+import com.gat.data.firebase.entity.NotificationParcelable;
+import com.gat.feature.main.MainActivity;
 import com.gat.feature.message.adapter.MessageAdapter;
 import com.gat.feature.message.item.MessageItem;
 import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.repository.entity.Message;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import io.reactivex.disposables.CompositeDisposable;
@@ -57,19 +70,45 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     private String userName;
     private int userId;
 
+    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                NotificationParcelable parcelable = intent.getExtras().getParcelable("data");
+                if (parcelable != null) {
+                    Notification notification = parcelable.getNotification();
+                    if (notification.pushType() == NotificationConfig.PushType.PRIVATE_MESSAGE) {
+                        if (notification.senderId() != userId) {
+                            // Make notification
+                            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                            Intent pushNotification = new Intent(getApplicationContext(), MainActivity.class);
+                            pushNotification.putExtra("data", parcelable);
+                            notificationUtils.showNotificationMessage(notification.title(),
+                                    notification.message(),
+                                    new Date().getTime(),
+                                    intent
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        userName = getScreen().userName();
         userId = getScreen().userId();
-
-        messageHeader.setText(userName);
 
         Log.d(TAG, "create");
         compositeDisposable = new CompositeDisposable(
                 getPresenter().itemsChanged().subscribe(this::onItemChanged),
-                getPresenter().loadingEvents().subscribe(this::onLoadingEvent)
+                getPresenter().loadingEvents().subscribe(this::onLoadingEvent),
+                getPresenter().getUserInfo(userId).subscribe(user -> {
+                    userName = user.name();
+                    messageHeader.setText(userName);
+                })
 
         );
 
@@ -118,6 +157,12 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         messageEdit.setOnClickListener(view -> {
             recyclerView.scrollToPosition((messageAdapter.getItemCount() > 0) ? messageAdapter.getItemCount() - 1 : 0);
         });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "---------------Restart");
     }
 
     private void onItemChanged(ItemResult result) {
@@ -171,13 +216,31 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     }
 
     @Override
+    protected void onResume() {
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mIntentReceiver,
+                new IntentFilter(NotificationConfig.NOTIFICATION_SERVICE));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mIntentReceiver);
+        super.onPause();
+    }
+
+    @Override
     protected Class<MessagePresenter> getPresenterClass() {
         return MessagePresenter.class;
     }
 
     @Override
     protected MessageScreen getDefaultScreen() {
-        return MessageScreen.instance(Strings.EMPTY, 0);
+        return MessageScreen.instance(0);
     }
 
     @Override

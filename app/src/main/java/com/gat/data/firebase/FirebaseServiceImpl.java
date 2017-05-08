@@ -325,7 +325,7 @@ public class FirebaseServiceImpl implements FirebaseService{
                 List<String> users = new ArrayList<String>();
                 for (Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator(); iterator.hasNext();) {
                     String key = iterator.next().getKey();
-                    if (key.equals(Integer.toString(mUserId))) {
+                    if (key.equals(Integer.toString(mUserId)) || CommonCheck.isAdmin(Integer.parseInt(key))) {
                         users.add(key);
                     } else {
                         users.add(0, key);

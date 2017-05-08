@@ -4,11 +4,17 @@ import android.support.annotation.IntDef;
 import android.util.Log;
 import android.util.Pair;
 
+import com.gat.app.activity.ScreenActivity;
 import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
+import com.gat.data.firebase.entity.Notification;
 import com.gat.data.response.ServerResponse;
-import com.gat.repository.entity.LoginData;
-import com.google.gson.JsonObject;
+import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
+import com.gat.feature.bookdetailowner.BookDetailOwnerScreen;
+import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
+import com.gat.feature.bookdetailsender.BookDetailSenderScreen;
+import com.gat.feature.message.MessageActivity;
+import com.gat.feature.message.presenter.MessageScreen;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +28,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
@@ -218,5 +223,32 @@ public class CommonCheck {
 
     public static boolean isAdmin(int userId) {
         return userId == ADMIN_USER_ID;
+    }
+
+    public static void processNotification(Notification notification, ScreenActivity activity) {
+        int requestId = notification.requestId();
+        switch (notification.pushType()) {
+            case NotificationConfig.PushType.PRIVATE_MESSAGE:
+            case NotificationConfig.PushType.BOOK_ACCEPTED:
+                activity.start(activity, MessageActivity.class, MessageScreen.instance(notification.senderId()));
+                break;
+            case NotificationConfig.PushType.REQUEST_BORROW:
+                activity.start(activity, BookDetailOwnerActivity.class, BookDetailOwnerScreen.instance(requestId));
+            case NotificationConfig.PushType.BOOK_BORROWED:
+            case NotificationConfig.PushType.BOOK_INFORM_LENT:
+            case NotificationConfig.PushType.BOOK_INFORM_RETURN:
+            case NotificationConfig.PushType.BOOK_REJECTED:
+            case NotificationConfig.PushType.BOOK_INFORM_LOST:
+            case NotificationConfig.PushType.BOOK_REQUEST_CANCEL:
+                activity.start(activity, BookDetailSenderActivity.class, BookDetailSenderScreen.instance(requestId));
+                break;
+            case NotificationConfig.PushType.BOOK_INFORM_BORROW:
+            case NotificationConfig.PushType.BOOK_REQUESTED_QUANTITY:
+                // TODO go to personal fragement request tab
+                break;
+            default:
+                break;
+
+        }
     }
 }

@@ -71,7 +71,6 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
                 start(getApplicationContext(),
                         MessageActivity.class,
                         MessageScreen.instance(
-                                ((GroupItem)item).group().userName(),
                                 Integer.parseInt(((GroupItem)item).group().users().get(0))
                         )
                 );
@@ -86,7 +85,6 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
                 start(getApplicationContext(),
                         MessageActivity.class,
                         MessageScreen.instance(
-                                ((GroupItem)item).group().userName(),
                                 Integer.parseInt(((GroupItem)item).group().users().get(0))
                         )
                 );

@@ -11,7 +11,7 @@ import com.google.gson.TypeAdapter;
  */
 @AutoValue
 public abstract class Notification {
-    public abstract String title();
+    public abstract @Nullable String title();
     public abstract String message();
     public abstract int pushType();
     public abstract String sound();

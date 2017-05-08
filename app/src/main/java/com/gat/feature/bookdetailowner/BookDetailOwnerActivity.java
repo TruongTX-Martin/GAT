@@ -226,7 +226,12 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         imgSave.setVisibility(View.GONE);
         txtTitle.setTextColor(Color.parseColor("#000000"));
         imgBack.setImageResource(R.drawable.narrow_back_black);
-        borrowingRecordId = getIntent().getIntExtra("BorrowingRecordId", 0);
+        // TODO remove intent
+        if (getScreen().requestId() != 0) {
+            borrowingRecordId = getScreen().requestId();
+        } else {
+            borrowingRecordId = getIntent().getIntExtra("BorrowingRecordId", 0);
+        }
 
         layoutParrentContacting.setVisibility(View.GONE);
         layoutParrentBorrowBook.setVisibility(View.GONE);
@@ -492,6 +497,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     }
     @Override
     protected BookDetailOwnerScreen getDefaultScreen() {
-        return BookDetailOwnerScreen.instance();
+        // TODO return null here
+        return BookDetailOwnerScreen.instance(0);
     }
 }

@@ -54,9 +54,9 @@ android {
             keyPassword                 "android"
         }
         release {
-            storeFile                   file("release.jks")
+            storeFile                   file("release_key.jks")
             storePassword               "android"
-            keyAlias                    "androidreleasekey"
+            keyAlias                    "android_release_key"
             keyPassword                 "android"
         }
     }
@@ -96,7 +96,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion               19
+            minSdkVersion               21
             multiDexEnabled             true
             buildConfigField            'boolean', 'MULTI_DEX', 'false'
         }

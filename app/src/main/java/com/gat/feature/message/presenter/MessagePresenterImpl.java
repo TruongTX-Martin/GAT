@@ -67,6 +67,8 @@ public class MessagePresenterImpl implements MessagePresenter {
 
     private UseCase<Boolean> sawMessageUseCase;
 
+    private Subject<User> getUserSubject;
+
     private Subject<Pair<String, Long>> sawMessageSubject;
 
     // Initialized observer
@@ -89,6 +91,8 @@ public class MessagePresenterImpl implements MessagePresenter {
         this.sendMessageResult = BehaviorSubject.create();
 
         this.initializedSubject = PublishSubject.create();
+
+        this.getUserSubject = PublishSubject.create();
 
         pageCnt = 1;
 
@@ -214,6 +218,14 @@ public class MessagePresenterImpl implements MessagePresenter {
                     }
                 })
         );
+
+        UseCase<User> getUserUseCase = useCaseFactory.getVisitorInfor(userId);
+        getUserUseCase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    getUserSubject.onNext(user);
+                })
+                .execute();
     }
 
     @Override
@@ -270,6 +282,11 @@ public class MessagePresenterImpl implements MessagePresenter {
     @Override
     public Observable<Boolean> sendMessageResult() {
         return sendMessageResult.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<User> getUserInfo(int userId) {
+        return getUserSubject.subscribeOn(schedulerFactory.main());
     }
 
     private void send(String message) {

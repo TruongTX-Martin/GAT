@@ -13,6 +13,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.util.CommonCheck;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.common.util.NotificationConfig;
 import com.gat.data.firebase.entity.Notification;
@@ -86,7 +87,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         if (intent != null) {
             NotificationParcelable parcelable = intent.getExtras().getParcelable("data");
             if (parcelable != null)
-                processNotification(parcelable.getNotification());
+                CommonCheck.processNotification(parcelable.getNotification(), this);
         }
 
         // setup view pager
@@ -187,34 +188,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Constance.RESULT_UPDATEUSER){
             personalFragment.requestPersonalInfo();
-        }
-    }
-
-    private void processNotification(Notification notification) {
-        switch (notification.pushType()) {
-            case NotificationConfig.PushType.PRIVATE_MESSAGE:
-                String message = notification.message();
-                String userName = message.substring(0, message.indexOf(":"));
-                Log.d("ReceiveNotification", message);
-                start(this, MessageActivity.class, MessageScreen.instance(userName, notification.senderId()));
-            case NotificationConfig.PushType.BOOK_ACCEPTED:
-                break;
-            case NotificationConfig.PushType.REQUEST_BORROW:
-            case NotificationConfig.PushType.BOOK_BORROWED:
-            case NotificationConfig.PushType.BOOK_INFORM_LENT:
-            case NotificationConfig.PushType.BOOK_INFORM_RETURN:
-            case NotificationConfig.PushType.BOOK_REJECTED:
-            case NotificationConfig.PushType.BOOK_INFORM_LOST:
-            case NotificationConfig.PushType.BOOK_REQUEST_CANCEL:
-
-                break;
-            case NotificationConfig.PushType.BOOK_INFORM_BORROW:
-            case NotificationConfig.PushType.BOOK_REQUESTED_QUANTITY:
-
-                break;
-            default:
-                break;
-
         }
     }
 }

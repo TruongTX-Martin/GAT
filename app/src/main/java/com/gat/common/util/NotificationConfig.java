@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 
 public class NotificationConfig {
+    public static final String NOTIFICATION_SERVICE = "com.gat.private_message";
     @Retention(RetentionPolicy.SOURCE)
     public @interface PushType {
         /**
