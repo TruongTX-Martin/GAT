@@ -1,7 +1,9 @@
 package com.gat.app;
 
-import com.gat.R;
 import com.gat.common.BootstrapApplication;
+import com.gat.dependency.AppComponent;
+import com.gat.dependency.AppModule;
+import com.gat.dependency.DaggerAppComponent;
 
 import io.paperdb.Paper;
 
@@ -15,5 +17,12 @@ public class GatApplication extends BootstrapApplication {
     public void onCreate() {
         super.onCreate();
         Paper.init(this);
+    }
+
+    @Override
+    protected AppComponent prepareAppComponent() {
+        return DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
     }
 }

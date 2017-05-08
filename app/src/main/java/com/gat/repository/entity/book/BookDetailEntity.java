@@ -180,7 +180,7 @@ public class BookDetailEntity {
         private String author = Strings.EMPTY;
 
         @SerializedName("rateAvg")
-        private int rateAvg;
+        private double rateAvg;
 
         @SerializedName("rateCount")
         private int rateCount;
@@ -208,7 +208,7 @@ public class BookDetailEntity {
             return author;
         }
 
-        public int getRateAvg() {
+        public double getRateAvg() {
             return rateAvg;
         }
 
@@ -242,6 +242,20 @@ public class BookDetailEntity {
 
         @SerializedName("deleteFlag")
         private int deleteFlag;
+
+        @SerializedName("sharingCount")
+        private int sharingCount;
+
+        @SerializedName("readCount")
+        private int readCount;
+
+        public int getSharingCount() {
+            return sharingCount;
+        }
+
+        public int getReadCount() {
+            return readCount;
+        }
 
         public int getUserId() {
             return userId;
@@ -294,6 +308,19 @@ public class BookDetailEntity {
         @SerializedName("deleteFlag")
         private int deleteFlag;
 
+        @SerializedName("sharingCount")
+        private int sharingCount;
+
+        @SerializedName("readCount")
+        private int readCount;
+
+        public int getSharingCount() {
+            return sharingCount;
+        }
+
+        public int getReadCount() {
+            return readCount;
+        }
 
         public int getUserId() {
             return userId;

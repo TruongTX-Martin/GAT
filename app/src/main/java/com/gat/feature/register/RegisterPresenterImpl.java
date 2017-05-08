@@ -3,6 +3,7 @@ package com.gat.feature.register;
 import android.util.Log;
 
 import com.gat.common.util.Strings;
+import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
@@ -44,7 +45,7 @@ public class RegisterPresenterImpl implements RegisterPresenter {
     private UseCase<User> registerUseCase;
 
 
-    private final Subject<ServerResponse<ResponseData>> errorSubject;
+    private final Subject<String> errorSubject;
 
     // Disposable to store and release observale when it done
     private CompositeDisposable registerDisposable;
@@ -94,7 +95,7 @@ public class RegisterPresenterImpl implements RegisterPresenter {
 
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onError() {
+    public Observable<String> onError() {
         return errorSubject.observeOn(schedulerFactory.main());
     }
 
@@ -111,11 +112,10 @@ public class RegisterPresenterImpl implements RegisterPresenter {
                     registerResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    if (throwable instanceof LoginException) {
-                        errorSubject.onNext(((LoginException)throwable).responseData());
-                    } else {
-                        errorSubject.onNext(ServerResponse.EXCEPTION);
-                    }
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> registerUseCase = UseCases.release(registerUseCase))
                 .execute();

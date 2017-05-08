@@ -11,6 +11,8 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.Keyword;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.GetGroupList;
 import com.gat.domain.usecase.*;
@@ -37,12 +39,15 @@ import com.gat.domain.usecase.UpdateLocation;
 import com.gat.domain.usecase.UseCase;
 import com.gat.domain.usecase.VerifyResetToken;
 import com.gat.domain.usecase.WorkUseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.BookRepository;
 import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
@@ -91,7 +96,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<Message>> getMessageList(String userId, int page, int size) {
+    public UseCase<List<Message>> getMessageList(int userId, int page, int size) {
         return new GetMessageList(messageRepositoryLazy.get(), userId, page, size);
     }
 
@@ -101,8 +106,28 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Boolean> sendMessage(String toUserId, String message) {
+    public UseCase<Message> messageUpdate(int userId) {
+        return new MessageUpdate(userId, messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Integer> getUnReadGroupMessageCnt() {
+        return new UnReadGroupMessageCnt(messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Group> groupUpdate() {
+        return new GroupUpdate(messageRepositoryLazy.get());
+    }
+
+    @Override
+    public UseCase<Boolean> sendMessage(int toUserId, String message) {
         return new SendMessage(messageRepositoryLazy.get(), message, toUserId);
+    }
+
+    @Override
+    public UseCase<Boolean> sawMessage(String groupId, long timeStamp) {
+        return new SawMessage(messageRepositoryLazy.get(), groupId, timeStamp);
     }
 
     @Override
@@ -113,6 +138,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<User> login(LoginData data) {
         return new Login(userRepositoryLazy.get(), data);
+    }
+
+    @Override
+    public UseCase<Boolean> loginFirebase() {
+        return new LoginFirebase(userRepositoryLazy.get());
     }
 
     @Override
@@ -200,17 +230,17 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<String>> getBooksSearchedKeyword() {
+    public UseCase<List<Keyword>> getBooksSearchedKeyword() {
         return new GetBooksSearchedKeyword(bookRepositoryLazy.get());
     }
 
     @Override
-    public UseCase<List<String>> getAuthorsSearchedKeyword() {
+    public UseCase<List<Keyword>> getAuthorsSearchedKeyword() {
         return new GetAuthorsSearchedKeyword(bookRepositoryLazy.get());
     }
 
     @Override
-    public UseCase<List<String>> getUsersSearchedKeyword() {
+    public UseCase<List<Keyword>> getUsersSearchedKeyword() {
         return new GetUsersSearchedKeyword(userRepositoryLazy.get());
     }
 
@@ -240,7 +270,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Data> updateInfo(EditInfoInput input) {
+    public UseCase<String> updateInfo(EditInfoInput input) {
         return new EditInfo(userRepositoryLazy.get(), input);
     }
 
@@ -303,4 +333,23 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
         return new RequestBorrow(bookRepositoryLazy.get(), editionId, ownerId);
 
     }
+
+    @Override
+    public UseCase<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        return new GetUserNotifications(userRepositoryLazy.get(), page, per_page);
+    }
+    public UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+        return new RequestBookByBorrower(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
+        return new RequestBookByOwner(userRepositoryLazy.get(),input);
+    }
+
+    @Override
+    public UseCase<Data> requestBorrowBook(BorrowRequestInput input) {
+        return new RequestBorrowBook(userRepositoryLazy.get(),input);
+    }
+
 }

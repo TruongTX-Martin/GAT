@@ -63,7 +63,7 @@
         <RelativeLayout
             android:id="@+id/layoutReaded"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:background="@drawable/bg_layout_filter_book">
@@ -101,7 +101,7 @@
         <RelativeLayout
             android:id="@+id/layoutReadedOverlay"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:background="@drawable/bg_layout_filter_book_not_choosed"
@@ -110,7 +110,7 @@
         <RelativeLayout
             android:id="@+id/layoutReadedBorder"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:background="@drawable/border_layout_filter_book"
             android:visibility="visible" />
     </RelativeLayout>
@@ -127,7 +127,7 @@
         <RelativeLayout
             android:id="@+id/layoutReading"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_margin="5dp"
             android:background="@drawable/bg_layout_filter_book">
 
@@ -162,7 +162,7 @@
         <RelativeLayout
             android:id="@+id/layoutReadingOverLay"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:background="@drawable/bg_layout_filter_book_not_choosed"
@@ -171,7 +171,7 @@
         <RelativeLayout
             android:id="@+id/layoutReadingBorder"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:background="@drawable/border_layout_filter_book"
             android:visibility="visible" />
     </RelativeLayout>
@@ -188,7 +188,7 @@
         <RelativeLayout
             android:id="@+id/layoutToRead"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_margin="5dp"
             android:background="@drawable/bg_layout_filter_book">
 
@@ -223,7 +223,7 @@
         <RelativeLayout
             android:id="@+id/layoutToReadOverlay"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:background="@drawable/bg_layout_filter_book_not_choosed"
@@ -232,7 +232,7 @@
         <RelativeLayout
             android:id="@+id/layoutToReadBorder"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:background="@drawable/border_layout_filter_book"
             android:visibility="gone" />
 

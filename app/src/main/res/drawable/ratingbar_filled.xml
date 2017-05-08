@@ -3,16 +3,16 @@
 
     <item android:state_pressed="true"
         android:state_window_focused="true"
-        android:drawable="@drawable/star_rating_selected" />
+        android:drawable="@drawable/ratingbar_staron" />
 
     <item android:state_focused="true"
         android:state_window_focused="true"
-        android:drawable="@drawable/star_rating_selected" />
+        android:drawable="@drawable/ratingbar_staron" />
 
     <item android:state_selected="true"
         android:state_window_focused="true"
-        android:drawable="@drawable/star_rating_selected" />
+        android:drawable="@drawable/ratingbar_staron" />
 
-    <item android:drawable="@drawable/star_rating_selected" />
+    <item android:drawable="@drawable/ratingbar_staron" />
 
 </selector>

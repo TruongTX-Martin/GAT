@@ -36,7 +36,7 @@ public class SearchHistoryViewHolder extends ItemViewHolder<SearchHistoryItem> {
     public void onBindItem(SearchHistoryItem item) {
         super.onBindItem(item);
 
-        textViewName.setText(item.keyword());
+        textViewName.setText(item.keyword().getKeyword());
         switch (mPageType) {
             case SuggestSearchActivity.TAB_POS.TAB_BOOK:
                 imageViewIcon.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_search_history_book));

@@ -1,9 +1,7 @@
 package com.gat.feature.login.ForgotPassword;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Pair;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,18 +14,12 @@ import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
-import com.gat.domain.usecase.ResetPassword;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by ducbtsn on 3/3/17.
@@ -84,9 +76,9 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
         return LoginScreen.instance(Strings.EMPTY);
     }
 
-    public void onError(ServerResponse<ResponseData> response) {
+    public void onError(String error) {
         onVerifying(false);
-        Toast.makeText(getApplicationContext(), getString(R.string.verify_failed), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     public void onSuccess(ServerResponse<VerifyTokenResponseData> responseDataServerResponse) {

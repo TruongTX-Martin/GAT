@@ -1,81 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/layoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtTopTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#000000"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/txtTopNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#929292"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CACACA" />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:background="#f7f7f7">
 
-        <ImageView
+
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="55dp"
-            android:layout_height="80dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
-            android:src="@drawable/twitter_btn" />
+            android:src="@drawable/ic_book_default"
+            app:border_color="#8fc4e0"
+            app:border_width="1dp" />
 
         <ImageView
             android:id="@+id/imgExtend"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/ic_extend" />
 
-        <TextView
-            android:id="@+id/txtName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@+id/imgExtend"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:textColor="#000000" />
-
-        <TextView
-            android:id="@+id/txtAuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtName"
-            android:layout_toLeftOf="@+id/imgExtend"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:textColor="#000000" />
-
-        <LinearLayout
-            android:id="@+id/layoutRating"
+        <RelativeLayout
+            android:id="@+id/layoutClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtAuthor"
+            android:layout_toLeftOf="@+id/imgExtend"
+            android:layout_toRightOf="@+id/imgAvatar">
+
+            <RelativeLayout
+                android:id="@+id/layoutName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/txtStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="5dp"
+                    android:text="Dang doi"
+                    android:textColor="#4e4e4e"
+                    android:textSize="11dp" />
+
+                <TextView
+                    android:id="@+id/txtBorrowerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/txtStatus"
+                    android:text="Andy Pham"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutRequest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutName"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtSendRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Gửi yêu cầu mượn sách"
+                    android:visibility="gone"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/txtNameBook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nguoc goc loai nguoi xxxx cascascc ascascascacas"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layoutConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutClick"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_toLeftOf="@+id/imgExtend"
             android:layout_toRightOf="@+id/imgAvatar"
             android:orientation="horizontal">
 
-            <RatingBar
-                android:id="@+id/ratingBar"
-                style="@style/CustomRatingBar"
+            <TextView
+                android:id="@+id/txtAgreed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/mySwitch"
-                android:layout_below="@+id/txtName"
-                android:numStars="5" />
+                android:layout_marginRight="20dp"
+                android:text="Đồng ý"
+                android:textColor="#7cc576" />
+
+            <TextView
+                android:id="@+id/txtReject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Từ chối"
+                android:textColor="#ed1c24" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtBorrowFrom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layoutRating"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:textColor="#000000" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#CACACA"
             android:layout_alignParentBottom="true"
-            />
+            android:background="#CACACA" />
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

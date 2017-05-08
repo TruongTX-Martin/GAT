@@ -3,6 +3,7 @@ package com.gat.feature.login;
 import android.util.Log;
 
 import com.gat.common.util.Strings;
+import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
@@ -59,7 +60,13 @@ public class LoginPresenterImpl implements LoginPresenter {
     private UseCase<LoginData> loginDataUseCase;
     private final Subject<LoginData> localLoginData;
 
-    private final Subject<ServerResponse<ResponseData>> errorSubject;
+    private UseCase<User> loadLocalUserUseCase;
+    private Subject<Integer> loadLocalUserSubject;
+
+    private UseCase<Boolean> loginFirebaseUseCase;
+    private Subject<Boolean> loginFirebaseResult;
+
+    private final Subject<String> errorSubject;
 
     // Disposable to store and release observale when it done
     private CompositeDisposable loginDisposable;
@@ -86,8 +93,11 @@ public class LoginPresenterImpl implements LoginPresenter {
         this.resetTokenSubject = BehaviorSubject.create();
         this.verifyTokenResultSubject = PublishSubject.create();
 
+        this.loadLocalUserSubject = BehaviorSubject.create();
 
         this.localLoginData = BehaviorSubject.create();
+
+        this.loginFirebaseResult = BehaviorSubject.create();
 
         this.errorSubject = PublishSubject.create();
     }
@@ -131,7 +141,9 @@ public class LoginPresenterImpl implements LoginPresenter {
                             .subscribe(password -> sendPassword(password)),
                     loginDataSubject.observeOn(schedulerFactory.main())
                             .filter(loginData -> checkLoginData(loginData))
-                            .subscribe(loginData -> login(loginData))
+                            .subscribe(loginData -> login(loginData)),
+                    loadLocalUserSubject.observeOn(schedulerFactory.main())
+                            .subscribe(input -> loadLocalUser(input))
             );
             isInitialized = true;
             Log.d(TAG, "IsInitialized");
@@ -139,7 +151,7 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onError() {
+    public Observable<String> onError() {
         return errorSubject.observeOn(schedulerFactory.main());
     }
     /**
@@ -194,6 +206,54 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
+    public Observable<Boolean> loginFirebase() {
+        return loginFirebaseResult.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void loginOnFirebase() {
+        loginFirebaseUseCase = UseCases.release(loginFirebaseUseCase);
+        loginFirebaseUseCase = useCaseFactory.loginFirebase();
+
+        loginFirebaseUseCase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(isOk -> {
+                    loginFirebaseResult.onNext(isOk);
+                })
+                .onError(throwable -> {
+                    throwable.printStackTrace();
+                })
+                .onStop(() -> loginFirebaseUseCase = UseCases.release(loginFirebaseUseCase))
+                .execute();
+    }
+
+    @Override
+    public void loadLocalUser() {
+        loadLocalUserSubject.onNext(1);
+    }
+
+    private void loadLocalUser(int input) {
+        loadLocalUserUseCase = UseCases.release(loadLocalUserUseCase);
+
+        loadLocalUserUseCase = useCaseFactory.getUser();
+
+        loadLocalUserUseCase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    loginResultSubject.onNext(user);
+                })
+                .onError(throwable -> {
+                    throwable.printStackTrace();
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(throwable.getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
+                })
+                .onStop(() -> loadLocalUserUseCase = UseCases.release(loadLocalUserUseCase))
+                .execute();
+    }
+
+    @Override
     public Observable<LoginData> loadLocalLoginData() {
         return localLoginData.observeOn(schedulerFactory.main());
     }
@@ -217,15 +277,13 @@ public class LoginPresenterImpl implements LoginPresenter {
         emailResetResponse.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(response -> {
-                    if (response.code() == ServerResponse.HTTP_CODE.OK) {
-                        emailResetResultSubject.onNext(response);
-                    } else {
-                        errorSubject.onNext(ServerResponse.BAD_RESPONSE);
-                    }
+                    emailResetResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    //throwable.printStackTrace();
-                    errorSubject.onNext(ServerResponse.EXCEPTION);
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> emailResetUseCase = UseCases.release(emailResetUseCase))
                 .execute();
@@ -241,15 +299,13 @@ public class LoginPresenterImpl implements LoginPresenter {
         verifyTokenResponse.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(response -> {
-                    if(response.code() == ServerResponse.HTTP_CODE.OK) {
-                        verifyTokenResultSubject.onNext(response);
-                    } else {
-                        errorSubject.onNext(ServerResponse.BAD_RESPONSE);
-                    }
+                    verifyTokenResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    //throwable.printStackTrace();
-                    errorSubject.onNext(ServerResponse.EXCEPTION);
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> verifyTokenUseCase = UseCases.release(verifyTokenUseCase))
                 .execute();
@@ -265,15 +321,13 @@ public class LoginPresenterImpl implements LoginPresenter {
         changePasswordResponse.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(response -> {
-                    if (response.isOk()) {
-                        changePasswordResultSubject.onNext(response);
-                    } else {
-                        errorSubject.onNext(ServerResponse.BAD_RESPONSE);
-                    }
+                    changePasswordResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    //throwable.printStackTrace();
-                    errorSubject.onNext(ServerResponse.EXCEPTION);
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> changePasswordUseCase = UseCases.release(changePasswordUseCase))
                 .execute();
@@ -294,11 +348,10 @@ public class LoginPresenterImpl implements LoginPresenter {
                     loginResultSubject.onNext(result);
                 })
                 .onError(throwable -> {
-                    if (throwable instanceof LoginException) {
-                        errorSubject.onNext(((LoginException)throwable).responseData());
-                    } else {
-                        errorSubject.onNext(ServerResponse.EXCEPTION);
-                    }
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> loginUseCase = UseCases.release(loginUseCase))
                 .execute();
@@ -320,9 +373,10 @@ public class LoginPresenterImpl implements LoginPresenter {
                     localLoginData.onNext(result);
                 })
                 .onError(throwable -> {
-                    throwable.printStackTrace();
-                    //loginResultSubject.onError(/*new LoginException()*/throwable);
-                    errorSubject.onNext(ServerResponse.EXCEPTION);
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(((CommonException)throwable).getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(() -> loginDataUseCase = UseCases.release(loginDataUseCase))
                 .execute();

@@ -23,6 +23,7 @@ import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookRequestAdapter;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.book.BookRequestEntity;
 
 import java.util.ArrayList;
@@ -40,44 +41,73 @@ public class FragmentBookRequest extends Fragment {
     private RelativeLayout layoutFilter;
     private List<BookRequestEntity> listBookRequest = new ArrayList<>();
     private BookRequestAdapter adapter;
-    private PersonalFragment parrentActivity;
-    private BookRequestInput currentInput;
-
-
+    private PersonalFragment parrentFragment;
+    private BookRequestInput currentInput = new  BookRequestInput(true,true,true,true);
     //layout for popup filter
-    private RelativeLayout layoutWaitingBorder,layoutWaitingOverlay,layoutContactingBorder,layoutContactingOverlay;
-    private RelativeLayout layoutBorrowingBorder,layoutBorrowingOverlay, layoutOtherBorder,layoutOtherOverlay;
+    private RelativeLayout layoutWaitingBorder, layoutWaitingOverlay, layoutContactingBorder, layoutContactingOverlay;
+    private RelativeLayout layoutBorrowingBorder, layoutBorrowingOverlay, layoutOtherBorder, layoutOtherOverlay;
 
-    private boolean sharingWaitToConfirm,sharingContacting,sharingBorrowing,sharingOther;
-    private boolean borrowingWaitToConfirm,borrowingContacting,borrowingBorrowing,borrowingOther;
+    private boolean sharingWaitToConfirm, sharingContacting, sharingBorrowing, sharingOther;
+    private boolean borrowingWaitToConfirm, borrowingContacting, borrowingBorrowing, borrowingOther;
 
     private TextView txtMessage;
-    private ProgressBar progressBar,progressBarLoadMore;
+    private ProgressBar progressBar, progressBarLoadMore;
     private boolean isRequesting;
     private boolean isContinueMore = true;
-    private boolean isInitView ;
+    private boolean isInitView;
+
+    private int numberRequestFromYou,numberRequestToYou;
+    private boolean setTitleTo, setTitleFrom;
+
     public void setCurrentInput(BookRequestInput currentInput) {
         this.currentInput = currentInput;
     }
 
+    public int getNumberRequestFromYou() {
+        return numberRequestFromYou;
+    }
+
+    public int getNumberRequestToYou() {
+        return numberRequestToYou;
+    }
+
     public void setListBookRequest(List<BookRequestEntity> list) {
-        if(currentInput != null && currentInput.getPage() == 1) {
+        if (currentInput != null && currentInput.getPage() == 1) {
             listBookRequest.clear();
-            if(isInitView){
-                if(list.size() == 0){
+            if (isInitView) {
+                if (list.size() == 0) {
                     txtMessage.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
-                }else{
+                } else {
                     txtMessage.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                 }
             }
 
         }
-        if(currentInput != null && currentInput.getPage() > 1 && list.size() ==0){
+        if (currentInput != null && currentInput.getPage() > 1 && list.size() == 0) {
             isContinueMore = false;
         }
         this.listBookRequest.addAll(list);
+        numberRequestToYou = 0; numberRequestFromYou = 0;
+        setTitleFrom = false; setTitleTo = false;
+        if(listBookRequest.size() > 0) {
+            for (int i=0; i< listBookRequest.size() ; i++) {
+                if (listBookRequest.get(i).getRecordType() == 1) {
+                    numberRequestToYou ++;
+                    if(!setTitleTo) {
+                        listBookRequest.get(i).setHeader(true);
+                        setTitleTo = true;
+                    }
+                }else if(listBookRequest.get(i).getRecordType() == 2){
+                    numberRequestFromYou ++;
+                    if (!setTitleFrom) {
+                        listBookRequest.get(i).setHeader(true);
+                        setTitleFrom = true;
+                    }
+                }
+            }
+        }
         hideLoading();
         hideLoadMore();
         if (adapter != null) {
@@ -86,8 +116,8 @@ public class FragmentBookRequest extends Fragment {
         isRequesting = false;
     }
 
-    public void setParrentActivity(PersonalFragment parrentActivity) {
-        this.parrentActivity = parrentActivity;
+    public void setParrentFragment(PersonalFragment parrentFragment) {
+        this.parrentFragment = parrentFragment;
     }
 
     @Override
@@ -99,6 +129,7 @@ public class FragmentBookRequest extends Fragment {
         initView();
         handleEvent();
         isInitView = true;
+        searchBook();
         return rootView;
     }
 
@@ -119,6 +150,46 @@ public class FragmentBookRequest extends Fragment {
 
     private void handleEvent() {
         layoutFilter.setOnClickListener(v -> showDialogFilter());
+//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                BookRequestEntity entity = listBookRequest.get(position);
+//                int recordType = entity.getRecordType();
+//                int recodeId = entity.getRecordId();
+//                if (recordType == 1) {
+//                    //sharing - user borrower -> request  by owner
+//                    Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
+//                    intent.putExtra("BorrowingRecordId", recodeId);
+//                    MainActivity.instance.startActivity(intent);
+//                } else if (recordType == 2) {
+//                    //borrowing - use owerner -> request by sender
+//                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
+//                    intent.putExtra("BorrowingRecordId", recodeId);
+//                    MainActivity.instance.startActivity(intent);
+//                }
+//            }
+//
+//            @Override
+//            public void onItemLongClick(View view, int position) {
+//
+//            }
+//        }));
+    }
+
+    public void agreedRequest(BookRequestEntity entity){
+        RequestStatusInput statusInput = new RequestStatusInput();
+        statusInput.setCurrentStatus(0);
+        statusInput.setNewStatus(2);
+        statusInput.setRecordId(entity.getRecordId());
+        parrentFragment.requestBookOwner(statusInput);
+    }
+
+    public void rejectRequest(BookRequestEntity entity){
+        RequestStatusInput statusInput = new RequestStatusInput();
+        statusInput.setCurrentStatus(0);
+        statusInput.setNewStatus(5);
+        statusInput.setRecordId(entity.getRecordId());
+        parrentFragment.requestBookOwner(statusInput);
     }
 
     private void showLoading() {
@@ -127,37 +198,41 @@ public class FragmentBookRequest extends Fragment {
     }
 
     private void hideLoading() {
-        if(progressBar != null) {
+        if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
-        if(recyclerView != null) {
+        if (recyclerView != null) {
             recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
-    private void showLoadMore(){
+    private void showLoadMore() {
         progressBarLoadMore.setVisibility(View.VISIBLE);
     }
 
     private void hideLoadMore() {
-        if(progressBarLoadMore != null) {
+        if (progressBarLoadMore != null) {
             progressBarLoadMore.setVisibility(View.GONE);
         }
     }
 
-    public  void loadMore(){
-        if(isRequesting == false && isContinueMore) {
-            currentInput.setPage(currentInput.getPage()+1);
+    public void loadMore() {
+        if (isRequesting == false && isContinueMore) {
+            currentInput.setPage(currentInput.getPage() + 1);
             searchBook();
             showLoadMore();
         }
     }
 
     private void showDialogFilter() {
-        sharingWaitToConfirm = currentInput.isSharingWaitConfirm(); sharingContacting = currentInput.isSharingContacting();
-        sharingBorrowing = currentInput.isSharingBorrowing();sharingOther = currentInput.isSharingOther();
-        borrowingWaitToConfirm = currentInput.isBorrowWaitConfirm(); borrowingContacting = currentInput.isBorrowBorrowing();
-        borrowingBorrowing = currentInput.isBorrowBorrowing(); borrowingOther = currentInput.isBorrowOther();
+        sharingWaitToConfirm = currentInput.isSharingWaitConfirm();
+        sharingContacting = currentInput.isSharingContacting();
+        sharingBorrowing = currentInput.isSharingBorrowing();
+        sharingOther = currentInput.isSharingOther();
+        borrowingWaitToConfirm = currentInput.isBorrowWaitConfirm();
+        borrowingContacting = currentInput.isBorrowBorrowing();
+        borrowingBorrowing = currentInput.isBorrowBorrowing();
+        borrowingOther = currentInput.isBorrowOther();
         LayoutInflater inflater = LayoutInflater.from(MainActivity.instance);
         View customView = inflater.inflate(R.layout.layout_popup_book_request_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
@@ -181,16 +256,16 @@ public class FragmentBookRequest extends Fragment {
         layoutOtherOverlay = (RelativeLayout) customView.findViewById(R.id.layoutOtherOverlay);
 
         imgClose.setOnClickListener(v -> {
-            if(sharingWaitToConfirm == currentInput.isSharingWaitConfirm()
+            if (sharingWaitToConfirm == currentInput.isSharingWaitConfirm()
                     && sharingContacting == currentInput.isSharingContacting()
                     && sharingBorrowing == currentInput.isSharingBorrowing()
                     && sharingOther == currentInput.isSharingOther()
                     && borrowingWaitToConfirm == currentInput.isBorrowWaitConfirm()
                     && borrowingContacting == currentInput.isBorrowContacting()
                     && borrowingBorrowing == currentInput.isBorrowBorrowing()
-                    && borrowingOther == currentInput.isBorrowOther()){
+                    && borrowingOther == currentInput.isBorrowOther()) {
                 //do nothing
-            }else{
+            } else {
                 currentInput.setSharingWaitConfirm(sharingWaitToConfirm);
                 currentInput.setSharingContacting(sharingContacting);
                 currentInput.setSharingBorrowing(sharingBorrowing);
@@ -231,72 +306,72 @@ public class FragmentBookRequest extends Fragment {
             refreshViewBorrowing();
         });
         layoutWaitingBorder.setOnClickListener(v -> {
-            if(layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
+            if (layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
                 sharingWaitToConfirm = false;
-            }else{
+            } else {
                 borrowingWaitToConfirm = false;
             }
             layoutWaitingOverlay.setVisibility(View.VISIBLE);
             layoutWaitingBorder.setVisibility(View.GONE);
         });
         layoutWaitingOverlay.setOnClickListener(v -> {
-            if(layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
+            if (layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
                 sharingWaitToConfirm = true;
-            }else{
+            } else {
                 borrowingWaitToConfirm = true;
             }
             layoutWaitingOverlay.setVisibility(View.GONE);
             layoutWaitingBorder.setVisibility(View.VISIBLE);
         });
         layoutContactingBorder.setOnClickListener(v -> {
-            if(layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
+            if (layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
                 sharingContacting = false;
-            }else{
+            } else {
                 borrowingContacting = false;
             }
             layoutContactingOverlay.setVisibility(View.VISIBLE);
             layoutContactingBorder.setVisibility(View.GONE);
         });
         layoutContactingOverlay.setOnClickListener(v -> {
-            if(layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
+            if (layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
                 sharingContacting = true;
-            }else{
+            } else {
                 borrowingContacting = true;
             }
             layoutContactingOverlay.setVisibility(View.GONE);
             layoutContactingBorder.setVisibility(View.VISIBLE);
         });
         layoutBorrowingBorder.setOnClickListener(v -> {
-            if(layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
+            if (layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
                 sharingBorrowing = false;
-            }else{
+            } else {
                 borrowingBorrowing = false;
             }
             layoutBorrowingOverlay.setVisibility(View.VISIBLE);
             layoutBorrowingBorder.setVisibility(View.GONE);
         });
         layoutBorrowingOverlay.setOnClickListener(v -> {
-            if(layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
+            if (layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
                 sharingBorrowing = true;
-            }else{
+            } else {
                 borrowingBorrowing = true;
             }
             layoutBorrowingOverlay.setVisibility(View.GONE);
             layoutBorrowingBorder.setVisibility(View.VISIBLE);
         });
         layoutOtherBorder.setOnClickListener(v -> {
-            if(layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
+            if (layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
                 sharingOther = false;
-            }else{
+            } else {
                 borrowingOther = false;
             }
             layoutOtherOverlay.setVisibility(View.VISIBLE);
             layoutOtherBorder.setVisibility(View.GONE);
         });
         layoutOtherOverlay.setOnClickListener(v -> {
-            if(layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
+            if (layoutRequestToYouOVerlay.getVisibility() == View.GONE) {
                 sharingOther = true;
-            }else{
+            } else {
                 borrowingOther = true;
             }
             layoutOtherOverlay.setVisibility(View.GONE);
@@ -305,77 +380,79 @@ public class FragmentBookRequest extends Fragment {
         popupWindow.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
     }
 
-    private void refreshViewSharing(){
-        if(sharingWaitToConfirm) {
+    private void refreshViewSharing() {
+        if (sharingWaitToConfirm) {
             layoutWaitingOverlay.setVisibility(View.GONE);
             layoutWaitingBorder.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             layoutWaitingOverlay.setVisibility(View.VISIBLE);
             layoutWaitingBorder.setVisibility(View.GONE);
         }
 
-        if(sharingContacting) {
+        if (sharingContacting) {
             layoutContactingOverlay.setVisibility(View.GONE);
             layoutContactingBorder.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             layoutContactingOverlay.setVisibility(View.VISIBLE);
             layoutContactingBorder.setVisibility(View.GONE);
         }
 
-        if(sharingBorrowing){
+        if (sharingBorrowing) {
             layoutBorrowingOverlay.setVisibility(View.GONE);
             layoutBorrowingBorder.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             layoutBorrowingOverlay.setVisibility(View.VISIBLE);
             layoutBorrowingBorder.setVisibility(View.GONE);
         }
 
-        if(sharingOther) {
+        if (sharingOther) {
             layoutOtherOverlay.setVisibility(View.GONE);
             layoutOtherBorder.setVisibility(View.VISIBLE);
-        }else{
-            layoutOtherOverlay.setVisibility(View.VISIBLE);
-            layoutOtherBorder.setVisibility(View.GONE);
-        }
-    }
-    private void refreshViewBorrowing(){
-        if(borrowingWaitToConfirm) {
-            layoutWaitingOverlay.setVisibility(View.GONE);
-            layoutWaitingBorder.setVisibility(View.VISIBLE);
-        }else{
-            layoutWaitingOverlay.setVisibility(View.VISIBLE);
-            layoutWaitingBorder.setVisibility(View.GONE);
-        }
-
-        if(borrowingContacting) {
-            layoutContactingOverlay.setVisibility(View.GONE);
-            layoutContactingBorder.setVisibility(View.VISIBLE);
-        }else{
-            layoutContactingOverlay.setVisibility(View.VISIBLE);
-            layoutContactingBorder.setVisibility(View.GONE);
-        }
-
-        if(borrowingBorrowing){
-            layoutBorrowingOverlay.setVisibility(View.GONE);
-            layoutBorrowingBorder.setVisibility(View.VISIBLE);
-        }else{
-            layoutBorrowingOverlay.setVisibility(View.VISIBLE);
-            layoutBorrowingBorder.setVisibility(View.GONE);
-        }
-
-        if(borrowingOther) {
-            layoutOtherOverlay.setVisibility(View.GONE);
-            layoutOtherBorder.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             layoutOtherOverlay.setVisibility(View.VISIBLE);
             layoutOtherBorder.setVisibility(View.GONE);
         }
     }
 
-    private void searchBook(){
+    private void refreshViewBorrowing() {
+        if (borrowingWaitToConfirm) {
+            layoutWaitingOverlay.setVisibility(View.GONE);
+            layoutWaitingBorder.setVisibility(View.VISIBLE);
+        } else {
+            layoutWaitingOverlay.setVisibility(View.VISIBLE);
+            layoutWaitingBorder.setVisibility(View.GONE);
+        }
+
+        if (borrowingContacting) {
+            layoutContactingOverlay.setVisibility(View.GONE);
+            layoutContactingBorder.setVisibility(View.VISIBLE);
+        } else {
+            layoutContactingOverlay.setVisibility(View.VISIBLE);
+            layoutContactingBorder.setVisibility(View.GONE);
+        }
+
+        if (borrowingBorrowing) {
+            layoutBorrowingOverlay.setVisibility(View.GONE);
+            layoutBorrowingBorder.setVisibility(View.VISIBLE);
+        } else {
+            layoutBorrowingOverlay.setVisibility(View.VISIBLE);
+            layoutBorrowingBorder.setVisibility(View.GONE);
+        }
+
+        if (borrowingOther) {
+            layoutOtherOverlay.setVisibility(View.GONE);
+            layoutOtherBorder.setVisibility(View.VISIBLE);
+        } else {
+            layoutOtherOverlay.setVisibility(View.VISIBLE);
+            layoutOtherBorder.setVisibility(View.GONE);
+        }
+    }
+
+    private void searchBook() {
+        if (currentInput == null) return;
         isRequesting = true;
-        parrentActivity.requestBookRequest(currentInput);
-        if(currentInput.getPage() == 1){
+        parrentFragment.requestBookRequest(currentInput);
+        if (currentInput.getPage() == 1) {
             txtMessage.setVisibility(View.GONE);
             showLoading();
             listBookRequest.clear();

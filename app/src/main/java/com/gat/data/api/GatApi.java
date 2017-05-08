@@ -3,13 +3,16 @@ package com.gat.data.api;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.ResultInfoObject;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.SimpleResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.data.response.impl.LoginResponseData;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.ResultInfoList;
 import com.gat.data.response.impl.VerifyTokenResponseData;
@@ -70,8 +73,8 @@ public interface GatApi {
             @Field("socialType") String socialType,
             @Field("name") String name,
             @Field("email") String email,
-            @Field("password") String password/*,
-            @Field("image") RequestBody image*/
+            @Field("password") String password,
+            @Field("image") String image
     );
 
     @FormUrlEncoded
@@ -95,19 +98,19 @@ public interface GatApi {
     );
 
     @GET("user/get_user_information")
-    Observable<User> getUserInformation();
+    Observable<User> getPublicUserInfo();
 
     @FormUrlEncoded
     @POST("user/update_usually_location")
-    Observable<Response<ServerResponse>> updateLocation(
+    Observable<Response<ServerResponse<SimpleResponse>>> updateLocation(
             @Field("address") String address,
             @Field("longitude") float longitude,
             @Field("latitude") float latitude
     );
 
     @FormUrlEncoded
-    @POST("user/update_favourite_category")
-    Observable<Response<ServerResponse>> updateCategory(
+    @POST("user/update_favorite_category")
+    Observable<Response<ServerResponse<SimpleResponse>>> updateCategory(
             @Field("categories") List<Integer> categories
     );
 
@@ -193,15 +196,15 @@ public interface GatApi {
     );
 
     @GET("search/get_book_searched_keyword")
-    Observable<Response<ServerResponse<ResultInfoList<String>>>> getBooksSearchedKeyword(
+    Observable<Response<ServerResponse<ResultInfoList<Keyword>>>> getBooksSearchedKeyword(
     );
 
     @GET("search/get_author_searched_keyword")
-    Observable<Response<ServerResponse<ResultInfoList<String>>>> getAuthorsSearchedKeyword(
+    Observable<Response<ServerResponse<ResultInfoList<Keyword>>>> getAuthorsSearchedKeyword(
     );
 
     @GET("search/get_user_searched_keyword")
-    Observable<Response<ServerResponse<ResultInfoList<String>>>> getUsersSearchedKeyword(
+    Observable<Response<ServerResponse<ResultInfoList<Keyword>>>> getUsersSearchedKeyword(
     );
 
     @GET("user/get_user_private_info")
@@ -253,7 +256,7 @@ public interface GatApi {
     );
 
     @GET("book/selfget_reading_stt")
-    Observable<Response<ServerResponse<ResultInfoObject<BookReadingInfo>>>> getReadingStatus (
+    Observable<Response<ServerResponse<BookReadingInfo>>> getReadingStatus (
             @Query("editionId") int editionId
     );
 
@@ -278,7 +281,7 @@ public interface GatApi {
     );
 
     @GET("book/selfget_instance_info")
-    Observable<Response<ServerResponse<ResultInfoObject<BookInstanceInfo>>>> getSelfInstanceInfo (
+    Observable<Response<ServerResponse<BookInstanceInfo>>> getSelfInstanceInfo (
             @Query("editionId") int editionId
     );
 
@@ -300,10 +303,22 @@ public interface GatApi {
 
     @FormUrlEncoded
     @POST("share/create_request")
-    Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>>
-            requestBorrow (
+    Observable<Response<ServerResponse<ResultInfoObject<BorrowResponse>>>> requestBorrow (
             @Field("editionId") int editionId,
             @Field("ownerId") int ownerId
+    );
+
+    @GET("user/get_user_notification")
+    Observable<Response<ServerResponse<DataResultListResponse<NotifyEntity>>>> getUserNotification (
+            @Query("page") int page,
+            @Query("per_page") int per_page);
+
+    @FormUrlEncoded
+    @POST("share/update_request_by_borrower")
+    Observable<Response<ServerResponse<Data>>> requestBookByBorrower(
+            @Field("recordId") int recordId,
+            @Field("currentStatus") int currentStatus,
+            @Field("newStatus") int newStatus
     );
 
 
@@ -338,6 +353,36 @@ public interface GatApi {
     Observable<Response<ServerResponse>> addEmailPassword (
             @Field("email") String email,
             @Field("password") String password
+    );
+
+
+    @FormUrlEncoded
+    @POST("share/update_request_by_owner")
+    Observable<Response<ServerResponse<Data>>> requestBookByOwner(
+            @Field("recordId") int recordId,
+            @Field("currentStatus") int currentStatus,
+            @Field("newStatus") int newStatus
+    );
+
+
+    @FormUrlEncoded
+    @POST("user/firebase_token_register")
+    Observable<Response<ServerResponse<Boolean>>> registerFirebaseToken (
+            @Field("firebaseToken") String firebaseToken
+    );
+
+    @FormUrlEncoded
+    @POST("user/push_message_notification")
+    Observable<Response<ServerResponse<Boolean>>> messageNotification (
+            @Field("receiverId") int receiverId,
+            @Field("Message") String message
+    );
+
+    @FormUrlEncoded
+    @POST("share/create_request")
+    Observable<Response<ServerResponse<Data>>> requestBorrowBook (
+            @Field("editionId") int editionId,
+            @Field("ownerId") int ownerId
     );
 
 

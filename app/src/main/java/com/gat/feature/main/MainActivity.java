@@ -1,15 +1,27 @@
 package com.gat.feature.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.KeyEvent;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.view.NonSwipeableViewPager;
+import com.gat.common.util.NotificationConfig;
+import com.gat.data.firebase.entity.Notification;
+import com.gat.data.firebase.entity.NotificationParcelable;
+import com.gat.feature.message.MessageActivity;
+import com.gat.feature.message.presenter.MessagePresenter;
+import com.gat.feature.message.presenter.MessageScreen;
+import com.gat.feature.notification.NotificationFragment;
+import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.setting.SettingFragment;
@@ -36,12 +48,13 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     }
 
     @BindView(R.id.viewPager)
-    ViewPager mViewPager;
+    NonSwipeableViewPager mViewPager;
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
 
     public static MainActivity instance;
+    private PersonalFragment personalFragment;
 
     @Override
     protected int getLayoutResource() {
@@ -69,6 +82,14 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
 
         ClientUtils.context = getApplicationContext();
         instance = this;
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            NotificationParcelable parcelable = intent.getExtras().getParcelable("data");
+            if (parcelable != null)
+                processNotification(parcelable.getNotification());
+        }
+
         // setup view pager
         setupViewPager(mViewPager);
         // setup tab layout
@@ -100,12 +121,14 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onDestroy();
     }
 
+
     private void setupViewPager(ViewPager viewPager) {
+        personalFragment = new PersonalFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
-        adapter.addFragment(new PersonalFragment(), "PERSONAL");
+        adapter.addFragment(personalFragment, "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
-        adapter.addFragment(new Fragment(), "NOTICE");
+        adapter.addFragment(new NotificationFragment(), "NOTICE");
         adapter.addFragment(new SettingFragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
@@ -141,4 +164,39 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Constance.RESULT_UPDATEUSER){
+            personalFragment.requestPersonalInfo();
+        }
+    }
+
+    private void processNotification(Notification notification) {
+        switch (notification.pushType()) {
+            case NotificationConfig.PushType.PRIVATE_MESSAGE:
+                String message = notification.message();
+                String userName = message.substring(0, message.indexOf(":"));
+                Log.d("ReceiveNotification", message);
+                start(this, MessageActivity.class, MessageScreen.instance(userName, notification.senderID()));
+            case NotificationConfig.PushType.BOOK_ACCEPTED:
+                break;
+            case NotificationConfig.PushType.REQUEST_BORROW:
+            case NotificationConfig.PushType.BOOK_BORROWED:
+            case NotificationConfig.PushType.BOOK_INFORM_LENT:
+            case NotificationConfig.PushType.BOOK_INFORM_RETURN:
+            case NotificationConfig.PushType.BOOK_REJECTED:
+            case NotificationConfig.PushType.BOOK_INFORM_LOST:
+            case NotificationConfig.PushType.BOOK_REQUEST_CANCEL:
+
+                break;
+            case NotificationConfig.PushType.BOOK_INFORM_BORROW:
+            case NotificationConfig.PushType.BOOK_REQUESTED_QUANTITY:
+
+                break;
+            default:
+                break;
+
+        }
+    }
 }

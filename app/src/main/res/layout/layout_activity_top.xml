@@ -13,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:src="@drawable/ic_back" />
+        android:src="@drawable/narrow_back_white" />
 
     <ImageView
         android:id="@+id/imgSave"
@@ -33,7 +33,7 @@
         android:layout_toRightOf="@+id/imgBack"
         android:gravity="center_horizontal"
         android:text="SỬA THÔNG TIN CÁ NHÂN"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="18dp" />
 
     <View

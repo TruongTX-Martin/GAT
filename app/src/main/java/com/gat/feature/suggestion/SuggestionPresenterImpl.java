@@ -6,11 +6,13 @@ import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
+import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
 
 import java.util.List;
 
 import com.gat.repository.entity.LoginData;
+import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import io.reactivex.Observable;
@@ -36,6 +38,9 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     private UseCase<List<UserNearByDistance>> userNearByDistance;
     private final Subject<List<UserNearByDistance>> resultListUserNearByDistance;
 
+    private UseCase<Integer> unReadGroupMessageUseCase;
+    private final Subject<Integer> unReadGroupMessageSubject;
+
     private final Subject<String> errorSubject;
 
     private int mPage;
@@ -50,6 +55,8 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
         errorSubject = PublishSubject.create();
         resultListUserNearByDistance = PublishSubject.create();
         resultBooksSuggestSubject = PublishSubject.create();
+
+        unReadGroupMessageSubject = BehaviorSubject.create();
     }
 
     @Override
@@ -85,13 +92,13 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     @Override
     public void suggestBooks() {
 
-        // get user login data
-        UseCase<LoginData> loginData = useCaseFactory.getLoginData();
-        loginData.executeOn(schedulerFactory.io())
+        // get cached user data
+        UseCase<User> loadLocalUser = useCaseFactory.getUser();
+        loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
-                .onNext(result -> {
-                    MZDebug.w("local login: " + result.toString());
-                    if (result.equals(LoginData.EMPTY)) {
+                .onNext(user -> {
+                    MZDebug.w("local login: " + user.isValid());
+                    if (!user.isValid()) {
                         doSuggestBookWithoutLogin();
                     } else {
                         doSuggestBookAfterLogin();
@@ -164,6 +171,26 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     @Override
     public Observable<String> onError() {
         return errorSubject.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void getUnReadGroupMessage() {
+        unReadGroupMessageUseCase = UseCases.release(unReadGroupMessageUseCase);
+        unReadGroupMessageUseCase = useCaseFactory.getUnReadGroupMessageCnt();
+        unReadGroupMessageUseCase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(cnt -> unReadGroupMessageSubject.onNext(cnt))
+                .onError(throwable -> {
+                    throwable.printStackTrace();
+                    unReadGroupMessageSubject.onNext(0);
+                })
+                .onStop(() -> unReadGroupMessageUseCase = UseCases.release(unReadGroupMessageUseCase))
+                .execute();
+    }
+
+    @Override
+    public Observable<Integer> unReadCnt() {
+        return unReadGroupMessageSubject.subscribeOn(schedulerFactory.main());
     }
 
 }

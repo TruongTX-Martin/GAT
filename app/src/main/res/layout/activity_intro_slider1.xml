@@ -4,29 +4,37 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/intro_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/intro_icon_1"/>
+            android:layout_marginTop="@dimen/slider_margin_top"
+            android:layout_marginBottom="@dimen/slider_margin_bottom"
+            android:src="@drawable/intro_slider_1"/>
 
         <TextView
+            android:id="@+id/intro_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/intro_title_1"
             android:textSize="@dimen/header_textsize"
             android:textStyle="bold"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:layout_marginBottom="@dimen/slider_margin_text_bottom"/>
         <TextView
+            android:id="@+id/intro_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/intro_content_1"
             android:textSize="@dimen/normal_textsize"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            android:textAlignment="center"
+            android:layout_marginLeft="@dimen/slider_margin_left_right"
+            android:layout_marginRight="@dimen/slider_margin_left_right"/>
     </LinearLayout>
 </RelativeLayout>

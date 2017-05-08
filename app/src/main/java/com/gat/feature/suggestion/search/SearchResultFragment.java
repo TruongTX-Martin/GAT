@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.gat.R;
@@ -19,7 +20,9 @@ import com.gat.common.listener.LoadMoreScrollListener;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.feature.personaluser.PersonalUserActivity;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.suggestion.search.item.SearchBookResultItem;
 import com.gat.feature.suggestion.search.item.SearchBuilder;
 import com.gat.feature.suggestion.search.item.SearchHistoryItem;
@@ -46,6 +49,9 @@ public class SearchResultFragment extends Fragment
 
     @BindView(R.id.recycler_view_search)
     RecyclerView recyclerView;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
     private OnUserTapOnKeyword onUserTapOnKeyword;
     private OnFragmentRequestLoadMore requestLoadMore;
@@ -89,21 +95,26 @@ public class SearchResultFragment extends Fragment
     }
 
     @Override
-    public void onLoadHistoryResult(List<String> list) {
+    public void onLoadHistoryResult(List<Keyword> list) {
         MZDebug.w("onLoadHistoryResult đã nhận được history || TAB = " + mTabType + ", list size = " + list.size());
 
+        hideProgress();
         List<Item> listItems = SearchBuilder.transformListHistory(list);
         this.searchResultAdapter.setItem(listItems);
     }
 
+
     @Override
     public void onSearchBookResult(List<BookResponse> list) {
+
+        hideProgress();
         if (null == list) {
             MZDebug.w("WARNING: onSearchBookResult : list null _________________________________W");
             return;
         }
 
-        this.textViewTitle.setText("Hiển thị " + list.size() + " kết quả tìm kiếm");
+        String totalString = String.format(getString(R.string.show_count_search_result), list.size());
+        this.textViewTitle.setText(totalString);
 
         this.searchResultAdapter.clearAllItems();
         List<Item> listItems = SearchBuilder.transformListBook(list);
@@ -112,6 +123,8 @@ public class SearchResultFragment extends Fragment
 
     @Override
     public void onSearchUserResult(List<UserResponse> list) {
+
+        hideProgress();
         if (null == list) {
             MZDebug.w("WARNING: onSearchUserResult : list null _________________________________W");
             return;
@@ -133,17 +146,26 @@ public class SearchResultFragment extends Fragment
         Item item = searchResultAdapter.getItemAt(position);
 
         if (item instanceof SearchHistoryItem) {
+
             SearchHistoryItem historyItem = (SearchHistoryItem) item;
-            onUserTapOnKeyword.onUserTapOnHistoryKeyword(historyItem.keyword());
+            onUserTapOnKeyword.onUserTapOnHistoryKeyword(historyItem.keyword().getKeyword());
         } else if (item instanceof SearchBookResultItem) {
+
             SearchBookResultItem bookItem = (SearchBookResultItem) item;
             Toast.makeText(getActivity(), "Book id: " + bookItem.bookResponse().getBookId() + ", EditionId: " + bookItem.bookResponse().getEditionId(), Toast.LENGTH_SHORT).show();
         } else if (item instanceof SearchUserResultItem) {
+
             SearchUserResultItem userItem = (SearchUserResultItem) item;
-//            Toast.makeText(getActivity(), "User id: " + userItem.userResponse().getUserId(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(SuggestSearchActivity.instance, PersonalUserActivity.class);
-            intent.putExtra("UserInfo",userItem.userResponse());
-            SuggestSearchActivity.instance.startActivity(intent);
+            SuggestSearchActivity.start(getActivity().getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(userItem.userResponse()));
+
         }
+    }
+
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

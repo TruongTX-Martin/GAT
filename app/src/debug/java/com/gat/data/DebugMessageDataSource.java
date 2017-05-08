@@ -29,28 +29,60 @@ public class DebugMessageDataSource implements MessageDataSource {
         this.firebaseService = firebaseService;
     }
     @Override
-    public Observable<List<MessageTable>> getMessageList(String groupId, int page, int size) {
-        firebaseService.getMessageList(groupId, page, size);
+    public Observable<List<MessageTable>> getMessageList(int userId, int page, int size) {
+        firebaseService.getMessageList(userId, page, size);
         return firebaseService.messageList();
+    }
+
+    @Override
+    public Observable<MessageTable> messageUpdate(int userId) {
+        return firebaseService.hasNewMessage(userId);
     }
 
     @Override
     public Observable<List<GroupTable>> getGroupList(int page, int size) {
         return firebaseService.getGroupList(page, size);
     }
+
     @Override
-    public Observable<Boolean> sendMessage(String toUserId, String message) {
+    public Observable<GroupTable> groupUpdate() {
+        return firebaseService.groupUpdated();
+    }
+
+    @Override
+    public Observable<Boolean> sendMessage(int toUserId, String message) {
+        firebaseService.sendMessage((long)toUserId, message);
+        return firebaseService.sendResult();
+    }
+
+    @Override
+    public Observable<List<Group>> loadGroupList() {
         return null;
     }
 
     @Override
-    public Observable<List<Group>> storeGroupList(List<Group> groupList) {
+    public Observable<Group> storeGroup(Group group) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Message>> loadMessageList(String groupId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<Message> storeMessage(String groupId, Message message) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Observable<List<Message>> storeMessageList(String groupId, List<Message> messageList) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void sawMessage(String groupId, long timeStamp) {
+        firebaseService.sawMessage(groupId, timeStamp);
     }
 
     private List<Message> listOfMessages(Message... messages) {

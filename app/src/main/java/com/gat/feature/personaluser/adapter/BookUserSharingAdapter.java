@@ -15,6 +15,7 @@ import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.feature.personaluser.fragment.FragmentBookUserSharing;
 import com.gat.repository.entity.book.BookSharingEntity;
 
@@ -56,6 +57,7 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                 holder.txtAuthor.setText(entity.getAuthor());
             }
             holder.ratingBar.setNumStars((int) entity.getRateAvg());
+            holder.txtRating.setText(entity.getRateAvg() +"");
             if (!Strings.isNullOrEmpty(entity.getImageId())) {
                 ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
             }
@@ -67,12 +69,34 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                 holder.btnWaitBorrow.setVisibility(View.VISIBLE);
                 holder.btnBorrow.setVisibility(View.GONE);
                 holder.imgExtend.setVisibility(View.INVISIBLE);
+                holder.txtStatus.setVisibility(View.VISIBLE);
             } else if (entity.getAvailableStatus() == 1 && entity.getRequestingStatus() == 1) {
                 holder.txtWaitAgreed.setVisibility(View.VISIBLE);
                 holder.imgExtend.setVisibility(View.VISIBLE);
                 holder.btnBorrow.setVisibility(View.GONE);
                 holder.btnWaitBorrow.setVisibility(View.GONE);
+                if(entity.getRecordStatus() == 0) {
+                    holder.txtStatus.setVisibility(View.VISIBLE);
+                    holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.wait_for_accept_borrow));
+                }else if(entity.getRecordStatus() == 1) {
+                    holder.txtStatus.setVisibility(View.VISIBLE);
+                    holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.wait_your_turn));
+                }else if (entity.getRecordStatus() == 2) {
+                    holder.txtStatus.setVisibility(View.VISIBLE);
+                    holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.is_connecting));
+                }else if (entity.getRecordStatus() == 3) {
+                    holder.txtStatus.setVisibility(View.VISIBLE);
+                    holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.is_borrowing));
+                }
             }
+            holder.btnBorrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BorrowRequestInput input = new BorrowRequestInput();
+                    input.setEditionId(entity.getEditionId());
+                    fragmentBookSharing.requestBorrowBook(input);
+                }
+            });
         }
         if (getItemCount() > 9 && position == (getItemCount() - 1)) {
             fragmentBookSharing.loadMore();
@@ -85,7 +109,7 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
     }
 
     public class BookSharingViewHolder extends RecyclerView.ViewHolder {
-        TextView txtTitle, txtAuthor, txtBorrowFrom, txtShared, txtWaitAgreed;
+        TextView txtTitle, txtAuthor, txtStatus, txtShared, txtWaitAgreed,txtRating;
         ImageView imgBook, imgExtend;
         RatingBar ratingBar;
         Button btnBorrow, btnWaitBorrow;
@@ -94,12 +118,13 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.txtName);
             txtAuthor = (TextView) view.findViewById(R.id.txtAuthor);
-            txtBorrowFrom = (TextView) view.findViewById(R.id.txtBorrowFrom);
+            txtStatus = (TextView) view.findViewById(R.id.txtStatus);
             txtShared = (TextView) view.findViewById(R.id.txtShared);
             imgBook = (ImageView) view.findViewById(R.id.imgAvatar);
             imgExtend = (ImageView) view.findViewById(R.id.imgExtend);
             ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
             txtWaitAgreed = (TextView) view.findViewById(R.id.txtWaitAgreed);
+            txtRating = (TextView) view.findViewById(R.id.txtRating);
             btnBorrow = (Button) view.findViewById(R.id.btnBorrow);
             btnWaitBorrow = (Button) view.findViewById(R.id.btnWaitBorrow);
         }

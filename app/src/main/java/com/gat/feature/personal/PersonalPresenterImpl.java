@@ -1,5 +1,10 @@
 package com.gat.feature.personal;
 
+import android.util.Log;
+
+import com.gat.common.util.MZDebug;
+import com.gat.data.exception.LoginException;
+import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.PaperUserDataSource;
@@ -7,10 +12,12 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
 
@@ -66,6 +73,17 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private Subject<BookRequestInput> requestBookInputSubject;
     private Subject<ServerResponse<ResponseData>> requestBookError;
 
+
+    //change status book
+    private CompositeDisposable changeStatusDisposable;
+    private final Subject<ChangeStatusResponse> changeStatusResultSubject;
+    private final Subject<RequestStatusInput> changeStatusInputSubject;
+    private final Subject<String> changeStatusError;
+    private UseCase<ChangeStatusResponse> changeStatusUsecase;
+
+    private final UseCase<User> loadLocalUser;
+    private boolean isLogin;
+
     public PersonalPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
@@ -90,6 +108,15 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         this.requestBookError = PublishSubject.create();
         requestBookResultSubject = PublishSubject.create();
         requestBookInputSubject =  BehaviorSubject.create();
+
+
+        this.changeStatusError = PublishSubject.create();
+        changeStatusResultSubject = PublishSubject.create();
+        changeStatusInputSubject = BehaviorSubject.create();
+
+        loadLocalUser = useCaseFactory.getUser();
+
+        isLogin = false;
     }
 
     @Override
@@ -108,8 +135,28 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
         requestBooksDisposable = new CompositeDisposable(requestBookInputSubject.
                 observeOn(schedulerFactory.main()).subscribe(this::getRequestBookData));
+
+        changeStatusDisposable = new CompositeDisposable(
+                changeStatusInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getChangeStatus)
+        );
+        // TODO 170506 do not start get personal information here
         //start get personal data
-        personalInputSubject.onNext("");
+        //personalInputSubject.onNext("");
+        loadLocalUser.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    MZDebug.w("local login: " + user.isValid());
+                    if (user.isValid()) {
+                        isLogin = true;
+                    } else {
+                        isLogin = false;
+                    }
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
     }
 
     @Override
@@ -118,6 +165,29 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         bookInstanceDisposable.dispose();
         changeBookSharingStatusDisposable.dispose();
         requestBooksDisposable.dispose();
+        changeStatusDisposable.dispose();
+    }
+
+    @Override
+    public void requestChangeStatus(RequestStatusInput input) {
+        if (isLogin)
+            changeStatusInputSubject.onNext(input);
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> getResponseChangeStatus() {
+        return changeStatusResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onErrorChangeStatus() {
+        return changeStatusError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestPersonalInfor(String input) {
+        if (isLogin)
+            personalInputSubject.onNext("");
     }
 
     @Override
@@ -132,7 +202,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestBookInstance(BookInstanceInput input) {
-        bookInstanceInputSubject.onNext(input);
+        if (isLogin)
+            bookInstanceInputSubject.onNext(input);
     }
 
     @Override
@@ -147,7 +218,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestChangeBookSharingStatus(BookChangeStatusInput input) {
-        changeBookSharingStatusInputSubject.onNext(input);
+        if (isLogin)
+            changeBookSharingStatusInputSubject.onNext(input);
     }
 
     @Override
@@ -162,7 +234,9 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestReadingBooks(BookReadingInput input) {
-        readingBookInputSubject.onNext(input);
+        if (isLogin)
+            readingBookInputSubject.onNext(input);
+
     }
 
     @Override
@@ -177,7 +251,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestBookRequests(BookRequestInput input) {
-        requestBookInputSubject.onNext(input);
+        if (isLogin)
+            requestBookInputSubject.onNext(input);
     }
 
     @Override
@@ -190,6 +265,28 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         return requestBookError.observeOn(schedulerFactory.main());
     }
 
+    private void getChangeStatus(RequestStatusInput input){
+        changeStatusUsecase = UseCases.release(changeStatusUsecase);
+        changeStatusUsecase = useCaseFactory.requestBookByOwner(input);
+        changeStatusUsecase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(response -> {
+                    changeStatusResultSubject.onNext(response);
+                })
+                .onError(throwable -> {
+                    if (throwable instanceof CommonException)
+                        changeStatusError.onNext(((CommonException)throwable).getMessage());
+                    else {
+                        throwable.printStackTrace();
+                        changeStatusError.onNext("Exception occurred.");
+                    }
+                })
+                .onStop(
+                        () -> changeStatusUsecase = UseCases.release(changeStatusUsecase)
+                )
+                .execute();
+    }
+
     private void getRequestBookData(BookRequestInput input) {
         requestBooksUsecase = UseCases.release(requestBooksUsecase);
         requestBooksUsecase = useCaseFactory.getBookRequest(input);
@@ -199,7 +296,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     requestBookResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    requestBookError.onError(throwable);
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        requestBookError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> requestBooksUsecase = UseCases.release(requestBooksUsecase)
@@ -216,7 +316,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     personalResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    personalError.onError(throwable);
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        personalError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> getPersonalUsecase = UseCases.release(getPersonalUsecase)
@@ -231,8 +334,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     bookInstanceResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    bookInstanceError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        bookInstanceError.onNext(ServerResponse.EXCEPTION);
                 }).onStop(
                 () -> getBookIntanceUsecase = UseCases.release(getBookIntanceUsecase)
         ).execute();
@@ -245,8 +351,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     changeBookSharingStatusResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    changeBookSharingStatusError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        changeBookSharingStatusError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> changeBookSharingStatusUsecase = UseCases.release(changeBookSharingStatusUsecase)
@@ -261,8 +370,11 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 onNext(reponse -> {
                     readingBookResultSubject.onNext(reponse);
                 })
-                .onError(throwableable -> {
-                    readingBookError.onError(throwableable);
+                .onError(throwable -> {
+                    if (throwable instanceof LoginException)
+                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    else
+                        readingBookError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> readingBooksUsecase = UseCases.release(readingBooksUsecase)

@@ -6,14 +6,10 @@ package com.gat.data.response.impl;
 
 public class BookInstanceInfo {
 
-    private int notSharingToal;
+    private int notSharingTotal;
     private int sharingTotal;
     private int borrowingTotal;
     private int lostTotal;
-
-    public void setNotSharingToal(int notSharingToal) {
-        this.notSharingToal = notSharingToal;
-    }
 
     public void setSharingTotal(int sharingTotal) {
         this.sharingTotal = sharingTotal;
@@ -27,10 +23,6 @@ public class BookInstanceInfo {
         this.lostTotal = lostTotal;
     }
 
-    public int getNotSharingToal() {
-        return notSharingToal;
-    }
-
     public int getSharingTotal() {
         return sharingTotal;
     }
@@ -41,5 +33,23 @@ public class BookInstanceInfo {
 
     public int getLostTotal() {
         return lostTotal;
+    }
+
+    public int getNotSharingTotal() {
+        return notSharingTotal;
+    }
+
+    public void setNotSharingTotal(int notSharingTotal) {
+        this.notSharingTotal = notSharingTotal;
+    }
+
+    @Override
+    public String toString() {
+        return "BookInstanceInfo{" +
+                "notSharingTotal=" + notSharingTotal +
+                ", sharingTotal=" + sharingTotal +
+                ", borrowingTotal=" + borrowingTotal +
+                ", lostTotal=" + lostTotal +
+                '}';
     }
 }

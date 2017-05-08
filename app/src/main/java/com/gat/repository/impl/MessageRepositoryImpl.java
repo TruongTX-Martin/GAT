@@ -1,5 +1,9 @@
 package com.gat.repository.impl;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.gat.common.util.CommonCheck;
+import com.gat.common.util.Strings;
 import com.gat.data.firebase.entity.GroupTable;
 import com.gat.data.firebase.entity.MessageTable;
 import com.gat.repository.MessageRepository;
@@ -10,13 +14,19 @@ import com.gat.repository.entity.Message;
 import com.gat.repository.entity.User;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import dagger.Lazy;
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
 /**
@@ -24,11 +34,23 @@ import io.reactivex.subjects.Subject;
  */
 
 public class MessageRepositoryImpl implements MessageRepository {
+    private final String TAG = MessageRepositoryImpl.class.getSimpleName();
+
     private final Lazy<MessageDataSource> networkDataSource;
     private final Lazy<MessageDataSource> localDataSource;
     private final Lazy<UserDataSource> netWorkUserDataSourceLazy;
     private final Lazy<UserDataSource> localUserDataSourceLazy;
 
+    private final Subject<List<Group>> groupListSubject;
+    private final List<Group> groupList;
+
+    private final List<Message> messageList;
+
+    private Subject<List<Message>> messageListSubject;
+
+    private Subject<Integer> groupUnReadCnt;
+
+    private int mUserId = 0;
 
     public MessageRepositoryImpl(Lazy<MessageDataSource> networkDataSource,
                                  Lazy<MessageDataSource> localDataSource,
@@ -39,33 +61,138 @@ public class MessageRepositoryImpl implements MessageRepository {
         this.localDataSource = localDataSource;
         this.netWorkUserDataSourceLazy = netWorkUserDataSourceLazy;
         this.localUserDataSourceLazy = localUserDataSourceLazy;
+        this.groupList = new ArrayList<>();
+        this.groupListSubject = BehaviorSubject.createDefault(groupList);
+        this.groupUnReadCnt = BehaviorSubject.createDefault(unReadGroupCnt());
+
+        messageList = new ArrayList<>();
+        messageListSubject = PublishSubject.create();
+
+        localUserDataSourceLazy.get().loadUser().subscribe(user -> {
+            if (user.isValid()) {
+                // Get from local database
+                localDataSource.get().loadGroupList().subscribe(list -> {
+                    Log.d(TAG, "----------------LoadList:" + list.size());
+                    groupList.addAll(list);
+                    groupUnReadCnt.onNext(unReadGroupCnt());
+                });
+                mUserId = user.userId();
+            }
+        });
+
     }
 
     @Override
-    public Observable<List<Message>> getMessageList(String groupId, int page, int size) {
-        return Observable.defer(() -> networkDataSource.get().getMessageList(groupId, page, size))
-                .map(list -> {
-                    List<Message> messages = new ArrayList<Message>();
-                    // TODO get user
-                    for (Iterator<MessageTable> iterator = list.iterator(); iterator.hasNext();) {
-                        MessageTable messageTable = iterator.next();
-                        messages.add(Message.builder().groupId(messageTable.getGroupId())
-                                .isRead(messageTable.isRead())
-                                .message(messageTable.getMessage())
-                                .timeStamp(messageTable.getTimeStamp())
-                                .userId(messageTable.getUserId())
-                                .build()
-                        );
+    public Observable<Integer> getGroupUnReadCnt() {
+        return groupUnReadCnt;
+    }
+
+    @Override
+    public Observable<List<Message>> getMessageList(int userId, int page, int size) {
+        localDataSource.get().loadMessageList(CommonCheck.getGroupId(userId, mUserId))
+                .subscribeOn(Schedulers.io())
+                .delay(100, TimeUnit.MILLISECONDS)
+                .subscribe(list -> {
+                    Log.d(TAG, "LocalThread:" + Thread.currentThread().getName());
+                    synchronized (messageList) {
+                        Log.d(TAG, "Clear message list:" + userId);
+                        messageList.clear();
+                        messageList.addAll(list);
+                        Log.d(TAG, "Add local list:" + userId + "," + messageList.size());
+                        messageListSubject.onNext(messageList);
                     }
-                    return messages;
                 });
+        return messageListSubject;
+        /*return Observable.defer(() -> networkDataSource.get().getMessageList(userId, page, size))
+                .flatMap(list -> {
+                    // Get user id list
+                    int length = list.size();
+                    if (length > 0) {
+                        // Get user list from server
+                        return netWorkUserDataSourceLazy.get().getUserInformation(userId).flatMap(user -> {
+                            List<Message> messageList = new ArrayList<Message>();
+                            String imageId = (user != null) ? user.imageId() : Strings.EMPTY;
+                            for (int i = 0; i < list.size(); i++) {
+                                MessageTable messageTable = list.get(i);
+                                messageList.add(Message.builder()
+                                        .groupId(CommonCheck.getGroupId(mUserId, userId))
+                                        .isRead(messageTable.getIsRead())
+                                        .message(messageTable.getMessage())
+                                        .imageId(messageTable.getUserId() == mUserId ? Strings.EMPTY : imageId)
+                                        .timeStamp(messageTable.getTimeStamp())
+                                        .userId(messageTable.getUserId())
+                                        .isLocal(messageTable.getUserId() == mUserId)
+                                        .build());
+                            }
+                            return Observable.just(messageList);
+                        });
+                    } else {
+                        return Observable.just(new ArrayList<>());
+                    }
+                });*/
+    }
+
+    @Override
+    public Observable<Message> messageUpdate(int userId) {
+        return Observable.defer(() -> networkDataSource.get().messageUpdate(userId)
+                            .filter(messageTable -> filterMessage(messageTable))
+                            .flatMap(messageTable -> {
+                                Log.d(TAG, "new message:" + messageTable.getMessage());
+                                if (messageTable.getUserId() == mUserId || CommonCheck.isAdmin((int)messageTable.getUserId())) {
+                                    return Observable.just(Message.builder()
+                                            .groupId(CommonCheck.getGroupId(mUserId, userId))
+                                            .isRead(messageTable.getIsRead())
+                                            .message(messageTable.getMessage())
+                                            .imageId(Strings.EMPTY)
+                                            .timeStamp(messageTable.getTimeStamp())
+                                            .userId(messageTable.getUserId())
+                                            .isLocal(messageTable.getUserId() == mUserId)
+                                            .build());
+                                } else {
+                                    return netWorkUserDataSourceLazy.get().getUserInformation(userId).flatMap(user -> Observable.just(Message.builder()
+                                            .groupId(CommonCheck.getGroupId(mUserId, userId))
+                                            .isRead(messageTable.getIsRead())
+                                            .message(messageTable.getMessage())
+                                            .imageId(user.isValid() ? user.imageId() : getLocalUserImage(userId))
+                                            .timeStamp(messageTable.getTimeStamp())
+                                            .userId(messageTable.getUserId())
+                                            .isLocal(messageTable.getUserId() == mUserId)
+                                            .build()));
+                                }
+                            })
+                            .flatMap(message -> localDataSource.get().storeMessage(CommonCheck.getGroupId(userId,mUserId),message))
+                            .doOnNext(message -> messageList.add(message))
+                            .doOnNext(message -> messageListSubject.onNext(messageList)));
     }
 
     @Override
     public Observable<List<Group>> getGroupList(int page, int size) {
-        return Observable.defer(() -> networkDataSource.get().getGroupList(page, size))
+        Log.d(TAG, "GetGroupList");
+        /*return Observable.defer(() -> networkDataSource.get().groupUpdate())
+                .flatMap(groupTable -> {
+                    int localUser = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
+                    int userId = 0;
+                    int length = groupTable.users().size();
+                    for (int i = 0; i < length; i++) {
+                        userId = Integer.parseInt(groupTable.users().get(i));
+                        if (userId != localUser)
+                            break;
+                    }
+                    return netWorkUserDataSourceLazy.get().getUserInformation(userId)
+                            .flatMap(newUser -> Observable.just(Group.builder()
+                                    .groupId(groupTable.groupId())
+                                    .isRead(groupTable.isRead())
+                                    .timeStamp(groupTable.timeStamp())
+                                    .userName(newUser.name())
+                                    .userImage(newUser.imageId())
+                                    .lastMessage(groupTable.lastMessage())
+                                    .users(groupTable.users())
+                                    .build()));
+                }).toList().toObservable();*/
+        // TODO #170502
+        return groupListSubject;
+        /*return Observable.defer(() -> networkDataSource.get().getGroupList(page, size))
                 .flatMap(list -> {
-                    int localUserId = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
                     // Get user id list
                     int length = list.size();
                     if (length > 0) {
@@ -97,13 +224,109 @@ public class MessageRepositoryImpl implements MessageRepository {
                     } else {
                         return Observable.just(new ArrayList<Group>());
                     }
+                }).flatMap(list -> localDataSource.get().storeGroupList(list));
+                */
+                /*.flatMapIterable(groupTables -> {
+                    Log.d("FlatIterable", groupTables.size() + "");
+                    return groupTables;
                 })
+                .flatMap(groupTable -> {
+                    int userId = Integer.parseInt(groupTable.users().get(0));
+                    return localUserDataSourceLazy.get().loadPublicUserInfo(userId)
+                            .flatMap(user -> {
+                                if (user.isValid()) {
+                                    Log.d("USER", user.userId() + "");
+                                    return Observable.just(Group.builder()
+                                            .groupId(groupTable.groupId())
+                                            .isRead(groupTable.isRead())
+                                            .timeStamp(groupTable.timeStamp())
+                                            .userName(user.name())
+                                            .userImage(user.imageId())
+                                            .lastMessage(groupTable.lastMessage())
+                                            .users(groupTable.users())
+                                            .build());
+                                } else {
+                                    return netWorkUserDataSourceLazy.get().getUserInformation(userId)
+                                            .flatMap(newUser -> Observable.just(Group.builder()
+                                                    .groupId(groupTable.groupId())
+                                                    .isRead(groupTable.isRead())
+                                                    .timeStamp(groupTable.timeStamp())
+                                                    .userName(newUser.name())
+                                                    .userImage(newUser.imageId())
+                                                    .lastMessage(groupTable.lastMessage())
+                                                    .users(groupTable.users())
+                                                    .build()));
+                                }
+                            });
+                })
+                .toList()
+                .toObservable()
                 .flatMap(list -> localDataSource.get().storeGroupList(list));
+                */
     }
 
     @Override
-    public Observable<Boolean> sendMessage(String toUserId, String message) {
-        return Observable.defer(() -> networkDataSource.get().sendMessage(toUserId, message));
+    public Observable<Group> groupUpdate() {
+        return Observable.defer(() -> networkDataSource.get().groupUpdate())
+                .filter(this::isGroupUpdate)
+                .flatMap(groupTable -> {
+                    // TODO #170502
+                    Group group = getGroup(groupTable);
+                    if (group != null) {
+                        Group updated = Group.builder()
+                                .groupId(groupTable.groupId())
+                                .isRead(groupTable.isRead())
+                                .timeStamp(groupTable.timeStamp())
+                                .userName(group.userName())
+                                .userImage(group.userImage())
+                                .lastMessage(groupTable.lastMessage())
+                                .users(groupTable.users())
+                                .build();
+                        return Observable.just(updated);
+                    } else {
+                        int localUser = localUserDataSourceLazy.get().loadUser().blockingFirst().userId();
+                        int userId = 0;
+                        int size = groupTable.users().size();
+                        for (int i = 0; i < size; i++) {
+                            userId = Integer.parseInt(groupTable.users().get(i));
+                            if (userId != localUser)
+                                break;
+                        }
+                        return netWorkUserDataSourceLazy.get().getUserInformation(userId)
+                                .filter(user -> user.isValid())
+                                .flatMap(newUser -> Observable.just(Group.builder()
+                                        .groupId(groupTable.groupId())
+                                        .isRead(groupTable.isRead())
+                                        .timeStamp(groupTable.timeStamp())
+                                        .userName(newUser.name())
+                                        .userImage(newUser.imageId())
+                                        .lastMessage(groupTable.lastMessage())
+                                        .users(groupTable.users())
+                                        .build()));
+                    }
+                })
+                .flatMap(group -> localDataSource.get().storeGroup(group))
+                .doOnNext(this::addGroup);
+    }
+
+    @Override
+    public Observable<Boolean> sendMessage(int toUserId, String message) {
+        return Observable.defer(() -> {
+                    Log.d(TAG, "SendFirebaseThread:" + Thread.currentThread().getName());
+                    return networkDataSource.get().sendMessage(toUserId, message);
+                }).observeOn(Schedulers.io())
+                .flatMap(result -> {
+                    Log.d(TAG, "CurrentThread:" + Thread.currentThread().getName());
+                    return netWorkUserDataSourceLazy.get().messageNotification(toUserId, message);
+                });
+    }
+
+    @Override
+    public Observable<Boolean> sawMessage(String groupId, long timeStamp) {
+        return Observable.defer(() -> {
+            networkDataSource.get().sawMessage(groupId, timeStamp);
+            return Observable.just(true);
+        });
     }
 
     private User getUser(List<User> users, int userId) {
@@ -115,5 +338,111 @@ public class MessageRepositoryImpl implements MessageRepository {
             }
         }
         return user;
+    }
+
+    private @Nullable Group getGroup(GroupTable groupTable) {
+        synchronized (groupList) {
+            for (Iterator<Group> iterator = groupList.iterator(); iterator.hasNext();) {
+                Group group = iterator.next();
+                if (group.groupId().equals(groupTable.groupId())) {
+                    return group;
+                }
+            }
+            return null;
+        }
+    }
+
+    private void addGroup(Group update) {
+        synchronized (groupList) {
+            int count = 0;
+            for (Iterator<Group> iterator = groupList.iterator(); iterator.hasNext();) {
+                Group group = iterator.next();
+                if (group.timeStamp() > update.timeStamp()) {
+                    count++;
+                }
+                if (group.groupId().equals(update.groupId())) {
+                    iterator.remove();
+                    break;
+                }
+            }
+            groupList.add(count, update);
+            groupListSubject.onNext(groupList);
+        }
+    }
+
+    private boolean isGroupUpdate(GroupTable update) {
+        synchronized (groupList) {
+            boolean find = false;
+            boolean isUpdate = false;
+            for (Iterator<Group> iterator = groupList.iterator(); iterator.hasNext();) {
+                Group group = iterator.next();
+                if (group.groupId().equals(update.groupId())) {
+                    find = true;
+                    if (update.timeStamp() > group.timeStamp()) {
+                        isUpdate = true;
+                    }
+                    break;
+                }
+            }
+            Log.d(TAG, "CheckUpdate:" + update.groupId() + "," + (!find || isUpdate));
+            return (!find || isUpdate);
+        }
+    }
+
+    private int unReadGroupCnt() {
+        synchronized (groupList) {
+            int count = 0;
+            for (Iterator<Group> iterator = groupList.iterator(); iterator.hasNext();) {
+                if (!iterator.next().isRead())
+                    count++;
+            }
+            return count;
+        }
+    }
+
+    private boolean filterMessage(MessageTable message) {
+        Log.d(TAG, "MessageSize:" +messageList.size());
+        synchronized (messageList) {
+            if (!messageList.isEmpty())
+                Log.d(TAG, "CheckLasMessage:" + messageList.get(messageList.size() - 1).toString());
+            boolean ret = false;
+            if (messageList.isEmpty()) {
+                ret = true;
+            } else {
+                Log.d(TAG, message.toString());
+                boolean isFound = false;
+                for (Iterator<Message> iterator = messageList.iterator(); iterator.hasNext();) {
+                    Message mes = iterator.next();
+                    if((mes.timeStamp() == message.getTimeStamp()) && mes.message().equals(message.getMessage()) && (mes.userId() == message.getUserId())) {
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (isFound) {
+                    ret = false;
+                } else {
+                    ret = true;
+                }
+            }
+            return ret;
+        }
+    }
+
+    private String getLocalUserImage(int userId) {
+        synchronized (messageList) {
+            String imageId = Strings.EMPTY;
+            if (messageList.isEmpty()) {
+
+            } else {
+                for (Iterator<Message> iterator = messageList.iterator(); iterator.hasNext();) {
+                    Message mes = iterator.next();
+                    if(mes.userId() == userId && !Strings.isNullOrEmpty(mes.imageId())) {
+                        imageId = mes.imageId();
+                        break;
+                    }
+                }
+            }
+            return imageId;
+        }
     }
 }

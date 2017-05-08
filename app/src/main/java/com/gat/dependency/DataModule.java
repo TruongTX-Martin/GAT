@@ -2,10 +2,12 @@ package com.gat.dependency;
 
 import com.gat.common.util.Strings;
 import com.gat.data.api.GatApi;
+import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
 import com.gat.data.response.ServerResponse;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.LoginData;
+import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ import dagger.Provides;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 //import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -33,10 +36,15 @@ public class DataModule {
     private UserDataSource userDataSource;
     private String language;
     private String url;
+    GsonConverterFactory gsonConverterFactory;
     public DataModule(String url, String language, UserDataSource userDataSource) {
         this.userDataSource = userDataSource;
         this.language = language;
         this.url = url;
+        gsonConverterFactory = GsonConverterFactory.create(
+                new GsonBuilder()
+                        .registerTypeAdapterFactory(new AutoValueGsonTypeAdapterFactory())
+                        .create());
     }
     @Provides
     @Singleton
@@ -59,15 +67,14 @@ public class DataModule {
                             Request request = requestBuilder.build();
                             okhttp3.Response response = chain.proceed(request);
                             if (response.code() == ServerResponse.HTTP_CODE.TOKEN) {
+                                userDataSource.persitUser(null).subscribe();
+                                userDataSource.storeLoginToken(null);
                                 throw new LoginException(ServerResponse.TOKEN_CHANGED);
                             }
                             return response;
                         } catch (SocketTimeoutException socketEx) {
                             socketEx.printStackTrace();
-                            return new okhttp3.Response.Builder()
-                                    .code(ServerResponse.HTTP_CODE.SOCKET_EXCEPTION)
-                                    .request(chain.request())
-                                    .build();
+                            throw CommonException.SOCKET_TIMEOUT;
                         }
                     }
                 })
@@ -83,21 +90,17 @@ public class DataModule {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public Response intercept(Chain chain) throws IOException {
                         try {
                             Request origin = chain.request();
                             Request.Builder requestBuilder = origin.newBuilder();
                             if (!Strings.isNullOrEmpty(language))
                                 requestBuilder.addHeader("Accept-Language", language);
                             Request request = requestBuilder.build();
-                            okhttp3.Response response = chain.proceed(request);
+                            Response response = chain.proceed(request);
                             return response;
                         } catch (SocketTimeoutException socketEx) {
-                            socketEx.printStackTrace();
-                            return new okhttp3.Response.Builder()
-                                    .code(ServerResponse.HTTP_CODE.SOCKET_EXCEPTION)
-                                    .request(chain.request())
-                                    .build();
+                            throw CommonException.SOCKET_TIMEOUT;
                         }
                     }
                 })
@@ -108,11 +111,12 @@ public class DataModule {
     @Singleton
     @Named("public")
     Retrofit providePublicRetrofit(@Named("public") OkHttpClient client) {
+
         return new Retrofit.Builder()
                 .baseUrl(url)
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(gsonConverterFactory)
                 .build();
     }
 
@@ -120,11 +124,12 @@ public class DataModule {
     @Singleton
     @Named("private")
     Retrofit providePrivateRetrofit(@Named("private") OkHttpClient client) {
+
         return new Retrofit.Builder()
                 .baseUrl(url)
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(gsonConverterFactory)
                 .build();
     }
 

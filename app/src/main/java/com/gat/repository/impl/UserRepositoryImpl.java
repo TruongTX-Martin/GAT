@@ -2,18 +2,26 @@ package com.gat.repository.impl;
 
 import android.location.Address;
 
+import com.gat.common.util.CommonCheck;
+import com.gat.common.util.Strings;
 import com.gat.data.firebase.SignInFirebase;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.data.response.impl.Keyword;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.data.response.impl.ResetPasswordResponseData;
 import com.gat.data.response.impl.VerifyTokenResponseData;
+import com.gat.data.user.EmailLoginData;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
@@ -61,7 +69,19 @@ public class UserRepositoryImpl implements UserRepository {
         return Observable.defer(() -> networkUserDataSourceLazy.get().login(data)
                 .flatMap(response -> {
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
-                    localUserDataSourceLazy.get().saveLoginData(data);
+                    if (data.type() == LoginData.Type.EMAIL) {
+                        EmailLoginData emailLoginData = EmailLoginData.instance(
+                                ((EmailLoginData)data).email(),
+                                ((EmailLoginData)data).password(),
+                                ((EmailLoginData)data).name(),
+                                ((EmailLoginData)data).image(),
+                                ((EmailLoginData)data).type(),
+                                response.data().getFirebasePassword()
+                        );
+                        localUserDataSourceLazy.get().saveLoginData(emailLoginData);
+                    } else {
+                        localUserDataSourceLazy.get().saveLoginData(data);
+                    }
                     return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
@@ -83,6 +103,19 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Observable<Boolean> loginFirebase() {
+        return Observable.defer(() -> localUserDataSourceLazy.get().loadUser()
+                .flatMap(user -> {
+                    if (user.isValid()) {
+                        signInFirebase.login();
+                        return signInFirebase.getLoginResult();
+                    } else {
+                        return Observable.just(false);
+                    }
+                }));
+    }
+
+    @Override
     public Observable<LoginData> getLoginData() {
         return Observable.defer(() -> localUserDataSourceLazy.get().loadLoginData());
     }
@@ -92,8 +125,20 @@ public class UserRepositoryImpl implements UserRepository {
     public Observable<User> register(LoginData data) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().register(data)
                 .flatMap(response -> {
-                    localUserDataSourceLazy.get().saveLoginData(data);
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
+                    if (data.type() == LoginData.Type.EMAIL) {
+                        EmailLoginData emailLoginData = EmailLoginData.instance(
+                                ((EmailLoginData)data).email(),
+                                ((EmailLoginData)data).password(),
+                                ((EmailLoginData)data).name(),
+                                ((EmailLoginData)data).image(),
+                                ((EmailLoginData)data).type(),
+                                response.data().getFirebasePassword()
+                        );
+                        localUserDataSourceLazy.get().saveLoginData(emailLoginData);
+                    } else {
+                        localUserDataSourceLazy.get().saveLoginData(data);
+                    }
                     return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
@@ -106,7 +151,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<ServerResponse> sendRequestResetPassword(String email) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().sendRequestResetPassword(email)
-                .flatMap(response -> localUserDataSourceLazy.get().storeResetToken(response))
+                .flatMap(response -> localUserDataSourceLazy.get().storeResetToken(email, response))
         );
     }
 
@@ -124,9 +169,20 @@ public class UserRepositoryImpl implements UserRepository {
         return Observable.defer(() -> networkUserDataSourceLazy.get()
                 .changePassword(password, storeVerifyData.blockingFirst().data().tokenVerify())
                 .map(response -> {
+                    String email = localUserDataSourceLazy.get().getEmailLogin().blockingFirst();
+                    EmailLoginData emailLoginData = EmailLoginData.instance(
+                            email,
+                            password,
+                            CommonCheck.getNameFromEmail(email),
+                            Strings.EMPTY,
+                            LoginData.Type.EMAIL,
+                            response.data().getFirebasePassword()
+                    );
+                    localUserDataSourceLazy.get().saveLoginData(emailLoginData);
                     localUserDataSourceLazy.get().storeLoginToken(response.data().loginToken());
                     return response;
-                }));
+                })
+        );
     }
 
     @Override
@@ -178,7 +234,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<Data> updateUserInfo(EditInfoInput input) {
+    public Observable<String> updateUserInfo(EditInfoInput input) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().updateUserInfo(input));
     }
 
@@ -199,7 +255,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<List<String>> getUsersSearchedKeyword() {
+    public Observable<List<Keyword>> getUsersSearchedKeyword() {
         return Observable.defer(()->networkUserDataSourceLazy.get().getUsersSearchedKeyword());
     }
 
@@ -210,7 +266,28 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<User> getUserPublicInfo(int userId) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().getUserInformation(userId));
+        return Observable.defer(() -> networkUserDataSourceLazy.get().getUserInformation(userId))
+                /*.flatMap(user -> localUserDataSourceLazy.get().storePublicUserInfo(user))*/;
+    }
+
+    @Override
+    public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().getUserNotification(page, per_page));
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> requestBookByBorrowrer(RequestStatusInput input) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByBorrower(input));
+    }
+
+    @Override
+    public Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByOwner(input));
+    }
+
+    @Override
+    public Observable<Data> requestBorrowBook(BorrowRequestInput input) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBorrowBook(input));
     }
 
 }

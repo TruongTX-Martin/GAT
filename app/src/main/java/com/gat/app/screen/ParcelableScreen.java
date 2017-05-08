@@ -14,8 +14,13 @@ import com.gat.feature.book_detail.comment.CommentScreen;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.login.LoginScreen;
-import com.gat.feature.message.MessageScreen;
+
+import com.gat.feature.message.presenter.GroupMessageScreen;
+import com.gat.feature.message.presenter.MessagePresenter;
+import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.main.MainScreen;
+import com.gat.feature.notification.NotificationScreen;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.register.RegisterScreen;
 import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
@@ -28,6 +33,7 @@ import com.gat.feature.setting.main.MainSettingScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
+import com.gat.repository.entity.User;
 
 import java.util.List;
 
@@ -54,7 +60,11 @@ public class ParcelableScreen implements Parcelable {
     private static final int ADD_TO_BOOKCASE = 14;
     private static final int ADD_COMMENT = 15;
     private static final int MESSAGER = 16;
-    private static final int SCAN = 17;
+    private static final int GROUP_MESSAGER = 17;
+    private static final int SCAN = 18;
+    private static final int USER_PERSONAL = 66;
+
+    private static final int NOTIFICATION = 80;
 
     private static final int MAIN_SETTING = 41;
     private static final int ADD_EMAIL_PASSWORD = 42;
@@ -105,6 +115,8 @@ public class ParcelableScreen implements Parcelable {
             return ADD_COMMENT;
         if (screen instanceof MessageScreen)
             return MESSAGER;
+        if (screen instanceof GroupMessageScreen)
+            return GROUP_MESSAGER;
         if (screen instanceof ScanScreen)
             return SCAN;
         if (screen instanceof MainSettingScreen)
@@ -115,8 +127,10 @@ public class ParcelableScreen implements Parcelable {
             return SOCIAL_CONNECTED;
         if (screen instanceof ChangePasswordScreen)
             return CHANGE_PASSWORD;
-
-
+        if (screen instanceof NotificationScreen)
+            return NOTIFICATION;
+        if(screen instanceof PersonalUserScreen)
+            return USER_PERSONAL;
 
         throw new IllegalArgumentException("Not support screen " + screen);
     }
@@ -140,7 +154,10 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof MessageScreen) {
             MessageScreen messageScreen = (MessageScreen) screen;
-            dest.writeString(messageScreen.groupId());
+            dest.writeInt(messageScreen.userId());
+            dest.writeString(messageScreen.userName());
+        } else if (screen instanceof GroupMessageScreen) {
+
         } else if (screen instanceof MainScreen) {
 
         } else if (screen instanceof ShareNearByUserDistanceScreen) {
@@ -152,7 +169,9 @@ public class ParcelableScreen implements Parcelable {
             dest.writeInt(bookDetailScreen.editionId());
         } else if (screen instanceof SelfUpdateReadingScreen) {
             SelfUpdateReadingScreen selfUpdateReadingScreen = (SelfUpdateReadingScreen) screen;
-            dest.writeParcelable(selfUpdateReadingScreen.bookReadingInfo(), flags);
+            dest.writeInt(selfUpdateReadingScreen.editionId());
+            dest.writeInt(selfUpdateReadingScreen.readingStatus());
+
         } else if (screen instanceof ListUserSharingBookScreen) {
             ListUserSharingBookScreen userSharingBookScreen = (ListUserSharingBookScreen) screen;
             dest.writeList(userSharingBookScreen.listUser());
@@ -172,6 +191,14 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof ChangePasswordScreen) {
 
+        }  else if (screen instanceof NotificationScreen) {
+
+        } else if (screen instanceof PersonalUserScreen) {
+            PersonalUserScreen commentScreen = (PersonalUserScreen) screen;
+            dest.writeParcelable(commentScreen.userResponse(), flags);
+        } else if (screen instanceof BookDetailScreen) {
+            BookDetailScreen bookDetailScreen = (BookDetailScreen)screen;
+            dest.writeInt(bookDetailScreen.editionId());
         }
 
 
@@ -215,13 +242,18 @@ public class ParcelableScreen implements Parcelable {
                 screen = MainScreen.instance();
                 break;
             case MESSAGER:
-                screen = MessageScreen.instance(in.readString());
+                int userId = in.readInt();
+                String userName = in.readString();
+                screen = MessageScreen.instance(userName, userId);
+                break;
+            case GROUP_MESSAGER:
+                screen = GroupMessageScreen.instance();
                 break;
             case BOOK_DETAIL:
                 screen = BookDetailScreen.instance(in.readInt());
                 break;
             case SELF_UPDATE_READING:
-                screen = SelfUpdateReadingScreen.instance(in.readParcelable(BookReadingInfo.class.getClassLoader()));
+                screen = SelfUpdateReadingScreen.instance(in.readInt(), in.readInt());
                 break;
             case LIST_USER_SHARING_BOOK:
                 List<UserResponse> myList = null;
@@ -245,6 +277,13 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case CHANGE_PASSWORD:
                 screen = ChangePasswordScreen.instance();
+                break;
+
+            case NOTIFICATION:
+                screen = NotificationScreen.instance();
+                break;
+            case USER_PERSONAL:
+                screen = PersonalUserScreen.instance(in.readParcelable(UserResponse.class.getClassLoader()));
                 break;
 
             default:

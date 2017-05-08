@@ -14,6 +14,6 @@ import io.reactivex.Observable;
 
 public interface AddCategoryPresenter extends Presenter{
     void setCategories(List<Integer> categories);
-    Observable<ServerResponse<ResponseData>> onError();
+    Observable<String> onError();
     Observable<ServerResponse> updateResult();
 }

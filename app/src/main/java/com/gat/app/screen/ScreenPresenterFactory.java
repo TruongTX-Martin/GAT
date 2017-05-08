@@ -1,17 +1,20 @@
 package com.gat.app.screen;
 
 import com.gat.dependency.PresenterComponent;
-import com.gat.feature.bookdetail.BookDetailRequestScreen;
-import com.gat.feature.editinfo.EditInfoScreen;
 import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
 import com.gat.feature.book_detail.comment.CommentScreen;
 import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScreen;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
+import com.gat.feature.bookdetailowner.BookDetailOwnerScreen;
+import com.gat.feature.bookdetailsender.BookDetailSenderPresenter;
+import com.gat.feature.bookdetailsender.BookDetailSenderScreen;
+import com.gat.feature.editinfo.EditInfoScreen;
 import com.gat.feature.login.LoginScreen;
-import com.gat.feature.message.MessagePresenter;
-import com.gat.feature.message.MessageScreen;
 import com.gat.feature.main.MainScreen;
+import com.gat.feature.message.presenter.GroupMessageScreen;
+import com.gat.feature.message.presenter.MessageScreen;
+import com.gat.feature.notification.NotificationScreen;
 import com.gat.feature.personal.PersonalScreen;
 import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.register.RegisterScreen;
@@ -60,6 +63,8 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getSuggestionPresenter();
         else if (key instanceof MessageScreen)
             return (P) presenterComponent.getMessagePresenter();
+        else if (key instanceof GroupMessageScreen)
+            return (P) presenterComponent.getGroupMessagePresenter();
         else if (key instanceof MainScreen)
             return (P) presenterComponent.getMainPresenter();
         else if (key instanceof ShareNearByUserDistanceScreen)
@@ -72,8 +77,10 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getEditInfoPresenter();
         }else if (key instanceof PersonalUserScreen){
             return (P) presenterComponent.getPersonalUserPresenter();
-        }else if (key instanceof BookDetailRequestScreen) {
-            return (P) (P) presenterComponent.getBookDetailPresenter();
+        } else if (key instanceof BookDetailSenderScreen) {
+            return (P) presenterComponent.getBookDetailSenderPresenter();
+        }else  if(key instanceof BookDetailOwnerScreen) {
+            return (P) presenterComponent.getBookDetailBorrowPresenter();
         }
         else if (key instanceof BookDetailScreen)
             return (P) presenterComponent.getBookDetailPresenter();
@@ -95,6 +102,9 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getSocialConnectedPresenter();
         else if (key instanceof ChangePasswordScreen)
             return (P) presenterComponent.getChangePasswordPresenter();
+        else if (key instanceof NotificationScreen)
+            return (P) presenterComponent.getNotificationPresenter();
+
 
         throw new IllegalArgumentException("Not support key " + key);
     }

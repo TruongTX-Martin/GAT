@@ -9,6 +9,7 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.Keyword;
 import com.gat.repository.BookRepository;
 import com.gat.repository.datasource.BookDataSource;
 import com.gat.repository.entity.Book;
@@ -68,12 +69,12 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Observable<List<String>> getBooksSearchedKeyword() {
+    public Observable<List<Keyword>> getBooksSearchedKeyword() {
         return Observable.defer(()->networkDataSourceLazy.get().getBooksSearchedKeyword());
     }
 
     @Override
-    public Observable<List<String>> getAuthorsSearchedKeyword() {
+    public Observable<List<Keyword>> getAuthorsSearchedKeyword() {
         return Observable.defer(()->networkDataSourceLazy.get().getAuthorsSearchedKeyword());
     }
 

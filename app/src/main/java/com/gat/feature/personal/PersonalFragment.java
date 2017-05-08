@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,15 +22,20 @@ import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.user.PaperUserDataSource;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.EditInfoActivity;
+import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personal.fragment.FragmentBookRequest;
 import com.gat.feature.personal.fragment.FragmentBookSharing;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
+import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.book.BookReadingEntity;
@@ -41,11 +43,8 @@ import com.gat.repository.entity.book.BookRequestEntity;
 import com.gat.repository.entity.book.BookSharingEntity;
 import com.google.gson.Gson;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -72,6 +71,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private CompositeDisposable disposablesChangeBookSharingStatus;
     private CompositeDisposable disposablesReadingBooks;
     private CompositeDisposable disposablesBooksRequest;
+    private CompositeDisposable disposablesRequestBookByOwner;
 
     //init fragment
     private FragmentBookSharing fragmentBookSharing;
@@ -80,7 +80,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private TextView txtNumberSharing;
     private TextView txtNumberReading;
     private TextView txtNumberRequest;
-    private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
+//    private BookRequestInput bookRequestInput = new BookRequestInput(true,true,true,true);
 
     private User userInfo;
     private Context context;
@@ -108,7 +108,6 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         context = getActivity().getApplicationContext();
         rootView = inflater.inflate(R.layout.layout_personal_activity,
                 container, false);
-        initView();
 
         disposablesPersonal = new CompositeDisposable(getPresenter().getResponsePersonal().subscribe(this::getUserInfoSuccess),
                 getPresenter().onErrorPersonal().subscribe(this::getUserInfoError));
@@ -126,11 +125,17 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         disposablesBooksRequest = new CompositeDisposable(getPresenter().getResponseBookRequest().subscribe(this::getBookRequestSuccess),
                 getPresenter().onErrorBookRequest().subscribe(this::getBookInstanceError));
 
+        disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
+                getPresenter().onErrorChangeStatus().subscribe(this::getBookDetailError));
+
+        initView();
+
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
         handleEvent();
+
         return rootView;
     }
 
@@ -173,7 +178,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         layoutInfo.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.instance, EditInfoActivity.class);
             intent.putExtra("UserInfo",  userInfo);
-            MainActivity.instance.startActivity(intent);
+            MainActivity.instance.startActivityForResult(intent,Constance.RESULT_UPDATEUSER);
         });
     }
 
@@ -220,7 +225,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         }
         if (fragmentBookRequest == null) {
             fragmentBookRequest = new FragmentBookRequest();
-            fragmentBookRequest.setParrentActivity(this);
+            fragmentBookRequest.setParrentFragment(this);
         }
         adapter.addFragment(fragmentBookSharing, "");
         adapter.addFragment(fragmentBookReading, "");
@@ -228,6 +233,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         viewPager.setAdapter(adapter);
     }
 
+    public void requestPersonalInfo(){
+        getPresenter().requestPersonalInfor("");
+    }
 
     //handle data personal return
     private void getUserInfoSuccess(Data<User> data) {
@@ -253,13 +261,31 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         }
     }
 
+    private void getBookDetailError(String error) {
+        ClientUtils.showToast("Error:" + error);
+    }
     private void getUserInfoError(ServerResponse<ResponseData> error) {
         ClientUtils.showToast(error.message());
+    }
+
+    public void requestBookOwner(RequestStatusInput statusInput){
+        getPresenter().requestChangeStatus(statusInput);
+    }
+    private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
+        if (data != null) {
+            if(data.getStatusCode() == 200){
+            }
+            ClientUtils.showToast(data.getMessage());
+        }
     }
 
 
     //get book instance
     public void requestBookInstance(BookInstanceInput input) {
+        if(!ClientUtils.isOnline()) {
+            ClientUtils.showViewNotInternet(layoutTop);
+            return;
+        }
         getPresenter().requestBookInstance(input);
     }
 
@@ -281,7 +307,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     //handle get bookInstance return
     private void getBookInstanceSuccess(Data data) {
-        if (data != null) {
+       if (data != null) {
             int totalSharing = data.getTotalSharing();
             txtNumberSharing.setText(totalSharing + "");
             int totalNotSharing = data.getTotalNotSharing();
@@ -293,6 +319,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void getBookInstanceError(ServerResponse<ResponseData> error) {
         ClientUtils.showToast(error.message());
+        if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
+            MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }
     }
 
 
@@ -312,12 +341,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             fragmentBookReading.setListBookReading(listReading);
         }
 
-        requestBookRequest(bookRequestInput);
-        fragmentBookRequest.setCurrentInput(bookRequestInput);
+//        requestBookRequest(bookRequestInput);
+//        fragmentBookRequest.setCurrentInput(bookRequestInput);
     }
 
     private void getBookRequestSuccess(Data data) {
-        System.out.println(data);
         if(data != null) {
             int totalBrowing = data.getBorrowingTotal();
             txtNumberRequest.setText(totalBrowing+"");
@@ -329,6 +357,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     @Override
     public void onDestroy() {
         super.onDestroy();
+        disposablesPersonal.dispose();
+        disposablesBookInstance.dispose();
+        disposablesChangeBookSharingStatus.dispose();
+        disposablesReadingBooks.dispose();
+        disposablesBooksRequest.dispose();
     }
 
 }

@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
     android:id="@+id/login_view">
     <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/background_header_blue">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_title"
+            android:textSize="@dimen/header_textsize"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="@dimen/btn_margin_bt"
+            android:layout_marginBottom="@dimen/btn_margin_bt"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/background_header_blue">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_title"
-                android:textSize="@dimen/header_textsize"
-                android:textColor="@color/colorWhite"
-                android:layout_marginTop="@dimen/btn_margin_bt"
-                android:layout_marginBottom="@dimen/btn_margin_bt"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
             android:orientation="vertical">
             <android.support.design.widget.TextInputLayout
                 android:layout_height="wrap_content"
@@ -35,10 +38,13 @@
                 android:layout_marginRight="@dimen/margin_left_right">
 
                 <EditText android:id="@+id/input_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:hint="@string/login_email_hint" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:hint="@string/login_email_hint"
+                    android:drawableStart="@drawable/email_input_icon"
+                    android:drawablePadding="10dp"
+                    android:textSize="@dimen/normal_textsize" />
             </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
                 android:layout_height="wrap_content"
@@ -51,7 +57,9 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:hint="@string/login_password_hint"
-                    android:textColorHint="@color/colorGray"/>
+                    android:drawableStart="@drawable/pass_input_icon"
+                    android:drawablePadding="10dp"
+                    android:textSize="@dimen/normal_textsize"/>
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -64,7 +72,8 @@
                 android:layout_marginRight="@dimen/margin_left_right"
                 android:background="@drawable/bg_rounded_blue"
                 android:textColor="@color/colorWhite"
-                android:text="@string/login_button"/>
+                android:text="@string/login_button"
+                android:textSize="@dimen/normal_textsize"/>
             <TextView
                 android:id="@+id/text_forgot_password"
                 android:layout_width="wrap_content"
@@ -73,6 +82,12 @@
                 android:textSize="@dimen/normal_textsize"
                 android:textColor="@color/colorBlue"
                 android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,40 +96,43 @@
                 android:layout_marginTop="60dp"
                 android:layout_marginBottom="20dp"
                 android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
-            <ImageButton
-                android:id="@+id/face_login_btn"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/facebook_btn"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="80dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal">
+                <ImageButton
+                    android:id="@+id/face_login_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/facebook_btn"
+                    android:scaleType="fitCenter"
+                    android:layout_marginStart="80dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/com_facebook_loginview_log_in_button_long"/>
 
-            <ImageButton
-                android:id="@+id/twitter_login_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/twitter_btn"
-                android:scaleType="fitCenter"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"/>
+                <ImageButton
+                    android:id="@+id/twitter_login_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/twitter_btn"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/twitter_description"/>
 
-            <ImageButton
-                android:id="@+id/google_login_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/google_btn"
-                android:scaleType="fitCenter"
-                android:layout_marginRight="80dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"/>
+                <ImageButton
+                    android:id="@+id/google_login_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/google_btn"
+                    android:scaleType="fitCenter"
+                    android:layout_marginEnd="80dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/common_signin_button_text_long"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

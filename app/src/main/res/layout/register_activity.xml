@@ -1,146 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorWhite"
     android:id="@+id/register_view">
     <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/background_header_blue">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_title"
+            android:textSize="@dimen/header_textsize"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="@dimen/btn_margin_bt"
+            android:layout_marginBottom="@dimen/btn_margin_bt"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/colorGrayLight"/>
+        <Button
+            android:id="@+id/face_register_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/register_btn_padding_start"
+            android:paddingEnd="@dimen/register_btn_padding_start"
+            android:background="@drawable/bg_border_bottom"
+            android:textAlignment="viewStart"
+            android:drawablePadding="10dp"
+            android:scaleType="fitCenter"
+            android:text="@string/register_face_btn"
+            android:drawableStart="@drawable/facebook_btn"
+            android:textSize="@dimen/normal_textsize"/>
+        <Button
+            android:id="@+id/twitter_register_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/register_btn_padding_start"
+            android:paddingEnd="@dimen/register_btn_padding_start"
+            android:background="@drawable/bg_border_bottom"
+            android:textAlignment="viewStart"
+            android:drawablePadding="10dp"
+            android:scaleType="fitCenter"
+            android:text="@string/register_twitter_btn"
+            android:textSize="@dimen/normal_textsize"
+            android:drawableStart="@drawable/twitter_btn"/>
+        <Button
+            android:id="@+id/google_register_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/register_btn_padding_start"
+            android:paddingEnd="@dimen/register_btn_padding_start"
+            android:background="@drawable/bg_border_bottom"
+            android:textAlignment="viewStart"
+            android:drawablePadding="10dp"
+            android:scaleType="fitCenter"
+            android:text="@string/register_google_btn"
+            android:drawableStart="@drawable/google_btn"
+            android:textSize="@dimen/normal_textsize"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/colorGrayLight"/>
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.design.widget.TextInputLayout
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/background_header_blue">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/register_title"
-                android:textSize="@dimen/header_textsize"
-                android:textColor="@color/colorWhite"
-                android:layout_marginTop="@dimen/btn_margin_bt"
-                android:layout_marginBottom="@dimen/btn_margin_bt"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        <LinearLayout
             android:layout_width="match_parent"
+            android:paddingStart="@dimen/register_btn_margin_lr"
+            android:paddingEnd="@dimen/register_btn_margin_lr"
+            android:paddingBottom="@dimen/btn_margin_bt"
+            android:background="@drawable/bg_border_bottom">
+
+            <EditText android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="@string/login_email_hint"
+                android:textSize="@dimen/normal_textsize"
+                android:drawableStart="@drawable/email_input_icon"
+                android:drawablePadding="10dp"
+                android:background="@drawable/text_edit_shape_white"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal">
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:background="@color/colorGrayLight"/>
-            <Button
-                android:id="@+id/face_register_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_start"
-                android:padding="5dp"
-                android:textAlignment="viewStart"
-                android:drawablePadding="20dp"
-                android:background="@android:color/transparent"
-                android:text="@string/register_face_btn"
-                android:drawableStart="@drawable/facebook_btn"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1sp"
-                android:background="@android:color/darker_gray"/>
-            <Button
-                android:id="@+id/twitter_register_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_start"
-                android:padding="5dp"
-                android:textAlignment="viewStart"
-                android:drawablePadding="20dp"
-                android:background="@android:color/transparent"
-                android:text="@string/register_twitter_btn"
-                android:drawableStart="@drawable/twitter_btn"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1sp"
-                android:background="@android:color/darker_gray"/>
-            <Button
-                android:id="@+id/google_register_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_start"
-                android:padding="5dp"
-                android:textAlignment="viewStart"
-                android:drawablePadding="20dp"
-                android:scaleType="fitCenter"
-                android:background="@android:color/transparent"
-                android:text="@string/register_google_btn"
-                android:drawableStart="@drawable/google_btn"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1sp"
-                android:background="@android:color/darker_gray"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:background="@color/colorGrayLight"/>
-        </LinearLayout>
-        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <android.support.design.widget.TextInputLayout
-                android:layout_height="wrap_content"
+            android:paddingStart="@dimen/register_btn_margin_lr"
+            android:paddingEnd="@dimen/register_btn_margin_lr"
+            android:paddingBottom="@dimen/btn_margin_bt"
+            android:background="@drawable/bg_border_bottom">
+            <EditText
+                android:id="@+id/input_password"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_left_right"
-                android:layout_marginRight="@dimen/margin_left_right">
-
-                <EditText android:id="@+id/input_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/login_email_hint" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_left_right"
-                android:layout_marginRight="@dimen/margin_left_right">
-                <EditText
-                    android:id="@+id/input_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:hint="@string/login_password_hint"
-                    android:textColorHint="@color/colorGray"/>
-            </android.support.design.widget.TextInputLayout>
+                android:inputType="textPassword"
+                android:hint="@string/login_password_hint"
+                android:drawableStart="@drawable/pass_input_icon"
+                android:drawablePadding="10dp"
+                android:textSize="@dimen/normal_textsize"
+                android:background="@drawable/text_edit_shape_white"/>
+        </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/btn_register"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                android:layout_marginLeft="@dimen/margin_left_right"
-                android:layout_marginRight="@dimen/margin_left_right"
-                android:background="@drawable/bg_rounded_blue"
-                android:textColor="@color/colorWhite"
-                android:text="@string/register_btn"
-                android:drawableEnd="@drawable/forma_1"
-                android:paddingEnd="@dimen/padding_end"
-                android:paddingStart="@dimen/padding_start"
-                android:paddingTop="5dp"/>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/register_policy"
-            android:drawablePadding="20dp"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="@dimen/btn_margin_bt"
-            android:layout_marginStart="@dimen/margin_left_right"
-            android:layout_marginEnd="@dimen/margin_left_right"
-            android:drawableStart="@drawable/policy_icon" />
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="@dimen/margin_left_right"
+            android:layout_marginRight="@dimen/margin_left_right"
+            android:background="@drawable/bg_rounded_blue"
+            android:textColor="@color/colorWhite"
+            android:text="@string/register_btn"
+            android:textSize="@dimen/normal_textsize"
+            android:drawableEnd="@drawable/forma_1"
+            android:paddingEnd="@dimen/padding_end"
+            android:paddingStart="@dimen/padding_start"
+            android:paddingTop="5dp" />
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

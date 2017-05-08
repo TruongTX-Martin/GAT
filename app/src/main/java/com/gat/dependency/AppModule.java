@@ -1,13 +1,16 @@
 package com.gat.dependency;
 
 import android.app.Application;
-
 import com.gat.app.screen.ScreenPresenterFactory;
+import com.gat.data.book.BookDataSourceImpl;
 import com.gat.data.firebase.FirebaseService;
 import com.gat.data.firebase.FirebaseServiceImpl;
 import com.gat.data.firebase.SignInFirebase;
 import com.gat.data.firebase.SignInFirebaseImpl;
+import com.gat.data.message.LocalMessageDataSourceImpl;
+import com.gat.data.message.NetworkMessageDataSourceImpl;
 import com.gat.data.user.PaperUserDataSource;
+import com.gat.data.user.UserDataSourceImpl;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.impl.SchedulerFactoryImpl;
@@ -23,10 +26,8 @@ import com.gat.repository.impl.MessageRepositoryImpl;
 import com.gat.repository.impl.UserRepositoryImpl;
 import com.rey.mvp2.PresenterManager;
 import com.rey.mvp2.impl.SimplePresenterManager;
-
 import javax.inject.Named;
 import javax.inject.Singleton;
-
 import dagger.Lazy;
 import dagger.Module;
 import dagger.Provides;
@@ -55,8 +56,7 @@ public class AppModule {
     @Singleton
     @Named("network")
     BookDataSource provideNetworkBookDataSource(DataComponent dataComponent){
-        //TODO: provide implementation
-        return null;
+        return new BookDataSourceImpl(dataComponent);
     }
 
     @Provides
@@ -78,8 +78,7 @@ public class AppModule {
     @Singleton
     @Named("network")
     UserDataSource provideNetworkUserDataSource(DataComponent dataComponent){
-        //TODO: provide implementation
-        return null;
+        return new UserDataSourceImpl(dataComponent);
     }
 
     @Provides
@@ -97,23 +96,21 @@ public class AppModule {
 
     @Provides
     @Singleton
-    SignInFirebase provideSignInFirebase(@Named("local") Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
-        return new SignInFirebaseImpl(userDataSourceLazy, schedulerFactory);
+    SignInFirebase provideSignInFirebase(@Named("local") Lazy<UserDataSource> localUserDataSource, @Named("network") Lazy<UserDataSource> networkUserDataSource, FirebaseService firebaseService, SchedulerFactory schedulerFactory) {
+        return new SignInFirebaseImpl(localUserDataSource, networkUserDataSource, firebaseService, schedulerFactory);
     }
     @Provides
     @Singleton
     @Named("network")
     MessageDataSource provideNetworkMessageDataSource(FirebaseService firebaseService) {
-        // TODO: provide implementation
-        return null;
+        return new NetworkMessageDataSourceImpl(firebaseService);
     }
 
     @Provides
     @Singleton
     @Named("local")
     MessageDataSource provideLocalMessageDataSource() {
-        // TODO: provide implementation
-        return null;
+        return new LocalMessageDataSourceImpl();
     }
 
     @Provides

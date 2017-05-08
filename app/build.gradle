@@ -32,7 +32,6 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.5.0'
         // Code coverage.
         classpath 'org.jacoco:org.jacoco.core:0.7.6.201602180812'
-        classpath 'io.fabric.tools:gradle:1.+'
 
         classpath 'com.google.gms:google-services:3.0.0'
     }
@@ -54,8 +53,18 @@ android {
             keyAlias                    "androiddebugkey"
             keyPassword                 "android"
         }
+        release {
+            storeFile                   file("release.jks")
+            storePassword               "android"
+            keyAlias                    "androidreleasekey"
+            keyPassword                 "android"
+        }
     }
 
+    dexOptions {
+        // Prevent OutOfMemory with MultiDex during the build phase
+        javaMaxHeapSize "4g"
+    }
     defaultConfig {
         applicationId                   configuration.applicationId
         minSdkVersion                   configuration.minimumSdkVersion
@@ -100,7 +109,7 @@ android {
 
         prod {
             minSdkVersion               configuration.minimumSdkVersion
-            multiDexEnabled             false
+            multiDexEnabled             true
             buildConfigField            'boolean', 'MULTI_DEX', 'false'
         }
     }
@@ -146,6 +155,10 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
             exceptionFormat 'full'
         }
+    }
+    dexOptions {
+        // Prevent OutOfMemory with MultiDex during the build phase
+        javaMaxHeapSize "4g"
     }
 }
 
@@ -235,6 +248,10 @@ dependencies {
 
     // autovalue + gson
     apt 'com.ryanharter.auto.value:auto-value-gson:0.3.1'
+
+    compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
+        transitive = true;
+    }
 
 }
 

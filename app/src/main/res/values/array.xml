@@ -2,16 +2,21 @@
 <resources>
     <!--TODO add cover and name here-->
     <array name="category_cover">
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
-        <item>@drawable/steve_job</item>
+        <item>@drawable/sach_van_hoc_1</item>
+        <item>@drawable/sach_ky_nang_3</item>
+        <item>@drawable/sach_kinh_te_5</item>
+        <item>@drawable/lich_su_dia_ly_13</item>
+        <item>@drawable/sach_nghe_thuat_15</item>
+        <item>@drawable/sach_ton_giao_16</item>
+        <item>@drawable/sach_thieu_nhi_2</item>
+        <item>@drawable/truyen_tranh_10</item>
+        <item>@drawable/sach_khoa_hoc_14</item>
+        <item>@drawable/sach_giao_khoa_7</item>
+        <item>@drawable/giao_trinh_dai_hoc_11</item>
+        <item>@drawable/sach_ngoai_ngu_8</item>
+        <item>@drawable/me_va_be_4</item>
+        <item>@drawable/sach_tong_hop_12</item>
+        <item>@drawable/tap_chi_17</item>
     </array>
 
     <array name="category_name">
@@ -25,6 +30,28 @@
         <item>@string/category_8</item>
         <item>@string/category_9</item>
         <item>@string/category_10</item>
+        <item>@string/category_11</item>
+        <item>@string/category_12</item>
+        <item>@string/category_13</item>
+        <item>@string/category_14</item>
+        <item>@string/category_15</item>
+    </array>
 
+    <array name="category_id">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>13</item>
+        <item>15</item>
+        <item>16</item>
+        <item>2</item>
+        <item>10</item>
+        <item>14</item>
+        <item>7</item>
+        <item>11</item>
+        <item>8</item>
+        <item>4</item>
+        <item>12</item>
+        <item>17</item>
     </array>
 </resources>

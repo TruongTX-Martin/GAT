@@ -1,14 +1,30 @@
 package com.gat.common.util;
 
 import android.support.annotation.IntDef;
+import android.util.Log;
 import android.util.Pair;
 
+import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
+import com.gat.data.response.ServerResponse;
 import com.gat.repository.entity.LoginData;
+import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 /**
  * Created by ducbtsn on 2/24/17.
@@ -17,8 +33,18 @@ import java.security.NoSuchAlgorithmException;
 public class CommonCheck {
     public final static int PASSWORD_LENGTH_MIN = 6;
     public final static int TOKEN_LENGTH = 6;
+
+    private final static int ADMIN_USER_ID = 0;
+
     private static final int ISBN_13 = 13;
     private static final int ISBN_10 = 10;
+    private static final int LOCAL_LOCALE = 2;
+
+
+    public @interface LOCALE {
+        int VN = 1;
+        int US = 2;
+    }
 
     @IntDef({Error.NO_ERROR, Error.FIELD_EMPTY, Error.EMAIL_INVALID, Error.PASSWORD_LENGTH})
     @Retention(RetentionPolicy.SOURCE)
@@ -117,4 +143,80 @@ public class CommonCheck {
         }
     }
 
+    public static <T extends Object> ServerResponse<T> checkResponse(Response<ServerResponse<T>> response) {
+        if (response == null) {
+            throw CommonException.FAILED_RESPONSE;
+        } else if (!response.isSuccessful()) {
+            ResponseBody errorBody = response.errorBody();
+            if (errorBody == null) {
+                throw CommonException.FAILED_RESPONSE;
+            } else {
+                try {
+                    JSONObject errorContent = new JSONObject(errorBody.string());
+                    if (errorContent.has("message")) {
+                        if (response.code() == ServerResponse.HTTP_CODE.TOKEN) {
+                            ServerResponse serverResponse = ServerResponse.TOKEN_CHANGED;
+                            serverResponse.message(errorContent.getString("message"));
+                            throw new LoginException(serverResponse);
+                        } else {
+                            throw new CommonException(errorContent.getString("message"));
+                        }
+                    } else {
+                        Log.d("ErrorBody", errorContent.toString());
+                        throw CommonException.FAILED_RESPONSE;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    throw CommonException.FAILED_RESPONSE;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw CommonException.FAILED_RESPONSE;
+                }
+            }
+        } else if (response.body() == null) {
+            throw CommonException.FAILED_RESPONSE;
+        } else {
+            Log.d("Response", "Code: " + response.body().code());
+            return response.body();
+        }
+    }
+
+    public static String getGroupId(int user1, int user2) {
+        return (user1 < user2) ? (user1 + ":" + user2) : (user2 + ":" + user1);
+    }
+
+    public static boolean isDiffDay(long time1, long time2) {
+        if (Math.abs(time1 - time2) > 1000 * 60 * 60 * 24 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String getDate(long time) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        cal.setTimeInMillis(time);
+        if (LOCAL_LOCALE == LOCALE.VN) {
+            return (cal.get(Calendar.DAY_OF_MONTH) + " tháng" + (cal.get(Calendar.MONTH) + 1) + " năm "
+                    + cal.get(Calendar.YEAR));
+        } else if (LOCAL_LOCALE == LOCALE.US){
+            return (cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + ", " +cal.get(Calendar.YEAR));
+        } else {
+            return Strings.EMPTY;
+        }
+    }
+
+    public static String getNameFromEmail(String email) {
+        if (validateEmail(email).first) {
+            return email.substring(0, email.indexOf('@'));
+        } else {
+            return Strings.EMPTY;
+        }
+    }
+
+
+    public static boolean isAdmin(int userId) {
+        return userId == ADMIN_USER_ID;
+    }
 }

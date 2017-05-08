@@ -4,35 +4,43 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Strings;
-import com.gat.data.response.ResponseData;
-import com.gat.data.response.ServerResponse;
+import com.gat.data.firebase.entity.NotificationParcelable;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.main.MainScreen;
-import com.gat.feature.message.GroupMessageActivity;
-import com.gat.feature.message.MessageScreen;
 import com.gat.feature.register.RegisterActivity;
-import com.gat.feature.search.SearchActivity;
-import com.gat.feature.search.SearchScreen;
-import com.gat.repository.entity.LoginData;
+import com.gat.feature.register.RegisterScreen;
 import com.gat.repository.entity.User;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Timed;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by ducbtsn on 3/4/17.
@@ -61,7 +69,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     private TextView[] dotViews;
 
     private CompositeDisposable disposables;
-    private ProgressDialog progressDialog;
+
 
     @Override
     protected int getLayoutResource() {
@@ -72,24 +80,24 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     protected void onCreate(Bundle savedBundle) {
         super.onCreate(savedBundle);
 
-        progressDialog =  new ProgressDialog(this);
-
         disposables = new CompositeDisposable(
                 getPresenter().loginResult().subscribe(this::onLoginResult),
                 getPresenter().onError().subscribe(this::onLoginError),
-                getPresenter().loadLocalLoginData().filter(loginData -> loginData != LoginData.EMPTY)
-                        .subscribe(loginData -> {
-                            onLogging(true);
-                            getPresenter().setIdentity(loginData);
-                        })
+                Observable.interval(5, TimeUnit.SECONDS).timeInterval().delay(2, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(longTimed -> {
+                    changePage();
+                })
+
         );
 
         // array index of all welcome sliders
         arrLayoutIdx = new int[]{
                 R.layout.activity_intro_slider1,
-                R.layout.activity_intro_slider2,
-                R.layout.activity_intro_slider3
+                R.layout.activity_intro_slider1,
+                R.layout.activity_intro_slider1
         };
+
+        if (!getScreen().tokenChange())
+            getPresenter().loadLocalUser();
 
         // adding bottom dots
         addBottomDots(0);
@@ -123,18 +131,15 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         });
 
         skip.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), MainActivity.class, MainScreen.instance());
         });
 
         loginBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), LoginActivity.class, LoginScreen.instance(Strings.EMPTY));
         });
 
         registerBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivity(intent);
+            start(getApplicationContext(), RegisterActivity.class, RegisterScreen.instance());
         });
     }
 
@@ -152,7 +157,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         for (int i = 0; i < dotViews.length; i++) {
             dotViews[i] = new TextView(this);
             dotViews[i].setText("•");
-            dotViews[i].setTextSize(35);
+            dotViews[i].setTextSize(40);
             dotViews[i].setTextColor(colorsInactive);
             layoutDots.addView(dotViews[i]);
         }
@@ -180,23 +185,20 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     }
 
     private void onLoginResult(User user) {
-        onLogging(false);
-        start(this, MainActivity.class, MainScreen.instance());
-        finish();
-    }
-
-    private void onLoginError(ServerResponse<ResponseData> responseData) {
-        onLogging(false);
-    }
-
-    private void onLogging(boolean enter) {
-        if (enter) {
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage(getString(R.string.authenticating));
-            progressDialog.show();
-        } else {
-            progressDialog.dismiss();
+        if (user.isValid()) {
+            getPresenter().loginOnFirebase();
+            start(this, MainActivity.class, MainScreen.instance());
+            finish();
         }
+    }
+
+    private void onLoginError(String error) {
+        // Do nothing
+    }
+
+    private void changePage() {
+        int current = viewPager.getCurrentItem();
+        viewPager.setCurrentItem((current + 1) % 3);
     }
 
     /**
@@ -213,6 +215,29 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View view = layoutInflater.inflate(arrLayoutIdx[position], container, false);
+            ImageView imageView =  (ImageView)view.findViewById(R.id.intro_image);
+            TextView headerText = (TextView)view.findViewById(R.id.intro_header);
+            TextView contentText = (TextView)view.findViewById(R.id.intro_content);
+            switch (position) {
+                case 0:
+                    imageView.setImageResource(R.drawable.intro_slider_1);
+                    headerText.setText(getString(R.string.intro_title_1));
+                    contentText.setText(getString(R.string.intro_content_1));
+                    break;
+                case 1:
+                    imageView.setImageResource(R.drawable.intro_slider_2);
+                    headerText.setText(getString(R.string.intro_title_2));
+                    contentText.setText(getString(R.string.intro_content_2));
+                    break;
+                case 2:
+                    imageView.setImageResource(R.drawable.intro_slider_3);
+                    headerText.setText(getString(R.string.intro_title_3));
+                    contentText.setText(getString(R.string.intro_content_3));
+                    break;
+                default:
+                    break;
+            }
+
             container.addView(view);
 
             return view;

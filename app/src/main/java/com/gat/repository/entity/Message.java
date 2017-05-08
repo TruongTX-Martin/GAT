@@ -1,5 +1,7 @@
 package com.gat.repository.entity;
 
+import android.support.annotation.Nullable;
+
 import com.gat.common.util.Strings;
 import com.google.auto.value.AutoValue;
 
@@ -12,8 +14,9 @@ public abstract class Message {
     public abstract String message();
     public abstract long timeStamp();
     public abstract boolean isRead();
-    public abstract String groupId();
+    public abstract @Nullable String groupId();
     public abstract String imageId();
+    public abstract boolean isLocal();
 
     public static Builder builder() {
         return new AutoValue_Message.Builder()
@@ -22,7 +25,8 @@ public abstract class Message {
                 .timeStamp(0l)
                 .isRead(false)
                 .imageId(Strings.EMPTY)
-                .groupId(Strings.EMPTY);
+                .groupId(Strings.EMPTY)
+                .isLocal(false);
     }
 
     public static Message instance() {
@@ -33,6 +37,7 @@ public abstract class Message {
                 .isRead(false)
                 .groupId(Strings.EMPTY)
                 .imageId(Strings.EMPTY)
+                .isLocal(false)
                 .build();
     }
 
@@ -44,6 +49,7 @@ public abstract class Message {
         public abstract Builder isRead(boolean isRead);
         public abstract Builder groupId(String groupId);
         public abstract Builder imageId(String imageId);
+        public abstract Builder isLocal(boolean isLocal);
         public abstract Message build();
     }
 }

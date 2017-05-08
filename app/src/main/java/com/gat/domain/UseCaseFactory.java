@@ -11,13 +11,18 @@ import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.data.response.impl.EvaluationItemResponse;
+import com.gat.data.response.impl.Keyword;
+import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
+import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
+import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.Group;
@@ -45,6 +50,8 @@ public interface UseCaseFactory {
 
     UseCase<User> login(LoginData data);
 
+    UseCase<Boolean> loginFirebase();
+
     UseCase<User> register(LoginData data);
 
     UseCase<LoginData> getLoginData();
@@ -61,11 +68,19 @@ public interface UseCaseFactory {
 
     UseCase<Integer> getBookByIsbn(String isbn);
 
-    UseCase<List<Message>> getMessageList(String groupId, int page, int size);
+    UseCase<List<Message>> getMessageList(int userId, int page, int size);
 
     UseCase<List<Group>> getGroupList(int page, int size);
 
-    UseCase<Boolean> sendMessage(String toUserId, String message);
+    UseCase<Integer> getUnReadGroupMessageCnt();
+
+    UseCase<Group> groupUpdate();
+
+    UseCase<Message> messageUpdate(int userId);
+
+    UseCase<Boolean> sendMessage(int toUserId, String message);
+
+    UseCase<Boolean> sawMessage(String groupId, long timeStamp);
 
     <T, R> UseCase<R> transform(UseCase<T> useCase, ObservableTransformer<T, R> transformer, @Nullable Scheduler transformScheduler);
 
@@ -85,11 +100,11 @@ public interface UseCaseFactory {
 
     UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage);
 
-    UseCase<List<String>> getBooksSearchedKeyword();
+    UseCase<List<Keyword>> getBooksSearchedKeyword();
 
-    UseCase<List<String>> getAuthorsSearchedKeyword();
+    UseCase<List<Keyword>> getAuthorsSearchedKeyword();
 
-    UseCase<List<String>> getUsersSearchedKeyword();
+    UseCase<List<Keyword>> getUsersSearchedKeyword();
 
     UseCase<Data> getBookInstance(BookInstanceInput input);
 
@@ -101,7 +116,7 @@ public interface UseCaseFactory {
 
     UseCase<Data<User>> getUserInfo();
 
-    UseCase<Data> updateInfo(EditInfoInput input);
+    UseCase<String> updateInfo(EditInfoInput input);
 
     UseCase<Data> getBookUserSharing(BookSharingUserInput input);
 
@@ -126,6 +141,12 @@ public interface UseCaseFactory {
     UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
 
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
+
+    UseCase<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
+    UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input);
+    UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
+
+    UseCase<Data> requestBorrowBook(BorrowRequestInput input);
 
 
 }

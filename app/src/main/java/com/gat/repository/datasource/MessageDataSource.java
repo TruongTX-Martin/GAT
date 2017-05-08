@@ -17,9 +17,15 @@ import io.reactivex.Observable;
 public interface MessageDataSource {
 
     public Observable<List<GroupTable>> getGroupList(int page, int size);
-    public Observable<List<MessageTable>> getMessageList(String groupId, int page, int size);
-    public Observable<Boolean> sendMessage(String toUserId, String message);
+    public Observable<GroupTable> groupUpdate();
+    public Observable<List<MessageTable>> getMessageList(int userId, int page, int size);
+    public Observable<MessageTable> messageUpdate(int userId);
+    public Observable<Boolean> sendMessage(int toUserId, String message);
 
-    public Observable<List<Group>> storeGroupList(List<Group> groupList);
+    public Observable<List<Group>> loadGroupList();
+    public Observable<Group> storeGroup(Group group);
+    public Observable<List<Message>> loadMessageList(String groupId);
+    public Observable<Message> storeMessage(String groupId, Message message);
     public Observable<List<Message>> storeMessageList(String groupId, List<Message> messageList);
+    public void sawMessage(String groupId, long timeStamp);
 }

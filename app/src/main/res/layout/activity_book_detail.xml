@@ -162,10 +162,14 @@
 
                 <TextView
                     android:id="@+id/text_view_sharing_book"
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_centerVertical="true"
-                    android:text="..." />
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/bg_cirle_green_height_24"
+                    android:layout_marginRight="@dimen/margin_horizontal_small"
+                    android:gravity="center"
+                    android:text="1" />
 
                 <Button
                     android:id="@+id/button_view_list"
@@ -209,7 +213,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:isIndicator="true"
                     android:numStars="5"
                     android:stepSize="0.5" />
 

@@ -37,6 +37,7 @@ public abstract class User implements Serializable {
     public abstract int loanCount();
     public abstract int readCount();
     public abstract int requestCount();
+    public abstract int passwordFlag();
 
     public static Builder builder(){
         return new AutoValue_User.Builder()
@@ -46,7 +47,8 @@ public abstract class User implements Serializable {
                 .deleteFlag(0)
                 .requestCount(0)
                 .loanCount(0)
-                .readCount(0);
+                .readCount(0)
+                .passwordFlag(0);
     }
 
     @AutoValue.Builder
@@ -61,6 +63,7 @@ public abstract class User implements Serializable {
         public abstract Builder loanCount(int cnt);
         public abstract Builder readCount(int cnt);
         public abstract Builder requestCount(int cnt);
+        public abstract Builder passwordFlag(int flag);
         public abstract User build();
 
     }

@@ -19,11 +19,7 @@ import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by ducbtsn on 2/26/17.
@@ -76,9 +72,9 @@ public class ForgotPasswordActivity extends ScreenActivity<LoginScreen, LoginPre
         });
     }
 
-    public void onError(ServerResponse<ResponseData> responseData) {
+    public void onError(String error) {
         onSending(false);
-        Toast.makeText(getApplicationContext(), getString(R.string.sending_failed), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     public void onSuccess(ServerResponse<ResetPasswordResponseData> responseDataServerResponse) {

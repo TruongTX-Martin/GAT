@@ -1,5 +1,7 @@
 package com.gat.data.response.impl;
 
+import android.support.annotation.Nullable;
+
 import com.gat.data.response.ResponseData;
 
 /**
@@ -8,8 +10,9 @@ import com.gat.data.response.ResponseData;
 
 public class LoginResponseData implements ResponseData {
 
-    public LoginResponseData(String loginToken) {
+    public LoginResponseData(String loginToken, String firebasePassword) {
         this.loginToken = loginToken;
+        this.firebasePassword = firebasePassword;
     }
 
     public String loginToken() {
@@ -21,6 +24,16 @@ public class LoginResponseData implements ResponseData {
     }
 
     private String loginToken;
+
+    public String getFirebasePassword() {
+        return firebasePassword;
+    }
+
+    public void setFirebasePassword(String firebasePassword) {
+        this.firebasePassword = firebasePassword;
+    }
+
+    private @Nullable String firebasePassword;
 
     @Override
     public int responseType() {
