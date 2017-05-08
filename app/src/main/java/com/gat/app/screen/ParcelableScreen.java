@@ -141,6 +141,7 @@ public class ParcelableScreen implements Parcelable {
             return BOOK_DETAIL_REQUEST_SENDER;
         if (screen instanceof BookDetailOwnerScreen)
             return BOOK_DETAIL_REQUEST_SENDER;
+
         throw new IllegalArgumentException("Not support screen " + screen);
     }
 
@@ -203,11 +204,7 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof PersonalUserScreen) {
             PersonalUserScreen commentScreen = (PersonalUserScreen) screen;
-
             dest.writeInt(commentScreen.userId());
-
-            UserResponse response = commentScreen.userResponse();
-            dest.writeParcelable(commentScreen.userResponse(), flags);
 
         } else if (screen instanceof BookDetailScreen) {
             BookDetailScreen bookDetailScreen = (BookDetailScreen)screen;
