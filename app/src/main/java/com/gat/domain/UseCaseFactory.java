@@ -25,6 +25,7 @@ import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.FirebasePassword;
 import com.gat.repository.entity.Group;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.Message;
@@ -148,5 +149,12 @@ public interface UseCaseFactory {
 
     UseCase<Data> requestBorrowBook(BorrowRequestInput input);
 
+    UseCase<ServerResponse> unlinkSocialAccount (int socialType);
+
+    UseCase<ServerResponse> linkSocialAccount (String socialID, String socialName , int socialType);
+
+    UseCase<ServerResponse<FirebasePassword>> addEmailPassword (String email, String password);
+
+    UseCase<ServerResponse> changeOldPassword(String newPassword, String oldPassword);
 
 }

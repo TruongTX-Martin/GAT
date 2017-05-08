@@ -1,6 +1,7 @@
 package com.gat.dependency;
 
 import com.gat.data.response.impl.NotifyEntity;
+import com.gat.repository.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -18,6 +19,8 @@ public class AutoValueGsonTypeAdapterFactory implements TypeAdapterFactory {
 
         if (rawType.equals(NotifyEntity.class)) {
             return (TypeAdapter<T>) NotifyEntity.typeAdapter(gson);
+        } else if (rawType.equals(User.class)) {
+            return (TypeAdapter<T>) User.typeAdapter(gson);
         }
 
         return null;

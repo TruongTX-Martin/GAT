@@ -19,6 +19,7 @@ import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.FirebasePassword;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 
@@ -339,7 +340,6 @@ public interface GatApi {
             @Field("socialType") int socialType
     );
 
-    //  Chưa có api
     @FormUrlEncoded
     @POST("user/change_password")
     Observable<Response<ServerResponse>> updatePassword (
@@ -350,7 +350,7 @@ public interface GatApi {
     //  Chưa có api
     @FormUrlEncoded
     @POST("user/add_email_pass")
-    Observable<Response<ServerResponse>> addEmailPassword (
+    Observable<Response<ServerResponse<FirebasePassword>>> addEmailPassword (
             @Field("email") String email,
             @Field("password") String password
     );

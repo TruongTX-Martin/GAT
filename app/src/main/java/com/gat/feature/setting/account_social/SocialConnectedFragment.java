@@ -16,13 +16,14 @@ import butterknife.OnClick;
 @SuppressLint("ValidFragment")
 public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScreen, SocialConnectedPresenter> {
 
-
     private ISettingDelegate delegate;
     private int mTypeSocial = 1;
+    private String mSocialUsername = "";
 
-    public SocialConnectedFragment (ISettingDelegate delegate, int type_social) {
+    public SocialConnectedFragment (ISettingDelegate delegate, int type_social, String username) {
         this.delegate = delegate;
         this.mTypeSocial = type_social;
+        this.mSocialUsername = username;
     }
 
     @Override

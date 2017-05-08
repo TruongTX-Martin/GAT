@@ -195,6 +195,7 @@ public class ParcelableScreen implements Parcelable {
 
         } else if (screen instanceof PersonalUserScreen) {
             PersonalUserScreen commentScreen = (PersonalUserScreen) screen;
+            UserResponse response = commentScreen.userResponse();
             dest.writeParcelable(commentScreen.userResponse(), flags);
         } else if (screen instanceof BookDetailScreen) {
             BookDetailScreen bookDetailScreen = (BookDetailScreen)screen;

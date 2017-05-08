@@ -1,5 +1,6 @@
 package com.gat.feature.setting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,12 +12,17 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.util.Constance;
 import com.gat.common.util.Views;
+import com.gat.feature.editinfo.EditInfoActivity;
+import com.gat.feature.main.MainActivity;
 import com.gat.feature.setting.account_social.SocialConnectedFragment;
 import com.gat.feature.setting.account_social.TypeSocial;
 import com.gat.feature.setting.add_email_password.AddEmailPasswordFragment;
 import com.gat.feature.setting.change_password.ChangePasswordFragment;
 import com.gat.feature.setting.main.MainSettingFragment;
+import com.gat.repository.entity.User;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -69,8 +75,10 @@ public class SettingFragment extends Fragment implements ISettingDelegate {
     }
 
     @Override
-    public void goToEditProfile() {
-
+    public void goToEditProfile(User user) {
+        Intent intent = new Intent(getActivity().getApplicationContext(), EditInfoActivity.class);
+        intent.putExtra("UserInfo",  user);
+        getActivity().startActivity(intent);
     }
 
     @Override
@@ -80,20 +88,20 @@ public class SettingFragment extends Fragment implements ISettingDelegate {
     }
 
     @Override
-    public void goToFacebook() {
-        Views.navigationToView(getActivity(), getSocialFacebook(),
+    public void goToFacebook(String username) {
+        Views.navigationToView(getActivity(), getSocialFacebook(username),
                 R.id.fl_setting, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
-    public void goToTwitter() {
-        Views.navigationToView(getActivity(), getSocialTwitter(),
+    public void goToTwitter(String username) {
+        Views.navigationToView(getActivity(), getSocialTwitter(username),
                 R.id.fl_setting, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
-    public void goToGoogle() {
-        Views.navigationToView(getActivity(), getSocialGoogle(),
+    public void goToGoogle(String username) {
+        Views.navigationToView(getActivity(), getSocialGoogle(username),
                 R.id.fl_setting, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
@@ -124,23 +132,23 @@ public class SettingFragment extends Fragment implements ISettingDelegate {
         return changePasswordFragment;
     }
 
-    private SocialConnectedFragment getSocialFacebook() {
+    private SocialConnectedFragment getSocialFacebook(String username) {
         if (null == socialFacebook) {
-            socialFacebook = new SocialConnectedFragment(this, TypeSocial.FACEBOOK);
+            socialFacebook = new SocialConnectedFragment(this, TypeSocial.FACEBOOK, username);
         }
         return socialFacebook;
     }
 
-    private SocialConnectedFragment getSocialTwitter() {
+    private SocialConnectedFragment getSocialTwitter(String username) {
         if (null == socialTwitter) {
-            socialTwitter = new SocialConnectedFragment(this, TypeSocial.TWITTER);
+            socialTwitter = new SocialConnectedFragment(this, TypeSocial.TWITTER, username);
         }
         return socialTwitter;
     }
 
-    private SocialConnectedFragment getSocialGoogle() {
+    private SocialConnectedFragment getSocialGoogle(String username) {
         if (null == socialGoogle) {
-            socialGoogle = new SocialConnectedFragment(this, TypeSocial.GOOGLE);
+            socialGoogle = new SocialConnectedFragment(this, TypeSocial.GOOGLE, username);
         }
         return socialGoogle;
     }

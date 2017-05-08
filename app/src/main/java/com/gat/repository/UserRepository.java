@@ -17,12 +17,14 @@ import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.FirebasePassword;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
+import java.util.Observer;
 
 import io.reactivex.Observable;
 
@@ -77,4 +79,11 @@ public interface UserRepository {
     Observable<ChangeStatusResponse> requestBookByBorrowrer(RequestStatusInput input);
     Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
     Observable<Data> requestBorrowBook(BorrowRequestInput input);
+
+    Observable<ServerResponse> unlinkSocialAccount(int socialType);
+    Observable<ServerResponse> linkSocialAccount (String socialID, String socialName , int socialType);
+    Observable<ServerResponse<FirebasePassword>> addEmailPassword (String email, String password);
+    Observable<ServerResponse> changeOldPassword(String newPassword, String oldPassword);
+
+
 }

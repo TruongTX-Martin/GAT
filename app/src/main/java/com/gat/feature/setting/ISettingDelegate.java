@@ -1,5 +1,7 @@
 package com.gat.feature.setting;
 
+import com.gat.repository.entity.User;
+
 /**
  * Created by mryit on 5/5/2017.
  */
@@ -10,15 +12,15 @@ public interface ISettingDelegate {
 
     void goToAddEmailPassword ();
 
-    void goToEditProfile ();
+    void goToEditProfile (User user);
 
     void goToChangePassword ();
 
-    void goToFacebook ();
+    void goToFacebook (String username);
 
-    void goToTwitter ();
+    void goToTwitter (String username);
 
-    void goToGoogle ();
+    void goToGoogle (String username);
 
     void logout ();
 

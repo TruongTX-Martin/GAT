@@ -38,6 +38,12 @@ public abstract class User implements Serializable {
     public abstract int readCount();
     public abstract int requestCount();
     public abstract int passwordFlag();
+    public abstract @Nullable String faceBookId();
+    public abstract @Nullable String faceBookName();
+    public abstract @Nullable String googleId();
+    public abstract @Nullable String googleName();
+    public abstract @Nullable String twitterId();
+    public abstract @Nullable String twitterName();
 
     public static Builder builder(){
         return new AutoValue_User.Builder()
@@ -48,7 +54,13 @@ public abstract class User implements Serializable {
                 .requestCount(0)
                 .loanCount(0)
                 .readCount(0)
-                .passwordFlag(0);
+                .passwordFlag(0)
+                .faceBookId(Strings.EMPTY)
+                .faceBookName(Strings.EMPTY)
+                .googleId(Strings.EMPTY)
+                .googleName(Strings.EMPTY)
+                .twitterId(Strings.EMPTY)
+                .twitterName(Strings.EMPTY);
     }
 
     @AutoValue.Builder
@@ -64,7 +76,12 @@ public abstract class User implements Serializable {
         public abstract Builder readCount(int cnt);
         public abstract Builder requestCount(int cnt);
         public abstract Builder passwordFlag(int flag);
+        public abstract Builder faceBookId(String faceBookId);
+        public abstract Builder faceBookName(String faceBookName);
+        public abstract Builder googleId(String googleId);
+        public abstract Builder googleName(String googleName);
+        public abstract Builder twitterId(String twitterId);
+        public abstract Builder twitterName(String twitterName);
         public abstract User build();
-
     }
 }

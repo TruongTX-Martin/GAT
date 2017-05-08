@@ -30,6 +30,7 @@
                 android:id="@+id/button_add_email_password"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_large"
+                android:visibility="gone"
                 android:layout_marginRight="@dimen/paddingLarge"
                 android:background="@drawable/bg_border_bottom">
 
@@ -105,6 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_large"
                 android:layout_marginRight="@dimen/paddingLarge"
+                android:visibility="gone"
                 android:background="@drawable/bg_border_top">
 
                 <ImageView
@@ -195,7 +197,6 @@
                     android:layout_toLeftOf="@+id/arrow_fb"
                     android:layout_toRightOf="@+id/text_view_facebook"
                     android:gravity="right"
-                    android:text="tranducthanhtb1z"
                     android:textColor="@color/colorTextViewGray"
                     android:textSize="@dimen/small_text_view_size" />
             </RelativeLayout>
@@ -213,7 +214,7 @@
                     android:layout_width="16.5dp"
                     android:layout_height="16.5dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_twitter" />
+                    android:src="@drawable/ic_twitter_active" />
 
 
                 <TextView
@@ -245,7 +246,6 @@
                     android:layout_toLeftOf="@+id/arrow_tw"
                     android:layout_toRightOf="@+id/text_view_twitter"
                     android:gravity="right|center_vertical"
-                    android:text="tranducthanhtb1z"
                     android:textColor="@color/colorTextViewGray"
                     android:textSize="@dimen/small_text_view_size" />
             </RelativeLayout>
@@ -292,7 +292,6 @@
                     android:layout_toLeftOf="@+id/arrow_gg"
                     android:layout_toRightOf="@+id/text_view_google"
                     android:gravity="right|center_vertical"
-                    android:text="tranducthanhtb1z"
                     android:textColor="@color/colorTextViewGray"
                     android:textSize="@dimen/small_text_view_size" />
             </RelativeLayout>

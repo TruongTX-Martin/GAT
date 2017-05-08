@@ -23,6 +23,7 @@ import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.FirebasePassword;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -181,6 +182,26 @@ public class PaperUserDataSource implements UserDataSource {
 
     @Override
     public Observable<Data> requestBorrowBook(BorrowRequestInput input) {
+        return null;
+    }
+
+    @Override
+    public Observable<ServerResponse> unlinkSocialAccount(int socialType) {
+        return null;
+    }
+
+    @Override
+    public Observable<ServerResponse> linkSocialAccount(String socialID, String socialName, int socialType) {
+        return null;
+    }
+
+    @Override
+    public Observable<ServerResponse<FirebasePassword>> addEmailPassword(String email, String password) {
+        return null;
+    }
+
+    @Override
+    public Observable<ServerResponse> changeOldPassword(String newPassword, String oldPassword) {
         return null;
     }
 
