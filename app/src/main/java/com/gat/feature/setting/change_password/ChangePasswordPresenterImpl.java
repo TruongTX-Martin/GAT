@@ -48,7 +48,7 @@ public class ChangePasswordPresenterImpl implements ChangePasswordPresenter {
             subjectFailed.onNext("Bạn cần nhập đủ thông tin");
             return;
         }
-        if (TextUtils.equals(newPassword, confirmPassword)) {
+        if ( ! TextUtils.equals(newPassword, confirmPassword)) {
             subjectFailed.onNext("Mật khẩu nhập lại không khớp");
             return;
         }

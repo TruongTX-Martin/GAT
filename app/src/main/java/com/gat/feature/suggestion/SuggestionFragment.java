@@ -249,7 +249,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             if ( null != userItem.getImageId() && ! userItem.getImageId().isEmpty()) {
                 Glide.with(getActivity()).
                         load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                                + userItem.getImageId() + "?size=t").into(imageViewAvatar);
+                                + userItem.getImageId() + "?size=s").into(imageViewAvatar);
             }
             textViewName.setText(userItem.getName());
             imageViewAvatar.setTag(userItem); // pass object -> tag

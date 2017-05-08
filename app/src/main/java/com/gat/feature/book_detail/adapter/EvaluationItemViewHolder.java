@@ -56,7 +56,7 @@ public class EvaluationItemViewHolder extends ItemViewHolder<EvaluationItem> {
         if (item.evaluation().getImageId() != null && !item.evaluation().getImageId().isEmpty()) {
             Glide.with(mContext).
                     load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                            + item.evaluation().getImageId() + "?size=t").listener(new RequestListener<String, GlideDrawable>() {
+                            + item.evaluation().getImageId() + "?size=s").listener(new RequestListener<String, GlideDrawable>() {
                 @Override
                 public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
 
