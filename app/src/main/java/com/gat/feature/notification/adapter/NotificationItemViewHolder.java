@@ -58,7 +58,7 @@ public class NotificationItemViewHolder extends ItemViewHolder<NotificationItem>
     public void onBindItem(NotificationItem item) {
         super.onBindItem(item);
 
-        String timeAgo = DateTimeUtil.calculateTimeAgo(DateTimeUtil.FORMAT_TYPE_1, item.notifyEntity().beginTime());
+        String timeAgo = DateTimeUtil.calculateTimeAgo(item.notifyEntity().beginTime());
         textViewTimeAgo.setText(timeAgo);
 
         showMessageContentByType(item.notifyEntity());

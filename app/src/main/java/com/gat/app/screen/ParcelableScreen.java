@@ -3,7 +3,6 @@ package com.gat.app.screen;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.gat.common.util.Strings;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
@@ -17,6 +16,7 @@ import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.feature.bookdetailowner.BookDetailOwnerScreen;
 import com.gat.feature.bookdetailsender.BookDetailSenderScreen;
 import com.gat.feature.login.LoginScreen;
+
 import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.message.presenter.MessagePresenter;
 import com.gat.feature.message.presenter.MessageScreen;
@@ -28,13 +28,15 @@ import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.scanbarcode.ScanScreen;
 import com.gat.feature.search.SearchScreen;
+import com.gat.feature.setting.account_social.SocialConnectedScreen;
+import com.gat.feature.setting.add_email_password.AddEmailPasswordScreen;
+import com.gat.feature.setting.change_password.ChangePasswordScreen;
+import com.gat.feature.setting.main.MainSettingScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
 import com.gat.repository.entity.User;
 
-import java.lang.annotation.ElementType;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,6 +70,11 @@ public class ParcelableScreen implements Parcelable {
     private static final int BOOK_DETAIL_REQUEST_SENDER = 71;
 
     private static final int NOTIFICATION = 80;
+
+    private static final int MAIN_SETTING = 41;
+    private static final int ADD_EMAIL_PASSWORD = 42;
+    private static final int SOCIAL_CONNECTED = 43;
+    private static final int CHANGE_PASSWORD = 44;
 
     public ParcelableScreen(Screen screen){
         this.screen = screen;
@@ -117,10 +124,19 @@ public class ParcelableScreen implements Parcelable {
             return GROUP_MESSAGER;
         if (screen instanceof ScanScreen)
             return SCAN;
+        if (screen instanceof MainSettingScreen)
+            return MAIN_SETTING;
+        if (screen instanceof AddEmailPasswordScreen)
+            return ADD_EMAIL_PASSWORD;
+        if (screen instanceof SocialConnectedScreen)
+            return SOCIAL_CONNECTED;
+        if (screen instanceof ChangePasswordScreen)
+            return CHANGE_PASSWORD;
         if (screen instanceof NotificationScreen)
             return NOTIFICATION;
         if(screen instanceof PersonalUserScreen)
             return USER_PERSONAL;
+
         if (screen instanceof BookDetailSenderScreen)
             return BOOK_DETAIL_REQUEST_SENDER;
         if (screen instanceof BookDetailOwnerScreen)
@@ -175,11 +191,24 @@ public class ParcelableScreen implements Parcelable {
             dest.writeParcelable(commentScreen.evaluation(), flags);
         } else if (screen instanceof ScanScreen) {
 
-        } else if (screen instanceof NotificationScreen) {
+        } else if (screen instanceof MainSettingScreen) {
+
+        } else if (screen instanceof AddEmailPasswordScreen) {
+
+        } else if (screen instanceof SocialConnectedScreen) {
+
+        } else if (screen instanceof ChangePasswordScreen) {
+
+        }  else if (screen instanceof NotificationScreen) {
 
         } else if (screen instanceof PersonalUserScreen) {
             PersonalUserScreen commentScreen = (PersonalUserScreen) screen;
+
             dest.writeInt(commentScreen.userId());
+
+            UserResponse response = commentScreen.userResponse();
+            dest.writeParcelable(commentScreen.userResponse(), flags);
+
         } else if (screen instanceof BookDetailScreen) {
             BookDetailScreen bookDetailScreen = (BookDetailScreen)screen;
             dest.writeInt(bookDetailScreen.editionId());
@@ -190,6 +219,8 @@ public class ParcelableScreen implements Parcelable {
             BookDetailSenderScreen bookDetailSenderScreen = (BookDetailSenderScreen)screen;
             dest.writeInt(bookDetailSenderScreen.requestId());
         }
+
+
         else {
             throw new IllegalArgumentException("Not implement serialization for " + screen);
         }
@@ -252,6 +283,18 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case ADD_COMMENT:
                 screen = CommentScreen.instance(in.readParcelable(EvaluationItemResponse.class.getClassLoader()));
+                break;
+            case MAIN_SETTING:
+                screen = MainSettingScreen.instance();
+                break;
+            case ADD_EMAIL_PASSWORD:
+                screen = AddEmailPasswordScreen.instance();
+                break;
+            case SOCIAL_CONNECTED:
+                screen = SocialConnectedScreen.instance();
+                break;
+            case CHANGE_PASSWORD:
+                screen = ChangePasswordScreen.instance();
                 break;
 
             case NOTIFICATION:

@@ -106,10 +106,11 @@ public class NotificationAdapter extends ItemAdapter {
 
             // add next item to end of list.
             for (int i = 1, z = list.size(); i < z; i++) {
-                String[] string = list.get(i).beginTime().split(" ");
-                String[] stringPrev = list.get(i - 1).beginTime().split(" ");
 
-                if (!string[0].equals(stringPrev[0])) {
+                String string = DateTimeUtil.transformDate(list.get(i).beginTime());
+                String stringPrev = DateTimeUtil.transformDate(list.get(i - 1).beginTime());
+
+                if (!string.equals(stringPrev)) {
                     timeHeader = DateTimeItem.instance(DateTimeUtil.transformDate(list.get(i).beginTime()));
                     listItems.add(timeHeader);
                 }

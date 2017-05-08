@@ -60,7 +60,7 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
         holder.ratingBar.setRating(item.getRateAvg());
         Glide.with(mContext).
                 load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                        + item.getImageId() + "?size=t").listener(new RequestListener<String, GlideDrawable>() {
+                        + item.getImageId() + "?size=s").listener(new RequestListener<String, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                 return false;

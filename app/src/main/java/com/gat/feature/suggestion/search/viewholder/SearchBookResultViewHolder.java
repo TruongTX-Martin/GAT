@@ -64,7 +64,7 @@ public class SearchBookResultViewHolder extends ItemViewHolder<SearchBookResultI
         if ( ! item.bookResponse().getImageId().isEmpty()) {
             Glide.with(mContext).
                     load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                            + item.bookResponse().getImageId() + "?size=t").listener(new RequestListener<String, GlideDrawable>() {
+                            + item.bookResponse().getImageId() + "?size=s").listener(new RequestListener<String, GlideDrawable>() {
                 @Override
                 public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                     progressBar.setVisibility(View.GONE);

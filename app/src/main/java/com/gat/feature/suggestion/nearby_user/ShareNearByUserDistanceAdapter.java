@@ -65,7 +65,7 @@ public class ShareNearByUserDistanceAdapter
         if ( null != user.getImageId() && ! user.getImageId().isEmpty()) {
             Glide.with(mContext).
                     load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                            + user.getImageId() + "?size=t").into(holder.imageViewUserAvatar);
+                            + user.getImageId() + "?size=s").into(holder.imageViewUserAvatar);
         }
 
         holder.textViewDistance.setText(String.valueOf(user.getDistance()));

@@ -43,6 +43,14 @@ import com.gat.feature.scanbarcode.ScanPresenterImpl;
 import com.gat.feature.search.SearchItemBuilder;
 import com.gat.feature.search.SearchPresenter;
 import com.gat.feature.search.SearchPresenterImpl;
+import com.gat.feature.setting.account_social.SocialConnectedPresenter;
+import com.gat.feature.setting.account_social.SocialConnectedPresenterImpl;
+import com.gat.feature.setting.add_email_password.AddEmailPasswordPresenter;
+import com.gat.feature.setting.add_email_password.AddEmailPasswordPresenterImpl;
+import com.gat.feature.setting.change_password.ChangePasswordPresenter;
+import com.gat.feature.setting.change_password.ChangePasswordPresenterImpl;
+import com.gat.feature.setting.main.MainSettingPresenter;
+import com.gat.feature.setting.main.MainSettingPresenterImpl;
 import com.gat.feature.suggestion.SuggestionPresenter;
 import com.gat.feature.suggestion.SuggestionPresenterImpl;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
@@ -103,9 +111,10 @@ public class PresenterModule {
 
     @Provides
     MessagePresenter provideMessagePresenter(UseCaseFactory useCaseFactory,
-                                             SchedulerFactory schedulerFactory){
+                                             SchedulerFactory schedulerFactory) {
         return new MessagePresenterImpl(useCaseFactory, schedulerFactory);
     }
+
 
     @Provides
     GroupMessagePresenter provideGroupMessagePresenter(UseCaseFactory useCaseFactory,
@@ -157,6 +166,7 @@ public class PresenterModule {
     //    return new BookDetailPresenterImpl(useCaseFactory, schedulerFactory);
     //}
 
+
     @Provides
     BookDetailSenderPresenter getBookDetailSenderPresenter( UseCaseFactory useCaseFactory,
                                                                 SchedulerFactory schedulerFactory) {
@@ -165,8 +175,8 @@ public class PresenterModule {
 
     @Provides
     BookDetailPresenter provideBookDetailPresenter(UseCaseFactory useCaseFactory,
-                                                   SchedulerFactory schedulerFactory){
-        return  new BookDetailPresenterImpl(useCaseFactory,schedulerFactory);
+                                                   SchedulerFactory schedulerFactory) {
+        return new BookDetailPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
     @Provides
@@ -182,22 +192,49 @@ public class PresenterModule {
     }
 
     @Provides
-    AddToBookcasePresenter provideAddToBookcasePresenter (UseCaseFactory useCaseFactory,
-                                                          SchedulerFactory schedulerFactory) {
+    AddToBookcasePresenter provideAddToBookcasePresenter(UseCaseFactory useCaseFactory,
+                                                         SchedulerFactory schedulerFactory) {
         return new AddToBookcasePresenterImpl(useCaseFactory, schedulerFactory);
     }
 
     @Provides
-    CommentPresenter provideCommentPresenter (UseCaseFactory useCaseFactory,
-                                              SchedulerFactory schedulerFactory) {
+    CommentPresenter provideCommentPresenter(UseCaseFactory useCaseFactory,
+                                             SchedulerFactory schedulerFactory) {
         return new CommentPresenterImpl(useCaseFactory, schedulerFactory);
     }
 
     @Provides
-    ScanPresenter provideScanPresenter (UseCaseFactory useCaseFactory,
-                                           SchedulerFactory schedulerFactory) {
+    ScanPresenter provideScanPresenter(UseCaseFactory useCaseFactory,
+                                       SchedulerFactory schedulerFactory) {
         return new ScanPresenterImpl(useCaseFactory, schedulerFactory);
     }
+
+    @Provides
+    MainSettingPresenter provideMainSettingPresenter(UseCaseFactory useCaseFactory,
+                                                     SchedulerFactory schedulerFactory) {
+        return new MainSettingPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+    @Provides
+    AddEmailPasswordPresenter provideAddEmailPasswordPresenter(UseCaseFactory useCaseFactory,
+                                                               SchedulerFactory schedulerFactory) {
+        return new AddEmailPasswordPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+
+    @Provides
+    SocialConnectedPresenter provideSocialConnectedPresenter(UseCaseFactory useCaseFactory,
+                                                             SchedulerFactory schedulerFactory) {
+        return new SocialConnectedPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
+
+    @Provides
+    ChangePasswordPresenter provideChangePasswordPresenter(UseCaseFactory useCaseFactory,
+                                                           SchedulerFactory schedulerFactory) {
+        return new ChangePasswordPresenterImpl(useCaseFactory, schedulerFactory);
+    }
+
     @Provides
     BookDetailOwnerPresenter provideBookDetailBorrowPresenter(UseCaseFactory useCaseFactory,
                                                               SchedulerFactory schedulerFactory) {
@@ -209,7 +246,6 @@ public class PresenterModule {
                                                         SchedulerFactory schedulerFactory) {
         return new NotificationPresenterImpl(useCaseFactory, schedulerFactory);
     }
-
 
 
 }

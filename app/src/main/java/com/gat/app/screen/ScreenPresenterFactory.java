@@ -22,6 +22,12 @@ import com.gat.feature.register.update.category.AddCategoryScreen;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.scanbarcode.ScanScreen;
 import com.gat.feature.search.SearchScreen;
+import com.gat.feature.setting.account_social.SocialConnectedScreen;
+import com.gat.feature.setting.add_email_password.AddEmailPasswordPresenter;
+import com.gat.feature.setting.add_email_password.AddEmailPasswordScreen;
+import com.gat.feature.setting.change_password.ChangePasswordScreen;
+import com.gat.feature.setting.main.MainSettingPresenter;
+import com.gat.feature.setting.main.MainSettingScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
@@ -88,8 +94,17 @@ public class ScreenPresenterFactory implements PresenterFactory {
             return (P) presenterComponent.getCommentPresenter();
         else if (key instanceof ScanScreen)
             return (P) presenterComponent.getScanPresenter();
+        else if (key instanceof MainSettingScreen)
+            return (P) presenterComponent.getMainSettingPresenter();
+        else if (key instanceof AddEmailPasswordScreen)
+            return (P) presenterComponent.getAddEmailPasswordPresenter();
+        else if (key instanceof SocialConnectedScreen)
+            return (P) presenterComponent.getSocialConnectedPresenter();
+        else if (key instanceof ChangePasswordScreen)
+            return (P) presenterComponent.getChangePasswordPresenter();
         else if (key instanceof NotificationScreen)
             return (P) presenterComponent.getNotificationPresenter();
+
 
         throw new IllegalArgumentException("Not support key " + key);
     }

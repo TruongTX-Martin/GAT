@@ -25,6 +25,7 @@ import com.gat.feature.notification.NotificationFragment;
 import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
+import com.gat.feature.setting.SettingFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
 
 import java.lang.annotation.Retention;
@@ -121,25 +122,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onDestroy();
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // your dialog to ask if user is going out
-            // ...
-
-            moveTaskToBack(true);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onBackPressed() {
-        // your dialog to ask if user is going out
-        // ...
-
-        moveTaskToBack(true);
-    }
 
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
@@ -148,7 +130,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         adapter.addFragment(personalFragment, "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
         adapter.addFragment(new NotificationFragment(), "NOTICE");
-        adapter.addFragment(new Fragment(), "SETTING");
+        adapter.addFragment(new SettingFragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
     }

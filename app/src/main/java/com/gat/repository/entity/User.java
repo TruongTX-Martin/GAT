@@ -52,8 +52,6 @@ public abstract class User implements Serializable {
     public abstract @Nullable String twitterId();
     public abstract @Nullable String twitterName();
 
-//    public abstract List<UsuallyLocation> usuallyLocation();
-
     public static Builder builder(){
         return new AutoValue_User.Builder()
                 .email(Strings.EMPTY)
@@ -90,7 +88,7 @@ public abstract class User implements Serializable {
         public abstract Builder googleName(String googleName);
         public abstract Builder twitterId(String twitterId);
         public abstract Builder twitterName(String twitterName);
-//        public abstract Builder usuallyLocation(List<UsuallyLocation> list);
+
         public abstract User build();
     }
 

@@ -54,6 +54,33 @@ public class DateTimeUtil {
     }
 
 
+    public static String calculateTimeAgo (long milliseconds) {
+
+        Date now = new Date();
+        long hoursAgo = TimeUnit.MILLISECONDS.toHours(now.getTime() - milliseconds);
+
+        if (hoursAgo <=1) {
+            return TimeUnit.MILLISECONDS.toMinutes(now.getTime() - milliseconds) + " phút";
+        } else if (hoursAgo >=24){
+            return TimeUnit.MILLISECONDS.toDays(now.getTime() - milliseconds) + " ngày";
+        } else {
+            return hoursAgo + " giờ";
+        }
+    }
+
+
+    public static String transformDate (long milliseconds) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return mDay + " tháng " + mMonth + " năm " + mYear;
+    }
+
+
     public static String transformDate (String timeString) {
 
         if (timeString == null || timeString.isEmpty()) {

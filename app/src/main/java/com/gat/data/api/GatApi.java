@@ -19,6 +19,7 @@ import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.repository.entity.Book;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.FirebasePassword;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
 
@@ -322,6 +323,39 @@ public interface GatApi {
     );
 
 
+    /**
+     * @param socialType: 1=Facebook, 2=Google, 3=Twitter
+     */
+    @FormUrlEncoded
+    @POST("user/unlink_social_acc")
+    Observable<Response<ServerResponse>> unlinkSocialAccount (
+            @Field("socialType") int socialType
+    );
+
+    @FormUrlEncoded
+    @POST("user/unlink_social_acc")
+    Observable<Response<ServerResponse>> linkSocialAccount (
+            @Field("socialID") String socialID,
+            @Field("socialName") String socialName,
+            @Field("socialType") int socialType
+    );
+
+    @FormUrlEncoded
+    @POST("user/change_password")
+    Observable<Response<ServerResponse>> updatePassword (
+            @Field("oldPassword") String oldPassword,
+            @Field("newPassword") String newPassword
+    );
+
+    //  Chưa có api
+    @FormUrlEncoded
+    @POST("user/add_email_pass")
+    Observable<Response<ServerResponse<FirebasePassword>>> addEmailPassword (
+            @Field("email") String email,
+            @Field("password") String password
+    );
+
+
     @FormUrlEncoded
     @POST("share/update_request_by_owner")
     Observable<Response<ServerResponse<Data>>> requestBookByOwner(
@@ -350,4 +384,6 @@ public interface GatApi {
             @Field("editionId") int editionId,
             @Field("ownerId") int ownerId
     );
+
+
 }

@@ -52,11 +52,11 @@ public class SearchUserResultViewHolder extends ItemViewHolder<SearchUserResultI
 
         if ( ! item.userResponse().getImageId().isEmpty()) {
             MZDebug.e(" URL IMG: " + "http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                    + item.userResponse().getImageId() + "?size=t");
+                    + item.userResponse().getImageId() + "?size=");
 
             Glide.with(mContext).
                     load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                            + item.userResponse().getImageId() + "?size=t").listener(new RequestListener<String, GlideDrawable>() {
+                            + item.userResponse().getImageId() + "?size=s").listener(new RequestListener<String, GlideDrawable>() {
                 @Override
                 public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                     progressBar.setVisibility(View.GONE);

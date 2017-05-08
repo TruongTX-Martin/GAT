@@ -33,6 +33,7 @@ import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.FirebasePassword;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -492,6 +493,50 @@ public class UserDataSourceImpl implements UserDataSource {
             }
             serverResponse.code(response.code());
             return serverResponse.data();
+        });
+    }
+
+    @Override
+    public Observable<ServerResponse> unlinkSocialAccount(int socialType) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse>> responseObservable;
+        responseObservable = api.unlinkSocialAccount(socialType);
+
+        return responseObservable.map(response -> {
+           return response.body();
+        });
+    }
+
+    @Override
+    public Observable<ServerResponse> linkSocialAccount(String socialID, String socialName, int socialType) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse>> responseObservable;
+        responseObservable = api.linkSocialAccount(socialID, socialName, socialType);
+
+        return responseObservable.map(response -> {
+            return response.body();
+        });
+    }
+
+    @Override
+    public Observable<ServerResponse<FirebasePassword>> addEmailPassword(String email, String password) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<FirebasePassword>>> responseObservable;
+        responseObservable = api.addEmailPassword(email, password);
+
+        return responseObservable.map(response -> {
+            return response.body();
+        });
+    }
+
+    @Override
+    public Observable<ServerResponse> changeOldPassword(String newPassword, String oldPassword) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse>> responseObservable;
+        responseObservable = api.updatePassword(oldPassword, newPassword);
+
+        return responseObservable.map(response -> {
+            return response.body();
         });
     }
 
