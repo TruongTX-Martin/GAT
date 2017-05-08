@@ -52,6 +52,7 @@ import com.gat.repository.BookRepository;
 import com.gat.repository.MessageRepository;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.Book;
+import com.gat.repository.entity.FirebasePassword;
 import com.gat.repository.entity.Group;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.LoginData;
@@ -354,7 +355,26 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
 
     @Override
     public UseCase<User> getVisitorInfor(int userId) {
-        return new GetVisitorInfo(userRepositoryLazy.get(),userId);
+        return new GetVisitorInfo(userRepositoryLazy.get(), userId);
+    }
+
+    public UseCase<ServerResponse> unlinkSocialAccount(int socialType) {
+        return new UnlinkSocialAccount(userRepositoryLazy.get(), socialType);
+    }
+
+    @Override
+    public UseCase<ServerResponse> linkSocialAccount(String socialID, String socialName, int socialType) {
+        return new LinkSocialAccount(userRepositoryLazy.get(), socialID, socialName, socialType);
+    }
+
+    @Override
+    public UseCase<ServerResponse<FirebasePassword>> addEmailPassword(String email, String password) {
+        return new AddEmailPassword(userRepositoryLazy.get(), email, password);
+    }
+
+    @Override
+    public UseCase<ServerResponse> changeOldPassword(String newPassword, String oldPassword) {
+        return new ChangeOldPassword(userRepositoryLazy.get(), oldPassword, newPassword);
     }
 
 }

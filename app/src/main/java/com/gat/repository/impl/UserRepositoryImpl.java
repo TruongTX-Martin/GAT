@@ -25,6 +25,7 @@ import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
+import com.gat.repository.entity.FirebasePassword;
 import com.gat.repository.entity.LoginData;
 import com.gat.repository.entity.User;
 import com.gat.repository.entity.UserNearByDistance;
@@ -288,6 +289,26 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<Data> requestBorrowBook(BorrowRequestInput input) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().requestBorrowBook(input));
+    }
+
+    @Override
+    public Observable<ServerResponse> unlinkSocialAccount(int socialType) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().unlinkSocialAccount(socialType));
+    }
+
+    @Override
+    public Observable<ServerResponse> linkSocialAccount(String socialID, String socialName, int socialType) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().linkSocialAccount(socialID, socialName, socialType));
+    }
+
+    @Override
+    public Observable<ServerResponse<FirebasePassword>> addEmailPassword(String email, String password) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().addEmailPassword(email, password));
+    }
+
+    @Override
+    public Observable<ServerResponse> changeOldPassword(String newPassword, String oldPassword) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().changeOldPassword(newPassword, oldPassword));
     }
 
 }

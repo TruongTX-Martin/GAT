@@ -55,6 +55,7 @@
     <dimen name="item_book_suggest_height">160dp</dimen>
 
     <dimen name="button_height">40dp</dimen>
+    <dimen name="button_height_large">68dp</dimen>
 
     <dimen name="item_header_height">40dp</dimen>
 

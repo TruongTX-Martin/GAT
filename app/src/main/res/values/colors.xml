@@ -19,6 +19,7 @@
     <color name="colorTextViewDarkNormal">#4e4e4e</color>
     <color name="textSecondary">#757575</color>
     <color name="colorTextViewGray">#919191</color>
+    <color name="colorTextViewRed">#ee1414</color>
 
     <color name="divider">#BDBDBD</color>
     <color name="dividerDark">#A1A1A1</color>
@@ -28,6 +29,7 @@
     <color name="colorBlue">#5396B9</color>
     <color name="colorGray">#919191</color>
     <color name="colorGrayNormal">#d7d7d7</color>
+    <color name="colorGrayF6">#f6f6f6</color>
     <color name="colorGrayLight">#F1F1F1</color>
     <color name="colorBlueDark">#4392bb</color>
 

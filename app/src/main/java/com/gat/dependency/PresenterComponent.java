@@ -20,6 +20,10 @@ import com.gat.feature.register.update.category.AddCategoryPresenter;
 import com.gat.feature.register.update.location.AddLocationPresenter;
 import com.gat.feature.scanbarcode.ScanPresenter;
 import com.gat.feature.search.SearchPresenter;
+import com.gat.feature.setting.account_social.SocialConnectedPresenter;
+import com.gat.feature.setting.add_email_password.AddEmailPasswordPresenter;
+import com.gat.feature.setting.change_password.ChangePasswordPresenter;
+import com.gat.feature.setting.main.MainSettingPresenter;
 import com.gat.feature.suggestion.SuggestionPresenter;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistancePresenter;
 import com.gat.feature.suggestion.search.SuggestSearchPresenter;
@@ -56,8 +60,18 @@ public interface PresenterComponent {
     ListUserSharingBookPresenter getListUserSharingBookPresenter();
     AddToBookcasePresenter getAddToBookcasePresenter();
     CommentPresenter getCommentPresenter();
+
+    MainSettingPresenter getMainSettingPresenter();
+    AddEmailPasswordPresenter getAddEmailPasswordPresenter();
+    SocialConnectedPresenter getSocialConnectedPresenter();
+    ChangePasswordPresenter getChangePasswordPresenter();
+
+
     BookDetailPresenter getBookDetailPresenter();
     BookDetailOwnerPresenter getBookDetailBorrowPresenter();
+
     ScanPresenter getScanPresenter();
     NotificationPresenter getNotificationPresenter();
+
+
 }

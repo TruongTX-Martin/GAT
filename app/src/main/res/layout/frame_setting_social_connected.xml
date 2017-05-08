@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height"
+        android:background="@drawable/bg_border_bottom">
+
+        <ImageView
+            android:id="@+id/image_view_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/narrow_back_black" />
+
+        <TextView
+            android:id="@+id/text_view_header"
+            style="@style/TextViewHeaderTop"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="@string/add_email_password"
+            android:textColor="@color/colorTextViewDark"
+            android:textSize="@dimen/larger_text_view_size" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text_view_social"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_large"
+        android:textColor="@color/colorTextViewGray" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_large"
+        android:background="@drawable/bg_white_border_top_bottom"
+        android:text="@string/disconnect"
+        android:textAllCaps="false"
+        android:textColor="@color/colorRedPrimaryDark" />
+
+
+</LinearLayout>
