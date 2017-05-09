@@ -37,13 +37,15 @@ import io.reactivex.Observable;
 public interface UserDataSource {
 
     Observable<User> loadUser();
-    Observable<User> persitUser(User user);
+    void persitUser(User user);
 
     Observable<ServerResponse<LoginResponseData>> login(LoginData data);
     Observable<LoginData> loadLoginData();
     void saveLoginData(LoginData loginData);
     void storeLoginToken(String token);
     Observable<String> getLoginToken();
+
+    Observable<Boolean> signOut();
 
     Observable<Boolean> messageNotification(int receiver, String message);
     Observable<Boolean> registerFirebaseToken(String token);

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.gat.common.util.MZDebug;
+import com.gat.data.firebase.entity.NotificationParcelable;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
@@ -168,6 +169,8 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof GroupMessageScreen) {
 
         } else if (screen instanceof MainScreen) {
+            MainScreen mainScreen = (MainScreen)screen;
+            dest.writeParcelable(mainScreen.notificationParcelable(), flags);
 
         } else if (screen instanceof ShareNearByUserDistanceScreen) {
 
@@ -255,7 +258,7 @@ public class ParcelableScreen implements Parcelable {
                 screen = SuggestSearchScreen.instance();
                 break;
             case MAIN:
-                screen = MainScreen.instance();
+                screen = MainScreen.instance(in.readParcelable(NotificationParcelable.class.getClassLoader()));
                 break;
             case MESSAGER:
                 int userId = in.readInt();

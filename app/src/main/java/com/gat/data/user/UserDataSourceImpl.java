@@ -552,6 +552,18 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
+    public Observable<Boolean> signOut() {
+        Log.d(TAG, "SignOut");
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<SimpleResponse>>> responseObservable = api.signOut();
+        return responseObservable.map(response -> {
+            ServerResponse serverResponse = CommonCheck.checkResponse(response);
+            serverResponse.code(response.code());
+            return serverResponse.isOk();
+        });
+    }
+
+    @Override
     public Observable<Boolean> messageNotification(int receiver, String message) {
         Log.d(TAG, "mesNoti:" + Thread.currentThread().getName());
         GatApi api = dataComponent.getPrivateGatApi();
@@ -591,7 +603,7 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<User> persitUser(User user) {
+    public void persitUser(User user) {
         throw new UnsupportedOperationException();
     }
 

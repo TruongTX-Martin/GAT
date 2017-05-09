@@ -386,4 +386,8 @@ public interface GatApi {
     );
 
 
+    @FormUrlEncoded
+    @POST("user/sign_out")
+    Observable<Response<ServerResponse<SimpleResponse>>> signOut();
+
 }

@@ -67,7 +67,7 @@ public class DataModule {
                             Request request = requestBuilder.build();
                             okhttp3.Response response = chain.proceed(request);
                             if (response.code() == ServerResponse.HTTP_CODE.TOKEN) {
-                                userDataSource.persitUser(null).subscribe();
+                                userDataSource.persitUser(null);
                                 userDataSource.storeLoginToken(null);
                                 throw new LoginException(ServerResponse.TOKEN_CHANGED);
                             }

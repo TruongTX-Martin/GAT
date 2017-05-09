@@ -132,6 +132,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
+    public UseCase<Boolean> makeNewGroupChat(int userId) {
+        return new MakeNewGroupChat(messageRepositoryLazy.get(), userId);
+    }
+
+    @Override
     public UseCase<User> getUser() {
         return new GetUser(userRepositoryLazy.get());
     }

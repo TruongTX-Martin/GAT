@@ -40,6 +40,8 @@ public interface UserRepository {
 
     Observable<User> login();
 
+    Observable<Boolean> signOut();
+
     Observable<Boolean> loginFirebase();
 
     Observable<LoginData> getLoginData();

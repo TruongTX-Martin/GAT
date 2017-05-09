@@ -126,8 +126,10 @@ public class AppModule {
     @Singleton
     UserRepository provideUserRepository(@Named("network")Lazy<UserDataSource> networkDataSourceLazy,
                                          @Named("local")Lazy<UserDataSource> localDataSourceLazy,
+                                         @Named("local") Lazy<MessageDataSource> localMessageDataSourceLazy,
+                                         @Named("network") Lazy<MessageDataSource> networkMessageDataSourceLazy,
                                          SignInFirebase signInFirebase){
-        return new UserRepositoryImpl(networkDataSourceLazy, localDataSourceLazy, signInFirebase);
+        return new UserRepositoryImpl(networkDataSourceLazy, localDataSourceLazy, localMessageDataSourceLazy,networkMessageDataSourceLazy, signInFirebase);
     }
 
 

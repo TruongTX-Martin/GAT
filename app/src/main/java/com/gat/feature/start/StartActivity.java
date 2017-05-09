@@ -24,6 +24,7 @@ import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.firebase.entity.NotificationParcelable;
+import com.gat.data.share.SharedData;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
@@ -189,11 +190,11 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     private void onLoginResult(User user) {
         if (user.isValid()) {
             getPresenter().loginOnFirebase();
-            if (getIntent().getExtras()!= null) {
-                processDataPayload();
-            } else {
+            Notification notification = getNotification();
+            if (Notification.isValid(notification))
+                start(this, MainActivity.class, MainScreen.instance(new NotificationParcelable(getNotification())));
+            else
                 start(this, MainActivity.class, MainScreen.instance());
-            }
             finish();
         }
     }
@@ -268,7 +269,7 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     }
 
 
-    private void processDataPayload() {
+    private Notification getNotification() {
         if (getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
             int pushType = bundle.getInt("pushType");
@@ -276,8 +277,9 @@ public class StartActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
             int senderId = bundle.getInt("senderId");
             int requestId = bundle.getInt("requestId");
             Notification notification = Notification.instance(Strings.EMPTY,Strings.EMPTY, pushType, "default", badge, senderId, requestId);
-            CommonCheck.processNotification(notification, this);
+            return notification;
         }
+        return Notification.NO_NOTIFICATION;
     }
 
 }

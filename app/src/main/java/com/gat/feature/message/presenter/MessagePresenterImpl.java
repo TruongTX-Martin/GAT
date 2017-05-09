@@ -92,7 +92,7 @@ public class MessagePresenterImpl implements MessagePresenter {
 
         this.initializedSubject = PublishSubject.create();
 
-        this.getUserSubject = PublishSubject.create();
+        this.getUserSubject = BehaviorSubject.create();
 
         pageCnt = 1;
 

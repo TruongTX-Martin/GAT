@@ -130,11 +130,13 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     }
 
     private void requestPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, REQUEST_CAMERA);
+        //ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, REQUEST_CAMERA);
+        requestPermissions(new String[]{CAMERA}, REQUEST_CAMERA);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_CAMERA:
                 Log.d(TAG, "RequestCameraResult:" + grantResults.length);

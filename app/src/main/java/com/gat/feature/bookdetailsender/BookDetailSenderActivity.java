@@ -20,6 +20,8 @@ import com.gat.data.response.ServerResponse;
 import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
+import com.gat.feature.message.MessageActivity;
+import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.personaluser.PersonalUserScreen;
@@ -265,11 +267,9 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
             }
         });
         imgBorrower.setOnClickListener(v -> BookDetailSenderActivity.start(getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(bookDetail.getOwnerInfo().getUserId())));
-        layoutChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
+        layoutChat.setOnClickListener(v -> {
+            if (bookDetail.getOwnerInfo() != null)
+                start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(bookDetail.getOwnerInfo().getUserId()));
         });
     }
 

@@ -1,6 +1,10 @@
 package com.gat.feature.main;
 
+import android.support.annotation.Nullable;
+
 import com.gat.app.screen.Screen;
+import com.gat.data.firebase.entity.Notification;
+import com.gat.data.firebase.entity.NotificationParcelable;
 import com.google.auto.value.AutoValue;
 
 /**
@@ -9,7 +13,11 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class MainScreen implements Screen {
+    public abstract @Nullable NotificationParcelable notificationParcelable();
+    public static MainScreen instance(NotificationParcelable parcelable) {
+        return new AutoValue_MainScreen(parcelable);
+    }
     public static MainScreen instance() {
-    return new AutoValue_MainScreen();
-}
+        return new AutoValue_MainScreen(new NotificationParcelable(Notification.NO_NOTIFICATION));
+    }
 }

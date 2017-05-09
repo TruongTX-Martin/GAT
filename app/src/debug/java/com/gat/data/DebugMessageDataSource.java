@@ -57,12 +57,12 @@ public class DebugMessageDataSource implements MessageDataSource {
 
     @Override
     public Observable<List<Group>> loadGroupList() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Observable<Group> storeGroup(Group group) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -83,6 +83,16 @@ public class DebugMessageDataSource implements MessageDataSource {
     @Override
     public void sawMessage(String groupId, long timeStamp) {
         firebaseService.sawMessage(groupId, timeStamp);
+    }
+
+    @Override
+    public Observable<Boolean> clearData() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Observable<Boolean> makeNewGroup(int userId) {
+        return firebaseService.makeNewGroup(userId);
     }
 
     private List<Message> listOfMessages(Message... messages) {

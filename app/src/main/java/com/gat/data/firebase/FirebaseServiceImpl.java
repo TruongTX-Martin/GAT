@@ -61,11 +61,6 @@ public class FirebaseServiceImpl implements FirebaseService{
     private final Lazy<UserDataSource> userDataSourceLazy;
     private final SchedulerFactory schedulerFactory;
 
-    public FirebaseServiceImpl(Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
-        this.userDataSourceLazy = userDataSourceLazy;
-        this.schedulerFactory = schedulerFactory;
-    }
-
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
 
@@ -109,18 +104,13 @@ public class FirebaseServiceImpl implements FirebaseService{
 
     private boolean mGroupInitialized = false;
 
-    private String mGroupId;
+    private String mGroupId = Strings.EMPTY;
 
     private Boolean isFirebaseInitalized = false;
 
-    @Override
-    public void Init() {
-        Log.d(TAG, "Initialize");
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-
+    public FirebaseServiceImpl(Lazy<UserDataSource> userDataSourceLazy, SchedulerFactory schedulerFactory) {
+        this.userDataSourceLazy = userDataSourceLazy;
+        this.schedulerFactory = schedulerFactory;
         /** Group **/
         userIdSubject = BehaviorSubject.create();
         groupListSubject = BehaviorSubject.create();
@@ -206,6 +196,18 @@ public class FirebaseServiceImpl implements FirebaseService{
                 Log.d(TAG, "MessageChild:"+databaseError.getMessage());
             }
         };
+    }
+
+    @Override
+    public void Init() {
+        Log.d(TAG, "Initialize");
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
+        if (firebaseUser == null)
+            return;
 
         compositeDisposable = new CompositeDisposable(
                 userIdSubject.observeOn(schedulerFactory.main()).subscribe(this::getGroupOfUser),
@@ -261,12 +263,17 @@ public class FirebaseServiceImpl implements FirebaseService{
         });
     }
 
-    public void onDestroy() {
-        compositeDisposable.dispose();
+    @Override
+    public void destroy() {
+        if (compositeDisposable != null)
+            compositeDisposable.dispose();
         if (!Strings.isNullOrEmpty(mGroupId))
             databaseReference.child(MESSAGE_LEVEL).child(mGroupId).removeEventListener(messageChildEventListener);
         if (mUserId != 0)
             databaseReference.child(GROUP_LEVEL).child(Long.toString(mUserId)).removeEventListener(groupChildEventListener);
+        mUserId = 0;
+        mGroupId = Strings.EMPTY;
+        isFirebaseInitalized = false;
     }
 
     /**
@@ -350,7 +357,7 @@ public class FirebaseServiceImpl implements FirebaseService{
         databaseReference.child(MESSAGE_LEVEL).child(group.groupId()).orderByChild("timeStamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
+                if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
                     MessageTable messageTable = dataSnapshot.getChildren().iterator().next().getValue(MessageTable.class);
                     GroupTable gr = GroupTable.builder().groupId(group.groupId())
                             .users(group.users())
@@ -492,7 +499,7 @@ public class FirebaseServiceImpl implements FirebaseService{
 
         } else {
             // Add groups
-            databaseReference.child(GROUP_LEVEL).push().setValue(groupId);
+            //databaseReference.child(GROUP_LEVEL).push().setValue(groupId);
             databaseReference.child(GROUP_LEVEL).child(groupId).child(Integer.toString(fromUserId)).setValue(true);
             databaseReference.child(GROUP_LEVEL).child(groupId).child(Integer.toString(toUserId)).setValue(true);
 
@@ -516,7 +523,7 @@ public class FirebaseServiceImpl implements FirebaseService{
                 int toUserId = userId;
                 String groupId = CommonCheck.getGroupId(fromUserId, toUserId);
                 // Add groups
-                databaseReference.child(GROUP_LEVEL).push().setValue(groupId);
+                //databaseReference.child(GROUP_LEVEL).push().setValue(groupId);
                 databaseReference.child(GROUP_LEVEL).child(groupId).child(Integer.toString(fromUserId)).setValue(true);
                 databaseReference.child(GROUP_LEVEL).child(groupId).child(Integer.toString(toUserId)).setValue(true);
 

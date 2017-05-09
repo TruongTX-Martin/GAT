@@ -84,13 +84,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         ClientUtils.context = getApplicationContext();
         instance = this;
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            NotificationParcelable parcelable = intent.getExtras().getParcelable("data");
-            if (parcelable != null)
-                CommonCheck.processNotification(parcelable.getNotification(), this);
-        }
-
         // setup view pager
         setupViewPager(mViewPager);
         // setup tab layout
@@ -115,6 +108,16 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
 
             }
         });
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            NotificationParcelable parcelable = intent.getExtras().getParcelable("data");
+            if (parcelable != null)
+                CommonCheck.processNotification(parcelable.getNotification(), this);
+        }
+        if (Notification.isValid(getScreen().notificationParcelable().getNotification())) {
+            CommonCheck.processNotification(getScreen().notificationParcelable().getNotification(), this);
+        }
     }
 
     @Override

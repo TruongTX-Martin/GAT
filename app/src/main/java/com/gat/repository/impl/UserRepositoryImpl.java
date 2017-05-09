@@ -1,6 +1,7 @@
 package com.gat.repository.impl;
 
 import android.location.Address;
+import android.util.Log;
 
 import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
@@ -23,6 +24,7 @@ import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.repository.UserRepository;
+import com.gat.repository.datasource.MessageDataSource;
 import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.FirebasePassword;
@@ -47,14 +49,22 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final Lazy<UserDataSource> networkUserDataSourceLazy;
     private final Lazy<UserDataSource> localUserDataSourceLazy;
+    private final Lazy<MessageDataSource> localMessageDataSourceLazy;
+    private final Lazy<MessageDataSource> networkMessageDataSourceLazy;
     private final SignInFirebase signInFirebase;
 
     private final Subject<User> userSubject;
 
-    public UserRepositoryImpl(Lazy<UserDataSource> networkUserDataSourceLazy, Lazy<UserDataSource> localUserDataSourceLazy, SignInFirebase signInFirebase) {
+    public UserRepositoryImpl(Lazy<UserDataSource> networkUserDataSourceLazy,
+                              Lazy<UserDataSource> localUserDataSourceLazy,
+                              Lazy<MessageDataSource> localMessageDataSourceLazy,
+                              Lazy<MessageDataSource> networkMessageDataSourceLazy,
+                              SignInFirebase signInFirebase) {
         this.networkUserDataSourceLazy = networkUserDataSourceLazy;
         this.localUserDataSourceLazy = localUserDataSourceLazy;
         this.signInFirebase = signInFirebase;
+        this.localMessageDataSourceLazy = localMessageDataSourceLazy;
+        this.networkMessageDataSourceLazy = networkMessageDataSourceLazy;
         this.userSubject= PublishSubject.create();
     }
 
@@ -86,7 +96,7 @@ public class UserRepositoryImpl implements UserRepository {
                     return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
-                .flatMap(user -> localUserDataSourceLazy.get().persitUser(user))
+                .doOnNext(user -> localUserDataSourceLazy.get().persitUser(user))
                 .doOnNext(userSubject::onNext)
                 .doOnNext(user -> signInFirebase.login())
         );
@@ -100,6 +110,14 @@ public class UserRepositoryImpl implements UserRepository {
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
                 .doOnNext(userSubject::onNext)
                 .doOnNext(user -> signInFirebase.login())
+        );
+    }
+
+    @Override
+    public Observable<Boolean> signOut() {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().signOut()
+                .flatMap(result -> localMessageDataSourceLazy.get().clearData())
+                .doOnNext(result -> signInFirebase.signOut())
         );
     }
 
@@ -143,7 +161,7 @@ public class UserRepositoryImpl implements UserRepository {
                     return networkUserDataSourceLazy.get().getPersonalInfo();
                 })
                 .flatMap(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson()))))
-                .flatMap(user -> localUserDataSourceLazy.get().persitUser(user))
+                .doOnNext(user -> localUserDataSourceLazy.get().persitUser(user))
                 .doOnNext(userSubject::onNext)
                 .doOnNext(user -> signInFirebase.register())
         );
@@ -288,7 +306,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<Data> requestBorrowBook(BorrowRequestInput input) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBorrowBook(input));
+        return Observable.defer(() -> networkUserDataSourceLazy.get().requestBorrowBook(input))
+                .doOnNext(data -> {
+                    networkMessageDataSourceLazy.get().makeNewGroup(input.getOwnerId()).subscribe(result -> {
+                        Log.d("MakeNewGroup:", "Result " + result);
+                    }, throwable -> {
+                        throwable.printStackTrace();
+                    });
+                });
     }
 
     @Override

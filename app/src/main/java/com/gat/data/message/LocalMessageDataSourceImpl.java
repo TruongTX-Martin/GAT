@@ -158,6 +158,20 @@ public class LocalMessageDataSourceImpl implements MessageDataSource {
 
     }
 
+    @Override
+    public Observable<Boolean> clearData() {
+        return Observable.fromCallable(() -> {
+            // Delete group
+            groupBook.destroy();
+            List<String> groupIds = messageBook.getAllKeys();
+            for (Iterator<String> iterator = groupIds.iterator(); iterator.hasNext();) {
+                Paper.book(iterator.next()).destroy();
+            }
+            messageBook.destroy();
+            return true;
+        });
+    }
+
     private void addSortGroupList(List<Group> groupList, Group group) {
         int count = 0;
         for (Iterator<Group> iterator = groupList.iterator(); iterator.hasNext();) {
@@ -165,5 +179,11 @@ public class LocalMessageDataSourceImpl implements MessageDataSource {
                 count++;
         }
         groupList.add(count, group);
+    }
+
+    @Override
+    public Observable<Boolean> makeNewGroup(int userId)
+    {
+        throw new UnsupportedOperationException();
     }
 }

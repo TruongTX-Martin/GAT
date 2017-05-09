@@ -28,4 +28,8 @@ public interface MessageDataSource {
     public Observable<Message> storeMessage(String groupId, Message message);
     public Observable<List<Message>> storeMessageList(String groupId, List<Message> messageList);
     public void sawMessage(String groupId, long timeStamp);
+
+    public Observable<Boolean> clearData();
+
+    public Observable<Boolean> makeNewGroup(int userId);
 }

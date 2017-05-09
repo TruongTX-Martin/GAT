@@ -80,6 +80,11 @@ public class NetworkMessageDataSourceImpl implements MessageDataSource {
         firebaseService.sawMessage(groupId, timeStamp);
     }
 
+    @Override
+    public Observable<Boolean> clearData() {
+        throw new UnsupportedOperationException();
+    }
+
     private List<Message> listOfMessages(Message... messages) {
         ArrayList list = new ArrayList();
         if (messages != null) {
@@ -94,5 +99,11 @@ public class NetworkMessageDataSourceImpl implements MessageDataSource {
             Collections.addAll(list, groups);
         }
         return list;
+    }
+
+    @Override
+    public Observable<Boolean> makeNewGroup(int userId)
+    {
+        return firebaseService.makeNewGroup(userId);
     }
 }

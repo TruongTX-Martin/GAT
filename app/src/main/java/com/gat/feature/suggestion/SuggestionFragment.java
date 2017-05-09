@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,11 +21,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.gat.R;
+import com.gat.app.activity.ScreenActivity;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.TrackGPS;
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.ServerResponse;
+import com.gat.data.share.SharedData;
 import com.gat.feature.book_detail.BookDetailActivity;
 import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.main.MainActivity;
@@ -43,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -128,12 +133,9 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
                 getPresenter().onBookSuggestSuccess().subscribe(this::onSuggestBooksSuccess),
                 getPresenter().onPeopleNearByUserSuccess().subscribe(this::onPeopleNearByUserByDistanceSuccess),
                 getPresenter().onError().subscribe(this::onError),
-                getPresenter().unReadCnt().subscribe(cnt -> {
-                    if (cnt > 0) {
-                        unReadGroupMessageCnt.setVisibility(View.VISIBLE);
-                        unReadGroupMessageCnt.setText(cnt + "");
-                    } else {
-                        unReadGroupMessageCnt.setVisibility(View.INVISIBLE);
+                SharedData.getInstance().getBadgeSubject().observeOn(AndroidSchedulers.mainThread()).distinctUntilChanged().subscribe(badge -> {
+                    if (getUserVisibleHint()) {
+                        displayBadge();
                     }
                 })
         );
@@ -141,10 +143,8 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         groupMessage.setOnClickListener(v -> {
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             if (firebaseUser != null)
-                MainActivity.start(getContext(), GroupMessageActivity.class, GroupMessageScreen.instance());
+                ScreenActivity.start(getContext(), GroupMessageActivity.class, GroupMessageScreen.instance());
         });
-
-        getPresenter().getUnReadGroupMessage();
 
         return view;
     }
@@ -343,5 +343,15 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     @Override
     public void onItemBookClickListener(View view, BookResponse book) {
         MainActivity.start(getActivity(), BookDetailActivity.class, BookDetailScreen.instance( (int) book.getEditionId()));
+    }
+
+    private void displayBadge() {
+        int badge = SharedData.getInstance().getBadge();
+        if (badge > 0) {
+            unReadGroupMessageCnt.setVisibility(View.VISIBLE);
+            unReadGroupMessageCnt.setText(badge + "");
+        } else {
+            unReadGroupMessageCnt.setVisibility(View.INVISIBLE);
+        }
     }
 }

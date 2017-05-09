@@ -11,6 +11,7 @@ import com.gat.R;
 import com.gat.common.util.NotificationConfig;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.firebase.entity.NotificationParcelable;
+import com.gat.data.share.SharedData;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.main.ResultActivity;
 import com.gat.feature.start.StartActivity;
@@ -70,6 +71,7 @@ public class MessagingService extends FirebaseMessagingService {
                     new Date().getTime(),
                     pushNotification);
         }
+        SharedData.getInstance().setBadge(notification.badge());
     }
 
     private @Nullable

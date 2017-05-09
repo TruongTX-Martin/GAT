@@ -329,6 +329,11 @@ public class MessageRepositoryImpl implements MessageRepository {
         });
     }
 
+    @Override
+    public Observable<Boolean> makeNewGroup(int userId) {
+        return networkDataSource.get().makeNewGroup(userId);
+    }
+
     private User getUser(List<User> users, int userId) {
         User user = null;
         for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {

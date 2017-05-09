@@ -63,15 +63,12 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<User> persitUser(User user) {
-        return Observable.fromCallable(() -> {
-            if (user == null) {
-                book.delete(KEY_USER);
-            } else {
-                book.write(KEY_USER, user);
-            }
-            return user == null ? User.NONE : user;
-        });
+    public void persitUser(User user) {
+        if (user == null) {
+            book.delete(KEY_USER);
+        } else {
+            book.write(KEY_USER, user);
+        }
     }
 
     @Override
@@ -133,6 +130,11 @@ public class PaperUserDataSource implements UserDataSource {
     @Override
     public Observable<String> getLoginToken() {
         return Observable.fromCallable(() -> book.read(KEY_LOGIN_TOKEN, Strings.EMPTY));
+    }
+
+    @Override
+    public Observable<Boolean> signOut() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
