@@ -16,7 +16,7 @@ public class EditInfoInput {
 
     private String name = Strings.EMPTY;
     private String imageBase64 = Strings.EMPTY;
-    private boolean isChangeImage = true;
+    private boolean isChangeImage = false;
 
 
     public EditInfoInput() {
@@ -39,6 +39,9 @@ public class EditInfoInput {
         return isChangeImage;
     }
 
+    public void setChangeImage(boolean changeImage) {
+        isChangeImage = changeImage;
+    }
 
     public void setName(String name) {
         this.name = name;

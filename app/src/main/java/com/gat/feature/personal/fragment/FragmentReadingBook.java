@@ -74,24 +74,20 @@ public class FragmentReadingBook extends Fragment {
             for (int i=0; i< this.listBookReading.size(); i++){
                 this.listBookReading.get(i).setHeader(false);
             }
-            numberReaded = 0;numberReading = 0;numberToRead =0;
             setTitleReading(false);setTitleReaded(false);setTitleToRead(false);
             if( this.listBookReading.size() > 0) {
                 for(int i=0; i<  this.listBookReading.size() ; i++) {
                     if(this.listBookReading.get(i).getReadingStatus() == 0) {
-                        numberReaded++;
                         if(!setTitleReaded){
                             this.listBookReading.get(i).setHeader(true);
                             setTitleReaded = true;
                         }
                     }else if (this.listBookReading.get(i).getReadingStatus() == 1) {
-                        numberReading ++;
                         if(!setTitleReading){
                             this.listBookReading.get(i).setHeader(true);
                             setTitleReading = true;
                         }
                     }else{
-                        numberToRead ++;
                         if(!setTitleToRead){
                             this.listBookReading.get(i).setHeader(true);
                             setTitleToRead = true;
@@ -188,7 +184,7 @@ public class FragmentReadingBook extends Fragment {
         popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.setOutsideTouchable(true);
-        ImageView imgClose = (ImageView) customView.findViewById(R.id.imgClose);
+        RelativeLayout imgClose = (RelativeLayout) customView.findViewById(R.id.layoutClose);
         RelativeLayout layoutReadedBorder = (RelativeLayout) customView.findViewById(R.id.layoutReadedBorder);
         RelativeLayout layoutReadedOverlay = (RelativeLayout) customView.findViewById(R.id.layoutReadedOverlay);
         RelativeLayout layoutReadingBorder = (RelativeLayout) customView.findViewById(R.id.layoutReadingBorder);
@@ -235,7 +231,6 @@ public class FragmentReadingBook extends Fragment {
                 currentInput.setToReadFilter(isToRead);
                 currentInput.setPage(1);
                 isContinueMore = true;
-                numberToRead = 0; numberReading =0; numberToRead = 0;
                 searchBook(currentInput);
             }
             popupWindow.dismiss();
@@ -288,7 +283,17 @@ public class FragmentReadingBook extends Fragment {
         return numberToRead;
     }
 
+    public void setNumberReaded(int numberReaded) {
+        this.numberReaded = numberReaded;
+    }
 
+    public void setNumberReading(int numberReading) {
+        this.numberReading = numberReading;
+    }
+
+    public void setNumberToRead(int numberToRead) {
+        this.numberToRead = numberToRead;
+    }
 
     public void setTitleReaded(boolean setTitleReaded) {
         this.setTitleReaded = setTitleReaded;

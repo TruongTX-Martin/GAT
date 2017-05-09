@@ -65,7 +65,7 @@ public interface UserRepository {
 
     Observable<Data<User>> getPersonalData();
     Observable<Data> getBookRequest(BookRequestInput input);
-    Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);
+    Observable<String> changeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getReadingBooks(BookReadingInput input);
     Observable<Data> getBookInstance(BookInstanceInput input);
     Observable<String> updateUserInfo(EditInfoInput input);

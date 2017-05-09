@@ -81,6 +81,12 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     @BindView(R.id.txtTitle)
     TextView txtTitle;
 
+    @BindView(R.id.layoutAddress)
+    RelativeLayout layoutAddress;
+
+    @BindView(R.id.layoutFavorit)
+    RelativeLayout layoutFavorit;
+
 
 
     @BindView(R.id.progressBar)
@@ -104,8 +110,6 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         txtTitle.setText("SỬA THÔNG TIN CÁ NHÂN");
         txtTitle.setTextColor(Color.parseColor("#000000"));
         imgBack.setImageResource(R.drawable.narrow_back_black);
-        edtName.setFocusableInTouchMode(false);
-        edtName.setFocusable(false);
         if (!Strings.isNullOrEmpty(user.imageId())) {
             String url = ClientUtils.getUrlImage(user.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
             ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
@@ -114,21 +118,32 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             edtName.setText(user.name());
             txtAddress.setText(user.name());
         }
-//        if(user.usuallyLocation().size() > 0){
-//            if(!Strings.isNullOrEmpty(user.usuallyLocation().get(0).getAddress())){
-//                txtAddress.setText(user.usuallyLocation().get(0).getAddress());
-//            }
-//        }
+        if(user.usuallyLocation().size() > 0){
+            if(!Strings.isNullOrEmpty(user.usuallyLocation().get(0).getAddress())){
+                txtAddress.setText(user.usuallyLocation().get(0).getAddress());
+            }
+        }
     }
 
     private void handleEvent() {
         txtEditInfo.setOnClickListener(v -> checkPermission());
         imgChangeName.setOnClickListener(v -> {
-            edtName.setFocusableInTouchMode(true);
-            edtName.setFocusable(true);
+            edtName.setText("");
         });
         imgSave.setOnClickListener(v -> updateProfile());
         imgBack.setOnClickListener(v -> backToPreviousActivity());
+        layoutAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //mr.Duc redirect here
+            }
+        });
+        layoutFavorit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //mr.Duc redirect here
+            }
+        });
     }
 
     private void backToPreviousActivity() {
@@ -151,23 +166,25 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     }
 
     private void updateProfile() {
-        progressBar.setVisibility(View.VISIBLE);
         String name = edtName.getText().toString().trim();
         if (Strings.isNullOrEmpty(name)) {
             ClientUtils.showToast("Bạn không được để trống tên");
             return;
         }
-        if (currentBitmap != null) {
-            currentBitmap = getResizedBitmap(currentBitmap, 400);
-        }
-        //update profile
+        progressBar.setVisibility(View.VISIBLE);
         EditInfoInput input = new EditInfoInput();
         input.setName(name);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        currentBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        input.setImageBase64(encoded);
+        input.setImageBase64("");
+        if (currentBitmap != null) {
+            currentBitmap = getResizedBitmap(currentBitmap, 400);
+            //update profile
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            currentBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            input.setImageBase64(encoded);
+            input.setChangeImage(true);
+        }
         getPresenter().requestEditInfo(input);
     }
 

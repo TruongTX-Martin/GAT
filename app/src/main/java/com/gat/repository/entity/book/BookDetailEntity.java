@@ -34,22 +34,22 @@ public class BookDetailEntity {
     private int recordType;
 
     @SerializedName("requestTime")
-    private String requestTime = Strings.EMPTY;
+    private long requestTime;
 
     @SerializedName("approveTime")
-    private String approveTime = Strings.EMPTY;
+    private long approveTime;
 
     @SerializedName("borrowTime")
-    private String borrowTime = Strings.EMPTY;
+    private long borrowTime;
 
     @SerializedName("completeTime")
-    private String completeTime = Strings.EMPTY;
+    private long completeTime;
 
     @SerializedName("cancelTime")
     private String cancelTime = Strings.EMPTY;
 
     @SerializedName("rejectTime")
-    private String rejectTime = Strings.EMPTY;
+    private long rejectTime ;
 
     public int getRecordId() {
         return recordId;
@@ -115,35 +115,36 @@ public class BookDetailEntity {
         this.recordType = recordType;
     }
 
-    public String getRequestTime() {
+
+    public long getRequestTime() {
         return requestTime;
     }
 
-    public void setRequestTime(String requestTime) {
+    public void setRequestTime(long requestTime) {
         this.requestTime = requestTime;
     }
 
-    public String getApproveTime() {
+    public long getApproveTime() {
         return approveTime;
     }
 
-    public void setApproveTime(String approveTime) {
+    public void setApproveTime(long approveTime) {
         this.approveTime = approveTime;
     }
 
-    public String getBorrowTime() {
+    public long getBorrowTime() {
         return borrowTime;
     }
 
-    public void setBorrowTime(String borrowTime) {
+    public void setBorrowTime(long borrowTime) {
         this.borrowTime = borrowTime;
     }
 
-    public String getCompleteTime() {
+    public long getCompleteTime() {
         return completeTime;
     }
 
-    public void setCompleteTime(String completeTime) {
+    public void setCompleteTime(long completeTime) {
         this.completeTime = completeTime;
     }
 
@@ -155,11 +156,11 @@ public class BookDetailEntity {
         this.cancelTime = cancelTime;
     }
 
-    public String getRejectTime() {
+    public long getRejectTime() {
         return rejectTime;
     }
 
-    public void setRejectTime(String rejectTime) {
+    public void setRejectTime(long rejectTime) {
         this.rejectTime = rejectTime;
     }
 

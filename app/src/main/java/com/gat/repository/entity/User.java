@@ -21,13 +21,13 @@ public abstract class User implements Serializable {
 
     public static int INVALID_USERID = 0;
     public static User NONE = builder().userId(INVALID_USERID).name(Strings.EMPTY)
-//            .usuallyLocation(new ArrayList<>())
+            .usuallyLocation(new ArrayList<>())
             .build();
     public static User DEFAULT = builder().userId(INVALID_USERID)       // TODO make default user
             .name("Invalid user")
             .email("")
             .imageId("33328625223")
-//            .usuallyLocation(new ArrayList<>())
+            .usuallyLocation(new ArrayList<>())
             .build();
     public boolean isValid() {
         return userId() != INVALID_USERID;
@@ -46,7 +46,7 @@ public abstract class User implements Serializable {
     public abstract int requestCount();
     public abstract int passwordFlag();
 
-//    public abstract List<UsuallyLocation> usuallyLocation();
+    public abstract List<UsuallyLocation> usuallyLocation();
 
     public static Builder builder(){
         return new AutoValue_User.Builder()
@@ -72,7 +72,7 @@ public abstract class User implements Serializable {
         public abstract Builder readCount(int cnt);
         public abstract Builder requestCount(int cnt);
         public abstract Builder passwordFlag(int flag);
-//        public abstract Builder usuallyLocation(List<UsuallyLocation> list);
+        public abstract Builder usuallyLocation(List<UsuallyLocation> list);
         public abstract User build();
     }
 

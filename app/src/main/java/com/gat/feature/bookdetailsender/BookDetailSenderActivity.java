@@ -190,7 +190,8 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     @BindView(R.id.layoutChat)
     LinearLayout layoutChat;
 
-
+    @BindView(R.id.txtRating)
+    TextView txtRating;
 
 
 
@@ -334,7 +335,8 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     String url = ClientUtils.getUrlImage(editionInfo.getImageId(), Constance.IMAGE_SIZE_ORIGINAL);
                     ClientUtils.setImage(imgEditionBook, R.drawable.ic_profile, url);
                 }
-                ratingBar.setNumStars((int)editionInfo.getRateAvg());
+                ratingBar.setRating((float) editionInfo.getRateAvg());
+                txtRating.setText(editionInfo.getRateAvg()+"");
             }
             ClientUtils.showToast("Record status:"+ recordStatus);
             switch (recordStatus){
@@ -445,8 +447,6 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     rltCheckReturn.setVisibility(View.GONE);
                     rltCheckCancel.setVisibility(View.GONE);
                     rltCheckUnreturn.setVisibility(View.VISIBLE);
-
-
                     break;
             }
         }

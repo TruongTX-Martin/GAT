@@ -10,6 +10,7 @@
         android:id="@+id/layoutTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#f6f6f6"
         android:orientation="vertical">
 
         <LinearLayout
@@ -50,7 +51,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f7f7f7">
+        android:background="#f6f6f6">
 
 
         <de.hdodenhof.circleimageview.CircleImageView

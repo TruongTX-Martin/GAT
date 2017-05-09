@@ -36,6 +36,7 @@
 
     <color name="tab_background_selected">@color/colorBlue</color>
     <color name="tab_background_unselected">@android:color/white</color>
+    <color name="tab_background_personal_selected">#f6f6f6</color>
 
     <!-- dots inactive colors -->
     <color name="dot_dark_screen1">#c6e4f3</color>
@@ -63,4 +64,11 @@
         <item>@color/dot_dark_screen3</item>
         <item>@color/dot_dark_screen4</item>
     </array>
+
+
+    <!--User page -->
+    <color name="background_color">#f6f6f6</color>
+    <color name="color_text">#202020</color>
+    <color name="color_text_child">#919191</color>
+    <color name="color_text_name_person">#5396b9</color>
 </resources>

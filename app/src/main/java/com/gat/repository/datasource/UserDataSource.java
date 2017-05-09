@@ -84,7 +84,7 @@ public interface UserDataSource {
     Observable<Data<User>> getPersonalInfo();
     Observable<Data> getBookInstance(BookInstanceInput instanceInput);
     Observable<Data> getBookRequest(BookRequestInput instanceInput);
-    Observable<Data> changeBookSharingStatus(BookChangeStatusInput input);
+    Observable<String> changeBookSharingStatus(BookChangeStatusInput input);
     Observable<Data> getReadingBook(BookReadingInput input);
 
     Observable<User> getUserInformation(int userId);

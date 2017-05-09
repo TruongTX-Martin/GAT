@@ -108,7 +108,7 @@ public interface UseCaseFactory {
 
     UseCase<Data> getBookInstance(BookInstanceInput input);
 
-    UseCase<Data> changeBookSharingStatus(BookChangeStatusInput input);
+    UseCase<String> changeBookSharingStatus(BookChangeStatusInput input);
 
     UseCase<Data> getReadingBooks(BookReadingInput input);
 

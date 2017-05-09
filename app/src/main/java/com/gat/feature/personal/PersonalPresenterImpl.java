@@ -54,8 +54,8 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     //change book sharing status
     private CompositeDisposable changeBookSharingStatusDisposable;
-    private UseCase<Data> changeBookSharingStatusUsecase;
-    private Subject<Data> changeBookSharingStatusResultSubject;
+    private UseCase<String> changeBookSharingStatusUsecase;
+    private Subject<String> changeBookSharingStatusResultSubject;
     private Subject<BookChangeStatusInput> changeBookSharingStatusInputSubject;
     private Subject<ServerResponse<ResponseData>> changeBookSharingStatusError;
 
@@ -223,7 +223,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<Data> getResponseBookSharingStatus() {
+    public Observable<String> getResponseBookSharingStatus() {
         return changeBookSharingStatusResultSubject.observeOn(schedulerFactory.main());
     }
 

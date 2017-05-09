@@ -199,6 +199,8 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     @BindView(R.id.layoutChat)
     LinearLayout layoutChat;
 
+    @BindView(R.id.txtRating)
+    TextView txtRating;
 
 
 
@@ -349,7 +351,8 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 String url = ClientUtils.getUrlImage(editionInfo.getImageId(), Constance.IMAGE_SIZE_ORIGINAL);
                 ClientUtils.setImage(imgEditionBook, R.drawable.ic_profile, url);
             }
-            ratingBar.setNumStars((int)editionInfo.getRateAvg());
+            ratingBar.setRating((float) editionInfo.getRateAvg());
+            txtRating.setText(editionInfo.getRateAvg()+"");
         }
 
         BookDetailEntity.BorrowerInfo borrowerInfo = bookDetail.getBorrowerInfo();
