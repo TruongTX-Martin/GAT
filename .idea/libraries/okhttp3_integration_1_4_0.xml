@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="okhttp3-integration-1.4.0">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/3989579931accc7fca4277bed26f83ffa6abda60/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/3989579931accc7fca4277bed26f83ffa6abda60/output/res" />
+      <root url="file://$USER_HOME$/.android/build-cache/a431160890d353a55b5f42744b754c0c78a15065/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/a431160890d353a55b5f42744b754c0c78a15065/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
