@@ -281,7 +281,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+    public Observable<String> changeBookSharingStatus(BookChangeStatusInput input) {
         return null;
     }
 

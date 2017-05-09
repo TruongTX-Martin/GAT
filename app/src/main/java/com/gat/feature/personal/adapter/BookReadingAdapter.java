@@ -51,7 +51,7 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
                 if(!Strings.isNullOrEmpty(entity.getEditionImageId())){
                     ClientUtils.setImage(holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getEditionImageId(), Constance.IMAGE_SIZE_SMALL));
                 }
-                holder.ratingBar.setNumStars((int)entity.getRateAvg());
+                holder.ratingBar.setRating((float)entity.getRateAvg());
                 holder.txtRating.setText(entity.getRateAvg()+"");
                 if(!Strings.isNullOrEmpty(entity.getBorrowFromUserName())) {
                     holder.layoutBorrowFrom.setVisibility(View.VISIBLE);

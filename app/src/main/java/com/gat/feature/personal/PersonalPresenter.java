@@ -29,7 +29,7 @@ public interface PersonalPresenter extends Presenter{
     Observable<ServerResponse<ResponseData>> onErrorBookInstance();
 
     void requestChangeBookSharingStatus(BookChangeStatusInput input);
-    Observable<Data> getResponseBookSharingStatus();
+    Observable<String> getResponseBookSharingStatus();
     Observable<ServerResponse<ResponseData>> onErrorBookSharingStatus();
 
     void requestReadingBooks(BookReadingInput input);

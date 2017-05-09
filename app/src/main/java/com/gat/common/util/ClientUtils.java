@@ -75,17 +75,16 @@ public class ClientUtils {
     public static String formatColor(String input,String color){
         return "<font color=\""+ color +"\">" + input + "</font>";
     }
-    public static String getDateFromString(String input){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static String getDateFromString(long input){
+        Date date=new Date(input + 1000);
         SimpleDateFormat formatBack = new SimpleDateFormat("dd-MM-yyyy");
         try {
-            Date date = (Date) format.parse(input);
             String dateConvert = formatBack.format(date);
             return dateConvert;
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return  "";
     }
 
     public static Bitmap loadBitmap(ImageView imageView, String url, OnBitmapLoaded onBitmapLoaded){
@@ -166,6 +165,17 @@ public class ClientUtils {
 
     public static String getStringLanguage(int i){
         return context.getResources().getString(i);
+    }
+
+    public static int roundDouble(double d){
+        double dAbs = Math.abs(d);
+        int i = (int) dAbs;
+        double result = dAbs - (double) i;
+        if(result<0.5){
+            return d<0 ? -i : i;
+        }else{
+            return d<0 ? -(i+1) : i+1;
+        }
     }
 
 }

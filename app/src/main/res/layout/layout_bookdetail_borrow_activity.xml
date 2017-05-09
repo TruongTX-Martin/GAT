@@ -49,7 +49,7 @@
                 android:layout_below="@+id/txtBorrowerName"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/imgBorrower"
-                android:textColor="#000000"
+                android:textColor="#919191"
                 android:textSize="14dp" />
 
             <LinearLayout
@@ -137,30 +137,30 @@
             </LinearLayout>
 
         </RelativeLayout>
-        <View
+
+
+        <TextView
+            android:id="@+id/txtRequest"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="#CACACA" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="25dp"
+            android:text="Gửi yêu cầu mượn sách"
+            android:textColor="#202020" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="#f6f6f6">
 
-            <TextView
-                android:id="@+id/txtRequest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:text="Gửi yêu cầu mượn sách"
-                android:textColor="#202020" />
 
             <ImageView
                 android:id="@+id/imgEditionBook"
                 android:layout_width="55dp"
                 android:layout_height="80dp"
-                android:layout_below="@+id/txtRequest"
                 android:layout_centerVertical="true"
                 android:layout_margin="10dp"
                 android:src="@drawable/twitter_btn" />
@@ -196,10 +196,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAuthor"
+                    android:layout_gravity="center_vertical"
                     android:layout_toRightOf="@+id/imgAvatar"
+                    android:isIndicator="true"
                     android:numStars="5"
-                    android:stepSize="0.01"
-                    android:isIndicator="true" />
+                    android:stepSize="0.01" />
+
+                <TextView
+                    android:id="@+id/txtRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#000000"
+                    android:textSize="14dp" />
             </LinearLayout>
 
 
@@ -341,10 +351,6 @@
         </LinearLayout>
 
 
-
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -356,8 +362,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.15"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent"
@@ -634,8 +639,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/ellipse_red"
-                        android:visibility="gone"
-                        >
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="10dp"

@@ -240,7 +240,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+    public Observable<String> changeBookSharingStatus(BookChangeStatusInput input) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().changeBookSharingStatus(input));
     }
 

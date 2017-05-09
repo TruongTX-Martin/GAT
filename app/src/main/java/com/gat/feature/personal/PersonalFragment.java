@@ -64,7 +64,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
 
     private RelativeLayout layoutTop;
-    private ImageView imgBack,imgSave;
+    private ImageView imgBack, imgSave;
     private TextView txtTitle;
 
     private CompositeDisposable disposablesPersonal;
@@ -86,6 +86,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private User userInfo;
     private Context context;
     private View rootView;
+
     @Override
     protected int getLayoutResource() {
         return R.layout.layout_personal_activity;
@@ -139,7 +140,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         return rootView;
     }
 
-    private void initView(){
+    private void initView() {
         viewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
         imgAvatar = (CircleImageView) rootView.findViewById(R.id.imgAvatar);
@@ -167,6 +168,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
             @Override
             public void onPageSelected(int position) {
+                tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#f6f6f6"));
             }
 
             @Override
@@ -176,8 +178,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         });
         layoutInfo.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.instance, EditInfoActivity.class);
-            intent.putExtra("UserInfo",  userInfo);
-            MainActivity.instance.startActivityForResult(intent,Constance.RESULT_UPDATEUSER);
+            intent.putExtra("UserInfo", userInfo);
+            MainActivity.instance.startActivityForResult(intent, Constance.RESULT_UPDATEUSER);
         });
     }
 
@@ -207,8 +209,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         txtNumberRequest = (TextView) tabThree.findViewById(R.id.txtNumber);
         txtNumberRequest.setText("0");
         TextView txtTitleThree = (TextView) tabThree.findViewById(R.id.txtTitle);
-        txtTitleThree.setText("Yêu cầu");
+        txtTitleThree.setText("Yêu cầu mượn sách");
         tabLayout.getTabAt(2).setCustomView(tabThree);
+        tabLayout.setSelectedTabIndicatorHeight(0);
     }
 
 
@@ -232,7 +235,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         viewPager.setAdapter(adapter);
     }
 
-    public void requestPersonalInfo(){
+    public void requestPersonalInfo() {
         getPresenter().requestPersonalInfor("");
     }
 
@@ -270,16 +273,18 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private void getBookDetailError(String error) {
         ClientUtils.showToast("Error:" + error);
     }
+
     private void getUserInfoError(ServerResponse<ResponseData> error) {
         ClientUtils.showToast(error.message());
     }
 
-    public void requestBookOwner(RequestStatusInput statusInput){
+    public void requestBookOwner(RequestStatusInput statusInput) {
         getPresenter().requestChangeStatus(statusInput);
     }
+
     private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
         if (data != null) {
-            if(data.getStatusCode() == 200){
+            if (data.getStatusCode() == 200) {
             }
             ClientUtils.showToast(data.getMessage());
         }
@@ -288,7 +293,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     //get book instance
     public void requestBookInstance(BookInstanceInput input) {
-        if(!ClientUtils.isOnline()) {
+        if (!ClientUtils.isOnline()) {
             ClientUtils.showViewNotInternet(layoutTop);
             return;
         }
@@ -307,18 +312,21 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     //request bookrequest
-    public  void requestBookRequest(BookRequestInput input){
+    public void requestBookRequest(BookRequestInput input) {
         getPresenter().requestBookRequests(input);
     }
 
     //handle get bookInstance return
     private void getBookInstanceSuccess(Data data) {
-       if (data != null) {
+        if (data != null) {
             int totalSharing = data.getTotalSharing();
             txtNumberSharing.setText(totalSharing + "");
             int totalNotSharing = data.getTotalNotSharing();
             int lostTotal = data.getLostTotal();
             List<BookSharingEntity> listBook = data.getListDataReturn(BookSharingEntity.class);
+            fragmentBookSharing.setNumberSharing(totalSharing);
+            fragmentBookSharing.setNumberNotSharing(totalNotSharing);
+            fragmentBookSharing.setNumberLost(lostTotal);
             fragmentBookSharing.setListBook(listBook);
         }
     }
@@ -331,19 +339,24 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
 
-    private void changeBookSharingStatusSuccess(Data data) {
-        if (data != null) {
-            System.out.println("Data:" + data);
+    private void changeBookSharingStatusSuccess(String data) {
+        if (!Strings.isNullOrEmpty(data)) {
+            ClientUtils.showToast(data);
         }
     }
 
     private void getReadingBooksSuccess(Data data) {
         if (data != null) {
             int totalReading = data.getReadingTotal();
+            int totalReaded = data.getReadTotal();
+            int totalToRead = data.getToReadTotal();
             if (totalReading > 0) {
                 txtNumberReading.setText(totalReading + "");
             }
             List<BookReadingEntity> listReading = data.getListDataReturn(BookReadingEntity.class);
+            fragmentBookReading.setNumberReading(totalReading);
+            fragmentBookReading.setNumberReaded(totalReaded);
+            fragmentBookReading.setNumberToRead(totalToRead);
             fragmentBookReading.setListBookReading(listReading);
         }
 
@@ -352,10 +365,13 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     private void getBookRequestSuccess(Data data) {
-        if(data != null) {
+        if (data != null) {
             int totalBrowing = data.getBorrowingTotal();
-            txtNumberRequest.setText(totalBrowing+"");
+            int totalWaiting = data.getWaitingTotal();
+            txtNumberRequest.setText(totalBrowing + "");
             List<BookRequestEntity> listBookRequest = data.getListDataReturn(BookRequestEntity.class);
+            fragmentBookRequest.setNumberRequestFromYou(totalBrowing);
+            fragmentBookRequest.setNumberRequestToYou(totalWaiting);
             fragmentBookRequest.setListBookRequest(listBookRequest);
         }
     }

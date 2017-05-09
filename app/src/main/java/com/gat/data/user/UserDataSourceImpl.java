@@ -278,13 +278,13 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+    public Observable<String> changeBookSharingStatus(BookChangeStatusInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.changeBookSharingStatus(input.getInstanceId(), input.getSharingStatus());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
-            return serverResponse.data();
+            return serverResponse.message();
         });
     }
 

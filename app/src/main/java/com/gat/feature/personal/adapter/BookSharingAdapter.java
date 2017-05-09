@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,19 +59,40 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
     public void onBindViewHolder(BookSharingViewHolder holder, int position) {
         BookSharingEntity entity = list.get(position);
         if (entity != null) {
-            if (entity.getSharingStatus() == 2 || entity.getSharingStatus() == 1) {
-                holder.imgExtend.setVisibility(View.VISIBLE);
-                holder.mySwitch.setVisibility(View.GONE);
-                holder.txtShared.setVisibility(View.GONE);
-            } else if (entity.getSharingStatus() == 0) {
+            if (entity.getSharingStatus() == 0) {
+                //not sharing
                 holder.imgExtend.setVisibility(View.GONE);
                 holder.mySwitch.setVisibility(View.VISIBLE);
                 holder.txtShared.setVisibility(View.VISIBLE);
+                holder.mySwitch.setChecked(false);
+            } else if (entity.getSharingStatus() == 1) {
+                //sharing
+                holder.imgExtend.setVisibility(View.GONE);
+                holder.mySwitch.setVisibility(View.VISIBLE);
+                holder.txtShared.setVisibility(View.VISIBLE);
+                holder.mySwitch.setChecked(true);
+            } else if (entity.getSharingStatus() == 2) {
+                holder.imgExtend.setVisibility(View.VISIBLE);
+                holder.mySwitch.setVisibility(View.GONE);
+                holder.txtShared.setVisibility(View.GONE);
             } else {
                 holder.imgExtend.setVisibility(View.GONE);
                 holder.mySwitch.setVisibility(View.GONE);
                 holder.txtShared.setVisibility(View.GONE);
             }
+//            if (entity.getSharingStatus() == 2 || entity.getSharingStatus() == 1) {
+//                holder.imgExtend.setVisibility(View.VISIBLE);
+//                holder.mySwitch.setVisibility(View.VISIBLE);
+//                holder.txtShared.setVisibility(View.GONE);
+//            } else if (entity.getSharingStatus() == 0) {
+//                holder.imgExtend.setVisibility(View.GONE);
+//                holder.mySwitch.setVisibility(View.VISIBLE);
+//                holder.txtShared.setVisibility(View.VISIBLE);
+//            } else {
+//                holder.imgExtend.setVisibility(View.GONE);
+//                holder.mySwitch.setVisibility(View.GONE);
+//                holder.txtShared.setVisibility(View.GONE);
+//            }
             if (!Strings.isNullOrEmpty(entity.getTitle())) {
                 holder.txtTitle.setText(entity.getTitle());
             }
@@ -79,11 +101,11 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
             }
             if (!Strings.isNullOrEmpty(entity.getBorrowingUserName())) {
                 holder.layoutBorrowFrom.setVisibility(View.VISIBLE);
-                holder.txtBorrowName.setText(entity.getBorrowingUserName());
+                holder.txtBorrowName.setText(Html.fromHtml(ClientUtils.formatColor("Người mượn ", "#000000") + ClientUtils.formatColor(entity.getBorrowingUserName(), "#5396b9")), TextView.BufferType.SPANNABLE);
             } else {
                 holder.layoutBorrowFrom.setVisibility(View.GONE);
             }
-            holder.ratingBar.setNumStars((int) entity.getRateAvg());
+            holder.ratingBar.setRating((float) entity.getRateAvg());
             holder.txtRating.setText(entity.getRateAvg() + "");
             if (!Strings.isNullOrEmpty(entity.getImageId())) {
                 ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
@@ -121,32 +143,23 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
                 }
             }
 
-            holder.txtBorrowName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainActivity.start(context, PersonalUserActivity.class, PersonalUserScreen.instance(entity.getBorrowingUserId()));
-
-                }
-            });
+            holder.txtBorrowName.setOnClickListener(v -> MainActivity.start(context, PersonalUserActivity.class, PersonalUserScreen.instance(entity.getBorrowingUserId())));
 
         }
         holder.mySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             fragmentBookSharing.changeStatusBook(entity, position);
         });
-        holder.imgBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int borrowingRecordId = entity.getBorrowingRecordId();
-                int sharingStatus = entity.getSharingStatus();
-                if (sharingStatus == 1) {
-                    //sharing
+        holder.imgBook.setOnClickListener(v -> {
+            int borrowingRecordId = entity.getBorrowingRecordId();
+            int sharingStatus = entity.getSharingStatus();
+            if (sharingStatus == 1) {
+                //sharing
 
-                } else if (sharingStatus == 2) {
-                    //borrowing
-                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
-                    intent.putExtra("BorrowingRecordId", borrowingRecordId);
-                    MainActivity.instance.startActivity(intent);
-                }
+            } else if (sharingStatus == 2) {
+                //borrowing
+                Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
+                intent.putExtra("BorrowingRecordId", borrowingRecordId);
+                MainActivity.instance.startActivity(intent);
             }
         });
         if (getItemCount() > 9 && position == (getItemCount() - 1)) {

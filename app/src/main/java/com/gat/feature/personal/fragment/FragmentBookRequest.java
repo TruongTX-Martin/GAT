@@ -63,6 +63,15 @@ public class FragmentBookRequest extends Fragment {
         this.currentInput = currentInput;
     }
 
+
+    public void setNumberRequestFromYou(int numberRequestFromYou) {
+        this.numberRequestFromYou = numberRequestFromYou;
+    }
+
+    public void setNumberRequestToYou(int numberRequestToYou) {
+        this.numberRequestToYou = numberRequestToYou;
+    }
+
     public int getNumberRequestFromYou() {
         return numberRequestFromYou;
     }
@@ -89,18 +98,15 @@ public class FragmentBookRequest extends Fragment {
             isContinueMore = false;
         }
         this.listBookRequest.addAll(list);
-        numberRequestToYou = 0; numberRequestFromYou = 0;
         setTitleFrom = false; setTitleTo = false;
         if(listBookRequest.size() > 0) {
             for (int i=0; i< listBookRequest.size() ; i++) {
                 if (listBookRequest.get(i).getRecordType() == 1) {
-                    numberRequestToYou ++;
                     if(!setTitleTo) {
                         listBookRequest.get(i).setHeader(true);
                         setTitleTo = true;
                     }
                 }else if(listBookRequest.get(i).getRecordType() == 2){
-                    numberRequestFromYou ++;
                     if (!setTitleFrom) {
                         listBookRequest.get(i).setHeader(true);
                         setTitleFrom = true;
@@ -150,30 +156,6 @@ public class FragmentBookRequest extends Fragment {
 
     private void handleEvent() {
         layoutFilter.setOnClickListener(v -> showDialogFilter());
-//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                BookRequestEntity entity = listBookRequest.get(position);
-//                int recordType = entity.getRecordType();
-//                int recodeId = entity.getRecordId();
-//                if (recordType == 1) {
-//                    //sharing - user borrower -> request  by owner
-//                    Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
-//                    intent.putExtra("BorrowingRecordId", recodeId);
-//                    MainActivity.instance.startActivity(intent);
-//                } else if (recordType == 2) {
-//                    //borrowing - use owerner -> request by sender
-//                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
-//                    intent.putExtra("BorrowingRecordId", recodeId);
-//                    MainActivity.instance.startActivity(intent);
-//                }
-//            }
-//
-//            @Override
-//            public void onItemLongClick(View view, int position) {
-//
-//            }
-//        }));
     }
 
     public void agreedRequest(BookRequestEntity entity){
@@ -242,7 +224,7 @@ public class FragmentBookRequest extends Fragment {
         popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.setOutsideTouchable(true);
-        ImageView imgClose = (ImageView) customView.findViewById(R.id.imgClose);
+        RelativeLayout imgClose = (RelativeLayout) customView.findViewById(R.id.layoutClose);
         TextView txtRequestToYou = (TextView) customView.findViewById(R.id.txtRequestToYou);
         TextView txtRequestFromYou = (TextView) customView.findViewById(R.id.txtRequestFromYou);
         RelativeLayout layoutRequestToYouOVerlay = (RelativeLayout) customView.findViewById(R.id.layoutRequestToYouOverlay);
