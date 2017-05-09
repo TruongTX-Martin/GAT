@@ -500,22 +500,48 @@ public class DebugUserDataSource implements UserDataSource {
 
     @Override
     public Observable<ServerResponse> unlinkSocialAccount(int socialType) {
-        return null;
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse>> responseObservable;
+        responseObservable = api.unlinkSocialAccount(socialType);
+
+        return responseObservable.map(response -> {
+            return response.body();
+        });
     }
 
     @Override
     public Observable<ServerResponse> linkSocialAccount(String socialID, String socialName, int socialType) {
-        return null;
+        MZDebug.w("User Data Srouce: linkSocialAccount");
+
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse>> responseObservable;
+        responseObservable = api.linkSocialAccount(socialID, socialName, socialType);
+
+        return responseObservable.map(response -> {
+            return response.body();
+        });
     }
 
     @Override
     public Observable<ServerResponse<FirebasePassword>> addEmailPassword(String email, String password) {
-        return null;
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<FirebasePassword>>> responseObservable;
+        responseObservable = api.addEmailPassword(email, password);
+
+        return responseObservable.map(response -> {
+            return response.body();
+        });
     }
 
     @Override
     public Observable<ServerResponse> changeOldPassword(String newPassword, String oldPassword) {
-        return null;
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse>> responseObservable;
+        responseObservable = api.updatePassword(oldPassword, newPassword);
+
+        return responseObservable.map(response -> {
+            return response.body();
+        });
     }
 
 

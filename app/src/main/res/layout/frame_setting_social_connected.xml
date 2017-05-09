@@ -24,7 +24,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:text="@string/add_email_password"
             android:textColor="@color/colorTextViewDark"
             android:textSize="@dimen/larger_text_view_size" />
 
@@ -34,9 +33,11 @@
         android:id="@+id/text_view_social"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height_large"
+        android:gravity="center_vertical|center_horizontal"
         android:textColor="@color/colorTextViewGray" />
 
     <Button
+        android:id="@+id/button_disconnect_social"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height_large"
         android:background="@drawable/bg_white_border_top_bottom"

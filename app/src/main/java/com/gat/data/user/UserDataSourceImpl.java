@@ -509,6 +509,9 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<ServerResponse> linkSocialAccount(String socialID, String socialName, int socialType) {
+
+        MZDebug.w("User Data Srouce: linkSocialAccount");
+
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse>> responseObservable;
         responseObservable = api.linkSocialAccount(socialID, socialName, socialType);

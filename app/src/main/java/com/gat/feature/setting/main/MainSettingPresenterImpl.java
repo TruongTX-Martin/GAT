@@ -3,9 +3,12 @@ package com.gat.feature.setting.main;
 import android.util.Log;
 
 import com.gat.common.util.MZDebug;
+import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
+import com.gat.domain.usecase.LinkSocialAccount;
 import com.gat.domain.usecase.UseCase;
+import com.gat.feature.setting.SocialType;
 import com.gat.repository.entity.User;
 
 import io.reactivex.Observable;
@@ -23,10 +26,18 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
 
     private final Subject<User> subjectLoadUserSuccess;
 
+    private UseCase<ServerResponse> useCaseLinkSocialAccount;
+    private final Subject<String> subjectFacebookSuccess;
+    private final Subject<String> subjectGoogleSuccess;
+    private final Subject<String> subjectTwitterSuccess;
+
     public MainSettingPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
         subjectLoadUserSuccess = PublishSubject.create();
+        subjectFacebookSuccess = PublishSubject.create();
+        subjectGoogleSuccess = PublishSubject.create();
+        subjectTwitterSuccess = PublishSubject.create();
     }
 
 
@@ -44,7 +55,7 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
     public void loadUserInfo() {
         UseCase<User> loadUser = useCaseFactory.getUser();
         loadUser.executeOn(schedulerFactory.io())
-                .executeOn(schedulerFactory.main())
+                .returnOn(schedulerFactory.main())
                 .onNext(user -> {
                     MZDebug.w("loadUserInfo SUCCESS : \n\r " + user.toString());
                     subjectLoadUserSuccess.onNext(user);
@@ -59,5 +70,47 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
     @Override
     public Observable<User> onUserInfoSuccess() {
         return subjectLoadUserSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestConnectSocial(String social_id, String social_name, int type) {
+        useCaseLinkSocialAccount = useCaseFactory.linkSocialAccount(social_id, social_name, type);
+        useCaseLinkSocialAccount.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(serverResponse -> {
+
+                    switch (type) {
+                        case SocialType.FACEBOOK:
+                            subjectFacebookSuccess.onNext(social_name);
+                            break;
+                        case SocialType.GOOGLE:
+                            subjectGoogleSuccess.onNext(social_name);
+                            break;
+                        case SocialType.TWITTER:
+                            subjectTwitterSuccess.onNext(social_name);
+                            break;
+                    }
+
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: requestConnectSocial : _______________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
+    }
+
+    @Override
+    public Observable<String> onConnectFacebookSuccess() {
+        return subjectFacebookSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onConnectGoogleSuccess() {
+        return subjectGoogleSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onConnectTwitterSuccess() {
+        return subjectTwitterSuccess.subscribeOn(schedulerFactory.main());
     }
 }

@@ -59,7 +59,7 @@ public class SettingFragment extends Fragment implements ISettingDelegate {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Bundle args = new Bundle();
-        args.putInt(MainSettingFragment.KEY_BACK_TO_MAIN, KeyBackToMain.DO_NOTHING);
+        args.putInt(MainSettingFragment.KEY_BACK_TO_MAIN, KeyBackToMain.FRIST_CREATE);
         getMainSettingFragment().setArguments(args);
         transaction.replace(R.id.fl_setting, getMainSettingFragment());
         transaction.commit();

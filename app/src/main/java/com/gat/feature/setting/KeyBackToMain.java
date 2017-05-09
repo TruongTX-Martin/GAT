@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface KeyBackToMain {
 
-    int DO_NOTHING = -1;
+    int FRIST_CREATE = -1;
     int BACK_BUTTON = 0;
     int BACK_CHANGE_PASSWORD = 1;
     int ADD_EMAIL_PASSWORD = 99;

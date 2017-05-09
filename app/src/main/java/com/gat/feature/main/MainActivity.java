@@ -26,10 +26,12 @@ import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.setting.SettingFragment;
+import com.gat.feature.setting.main.MainSettingFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -174,5 +176,16 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         if(requestCode == Constance.RESULT_UPDATEUSER){
             personalFragment.requestPersonalInfo();
         }
+
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if(fragment instanceof MainSettingFragment) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
+                    break;
+                }
+            }
+        }
+
     }
 }

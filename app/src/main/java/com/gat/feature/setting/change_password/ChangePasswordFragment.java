@@ -9,6 +9,10 @@ import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.util.Strings;
+import com.gat.feature.login.ForgotPassword.ForgotPasswordActivity;
+import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
 import com.gat.feature.setting.ISettingDelegate;
 import com.gat.feature.setting.KeyBackToMain;
 
@@ -90,6 +94,12 @@ public class ChangePasswordFragment extends ScreenFragment<ChangePasswordScreen,
                 editTextCurrentPassword.getText().toString(),
                 editTextNewPassword.getText().toString(),
                 editTextConfirmPassword.getText().toString());
+    }
+
+    @OnClick(R.id.button_forgot_password)
+    void onButtonForgotPasswordTap () {
+        MainActivity.start(getActivity().getApplicationContext(),
+                ForgotPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
     }
 
     void onChangePasswordSuccess (String message) {

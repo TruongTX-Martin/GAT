@@ -23,6 +23,7 @@ import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.RequestStatusInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
+import com.gat.feature.setting.SocialType;
 import com.gat.repository.UserRepository;
 import com.gat.repository.datasource.MessageDataSource;
 import com.gat.repository.datasource.UserDataSource;
@@ -318,12 +319,146 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<ServerResponse> unlinkSocialAccount(int socialType) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().unlinkSocialAccount(socialType));
+        return Observable.defer(() -> networkUserDataSourceLazy.get().unlinkSocialAccount(socialType))
+                .map(serverResponse -> {
+
+                    User user = localUserDataSourceLazy.get().loadUser().blockingFirst();
+
+                    User userStore = null;
+                    switch (socialType) {
+                        case SocialType.FACEBOOK:
+                            userStore = User.builder().userId(user.userId()).email(Strings.EMPTY)
+                                    .faceBookId(Strings.EMPTY).faceBookName(Strings.EMPTY)
+                                    .userId(user.userId())
+                                    .name(user.name())
+                                    .imageId(user.imageId())
+                                    .userTypeFlag(user.userTypeFlag())
+                                    .deleteFlag(user.deleteFlag())
+                                    .requestCount(user.requestCount())
+                                    .loanCount(user.loanCount())
+                                    .readCount(user.readCount())
+                                    .passwordFlag(user.passwordFlag())
+                                    .googleId(user.googleId())
+                                    .googleName(user.googleName())
+                                    .twitterId(user.twitterId())
+                                    .twitterName(user.twitterName()).build();
+                            break;
+
+                        case SocialType.GOOGLE:
+                            userStore = User.builder().userId(user.userId()).email(Strings.EMPTY)
+                                    .googleId(Strings.EMPTY).googleName(Strings.EMPTY)
+                                    .userId(user.userId())
+                                    .name(user.name())
+                                    .imageId(user.imageId())
+                                    .userTypeFlag(user.userTypeFlag())
+                                    .deleteFlag(user.deleteFlag())
+                                    .requestCount(user.requestCount())
+                                    .loanCount(user.loanCount())
+                                    .readCount(user.readCount())
+                                    .passwordFlag(user.passwordFlag())
+                                    .googleId(user.googleId())
+                                    .googleName(user.googleName())
+                                    .twitterId(user.twitterId())
+                                    .twitterName(user.twitterName()).build();
+                            break;
+
+                        case SocialType.TWITTER:
+                            userStore = User.builder().userId(user.userId()).email(Strings.EMPTY)
+                                    .twitterId(Strings.EMPTY).twitterName(Strings.EMPTY)
+                                    .userId(user.userId())
+                                    .name(user.name())
+                                    .imageId(user.imageId())
+                                    .userTypeFlag(user.userTypeFlag())
+                                    .deleteFlag(user.deleteFlag())
+                                    .requestCount(user.requestCount())
+                                    .loanCount(user.loanCount())
+                                    .readCount(user.readCount())
+                                    .passwordFlag(user.passwordFlag())
+                                    .googleId(user.googleId())
+                                    .googleName(user.googleName())
+                                    .twitterId(user.twitterId())
+                                    .twitterName(user.twitterName()).build();
+                            break;
+
+                    }
+                    localUserDataSourceLazy.get().persitUser(userStore);
+
+                    return serverResponse;
+                });
     }
 
     @Override
     public Observable<ServerResponse> linkSocialAccount(String socialID, String socialName, int socialType) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().linkSocialAccount(socialID, socialName, socialType));
+//        return Observable.defer(() -> networkUserDataSourceLazy.get().linkSocialAccount(socialID, socialName, socialType));
+
+        return Observable.defer(() -> networkUserDataSourceLazy.get().linkSocialAccount(socialID, socialName, socialType))
+                .map(serverResponse -> {
+
+                    User user = localUserDataSourceLazy.get().loadUser().blockingFirst();
+
+                    User userStore = null;
+                    switch (socialType) {
+                        case SocialType.FACEBOOK:
+                            userStore = User.builder().userId(user.userId()).email(Strings.EMPTY)
+                                    .faceBookId(socialID).faceBookName(socialName)
+                                    .userId(user.userId())
+                                    .name(user.name())
+                                    .imageId(user.imageId())
+                                    .userTypeFlag(user.userTypeFlag())
+                                    .deleteFlag(user.deleteFlag())
+                                    .requestCount(user.requestCount())
+                                    .loanCount(user.loanCount())
+                                    .readCount(user.readCount())
+                                    .passwordFlag(user.passwordFlag())
+                                    .googleId(user.googleId())
+                                    .googleName(user.googleName())
+                                    .twitterId(user.twitterId())
+                                    .twitterName(user.twitterName()).build();
+                            break;
+
+                        case SocialType.GOOGLE:
+                            userStore = User.builder().userId(user.userId()).email(Strings.EMPTY)
+                                    .googleId(socialID).googleName(socialName)
+                                    .userId(user.userId())
+                                    .name(user.name())
+                                    .imageId(user.imageId())
+                                    .userTypeFlag(user.userTypeFlag())
+                                    .deleteFlag(user.deleteFlag())
+                                    .requestCount(user.requestCount())
+                                    .loanCount(user.loanCount())
+                                    .readCount(user.readCount())
+                                    .passwordFlag(user.passwordFlag())
+                                    .googleId(user.googleId())
+                                    .googleName(user.googleName())
+                                    .twitterId(user.twitterId())
+                                    .twitterName(user.twitterName()).build();
+                            break;
+
+                        case SocialType.TWITTER:
+                            userStore = User.builder().userId(user.userId()).email(Strings.EMPTY)
+                                    .twitterId(socialID).twitterName(socialName)
+                                    .userId(user.userId())
+                                    .name(user.name())
+                                    .imageId(user.imageId())
+                                    .userTypeFlag(user.userTypeFlag())
+                                    .deleteFlag(user.deleteFlag())
+                                    .requestCount(user.requestCount())
+                                    .loanCount(user.loanCount())
+                                    .readCount(user.readCount())
+                                    .passwordFlag(user.passwordFlag())
+                                    .googleId(user.googleId())
+                                    .googleName(user.googleName())
+                                    .twitterId(user.twitterId())
+                                    .twitterName(user.twitterName()).build();
+                            break;
+
+                    }
+                    localUserDataSourceLazy.get().persitUser(userStore);
+
+
+                    return serverResponse;
+                });
+
     }
 
     @Override

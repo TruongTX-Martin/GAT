@@ -13,7 +13,9 @@ public interface MainSettingPresenter extends Presenter {
     void loadUserInfo ();
     Observable<User> onUserInfoSuccess ();
 
-
-
+    void requestConnectSocial (String social_id, String social_name, int type);
+    Observable<String> onConnectFacebookSuccess();
+    Observable<String> onConnectGoogleSuccess();
+    Observable<String> onConnectTwitterSuccess();
 
 }
