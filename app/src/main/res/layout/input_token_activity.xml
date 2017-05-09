@@ -71,7 +71,7 @@
                 android:background="@drawable/bg_rounded_blue"
                 android:textColor="@color/colorWhite"
                 android:text="@string/reset_pass_btn"
-                android:drawableRight="@drawable/forma_1"
+                android:drawableRight="@drawable/scan_ic_selected"
                 android:drawablePadding="-20dp"/>
         </LinearLayout>
     </LinearLayout>

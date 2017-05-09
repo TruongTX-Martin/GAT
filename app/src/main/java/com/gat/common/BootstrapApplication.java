@@ -2,6 +2,8 @@ package com.gat.common;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
+
 import com.gat.BuildConfig;
 import com.gat.dependency.AppComponent;
 import com.gat.dependency.AppModule;
@@ -36,7 +38,7 @@ public class BootstrapApplication extends Application implements HasComponent<Ap
             }
         }
 
-//        MultiDex.install(this);
+     //   MultiDex.install(this);
     }
 
     @Override

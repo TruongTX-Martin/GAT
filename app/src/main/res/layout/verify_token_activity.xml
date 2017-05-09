@@ -1,78 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
     android:id="@+id/verify_token_view">
-    <LinearLayout
+
+    <include layout="@layout/header_blue"/>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="@string/forgot_inputtoken_message"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textEmail"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textColor="@color/colorGray"
+        android:background="@drawable/bg_border_bottom"
+        android:text="@string/forgot_sendreq_message"/>
 
-        <LinearLayout
+    <android.support.design.widget.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingStart="@dimen/margin_left_right"
+        android:paddingEnd="@dimen/margin_left_right"
+        android:paddingBottom="@dimen/btn_margin_bt"
+        android:background="@drawable/bg_border_bottom">
+
+        <EditText android:id="@+id/text_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/background_header_blue">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_forgot_title"
-                android:textSize="@dimen/header_textsize"
-                android:textColor="@color/colorWhite"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
+            android:inputType="text"
+            android:textSize="@dimen/normal_textsize"
+            android:hint="@string/forgot_inputtoken_hint"
+            android:background="@drawable/text_edit_shape_white"/>
+    </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/forgot_inputtoken_message"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center_horizontal"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textEmail"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center_horizontal"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
-            <android.support.design.widget.TextInputLayout
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_left_right"
-                android:layout_marginRight="@dimen/margin_left_right">
-                <EditText android:id="@+id/input_token"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:hint="@string/forgot_inputtoken_hint" />
-            </android.support.design.widget.TextInputLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
-            <Button
-                android:id="@+id/btn_send"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginLeft="@dimen/margin_left_right"
-                android:layout_marginRight="@dimen/margin_left_right"
-                android:background="@drawable/bg_rounded_blue"
-                android:textColor="@color/colorWhite"
-                android:text="@string/verify_token_btn"
-                android:drawableEnd="@drawable/forma_1"
-                android:paddingEnd="@dimen/padding_end"
-                android:paddingStart="@dimen/padding_start"/>
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        android:background="@drawable/bg_rounded_blue"
+        android:textColor="@color/colorWhite"
+        android:text="@string/verify_token_btn"
+        android:textAlignment="center"
+        android:paddingStart="60dp"
+        android:drawableEnd="@drawable/forma_1"
+        android:paddingEnd="30dp"/>
+</LinearLayout>

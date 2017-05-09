@@ -92,6 +92,9 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     @BindView(R.id.twitter_login_btn)
     ImageButton twitterLoginBtn;
 
+    @BindView(R.id.header_text)
+    TextView headerText;
+
     private CompositeDisposable disposables;
     private ProgressDialog progressDialog;
     private Subject<Boolean> progressSubject;
@@ -118,6 +121,8 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        headerText.setText(getString(R.string.login_title));
 
         progressDialog = new ProgressDialog(this);
         progressSubject = BehaviorSubject.create();

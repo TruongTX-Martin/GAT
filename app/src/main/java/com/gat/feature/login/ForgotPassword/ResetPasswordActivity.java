@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gat.R;
@@ -30,11 +31,18 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class ResetPasswordActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
-    @BindView(R.id.input_password)
+    @BindView(R.id.text_input)
     EditText passwordText;
+
+    @BindView(R.id.textEmail)
+    TextView emailTextView;
 
     @BindView(R.id.btn_send)
     Button btnVerify;
+
+    @BindView(R.id.header_text)
+    TextView headerText;
+
 
     CompositeDisposable disposable;
 
@@ -43,6 +51,10 @@ public class ResetPasswordActivity extends ScreenActivity<LoginScreen, LoginPres
     @Override
     protected void onCreate(Bundle savedBundleInstance) {
         super.onCreate(savedBundleInstance);
+
+        emailTextView.setText(getScreen().email());
+
+        headerText.setText(getString(R.string.login_forgot_title));
 
         disposable = new CompositeDisposable(
                 getPresenter().changePasswordResult().subscribe(this::onSuccess),

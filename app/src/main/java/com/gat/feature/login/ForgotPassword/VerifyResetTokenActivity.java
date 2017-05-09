@@ -26,7 +26,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
-    @BindView(R.id.input_token)
+    @BindView(R.id.text_input)
     EditText tokenText;
 
     @BindView(R.id.textEmail)
@@ -34,6 +34,9 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
 
     @BindView(R.id.btn_send)
     Button btnVerify;
+
+    @BindView(R.id.header_text)
+    TextView headerText;
 
     CompositeDisposable disposable;
 
@@ -44,6 +47,8 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
         super.onCreate(savedBundleInstance);
 
         emailTextView.setText(getScreen().email());
+
+        headerText.setText(getString(R.string.login_forgot_title));
 
         disposable = new CompositeDisposable(
                 getPresenter().verifyResult().subscribe(this::onSuccess),
@@ -83,7 +88,7 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
 
     public void onSuccess(ServerResponse<VerifyTokenResponseData> responseDataServerResponse) {
         onVerifying(false);
-        this.start(getApplicationContext(), ResetPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
+        this.start(getApplicationContext(), ResetPasswordActivity.class, getScreen());
         finish();
     }
 

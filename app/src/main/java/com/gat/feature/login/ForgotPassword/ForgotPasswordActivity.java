@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gat.R;
@@ -29,8 +30,12 @@ public class ForgotPasswordActivity extends ScreenActivity<LoginScreen, LoginPre
 
     @BindView(R.id.input_email)
     EditText emailText;
+
     @BindView(R.id.btn_send)
     Button btnSend;
+
+    @BindView(R.id.header_text)
+    TextView headerText;
 
     CompositeDisposable disposable;
 
@@ -44,6 +49,8 @@ public class ForgotPasswordActivity extends ScreenActivity<LoginScreen, LoginPre
     @Override
     protected void onCreate(Bundle savedBundleInstance) {
         super.onCreate(savedBundleInstance);
+
+        headerText.setText(getString(R.string.login_forgot_title));
 
         disposable = new CompositeDisposable(
                 getPresenter().resetPasswordResponse().subscribe(this::onSuccess),

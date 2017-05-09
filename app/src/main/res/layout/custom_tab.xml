@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/tab"
-    android:textColor="@color/colorAccent"
-    android:gravity="center_horizontal"
-    android:textSize="14sp"
-    android:fontFamily="sans-serif"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:id="@+id/icon"
+        android:layout_gravity="center_horizontal" />
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/tab_text_size"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/tab_text_margin"
+        android:lines="1"
+        android:id="@+id/text"/>
+</LinearLayout>

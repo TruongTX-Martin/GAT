@@ -41,7 +41,7 @@
             android:layout_marginRight="@dimen/margin_left_right"
             android:layout_marginTop="24dp"
             android:background="@drawable/bg_rounded_blue"
-            android:drawableEnd="@drawable/forma_1"
+            android:drawableEnd="@drawable/scan_ic_selected"
             android:paddingEnd="@dimen/padding_end"
             android:paddingStart="@dimen/padding_start"
             android:paddingTop="5dp"

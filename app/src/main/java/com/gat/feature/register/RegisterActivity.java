@@ -11,6 +11,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -97,6 +98,9 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
     @BindView(R.id.google_register_btn)
     Button googleRegisterBtn;
 
+    @BindView(R.id.header_text)
+    TextView headerText;
+
     private Subject<Boolean> progressSubject;
 
     // For facebook callback
@@ -125,6 +129,8 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        headerText.setText(getString(R.string.register_title));
 
         unbinder = ButterKnife.bind(this);
 

@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.KeyEvent;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -15,12 +12,8 @@ import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
 import com.gat.common.view.NonSwipeableViewPager;
-import com.gat.common.util.NotificationConfig;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.firebase.entity.NotificationParcelable;
-import com.gat.feature.message.MessageActivity;
-import com.gat.feature.message.presenter.MessagePresenter;
-import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.notification.NotificationFragment;
 import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
@@ -144,6 +137,37 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         tabLayout.getTabAt(TAB_POS.TAB_SCAN).setIcon(R.drawable.scan_ic);
         tabLayout.getTabAt(TAB_POS.TAB_NOTIFICATION).setIcon(R.drawable.notic_ic);
         tabLayout.getTabAt(TAB_POS.TAB_SETTING).setIcon(R.drawable.setting_ic);
+        /*
+        View view1 = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.ic_home_ic_selected);
+        TextView textView = (TextView) view1.findViewById(R.id.text);
+        textView.setText(getString(R.string.tab_home));
+        tabLayout.getTabAt(TAB_POS.TAB_HOME).setCustomView(view1);
+
+        View view2 = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.personal_ic);
+        textView = (TextView) view2.findViewById(R.id.text);
+        textView.setText(getString(R.string.tab_personal));
+        tabLayout.getTabAt(TAB_POS.TAB_PERSONAL).setCustomView(view2);
+
+        View view3 = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.scan_ic);
+        textView = (TextView) view3.findViewById(R.id.text);
+        textView.setText(getString(R.string.tab_scanbarcode));
+        tabLayout.getTabAt(TAB_POS.TAB_SCAN).setCustomView(view3);
+
+        View view4 = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        view4.findViewById(R.id.icon).setBackgroundResource(R.drawable.notic_ic);
+        textView = (TextView) view4.findViewById(R.id.text);
+        textView.setText(getString(R.string.tab_notification));
+        tabLayout.getTabAt(TAB_POS.TAB_NOTIFICATION).setCustomView(view4);
+
+        View view5 = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        view5.findViewById(R.id.icon).setBackgroundResource(R.drawable.setting_ic);
+        textView = (TextView) view5.findViewById(R.id.text);
+        textView.setText(getString(R.string.tab_setting));
+        tabLayout.getTabAt(TAB_POS.TAB_SETTING).setCustomView(view5);
+        */
     }
 
     private void selectTab(TabLayout.Tab tab, boolean select) {
@@ -166,6 +190,27 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
             default:
                 throw new UnsupportedOperationException();
         }
+        /*
+        switch (tab.getPosition()) {
+            case TAB_POS.TAB_HOME:
+                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.ic_home_ic_selected : R.drawable.ic_home_ic_selected);
+                break;
+            case TAB_POS.TAB_PERSONAL:
+                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.personal_ic_selected : R.drawable.personal_ic);
+                break;
+            case TAB_POS.TAB_SCAN:
+                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.scan_ic_selected : R.drawable.scan_ic);
+                break;
+            case TAB_POS.TAB_NOTIFICATION:
+                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
+                break;
+            case TAB_POS.TAB_SETTING:
+                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.setting_ic_selected : R.drawable.setting_ic);
+                break;
+            default:
+                throw new UnsupportedOperationException();
+        }
+        */
     }
 
     @Override
