@@ -3,12 +3,17 @@ package com.gat.feature.setting.account_social;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.feature.setting.ISettingDelegate;
 import com.gat.feature.setting.KeyBackToMain;
 
+import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by mozaa on 05/05/2017.
@@ -17,6 +22,13 @@ import butterknife.OnClick;
 @SuppressLint("ValidFragment")
 public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScreen, SocialConnectedPresenter> {
 
+    @BindView(R.id.text_view_header)
+    TextView textViewHeader;
+
+    @BindView(R.id.text_view_social)
+    TextView textViewSocial;
+
+    private CompositeDisposable disposable;
     private ISettingDelegate delegate;
     private int mTypeSocial = 1;
     private String mSocialUsername = "";
@@ -47,30 +59,67 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
         return SocialConnectedScreen.instance();
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        disposable = new CompositeDisposable(
+            getPresenter().onUnLinkAccountSocialSuccess().subscribe(this::onDisconnectSuccess)
+        );
+
         switch (mTypeSocial) {
             case TypeSocial.FACEBOOK:
+                textViewHeader.setText(R.string.facebook);
+                textViewSocial.setText(getString(R.string.in_facebook_connection, mSocialUsername));
                 break;
 
             case TypeSocial.TWITTER:
+                textViewHeader.setText(R.string.twitter);
+                textViewSocial.setText(getString(R.string.in_twitter_connection, mSocialUsername));
                 break;
 
             case TypeSocial.GOOGLE:
+                textViewHeader.setText(R.string.google);
+                textViewSocial.setText(getString(R.string.in_google_connection, mSocialUsername));
                 break;
         }
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
+    }
 
     @OnClick(R.id.image_view_back)
     void onBackPress() {
         delegate.goToMainSetting(KeyBackToMain.BACK_BUTTON);
     }
 
+
+    @OnClick(R.id.button_disconnect_social)
+    void onButtonDisconnectTap () {
+        getPresenter().unLinkAccount(mTypeSocial);
+    }
+
+
+    private void onDisconnectSuccess (String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        switch (mTypeSocial) {
+            case TypeSocial.FACEBOOK:
+                delegate.goToMainSetting(KeyBackToMain.DISCONNECT_FACEBOOK);
+                break;
+
+            case TypeSocial.TWITTER:
+                delegate.goToMainSetting(KeyBackToMain.DISCONNECT_TWITTER);
+                break;
+
+            case TypeSocial.GOOGLE:
+                delegate.goToMainSetting(KeyBackToMain.DISCONNECT_GOOGLE);
+                break;
+        }
+    }
 
 
 }

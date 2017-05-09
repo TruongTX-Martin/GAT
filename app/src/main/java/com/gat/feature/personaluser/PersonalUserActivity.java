@@ -116,11 +116,12 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         if(currentUser != null) {
             if(!Strings.isNullOrEmpty(currentUser.name())) {
                 txtName.setText(currentUser.name());
-                txtAddress.setText(currentUser.name());
             }
-//            if(!Strings.isNullOrEmpty(currentUser.ad())) {
-//                txtAddress.setText(userResponse.getAddress());
-//            }
+            if(currentUser.usuallyLocation().size() > 0){
+                if(!Strings.isNullOrEmpty(currentUser.usuallyLocation().get(0).getAddress())){
+                    txtAddress.setText(currentUser.usuallyLocation().get(0).getAddress());
+                }
+            }
             if (!Strings.isNullOrEmpty(currentUser.imageId())) {
                 String url = ClientUtils.getUrlImage(currentUser.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
                 ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
@@ -281,5 +282,6 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         disposablesBookUserSharing.dispose();
         disposablesBookUserReading.dispose();
         disposableBorrowBook.dispose();
+        disposableUserVisitorInfo.dispose();
     }
 }

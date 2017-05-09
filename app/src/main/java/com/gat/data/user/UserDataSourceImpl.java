@@ -278,13 +278,13 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+    public Observable<String> changeBookSharingStatus(BookChangeStatusInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.changeBookSharingStatus(input.getInstanceId(), input.getSharingStatus());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
-            return serverResponse.data();
+            return serverResponse.message();
         });
     }
 
@@ -509,6 +509,9 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<ServerResponse> linkSocialAccount(String socialID, String socialName, int socialType) {
+
+        MZDebug.w("User Data Srouce: linkSocialAccount");
+
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse>> responseObservable;
         responseObservable = api.linkSocialAccount(socialID, socialName, socialType);

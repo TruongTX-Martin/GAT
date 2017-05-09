@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!--user instance screen-->
+    <dimen name="size_img_profile">50dp</dimen>
+    <dimen name="name_user">12.3dp</dimen>
+    <dimen name="address_user">8dp</dimen>
+
+    <dimen name="size_img_circle">17dp</dimen>
+    <dimen name="size_ic_circle">7.7dp</dimen>
+    <!--end user instance screen-->
+
+</resources>

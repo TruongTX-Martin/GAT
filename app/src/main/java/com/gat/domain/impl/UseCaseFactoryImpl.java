@@ -256,7 +256,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<Data> changeBookSharingStatus(BookChangeStatusInput input) {
+    public UseCase<String> changeBookSharingStatus(BookChangeStatusInput input) {
         return new ChangeBookSharingStatus(userRepositoryLazy.get(), input);
     }
 
@@ -380,6 +380,11 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     @Override
     public UseCase<ServerResponse> changeOldPassword(String newPassword, String oldPassword) {
         return new ChangeOldPassword(userRepositoryLazy.get(), oldPassword, newPassword);
+    }
+
+    @Override
+    public UseCase<Boolean> signOut() {
+        return new SignOut(userRepositoryLazy.get());
     }
 
 }

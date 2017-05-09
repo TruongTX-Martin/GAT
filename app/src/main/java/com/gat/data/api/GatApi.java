@@ -333,7 +333,7 @@ public interface GatApi {
     );
 
     @FormUrlEncoded
-    @POST("user/unlink_social_acc")
+    @POST("user/link_social_acc")
     Observable<Response<ServerResponse>> linkSocialAccount (
             @Field("socialID") String socialID,
             @Field("socialName") String socialName,
@@ -347,7 +347,7 @@ public interface GatApi {
             @Field("newPassword") String newPassword
     );
 
-    //  Chưa có api
+
     @FormUrlEncoded
     @POST("user/add_email_pass")
     Observable<Response<ServerResponse<FirebasePassword>>> addEmailPassword (
@@ -386,7 +386,6 @@ public interface GatApi {
     );
 
 
-    @FormUrlEncoded
     @POST("user/sign_out")
     Observable<Response<ServerResponse<SimpleResponse>>> signOut();
 

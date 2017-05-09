@@ -221,6 +221,7 @@
     <string name="in_twitter_connection">Đang kết nối với tài khoản twitter %1$s</string>
     <string name="logout">Thoát tài khoản</string>
     <string name="new_password_hint">Input new password</string>
+    <string name="ask_for_logout">Bạn thực sự muốn thoát</string>
 
 
 </resources>

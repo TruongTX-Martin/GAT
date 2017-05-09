@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.KeyEvent;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -19,10 +23,12 @@ import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.scanbarcode.ScanFragment;
 import com.gat.feature.setting.SettingFragment;
+import com.gat.feature.setting.main.MainSettingFragment;
 import com.gat.feature.suggestion.SuggestionFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -118,6 +124,10 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        // your code.
+    }
 
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
@@ -137,37 +147,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         tabLayout.getTabAt(TAB_POS.TAB_SCAN).setIcon(R.drawable.scan_ic);
         tabLayout.getTabAt(TAB_POS.TAB_NOTIFICATION).setIcon(R.drawable.notic_ic);
         tabLayout.getTabAt(TAB_POS.TAB_SETTING).setIcon(R.drawable.setting_ic);
-        /*
-        View view1 = getLayoutInflater().inflate(R.layout.custom_tab, null);
-        view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.ic_home_ic_selected);
-        TextView textView = (TextView) view1.findViewById(R.id.text);
-        textView.setText(getString(R.string.tab_home));
-        tabLayout.getTabAt(TAB_POS.TAB_HOME).setCustomView(view1);
-
-        View view2 = getLayoutInflater().inflate(R.layout.custom_tab, null);
-        view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.personal_ic);
-        textView = (TextView) view2.findViewById(R.id.text);
-        textView.setText(getString(R.string.tab_personal));
-        tabLayout.getTabAt(TAB_POS.TAB_PERSONAL).setCustomView(view2);
-
-        View view3 = getLayoutInflater().inflate(R.layout.custom_tab, null);
-        view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.scan_ic);
-        textView = (TextView) view3.findViewById(R.id.text);
-        textView.setText(getString(R.string.tab_scanbarcode));
-        tabLayout.getTabAt(TAB_POS.TAB_SCAN).setCustomView(view3);
-
-        View view4 = getLayoutInflater().inflate(R.layout.custom_tab, null);
-        view4.findViewById(R.id.icon).setBackgroundResource(R.drawable.notic_ic);
-        textView = (TextView) view4.findViewById(R.id.text);
-        textView.setText(getString(R.string.tab_notification));
-        tabLayout.getTabAt(TAB_POS.TAB_NOTIFICATION).setCustomView(view4);
-
-        View view5 = getLayoutInflater().inflate(R.layout.custom_tab, null);
-        view5.findViewById(R.id.icon).setBackgroundResource(R.drawable.setting_ic);
-        textView = (TextView) view5.findViewById(R.id.text);
-        textView.setText(getString(R.string.tab_setting));
-        tabLayout.getTabAt(TAB_POS.TAB_SETTING).setCustomView(view5);
-        */
     }
 
     private void selectTab(TabLayout.Tab tab, boolean select) {
@@ -190,27 +169,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
             default:
                 throw new UnsupportedOperationException();
         }
-        /*
-        switch (tab.getPosition()) {
-            case TAB_POS.TAB_HOME:
-                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.ic_home_ic_selected : R.drawable.ic_home_ic_selected);
-                break;
-            case TAB_POS.TAB_PERSONAL:
-                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.personal_ic_selected : R.drawable.personal_ic);
-                break;
-            case TAB_POS.TAB_SCAN:
-                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.scan_ic_selected : R.drawable.scan_ic);
-                break;
-            case TAB_POS.TAB_NOTIFICATION:
-                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
-                break;
-            case TAB_POS.TAB_SETTING:
-                tab.getCustomView().findViewById(R.id.icon).setBackgroundResource(select ? R.drawable.setting_ic_selected : R.drawable.setting_ic);
-                break;
-            default:
-                throw new UnsupportedOperationException();
-        }
-        */
     }
 
     @Override
@@ -219,5 +177,16 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         if(requestCode == Constance.RESULT_UPDATEUSER){
             personalFragment.requestPersonalInfo();
         }
+
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if(fragment instanceof MainSettingFragment) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
+                    break;
+                }
+            }
+        }
+
     }
 }

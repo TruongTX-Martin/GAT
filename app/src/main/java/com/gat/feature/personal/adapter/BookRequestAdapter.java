@@ -77,7 +77,9 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                     }
                     holder.txtAgreed.setOnClickListener(v -> fragment.agreedRequest(entity));
                     holder.txtReject.setOnClickListener(v -> fragment.rejectRequest(entity));
-
+                    if(!Strings.isNullOrEmpty(entity.getEditionTitle())) {
+                        holder.txtNameBook.setText(Html.fromHtml(ClientUtils.formatColor("Gửi yêu cầu mượn sách ","#000000") + ClientUtils.formatColor(entity.getEditionTitle(),"#5297ba")), TextView.BufferType.SPANNABLE);
+                    }
                 }else {
                     //yeu cau tu ban
                     if(entity.isHeader()){
@@ -95,13 +97,14 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                     }
                     setTextStatus(holder.txtStatus,entity.getRecordStatus());
                     holder.layoutConfirm.setVisibility(View.GONE);
-                }
-                if(!Strings.isNullOrEmpty(entity.getEditionTitle())) {
-                    holder.txtNameBook.setText(Html.fromHtml(ClientUtils.formatColor("Gửi yêu cầu mượn sách: ","#000000") + ClientUtils.formatColor(entity.getEditionTitle(),"#5297ba")), TextView.BufferType.SPANNABLE);
+                    if(!Strings.isNullOrEmpty(entity.getEditionTitle())) {
+                        holder.txtNameBook.setText(Html.fromHtml(ClientUtils.formatColor("Yêu cầu mượn sách ","#000000") + ClientUtils.formatColor(entity.getEditionTitle(),"#5297ba")), TextView.BufferType.SPANNABLE);
+                    }
                 }
                 holder.layoutClick.setOnClickListener(v -> {
                     int recordType = entity.getRecordType();
                     int recodeId = entity.getRecordId();
+                    ClientUtils.showToast("Type record:"+recordType);
                     if (recordType == 1) {
                         //sharing - user borrower -> request  by owner
                         Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);

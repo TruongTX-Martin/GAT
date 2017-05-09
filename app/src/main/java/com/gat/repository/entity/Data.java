@@ -110,6 +110,14 @@ public class Data<T> {
         return readingTotal;
     }
 
+    public int getToReadTotal() {
+        return toReadTotal;
+    }
+
+    public int getReadTotal() {
+        return readTotal;
+    }
+
     //property for request book
     @SerializedName("borrowingTotal")
     private int borrowingTotal;
@@ -120,5 +128,9 @@ public class Data<T> {
 
     public int getBorrowingTotal() {
         return borrowingTotal;
+    }
+
+    public int getWaitingTotal() {
+        return waitingTotal;
     }
 }

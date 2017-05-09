@@ -11,7 +11,7 @@ import io.reactivex.Observable;
  * Created by truongtechno on 06/04/2017.
  */
 
-public class ChangeBookSharingStatus extends UseCase<Data> {
+public class ChangeBookSharingStatus extends UseCase<String> {
 
     private UserRepository userRepository;
     private BookChangeStatusInput input;
@@ -20,7 +20,7 @@ public class ChangeBookSharingStatus extends UseCase<Data> {
         this.input = input;
     }
     @Override
-    protected Observable<Data> createObservable() {
+    protected Observable<String> createObservable() {
         return userRepository.changeBookSharingStatus(input);
     }
 }

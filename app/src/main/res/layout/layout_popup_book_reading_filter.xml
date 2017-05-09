@@ -24,14 +24,20 @@
             android:layout_marginLeft="10dp"
             android:src="@drawable/ic_filter_green" />
 
-        <ImageView
-            android:id="@+id/imgClose"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+        <RelativeLayout
+            android:id="@+id/layoutClose"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_cancle" />
+            >
+            <ImageView
+                android:id="@+id/imgClose"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_cancle" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/txtFilter"
