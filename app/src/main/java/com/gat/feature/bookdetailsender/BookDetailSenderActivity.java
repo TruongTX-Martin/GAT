@@ -452,6 +452,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     rltCheckReturn.setVisibility(View.GONE);
                     rltCheckCancel.setVisibility(View.GONE);
                     rltCheckUnreturn.setVisibility(View.VISIBLE);
+                    
                     break;
             }
         }
