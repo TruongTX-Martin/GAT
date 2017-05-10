@@ -127,6 +127,10 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        // your code.
+    }
 
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
