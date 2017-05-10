@@ -161,4 +161,6 @@ public interface UseCaseFactory {
 
     UseCase<ServerResponse> changeOldPassword(String newPassword, String oldPassword);
 
+    UseCase<Boolean> signOut ();
+
 }

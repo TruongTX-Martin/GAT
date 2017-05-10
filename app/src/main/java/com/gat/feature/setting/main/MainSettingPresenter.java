@@ -18,4 +18,6 @@ public interface MainSettingPresenter extends Presenter {
     Observable<String> onConnectGoogleSuccess();
     Observable<String> onConnectTwitterSuccess();
 
+    void requestSignOut();
+    Observable<Boolean> onSignOutSuccess();
 }

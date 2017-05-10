@@ -382,4 +382,9 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
         return new ChangeOldPassword(userRepositoryLazy.get(), oldPassword, newPassword);
     }
 
+    @Override
+    public UseCase<Boolean> signOut() {
+        return new SignOut(userRepositoryLazy.get());
+    }
+
 }

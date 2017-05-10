@@ -220,6 +220,7 @@
     <string name="in_google_connection">Đang kết nối với tài khoản google %1$s</string>
     <string name="in_twitter_connection">Đang kết nối với tài khoản twitter %1$s</string>
     <string name="logout">Thoát tài khoản</string>
+    <string name="ask_for_logout">Bạn thực sự muốn thoát</string>
 
 
 </resources>

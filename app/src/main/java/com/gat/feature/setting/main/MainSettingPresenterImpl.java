@@ -30,6 +30,7 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
     private final Subject<String> subjectFacebookSuccess;
     private final Subject<String> subjectGoogleSuccess;
     private final Subject<String> subjectTwitterSuccess;
+    private final Subject<Boolean> subjectSignOut;
 
     public MainSettingPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
@@ -38,6 +39,7 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
         subjectFacebookSuccess = PublishSubject.create();
         subjectGoogleSuccess = PublishSubject.create();
         subjectTwitterSuccess = PublishSubject.create();
+        subjectSignOut = PublishSubject.create();
     }
 
 
@@ -112,5 +114,25 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
     @Override
     public Observable<String> onConnectTwitterSuccess() {
         return subjectTwitterSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestSignOut() {
+        useCaseFactory.signOut().executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(result -> {
+                    subjectSignOut.onNext(result);
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: requestSignOut : _____________________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                    subjectSignOut.onNext(false);
+                })
+                .execute();
+    }
+
+    @Override
+    public Observable<Boolean> onSignOutSuccess() {
+        return subjectSignOut.subscribeOn(schedulerFactory.main());
     }
 }

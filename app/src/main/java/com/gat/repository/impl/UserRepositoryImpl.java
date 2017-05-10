@@ -118,6 +118,7 @@ public class UserRepositoryImpl implements UserRepository {
     public Observable<Boolean> signOut() {
         return Observable.defer(() -> networkUserDataSourceLazy.get().signOut()
                 .flatMap(result -> localMessageDataSourceLazy.get().clearData())
+                .flatMap(result -> localUserDataSourceLazy.get().signOut())
                 .doOnNext(result -> signInFirebase.signOut())
         );
     }
@@ -356,8 +357,8 @@ public class UserRepositoryImpl implements UserRepository {
                                     .loanCount(user.loanCount())
                                     .readCount(user.readCount())
                                     .passwordFlag(user.passwordFlag())
-                                    .googleId(user.googleId())
-                                    .googleName(user.googleName())
+                                    .faceBookId(user.faceBookId())
+                                    .faceBookName(user.faceBookName())
                                     .twitterId(user.twitterId())
                                     .twitterName(user.twitterName()).build();
                             break;
@@ -374,10 +375,11 @@ public class UserRepositoryImpl implements UserRepository {
                                     .loanCount(user.loanCount())
                                     .readCount(user.readCount())
                                     .passwordFlag(user.passwordFlag())
+                                    .faceBookId(user.faceBookId())
+                                    .faceBookName(user.faceBookName())
                                     .googleId(user.googleId())
                                     .googleName(user.googleName())
-                                    .twitterId(user.twitterId())
-                                    .twitterName(user.twitterName()).build();
+                                    .build();
                             break;
 
                     }
@@ -448,8 +450,9 @@ public class UserRepositoryImpl implements UserRepository {
                                     .passwordFlag(user.passwordFlag())
                                     .googleId(user.googleId())
                                     .googleName(user.googleName())
-                                    .twitterId(user.twitterId())
-                                    .twitterName(user.twitterName()).build();
+                                    .faceBookId(user.faceBookId())
+                                    .faceBookName(user.faceBookName())
+                                    .build();
                             break;
 
                     }

@@ -2,30 +2,35 @@ package com.gat.feature.setting.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.MZDebug;
+import com.gat.common.util.Strings;
+import com.gat.feature.book_detail.self_update_reading.ReadingState;
+import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
 import com.gat.feature.setting.ISettingDelegate;
-import com.gat.feature.setting.KeyBackToMain;
 import com.gat.feature.setting.SocialType;
+import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -34,14 +39,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.twitter.sdk.android.core.services.AccountService;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Arrays;
-
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -73,6 +83,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     private CompositeDisposable disposable;
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager callbackManager;
+    private TwitterAuthClient twitterAuthClient;
 
     public MainSettingFragment (ISettingDelegate delegate) {
         this.delegate = delegate;;
@@ -104,6 +115,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
         callbackManager = CallbackManager.Factory.create();
         createGoogleApiClient();
+        createTwitterClient();
     }
 
     @Override
@@ -113,7 +125,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
                 getPresenter().onUserInfoSuccess().subscribe(this::onLoadUserSuccess),
                 getPresenter().onConnectFacebookSuccess().subscribe(this::onConnectFacebookSuccess),
                 getPresenter().onConnectGoogleSuccess().subscribe(this::onConnectGoogleSuccess),
-                getPresenter().onConnectTwitterSuccess().subscribe(this::onConnectTwitterSuccess)
+                getPresenter().onConnectTwitterSuccess().subscribe(this::onConnectTwitterSuccess),
+                getPresenter().onSignOutSuccess().subscribe(this::onSignOutSuccess)
         );
 
 
@@ -163,6 +176,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
             GoogleSignInResult googleSignInResult =
                     Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(googleSignInResult);
+        } else {
+            twitterAuthClient.onActivityResult(requestCode, resultCode, data);
         }
 
     }
@@ -191,8 +206,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (mUser == null) {
             return;
         }
-        if ( ! TextUtils.isEmpty(mUser.faceBookId())) {
-            delegate.goToFacebook(mUser.faceBookName());
+        if ( ! TextUtils.isEmpty(mFacebookUserName)) {
+            delegate.goToFacebook(mFacebookUserName);
             return;
         }
 
@@ -207,13 +222,13 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (mUser == null) {
             return;
         }
-        if ( ! TextUtils.isEmpty(mUser.twitterId())) {
-            delegate.goToTwitter(mUser.twitterName());
+        if ( ! TextUtils.isEmpty(mTwitterUserName)) {
+            delegate.goToTwitter(mTwitterUserName);
             return;
         }
 
         // connect twitter account
-
+        openTwitterSignIn();
     }
 
     @OnClick(R.id.button_google)
@@ -221,8 +236,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (mUser == null) {
             return;
         }
-        if ( ! TextUtils.isEmpty(mUser.googleId())) {
-            delegate.goToGoogle(mUser.googleName());
+        if ( ! TextUtils.isEmpty(mGoogleUserName)) {
+            delegate.goToGoogle(mGoogleUserName);
             return;
         }
 
@@ -233,7 +248,15 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     @OnClick(R.id.button_logout)
     void onLogoutTap () {
-        Toast.makeText(mContext, "dialog hỏi muốn thoát ko", Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getResources().getString(R.string.ask_for_logout));
+        builder.setPositiveButton(android.R.string.yes, (dialog, id) -> {
+            dialog.dismiss();
+            getPresenter().requestSignOut();
+        });
+        builder.setNegativeButton(android.R.string.cancel, (dialog, id) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private User mUser;
@@ -255,18 +278,21 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         }
 
         // check facebook connected
+        mFacebookUserName = user.faceBookName();
         if ( ! TextUtils.isEmpty(user.faceBookId()) && ! TextUtils.isEmpty(user.faceBookName())) {
             MZDebug.w("facebook connected: " + user.faceBookName());
             textViewFacebook.setText(user.faceBookName());
         }
 
         // check twitter connected
+        mTwitterUserName = user.twitterName();
         if (! TextUtils.isEmpty(user.twitterId()) && ! TextUtils.isEmpty(user.twitterName())) {
             MZDebug.w("twitter connected: " + user.twitterName());
             textViewTwitter.setText(user.twitterName());
         }
 
         // check google connected
+        mGoogleUserName = user.googleName();
         if (! TextUtils.isEmpty(user.googleId()) && ! TextUtils.isEmpty(user.googleName())) {
             MZDebug.w("google connected: " + user.googleName());
             textViewGoogle.setText(user.googleName());
@@ -292,6 +318,26 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
                 build();
     }
 
+    private void createTwitterClient () {
+        ApplicationInfo app = null;
+        try {
+            app = getActivity().getPackageManager().getApplicationInfo(getActivity().getPackageName(), PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (null == app) {
+            return;
+        }
+        Bundle bundle = app.metaData;
+        String apiKey = bundle.getString("io.fabric.ApiKey");
+        String apiSecret = getString(R.string.twitter_api_secret);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(
+                apiKey,
+                apiSecret);
+        Fabric.with(getActivity(), new Twitter(authConfig));
+        twitterAuthClient = new TwitterAuthClient();
+    }
+
     private void handleSignInResult(GoogleSignInResult googleSignInResult) {
         MZDebug.w(" __________________________________ handleSignInResult ______________________");
 
@@ -309,7 +355,6 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         MZDebug.w("account email:" + account.getEmail() + ", display name: " + account.getDisplayName() );
         getPresenter().requestConnectSocial(account.getEmail() , account.getDisplayName(), SocialType.GOOGLE);
     }
-
 
     FacebookCallback<LoginResult> facebookCallback = new FacebookCallback<LoginResult>() {
         @Override
@@ -347,24 +392,61 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         }
     };
 
+    private void openTwitterSignIn () {
+        if (null == twitterAuthClient) {
+            return;
+        }
+        twitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> resultSession) {
+                TwitterSession session = resultSession.data;
+                AccountService service = Twitter.getApiClient(session).getAccountService();
+                service.verifyCredentials(true, true).enqueue(new Callback<com.twitter.sdk.android.core.models.User>() {
+                    @Override
+                    public void success(Result<com.twitter.sdk.android.core.models.User> resultUser) {
+                        getPresenter().requestConnectSocial(
+                                String.valueOf(resultUser.data.getId()), resultUser.data.name, SocialType.TWITTER);
+                    }
 
-    String userNameFacebook = "";
+                    @Override
+                    public void failure(TwitterException ex) {
+                        MZDebug.w("Twitter failure: " + Log.getStackTraceString(ex));
+                    }
+                });
+            }
+
+            @Override
+            public void failure(TwitterException ex) {
+                MZDebug.w("Twitter failure: " + Log.getStackTraceString(ex));
+            }
+        });
+    }
+
+    String mFacebookUserName = "";
     private void onConnectFacebookSuccess (String username) {
-        userNameFacebook= username;
+        mFacebookUserName = username;
         textViewFacebook.setText(username);
     }
 
-    String userNameGoogle = "";
+    String mGoogleUserName = "";
     private void onConnectGoogleSuccess (String username) {
-        userNameGoogle = username;
+        mGoogleUserName = username;
         textViewGoogle.setText(username);
     }
 
-    String userNameTwitter = "";
+    String mTwitterUserName = "";
     private void onConnectTwitterSuccess (String username) {
-        userNameTwitter = username;
+        mTwitterUserName = username;
         textViewTwitter.setText(username);
     }
 
+    private void onSignOutSuccess (Boolean result) {
+        if (result) {
+            MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+            getActivity().finish();
+        } else {
+            Toast.makeText(mContext, "Như một sự trêu đùa của tạo hóa, bạn không thể đăng xuất lúc này.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

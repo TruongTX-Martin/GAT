@@ -134,7 +134,10 @@ public class PaperUserDataSource implements UserDataSource {
 
     @Override
     public Observable<Boolean> signOut() {
-        throw new UnsupportedOperationException();
+        return Observable.fromCallable(() -> {
+            book.delete(KEY_USER);
+            return true;
+        });
     }
 
     @Override

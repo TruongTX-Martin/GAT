@@ -347,7 +347,7 @@ public interface GatApi {
             @Field("newPassword") String newPassword
     );
 
-    //  Chưa có api
+
     @FormUrlEncoded
     @POST("user/add_email_pass")
     Observable<Response<ServerResponse<FirebasePassword>>> addEmailPassword (
@@ -386,7 +386,6 @@ public interface GatApi {
     );
 
 
-    @FormUrlEncoded
     @POST("user/sign_out")
     Observable<Response<ServerResponse<SimpleResponse>>> signOut();
 
