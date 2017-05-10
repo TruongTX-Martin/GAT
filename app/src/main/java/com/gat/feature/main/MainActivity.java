@@ -1,14 +1,15 @@
 package com.gat.feature.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.KeyEvent;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -16,8 +17,11 @@ import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
 import com.gat.common.view.NonSwipeableViewPager;
+import com.gat.common.util.NotificationConfig;
+import com.gat.data.firebase.NotificationUtils;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.firebase.entity.NotificationParcelable;
+import com.gat.data.share.SharedData;
 import com.gat.feature.notification.NotificationFragment;
 import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
@@ -28,6 +32,7 @@ import com.gat.feature.suggestion.SuggestionFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,6 +57,31 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
+
+    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                NotificationParcelable parcelable = intent.getExtras().getParcelable("data");
+                if (parcelable != null) {
+                    Notification notification = parcelable.getNotification();
+                    if (notification.pushType() == NotificationConfig.PushType.PRIVATE_MESSAGE) {
+                        if (notification.senderId() != SharedData.getInstance().getMessagingUserId()) {
+                            // Make notification
+                            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                            Intent pushNotification = new Intent(getApplicationContext(), MainActivity.class);
+                            pushNotification.putExtra("data", parcelable);
+                            notificationUtils.showNotificationMessage(notification.title(),
+                                    notification.message(),
+                                    new Date().getTime(),
+                                    intent
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     public static MainActivity instance;
     private PersonalFragment personalFragment;
@@ -187,6 +217,23 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
                 }
             }
         }
+    }
 
+    @Override
+    protected void onResume() {
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mIntentReceiver,
+                new IntentFilter(NotificationConfig.NOTIFICATION_SERVICE));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mIntentReceiver);
+        super.onPause();
     }
 }

@@ -7,13 +7,16 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gat.R;
@@ -28,6 +31,7 @@ import com.gat.common.util.Strings;
 import com.gat.data.firebase.NotificationUtils;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.firebase.entity.NotificationParcelable;
+import com.gat.data.share.SharedData;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.message.adapter.MessageAdapter;
 import com.gat.feature.message.item.MessageItem;
@@ -56,10 +60,16 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     EditText messageEdit;
 
     @BindView(R.id.message_send)
-    Button messageSendBtn;
+    TextView messageSendBtn;
 
-    @BindView(R.id.message_header_text)
+    @BindView(R.id.txtTitle)
     TextView messageHeader;
+
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
 
     private LoadMoreScrollListener loadMoreScrollListener;
     private MessageAdapter messageAdapter;
@@ -70,38 +80,16 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
     private String userName;
     private int userId;
 
-    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                NotificationParcelable parcelable = intent.getExtras().getParcelable("data");
-                if (parcelable != null) {
-                    Notification notification = parcelable.getNotification();
-                    if (notification.pushType() == NotificationConfig.PushType.PRIVATE_MESSAGE) {
-                        if (notification.senderId() != userId) {
-                            // Make notification
-                            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-                            Intent pushNotification = new Intent(getApplicationContext(), MainActivity.class);
-                            pushNotification.putExtra("data", parcelable);
-                            notificationUtils.showNotificationMessage(notification.title(),
-                                    notification.message(),
-                                    new Date().getTime(),
-                                    intent
-                            );
-                        }
-                    }
-                }
-            }
-        }
-    };
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         userId = getScreen().userId();
 
+        SharedData.getInstance().setMessagingUserId(userId);
+
         Log.d(TAG, "create");
+
         compositeDisposable = new CompositeDisposable(
                 getPresenter().itemsChanged().subscribe(this::onItemChanged),
                 getPresenter().loadingEvents().subscribe(this::onLoadingEvent),
@@ -111,6 +99,9 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
                 })
 
         );
+
+        imgBack.setImageResource(R.drawable.narrow_back_black);
+        imgSave.setVisibility(View.GONE);
 
         messageAdapter = new MessageAdapter();
         recyclerView.setAdapter(messageAdapter);
@@ -137,9 +128,9 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().trim().length() > 0) {
-                    messageSendBtn.setEnabled(true);
+                    messageSendBtn.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
                 } else {
-                    messageSendBtn.setEnabled(false);
+                    messageSendBtn.setTextColor(ResourcesCompat.getColor(getResources(), R.color.coolBlue, null));
                 }
             }
 
@@ -213,24 +204,6 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         loadMoreScrollListener = null;
         compositeDisposable.dispose();
         super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        // register GCM registration complete receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mIntentReceiver,
-                new IntentFilter(NotificationConfig.NOTIFICATION_SERVICE));
-
-        // clear the notification area when the app is opened
-        NotificationUtils.clearNotifications(getApplicationContext());
-
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mIntentReceiver);
-        super.onPause();
     }
 
     @Override

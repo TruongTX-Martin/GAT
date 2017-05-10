@@ -12,8 +12,9 @@ public abstract class MessageItem implements Item {
     public abstract Message message();
     public abstract boolean displayDate();
     public abstract boolean displayImage();
+    public abstract boolean displayBottomLine();
 
-    public static MessageItem instance(Message message, boolean displayDate, boolean displayImage) {
-        return new AutoValue_MessageItem(message, displayDate, displayImage);
+    public static MessageItem instance(Message message, boolean displayDate, boolean displayImage, boolean displayBottomLine) {
+        return new AutoValue_MessageItem(message, displayDate, displayImage,displayBottomLine);
     }
 }

@@ -8,6 +8,7 @@ import com.gat.common.util.CommonCheck;
 import com.gat.repository.entity.Message;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,13 +32,25 @@ public class MessageItemBuilder extends ItemBuilder<Message>{
         long timeStamp = 0;
         int userId = 0;
         // Add new messages to new list
-        for (Message message : messages) {
+        int messageSize = messages.size();
+        for (int i = 0; i < messageSize; i++) {
+            boolean isLastAdminMessage = false;
+            Message message = messages.get(i);
+            if (CommonCheck.isAdmin((int)message.userId())) {
+                if (i + 1 >= messageSize) {
+                    isLastAdminMessage = true;
+                } else {
+                    if (!CommonCheck.isAdmin((int)(messages.get(i+1).userId()))) {
+                        isLastAdminMessage = true;
+                    }
+                }
+            }
             if (CommonCheck.isDiffDay(timeStamp, message.timeStamp()))
-                newItems.add(MessageItem.instance(message, true, true));
+                newItems.add(MessageItem.instance(message, true, true, isLastAdminMessage));
             else if (userId == message.userId())
-                newItems.add(MessageItem.instance(message, false, false));
+                newItems.add(MessageItem.instance(message, false, false, isLastAdminMessage));
             else
-                newItems.add(MessageItem.instance(message, false, true));
+                newItems.add(MessageItem.instance(message, false, true, isLastAdminMessage));
             userId = (int)message.userId();
             timeStamp = message.timeStamp();
         }
@@ -59,7 +72,7 @@ public class MessageItemBuilder extends ItemBuilder<Message>{
         for (Item item : items) {
             newItems.add(item);
         }
-        newItems.add(0, MessageItem.instance(data, false, true));   // TODO not use now
+        newItems.add(0, MessageItem.instance(data, false, true, false));   // TODO not use now
         return ItemResult.instance(newItems, DiffUtil.calculateDiff(new Comparator(items, newItems)));
     }
 }

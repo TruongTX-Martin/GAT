@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ServerResponse;
@@ -60,6 +61,9 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     @BindView(R.id.btn_light)
     Button lightBtn;
 
+    @BindView(R.id.header_text)
+    TextView headerText;
+
     private boolean isTorchOn = false;
 
     private CompositeDisposable disposables;
@@ -86,6 +90,8 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        headerText.setText(getString(R.string.scan_barcode_header));
 
         Log.d(TAG, "onCreateView");
         disposables = new CompositeDisposable(
@@ -216,17 +222,6 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     }
 
     private void showErrorDialog(String header, String content) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance);
-        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.instance);
-        View view = layoutInflater.inflate(R.layout.layout_popup_scan, null);
-        builder.setView(view);
-        AlertDialog dialog = builder.create();
-        TextView textHeader = (TextView)view.findViewById(R.id.scan_popup_header);
-        textHeader.setText(header);
-        TextView textContent = (TextView) view.findViewById(R.id.scan_popup_content);
-        textContent.setText(content);
-        Button button = (Button) view.findViewById(R.id.btn_popup_ok);
-        button.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+        ClientUtils.showErrorDialog(header, content, getContext());
     }
 }

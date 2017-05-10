@@ -31,6 +31,9 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
     @BindView(R.id.message_date)
     TextView textDate;
 
+    @BindView(R.id.admin_line)
+    View adminLine;
+
     private final boolean isRight;
     public MessageViewHolder(ViewGroup parent, @LayoutRes int layoutId, boolean isRight) {
         super(parent, layoutId);
@@ -47,16 +50,19 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
             userImage.setVisibility(View.INVISIBLE);
         } else {
             if (CommonCheck.isAdmin((int)message.userId())) {
-                userImage.setImageResource(R.drawable.android);       // TODO change to admin image
+                userImage.setImageResource(R.drawable.gat_app_icon);
             } else {
                 String url = ClientUtils.getUrlImage(message.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
-                ClientUtils.setImage(userImage, R.drawable.steve_job, url);
+                ClientUtils.setImage(userImage, R.drawable.gat_app_icon, url);
             }
         }
         if (item.displayDate()) {
             textDate.setText(CommonCheck.getDate(item.message().timeStamp()));
         } else {
             textDate.setVisibility(View.GONE);
+        }
+        if (!item.displayBottomLine()) {
+            adminLine.setVisibility(View.GONE);
         }
     }
 }

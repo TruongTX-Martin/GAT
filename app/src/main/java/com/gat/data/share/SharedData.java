@@ -18,6 +18,8 @@ public class SharedData {
 
     private static boolean isLoggedIn = false;
 
+    private Integer mMessagingUserId = 0;
+
     private SharedData() {
 
     }
@@ -44,6 +46,18 @@ public class SharedData {
     public int getBadge() {
         synchronized (SharedData.class) {
             return mBadge;
+        }
+    }
+
+    public int getMessagingUserId() {
+        synchronized (mMessagingUserId) {
+            return mMessagingUserId;
+        }
+    }
+
+    public void setMessagingUserId(int userId) {
+        synchronized (mMessagingUserId) {
+            mMessagingUserId = userId;
         }
     }
 
