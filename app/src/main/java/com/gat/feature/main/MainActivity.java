@@ -14,6 +14,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
+import com.gat.common.util.Views;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.common.util.NotificationConfig;
 import com.gat.data.firebase.entity.Notification;
@@ -120,6 +121,12 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         if (Notification.isValid(getScreen().notificationParcelable().getNotification())) {
             CommonCheck.processNotification(getScreen().notificationParcelable().getNotification(), this);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Views.hideKeyboard(this);
     }
 
     @Override

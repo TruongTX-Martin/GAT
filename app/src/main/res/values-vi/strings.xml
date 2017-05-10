@@ -122,18 +122,19 @@
     <string name="send_message_btn">Send</string>
 
     <!-- suggestion text -->
-    <string name="share_near_me">Chia sẻ sách gần bạn</string>
+    <string name="go_setting_enable_gps">Mở Cài đặt -> Cho phép truy cập vị trí của bạn.</string>
+    <string name="share_near_me">Người dùng gần bạn</string>
     <string name="cover_content_description">Book Image Cover</string>
     <string name="iv_back_description">Back</string>
     <string name="iv_share_description">Share</string>
-    <string name="most_search_by_user">Sách tìm kiếm nhiều nhất</string>
+    <string name="most_search_by_user">Sách được mượn nhiều nhất</string>
     <string name="suggest">Đề xuất</string>
-    <string name="view_more">View more </string>
+    <string name="view_more">Xem thêm </string>
     <string name="ic_chat_description">Chat</string>
     <string name="book_lend">Sách cho mượn</string>
     <string name="book_reading">Sách đang đọc</string>
 
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Huỷ</string>
 
 
     <string name="msg_allow_location">To see all of users sharing book around of you. You need enable location permission!</string>

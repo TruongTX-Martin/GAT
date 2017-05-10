@@ -309,7 +309,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         textViewBookDescription.setText(book.getDescription());
         if (mBookInfo.getImageId() != null && !mBookInfo.getImageId().isEmpty()) {
             imageViewBookCover.setDrawingCacheEnabled(true);
-            ClientUtils.setImage(imageViewBookCover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_THUMBNAIL));
+            ClientUtils.setImage(imageViewBookCover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_SMALL));
         }
     }
 
