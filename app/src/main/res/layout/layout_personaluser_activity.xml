@@ -43,7 +43,6 @@
             android:layout_toLeftOf="@+id/layoutEdit"
             android:layout_toRightOf="@+id/imgAvatar"
             android:layout_below="@+id/txtName"
-            android:visibility="gone"
             >
 
             <ImageView
@@ -54,6 +53,7 @@
                 android:background="@drawable/ic_current_location"
                 android:layout_marginRight="50dp"
                 android:layout_marginLeft="5dp"
+                android:visibility="gone"
                 >
             </ImageView>
 
@@ -64,6 +64,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toLeftOf="@+id/imgLocation"
                 android:textColor="#919191"
+                android:layout_marginRight="50dp"
                 android:textSize="12dp" />
         </RelativeLayout>
 

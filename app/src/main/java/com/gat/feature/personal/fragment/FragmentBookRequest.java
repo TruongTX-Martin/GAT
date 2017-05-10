@@ -106,7 +106,7 @@ public class FragmentBookRequest extends Fragment {
                         listBookRequest.get(i).setHeader(true);
                         setTitleTo = true;
                     }
-                }else if(listBookRequest.get(i).getRecordType() == 2){
+                }else if(listBookRequest.get(i).getRecordType() == 2 || listBookRequest.get(i).getRecordType() == 0){
                     if (!setTitleFrom) {
                         listBookRequest.get(i).setHeader(true);
                         setTitleFrom = true;

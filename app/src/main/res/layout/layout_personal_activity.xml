@@ -26,7 +26,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgAvatar"
             android:layout_width="@dimen/size_img_profile"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/size_img_profile"
             android:layout_margin="10dp"
             android:src="@drawable/ic_profile"
             app:border_color="#8fc4e0"
@@ -61,7 +61,7 @@
         <TextView
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/name_user"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="20dp"
@@ -69,15 +69,18 @@
             android:layout_toRightOf="@+id/imgAvatar"
             android:textColor="#202020"
             android:textSize="@dimen/name_user"
+            android:text="Name "
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/address_user"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="80dp"
             android:textColor="#919191"
+            android:text="Address"
             android:textSize="@dimen/address_user"
             android:layout_alignBottom="@+id/layoutEdit"
             android:layout_toEndOf="@+id/imgAvatar" />

@@ -362,7 +362,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.15"
                 android:orientation="vertical"
-                android:visibility="gone">
+                >
 
                 <View
                     android:layout_width="match_parent"
@@ -475,7 +475,7 @@
                 <RelativeLayout
                     android:id="@+id/rltOverLayCancelRequest"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginTop="190dp"
                     android:background="#C8d7d7d7" />
 
@@ -499,7 +499,9 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#CACACA" />
+                    android:background="#CACACA"
+                    android:layout_marginBottom="10dp"
+                    />
 
                 <RelativeLayout
                     android:id="@+id/layoutParrentContacting"
@@ -627,7 +629,7 @@
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:background="@android:color/transparent">
 
                     <RelativeLayout
@@ -685,7 +687,7 @@
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:background="@android:color/transparent">
 
 
@@ -806,7 +808,7 @@
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:background="@android:color/transparent">
 
                     <RelativeLayout

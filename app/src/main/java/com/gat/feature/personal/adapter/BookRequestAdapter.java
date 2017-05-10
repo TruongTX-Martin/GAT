@@ -110,7 +110,7 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                         Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
                         intent.putExtra("BorrowingRecordId", recodeId);
                         MainActivity.instance.startActivity(intent);
-                    } else if (recordType == 2) {
+                    } else if (recordType == 2 || recordType == 0) {
                         //borrowing - use owerner -> request by sender
                         Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
                         intent.putExtra("BorrowingRecordId", recodeId);
