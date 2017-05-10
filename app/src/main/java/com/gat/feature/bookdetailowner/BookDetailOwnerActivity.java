@@ -266,7 +266,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 statusInput.setNewStatus(2);
                 statusInput.setRecordId(bookDetail.getRecordId());
                 requestBookOwner(statusInput);
-                
+
             }
         });
         layoutParrentReject.setOnClickListener(v -> {

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="err_email_empty">Bạn cần nhập Email.</string>
-    <string name="err_password_empty">Bạn cần nhập password.</string>
-
-
-</resources>

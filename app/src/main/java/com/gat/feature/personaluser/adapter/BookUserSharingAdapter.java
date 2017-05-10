@@ -56,7 +56,7 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
             if (!Strings.isNullOrEmpty(entity.getAuthor())) {
                 holder.txtAuthor.setText(entity.getAuthor());
             }
-            holder.ratingBar.setNumStars((int) entity.getRateAvg());
+            holder.ratingBar.setRating( (float) entity.getRateAvg());
             holder.txtRating.setText(entity.getRateAvg() +"");
             if (!Strings.isNullOrEmpty(entity.getImageId())) {
                 ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
@@ -90,6 +90,14 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                 }
             }
             holder.btnBorrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BorrowRequestInput input = new BorrowRequestInput();
+                    input.setEditionId(entity.getEditionId());
+                    fragmentBookSharing.requestBorrowBook(input);
+                }
+            });
+            holder.btnWaitBorrow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     BorrowRequestInput input = new BorrowRequestInput();

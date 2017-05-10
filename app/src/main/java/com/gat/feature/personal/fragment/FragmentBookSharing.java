@@ -63,6 +63,15 @@ public class FragmentBookSharing extends Fragment {
         this.currentInput = currentInput;
     }
 
+    public void refreshDate(){
+        currentInput.setPage(1);
+        searchBook(currentInput);
+    }
+
+    public BookInstanceInput getCurrentInput() {
+        return currentInput;
+    }
+
     public void setListBook(List<BookSharingEntity> listBook) {
         try {
             if (listBook != null && listBook.size() > 0) {
@@ -216,7 +225,7 @@ public class FragmentBookSharing extends Fragment {
     }
 
     private void showDialogFilter() {
-        if(currentInput == null) return;
+        if (currentInput == null) return;
         isSharing = currentInput.isSharingFilter();
         isNotSharing = currentInput.isNotSharingFilter();
         isLost = currentInput.isLostFilter();
@@ -328,15 +337,18 @@ public class FragmentBookSharing extends Fragment {
     }
 
     public void changeStatusBook(BookSharingEntity entity, int position) {
-        if (entity.getSharingStatus() == 0) {
-            entity.setSharingStatus(1);
-        } else {
-            entity.setSharingStatus(0);
+        try {
+            if (entity.getSharingStatus() == 0) {
+                entity.setSharingStatus(1);
+            } else {
+                entity.setSharingStatus(0);
+            }
+            BookChangeStatusInput input = new BookChangeStatusInput(entity.getInstanceId(), entity.getSharingStatus());
+            parrentActivity.requestChangeStatusBook(input);
+            listBook.remove(position);
+            listBook.add(position, entity);
+        } catch (Exception e) {
         }
-        BookChangeStatusInput input = new BookChangeStatusInput(entity.getInstanceId(), entity.getSharingStatus());
-        parrentActivity.requestChangeStatusBook(input);
-        listBook.remove(position);
-        listBook.add(position, entity);
     }
 
     public int getNumberSharing() {

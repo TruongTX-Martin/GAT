@@ -1,5 +1,7 @@
 package com.gat.feature.personal;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,6 +29,7 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.user.PaperUserDataSource;
 import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.editinfo.EditInfoActivity;
+import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
@@ -73,6 +78,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private CompositeDisposable disposablesReadingBooks;
     private CompositeDisposable disposablesBooksRequest;
     private CompositeDisposable disposablesRequestBookByOwner;
+    private CompositeDisposable disposablesCheckLogin;
 
     //init fragment
     private FragmentBookSharing fragmentBookSharing;
@@ -86,6 +92,13 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private User userInfo;
     private Context context;
     private View rootView;
+
+    private MainActivity mainActivity;
+    Dialog dialog;
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     @Override
     protected int getLayoutResource() {
@@ -129,6 +142,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
                 getPresenter().onErrorChangeStatus().subscribe(this::getBookInstanceError));
+        disposablesCheckLogin = new CompositeDisposable(getPresenter().checkLoginSucess().subscribe(this::checkLoginSuccess),
+                getPresenter().checkLoginFailed().subscribe(this::checkLoginFailed));
 
         initView();
 
@@ -157,6 +172,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         txtTitle.setText("CÁ NHÂN");
         txtTitle.setTextColor(Color.parseColor("#ffffff"));
         layoutTop.setBackgroundColor(Color.parseColor("#8ec3df"));
+
+        dialog = new Dialog(MainActivity.instance);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_login);
+        dialog.setCanceledOnTouchOutside(false);
     }
 
     private void handleEvent() {
@@ -243,18 +263,17 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private void getUserInfoSuccess(Data<User> data) {
         if (data != null) {
             userInfo = data.getDataReturn(User.typeAdapter(new Gson()));
-//            List<UsuallyLocation> list = userInfo.usuallyLocation();
             if (userInfo == null)
                 userInfo = User.NONE;
             if (!Strings.isNullOrEmpty(userInfo.name())) {
                 txtName.setText(userInfo.name());
                 txtAddress.setText(userInfo.name());
             }
-//            if(userInfo.usuallyLocation().size() > 0){
-//                if(!Strings.isNullOrEmpty(userInfo.usuallyLocation().get(0).getAddress())){
-//                    txtAddress.setText(userInfo.usuallyLocation().get(0).getAddress());
-//                }
-//            }
+            if(userInfo.usuallyLocation().size() > 0){
+                if(!Strings.isNullOrEmpty(userInfo.usuallyLocation().get(0).getAddress())){
+                    txtAddress.setText(userInfo.usuallyLocation().get(0).getAddress());
+                }
+            }
             if (!Strings.isNullOrEmpty(userInfo.imageId())) {
                 String url = ClientUtils.getUrlImage(userInfo.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
                 ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
@@ -290,6 +309,30 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         }
     }
 
+    public void checkLogin() {
+        getPresenter().checkLogin();
+    }
+
+    private void checkLoginSuccess(String input) {
+        //do nothing
+    }
+
+
+    private void checkLoginFailed(String input) {
+        //show dialog
+        Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
+        Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+        btnCancle.setOnClickListener(v -> {
+            mainActivity.setTabDesire(0);
+            dialog.dismiss();
+        });
+        btnOk.setOnClickListener(v -> {
+            MainActivity.start(MainActivity.instance.getApplicationContext(), LoginActivity.class, LoginScreen.instance(Strings.EMPTY));
+        });
+        if(dialog != null && !dialog.isShowing()){
+            dialog.show();
+        }
+    }
 
     //get book instance
     public void requestBookInstance(BookInstanceInput input) {
@@ -341,7 +384,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void changeBookSharingStatusSuccess(String data) {
         if (!Strings.isNullOrEmpty(data)) {
-            ClientUtils.showToast(data);
+            fragmentBookSharing.refreshDate();
         }
     }
 

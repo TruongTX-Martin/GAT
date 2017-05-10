@@ -125,6 +125,9 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
             public void onTabSelected(TabLayout.Tab tab) {
                 selectTab(tab, true);// For refresh layout
                 mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
+                if(tab.getPosition() == 1) {
+                    personalFragment.checkLogin();
+                }
             }
 
             @Override
@@ -149,6 +152,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         }
     }
 
+    public void setTabDesire(int position) {
+        mTabLayout.setScrollPosition(position,0f,true);
+        mViewPager.setCurrentItem(position);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -161,6 +169,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
 
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
+        personalFragment.setMainActivity(this);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
         adapter.addFragment(personalFragment, "PERSONAL");

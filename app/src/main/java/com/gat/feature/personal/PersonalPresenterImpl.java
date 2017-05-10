@@ -1,8 +1,12 @@
 package com.gat.feature.personal;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
 
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
+import com.gat.common.util.Strings;
 import com.gat.data.exception.LoginException;
 import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
@@ -13,11 +17,14 @@ import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
+import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.RequestStatusInput;
+import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
 
@@ -81,6 +88,13 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private final Subject<ServerResponse<ResponseData>> changeStatusError;
     private UseCase<ChangeStatusResponse> changeStatusUsecase;
 
+
+    //check login
+    private CompositeDisposable checkLoginDisposable;
+    private final Subject<String> checkLoginResultSubject;
+    private final Subject<String> checkLoginInputSubject;
+    private final Subject<String> checkLoginError;
+
     private final UseCase<User> loadLocalUser;
     private boolean isLogin;
 
@@ -91,6 +105,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         this.personalError = PublishSubject.create();
         personalResultSubject = PublishSubject.create();
         personalInputSubject = BehaviorSubject.create();
+
+        this.checkLoginError = PublishSubject.create();
+        checkLoginResultSubject = PublishSubject.create();
+        checkLoginInputSubject = BehaviorSubject.create();
 
 
         this.bookInstanceError = PublishSubject.create();
@@ -139,6 +157,9 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         changeStatusDisposable = new CompositeDisposable(
                 changeStatusInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getChangeStatus)
         );
+
+        checkLoginDisposable = new CompositeDisposable(checkLoginInputSubject.
+                observeOn(schedulerFactory.main()).subscribe(this::startCheckLogin));
         // TODO 170506 do not start get personal information here
         //start get personal data
         loadLocalUser.executeOn(schedulerFactory.io())
@@ -159,6 +180,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 .execute();
     }
 
+
     @Override
     public void onDestroy() {
         personalDisposable.dispose();
@@ -166,6 +188,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         changeBookSharingStatusDisposable.dispose();
         requestBooksDisposable.dispose();
         changeStatusDisposable.dispose();
+        checkLoginDisposable.dispose();
     }
 
     @Override
@@ -182,6 +205,24 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorChangeStatus() {
         return changeStatusError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void checkLogin() {
+//        if(!isLogin){
+//            showDialogLogin();
+//        }
+        checkLoginInputSubject.onNext("");
+    }
+
+    @Override
+    public Observable<String> checkLoginSucess() {
+        return checkLoginResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> checkLoginFailed() {
+        return checkLoginError.observeOn(schedulerFactory.main());
     }
 
     @Override
@@ -251,8 +292,9 @@ public class PersonalPresenterImpl implements PersonalPresenter {
 
     @Override
     public void requestBookRequests(BookRequestInput input) {
-        if (isLogin)
+        if (isLogin) {
             requestBookInputSubject.onNext(input);
+        }
     }
 
     @Override
@@ -263,6 +305,14 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorBookRequest() {
         return requestBookError.observeOn(schedulerFactory.main());
+    }
+
+    private void startCheckLogin(String input){
+        if(isLogin) {
+            checkLoginResultSubject.onNext("");
+        }else{
+            checkLoginError.onNext("");
+        }
     }
 
     private void getChangeStatus(RequestStatusInput input){

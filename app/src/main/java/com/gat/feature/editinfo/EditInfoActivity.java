@@ -2,6 +2,8 @@ package com.gat.feature.editinfo;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -317,8 +319,23 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        backToPreviousActivity();
+//        super.onBackPressed();
+        AlertDialog.Builder alertboxDowload = new AlertDialog.Builder(this);
+        alertboxDowload.setTitle("Huỷ thay đổi");
+        alertboxDowload.setMessage("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
+        alertboxDowload.setCancelable(false);
+        alertboxDowload.setPositiveButton("Có",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        backToPreviousActivity();
+                    }
+                });
+        alertboxDowload.setNegativeButton("Không",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        alertboxDowload.show();
     }
 
 

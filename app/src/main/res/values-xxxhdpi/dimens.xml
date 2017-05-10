@@ -82,4 +82,13 @@
     <dimen name="email_icon_padding">10dp</dimen>
     <dimen name="message_input_height">80dp</dimen>
     <dimen name="message_input_margin">10dp</dimen>
+
+    <!--user instance screen-->
+    <dimen name="size_img_profile">37.5dp</dimen>
+    <dimen name="name_user">8sp</dimen>
+    <dimen name="address_user">6sp</dimen>
+
+    <dimen name="size_img_circle">17dp</dimen>
+    <dimen name="size_ic_circle">7.7dp</dimen>
+    <!--end user instance screen-->
 </resources>

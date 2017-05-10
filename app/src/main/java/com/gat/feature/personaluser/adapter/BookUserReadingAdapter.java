@@ -9,15 +9,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.gat.R;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
-import com.gat.feature.personal.fragment.FragmentReadingBook;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.personaluser.PersonalUserActivity;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.personaluser.fragment.FragmentBookUserReading;
 import com.gat.repository.entity.book.BookReadingEntity;
-
 import java.util.List;
 
 /**
@@ -52,7 +52,7 @@ public class BookUserReadingAdapter extends RecyclerView.Adapter<BookUserReading
                 if(!Strings.isNullOrEmpty(entity.getEditionImageId())){
                     ClientUtils.setImage(holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getEditionImageId(), Constance.IMAGE_SIZE_SMALL));
                 }
-                holder.ratingBar.setNumStars((int)entity.getRateAvg());
+                holder.ratingBar.setRating((float) entity.getRateAvg());
                 holder.txtRating.setText(entity.getRateAvg() + "");
                 if(!Strings.isNullOrEmpty(entity.getBorrowFromUserName())) {
                     holder.layoutBorrowFrom.setVisibility(View.VISIBLE);
@@ -60,6 +60,12 @@ public class BookUserReadingAdapter extends RecyclerView.Adapter<BookUserReading
                 }else{
                     holder.layoutBorrowFrom.setVisibility(View.GONE);
                 }
+                holder.txtBorrowName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PersonalUserActivity.start(context, PersonalUserActivity.class, PersonalUserScreen.instance(entity.getBorrowFromUserId()));
+                    }
+                });
             }
             if(getItemCount() > 9 && position == (getItemCount() -1)){
                 fragment.loadMore();

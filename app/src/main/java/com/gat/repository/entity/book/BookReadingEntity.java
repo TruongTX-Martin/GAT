@@ -72,6 +72,10 @@ public class BookReadingEntity {
         return borrowFromUserName;
     }
 
+    public int getBorrowFromUserId() {
+        return borrowFromUserId;
+    }
+
     public double getRateAvg() {
         return rateAvg;
     }
