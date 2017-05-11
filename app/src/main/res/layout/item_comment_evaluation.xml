@@ -12,7 +12,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginRight="@dimen/margin_horizontal_large"
-        android:src="@drawable/demo_book_cover" />
+        android:src="@drawable/default_user_icon" />
 
     <TextView
         android:id="@+id/text_view_time_ago"

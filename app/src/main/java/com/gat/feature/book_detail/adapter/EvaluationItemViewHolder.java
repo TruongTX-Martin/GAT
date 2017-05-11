@@ -1,6 +1,7 @@
 package com.gat.feature.book_detail.adapter;
 
 import android.support.annotation.LayoutRes;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -11,6 +12,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.DateTimeUtil;
 
 import butterknife.BindView;
@@ -46,29 +48,14 @@ public class EvaluationItemViewHolder extends ItemViewHolder<EvaluationItem> {
     public void onBindItem(EvaluationItem item) {
         super.onBindItem(item);
 
-        textViewTimeAgo.setText(String.valueOf(
-                DateTimeUtil.calculateDayAgo(DateTimeUtil.FORMAT_TYPE_1, item.evaluation().getEvaluationTime())
-                ));
+        textViewTimeAgo.setText(String.valueOf(DateTimeUtil.calculateTimeAgo(item.evaluation().getEvaluationTime())));
         textViewName.setText(item.evaluation().getName());
-        //ratingBarComment.setRating(item.evaluation().get); TODO miss rating
+        ratingBarComment.setRating(item.evaluation().getValue());
         textViewCommentEvaluation.setText(item.evaluation().getReview());
 
-        if (item.evaluation().getImageId() != null && !item.evaluation().getImageId().isEmpty()) {
-            Glide.with(mContext).
-                    load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                            + item.evaluation().getImageId() + "?size=s").listener(new RequestListener<String, GlideDrawable>() {
-                @Override
-                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-
-                    return false;
-                }
-            }).into(imageViewAvatar);
+        if ( ! TextUtils.isEmpty(item.evaluation().getImageId())) {
+            ClientUtils.setImage(imageViewAvatar, R.drawable.default_user_icon,
+                    ClientUtils.getUrlImage(item.evaluation().getImageId(), ClientUtils.SIZE_SMALL));
         }
     }
 }

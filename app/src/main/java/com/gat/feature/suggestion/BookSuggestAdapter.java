@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gat.R;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
+import com.gat.common.util.ClientUtils;
 import com.gat.data.response.BookResponse;
 
 import java.util.List;
@@ -58,24 +60,14 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
 
         holder.textViewBookName.setText(item.getTitle());
         holder.ratingBar.setRating(item.getRateAvg());
-        Glide.with(mContext).
-                load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                        + item.getImageId() + "?size=s").listener(new RequestListener<String, GlideDrawable>() {
-            @Override
-            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                return false;
-            }
 
-            @Override
-            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                holder.progressBar.setVisibility(View.GONE);
-                return false;
-            }
-        }).into(holder.ivBooksCoverList);
+        if ( ! TextUtils.isEmpty(item.getImageId())) {
+            ClientUtils.setImage(holder.ivBooksCoverList, R.drawable.default_book_cover,
+                    ClientUtils.getUrlImage(item.getImageId(), ClientUtils.SIZE_SMALL));
+        }
 
         LayerDrawable stars = (LayerDrawable) holder.ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
-
     }
 
     @Override
@@ -98,8 +90,6 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
         RatingBar ratingBar;
         @BindView(R.id.image_view_book_cover)
         ImageView ivBooksCoverList;
-        @BindView(R.id.progress_bar)
-        ProgressBar progressBar;
 
         public BookSuggestHolder(View itemView) {
             super(itemView);
