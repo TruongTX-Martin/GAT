@@ -10,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/navigation_header_height"
         android:gravity="center_vertical"
-        android:paddingEnd="@dimen/paddingNormal">
+        android:paddingEnd="@dimen/paddingNormal"
+        android:paddingStart="@dimen/paddingNormal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:contentDescription="@string/ic_chat_description"
             android:src="@drawable/ic_chat"
@@ -98,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:text="Go Setting -> Enable Location permission"
+                    android:text="@string/go_setting_enable_gps"
                     android:textAllCaps="false"
                     android:textColor="@color/colorTextViewGray" />
 

@@ -300,7 +300,6 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         MZDebug.i("_______________________________ processLocationToUpdateUserShareNearByDistance");
         if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
-            MZDebug.w("onPermissionsDenied -_- ");
             if (gps == null) {
                 gps = new TrackGPS(getActivity());
             }
@@ -312,6 +311,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
                 processUserNearByDistance();
             }
         } else {
+            MZDebug.w("onPermissionsDenied -_- ");
             // Request one permission
             EasyPermissions.requestPermissions(this, mContext.getResources().getString(R.string.msg_allow_location),
                     PERMISSION_ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);

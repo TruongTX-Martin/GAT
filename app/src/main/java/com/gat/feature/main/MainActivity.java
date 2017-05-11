@@ -16,6 +16,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
+import com.gat.common.util.Views;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.common.util.NotificationConfig;
 import com.gat.data.firebase.NotificationUtils;
@@ -155,6 +156,12 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
     public void setTabDesire(int position) {
         mTabLayout.setScrollPosition(position,0f,true);
         mViewPager.setCurrentItem(position);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Views.hideKeyboard(this);
     }
 
     @Override

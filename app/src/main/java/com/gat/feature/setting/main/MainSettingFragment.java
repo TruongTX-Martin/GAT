@@ -25,6 +25,7 @@ import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
+import com.gat.common.util.Views;
 import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
@@ -121,6 +122,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Views.hideKeyboard(getActivity());
+
         disposable = new CompositeDisposable(
                 getPresenter().onUserInfoSuccess().subscribe(this::onLoadUserSuccess),
                 getPresenter().onConnectFacebookSuccess().subscribe(this::onConnectFacebookSuccess),
@@ -128,7 +131,6 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
                 getPresenter().onConnectTwitterSuccess().subscribe(this::onConnectTwitterSuccess),
                 getPresenter().onSignOutSuccess().subscribe(this::onSignOutSuccess)
         );
-
 
         getPresenter().loadUserInfo();
 
