@@ -493,12 +493,12 @@ public class DebugUserDataSource implements UserDataSource {
             if (serverResponse == null) {
                 serverResponse = ServerResponse.BAD_RESPONSE;
             }
-            if(response.raw().code() == 400) {
-                String result  = response.errorBody().string();
-                serverResponse.message(result);
-            }
-            serverResponse.code(response.raw().code());
-            return serverResponse.data();
+            serverResponse.code(response.code());
+
+            ServerResponse<Data> sr = CommonCheck.checkResponse(response);
+            sr.code(response.code());
+
+            return sr.data();
         });
     }
 

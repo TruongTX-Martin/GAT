@@ -198,16 +198,16 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
                     requestBorrowBookResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-//                    if (throwable instanceof LoginException)
-//                        requestBorrowBookError.onNext(ServerResponse.TOKEN_CHANGED);
-//                    else
-//                        requestBorrowBookError.onNext(ServerResponse.EXCEPTION);
-                    if (throwable instanceof CommonException)
-                        requestBorrowBookError.onNext(((CommonException)throwable).getMessage());
-                    else {
-                        throwable.printStackTrace();
-                        requestBorrowBookError.onNext("Exception occurred.");
-                    }
+                   if (throwable instanceof CommonException)
+                       requestBorrowBookError.onNext(((CommonException)throwable).getMessage());
+                    else
+                       requestBorrowBookError.onNext(ServerResponse.EXCEPTION.message());
+//                    if (throwable instanceof CommonException)
+//                        requestBorrowBookError.onNext(((CommonException)throwable).getMessage());
+//                    else {
+//                        throwable.printStackTrace();
+//                        requestBorrowBookError.onNext("Exception occurred.");
+//                    }
                 })
                 .onStop(
                         () -> requestBorrowBookUsecase = UseCases.release(requestBorrowBookUsecase)
