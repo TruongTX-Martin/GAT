@@ -154,7 +154,8 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     @OnClick(R.id.image_button_search_scan)
     void onButtonSearchScanTap () {
-
+        // TODO go to scan barcode page
+        finish();
     }
 
     @OnClick(R.id.button_cancel)

@@ -6,7 +6,7 @@
     android:background="@color/colorWhite"
     android:id="@+id/register_view">
 
-    <include layout="@layout/header_blue"/>
+    <include layout="@layout/layout_activity_top" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,6 +99,7 @@
                 android:drawableStart="@drawable/pass_input_icon"
                 android:drawablePadding="10dp"
                 android:textSize="@dimen/normal_textsize"
+                android:maxLength="10"
                 android:background="@drawable/text_edit_shape_white"/>
         </android.support.design.widget.TextInputLayout>
 

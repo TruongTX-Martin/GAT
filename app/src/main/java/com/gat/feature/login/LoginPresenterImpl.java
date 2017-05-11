@@ -122,6 +122,7 @@ public class LoginPresenterImpl implements LoginPresenter {
         emailResetUseCase = UseCases.release(emailResetUseCase);
         verifyTokenUseCase = UseCases.release(verifyTokenUseCase);
         changePasswordUseCase = UseCases.release(changePasswordUseCase);
+        loadLocalUserUseCase = UseCases.release(loadLocalUserUseCase);
 
         loginDisposable.dispose();
 

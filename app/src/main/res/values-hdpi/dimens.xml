@@ -9,6 +9,9 @@
 
     <dimen name="size_img_circle">17dp</dimen>
     <dimen name="size_ic_circle">7.7dp</dimen>
+    <dimen name="btn_width">290dp</dimen>
+    <dimen name="light_padding_start">30dp</dimen>
+    <dimen name="light_padding_end">30dp</dimen>
     <!--end user instance screen-->
 
 </resources>

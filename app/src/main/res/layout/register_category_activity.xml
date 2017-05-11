@@ -3,26 +3,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/category_view">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/background_header_blue"
-        android:id="@+id/header">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/register_category_header"
-            android:textSize="@dimen/header_textsize"
-            android:textColor="@color/colorWhite"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_gravity="center_horizontal"/>
-    </LinearLayout>
+
+    <include layout="@layout/layout_activity_top" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header">
+        android:layout_below="@+id/layoutMenutop">
         <GridView
             android:id="@+id/gridview"
             android:layout_width="match_parent"
@@ -38,12 +25,12 @@
         <Button
             android:text="@string/btn_add_category"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/btn_height"
             android:id="@+id/btn_add_category"
             android:layout_marginLeft="@dimen/margin_left_right"
             android:layout_marginRight="@dimen/margin_left_right"
             android:background="@drawable/bg_rounded_blue"
-            android:drawableEnd="@drawable/scan_ic_selected"
+            android:drawableEnd="@drawable/forma_1"
             android:paddingEnd="@dimen/padding_end"
             android:paddingStart="@dimen/padding_start"
             android:textColor="@color/colorWhite"

@@ -11,6 +11,9 @@
     <dimen name="size_ic_circle">7.7dp</dimen>
     <dimen name="message_input_height">80dp</dimen>
     <dimen name="message_input_margin">10dp</dimen>
+    <dimen name="btn_width">290dp</dimen>
+    <dimen name="light_padding_start">30dp</dimen>
+    <dimen name="light_padding_end">30dp</dimen>
     <!--end user instance screen-->
 
 </resources>

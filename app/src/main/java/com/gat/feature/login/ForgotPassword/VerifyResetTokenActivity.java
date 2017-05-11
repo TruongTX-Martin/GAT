@@ -2,8 +2,12 @@ package com.gat.feature.login.ForgotPassword;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +21,8 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.VerifyTokenResponseData;
 import com.gat.feature.login.LoginPresenter;
 import com.gat.feature.login.LoginScreen;
+import com.gat.feature.register.update.location.AddLocationActivity;
+import com.gat.feature.register.update.location.AddLocationScreen;
 
 import butterknife.BindView;
 import io.reactivex.disposables.CompositeDisposable;
@@ -35,8 +41,17 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
     @BindView(R.id.btn_send)
     Button btnVerify;
 
-    @BindView(R.id.header_text)
-    TextView headerText;
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
+
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout headerLayout;
 
     CompositeDisposable disposable;
 
@@ -48,7 +63,11 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
 
         emailTextView.setText(getScreen().email());
 
-        headerText.setText(getString(R.string.login_forgot_title));
+        headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
+        txtTitle.setText(getString(R.string.forgot_password));
+        txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
+        imgBack.setImageResource(R.drawable.narrow_back_black);
+        imgSave.setVisibility(View.GONE);
 
         disposable = new CompositeDisposable(
                 getPresenter().verifyResult().subscribe(this::onSuccess),
@@ -67,6 +86,11 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
             }
             onVerifying(true);
             getPresenter().verifyToken(token);
+        });
+
+        imgBack.setOnClickListener(v -> {
+            start(getApplicationContext(), ForgotPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
+            this.finish();
         });
     }
 

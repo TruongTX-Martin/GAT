@@ -43,6 +43,7 @@
                     android:hint="@string/login_password_hint"
                     android:drawableStart="@drawable/pass_input_icon"
                     android:drawablePadding="10dp"
+                    android:maxLength="10"
                     android:textSize="@dimen/normal_textsize"/>
             </android.support.design.widget.TextInputLayout>
 

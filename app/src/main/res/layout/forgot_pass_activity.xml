@@ -6,7 +6,7 @@
     android:background="@color/colorWhite"
     android:id="@+id/forgot_password_view">
 
-    <include layout="@layout/header_blue"/>
+    <include layout="@layout/layout_activity_top"/>
 
     <TextView
         android:layout_width="match_parent"

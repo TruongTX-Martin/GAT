@@ -194,7 +194,8 @@ public class ParcelableScreen implements Parcelable {
             CommentScreen commentScreen = (CommentScreen) screen;
             dest.writeParcelable(commentScreen.evaluation(), flags);
         } else if (screen instanceof ScanScreen) {
-
+            ScanScreen scanScreen = (ScanScreen)screen;
+            dest.writeInt(scanScreen.from());
         } else if (screen instanceof MainSettingScreen) {
 
         } else if (screen instanceof AddEmailPasswordScreen) {
@@ -296,7 +297,9 @@ public class ParcelableScreen implements Parcelable {
             case CHANGE_PASSWORD:
                 screen = ChangePasswordScreen.instance();
                 break;
-
+            case SCAN:
+                screen = ScanScreen.instance(in.readInt());
+                break;
             case NOTIFICATION:
                 screen = NotificationScreen.instance();
                 break;

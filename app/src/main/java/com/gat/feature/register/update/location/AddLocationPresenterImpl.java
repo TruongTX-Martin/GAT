@@ -3,13 +3,13 @@ package com.gat.feature.register.update.location;
 import android.util.Log;
 
 import com.gat.data.exception.CommonException;
-import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.user.UserAddressData;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
+import com.gat.repository.entity.User;
 import com.google.android.gms.maps.model.LatLng;
 
 import io.reactivex.Observable;
@@ -38,6 +38,10 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
     private Observable<LatLng> addressResult;
     private UseCase<LatLng> getLocationFromAddressUseCase;
 
+    private UseCase<User> loadLocalUserUseCase;
+    private Subject<Integer> loadLocalUserSubject;
+    private final Subject<User> userSubject;
+
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
 
@@ -51,6 +55,9 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
         this.updateLocationDataSubject = BehaviorSubject.create();
 
         this.getLocationFromAddressSubject = BehaviorSubject.create();
+
+        this.loadLocalUserSubject = PublishSubject.create();
+        this.userSubject = PublishSubject.create();
 
         this.errorSubject = PublishSubject.create();
     }
@@ -67,6 +74,37 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
     @Override
     public Observable<String> onError() {
         return errorSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void loadUser() {
+        loadLocalUserSubject.onNext(1);
+    }
+
+    @Override
+    public Observable<User> userInfo() {
+        return userSubject.observeOn(schedulerFactory.main());
+    }
+
+    private void loadLocalUser(int input) {
+        loadLocalUserUseCase = UseCases.release(loadLocalUserUseCase);
+
+        loadLocalUserUseCase = useCaseFactory.getUser();
+
+        loadLocalUserUseCase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    userSubject.onNext(user);
+                })
+                .onError(throwable -> {
+                    throwable.printStackTrace();
+                    if (throwable instanceof CommonException)
+                        errorSubject.onNext(throwable.getMessage());
+                    else
+                        errorSubject.onNext(ServerResponse.EXCEPTION.message());
+                })
+                .onStop(() -> loadLocalUserUseCase = UseCases.release(loadLocalUserUseCase))
+                .execute();
     }
 
     @Override
@@ -87,13 +125,16 @@ public class AddLocationPresenterImpl implements AddLocationPresenter {
     public void onCreate() {
         compositeDisposable = new CompositeDisposable(
                 updateLocationDataSubject.observeOn(schedulerFactory.main()).subscribe(this::updateLocation),
-                getLocationFromAddressSubject.observeOn(schedulerFactory.main()).subscribe(this::getLocation)
+                getLocationFromAddressSubject.observeOn(schedulerFactory.main()).subscribe(this::getLocation),
+                loadLocalUserSubject.observeOn(schedulerFactory.main())
+                        .subscribe(input -> loadLocalUser(input))
         );
     }
 
     @Override
     public void onDestroy() {
         updateLocationUseCase = UseCases.release(updateLocationUseCase);
+        loadLocalUserUseCase = UseCases.release(loadLocalUserUseCase);
         compositeDisposable.dispose();
     }
 

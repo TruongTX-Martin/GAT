@@ -127,10 +127,10 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() > 0) {
-                    messageSendBtn.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
-                } else {
+                if (charSequence.toString().length() > 0) {
                     messageSendBtn.setTextColor(ResourcesCompat.getColor(getResources(), R.color.coolBlue, null));
+                } else {
+                    messageSendBtn.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
                 }
             }
 
@@ -145,8 +145,13 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
                 messageEdit.setText(Strings.EMPTY);
             }
         });
+
         messageEdit.setOnClickListener(view -> {
             recyclerView.scrollToPosition((messageAdapter.getItemCount() > 0) ? messageAdapter.getItemCount() - 1 : 0);
+        });
+
+        imgBack.setOnClickListener(v -> {
+            finish();
         });
     }
 

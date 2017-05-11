@@ -5,12 +5,17 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.util.Pair;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,8 +103,17 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
     @BindView(R.id.google_register_btn)
     Button googleRegisterBtn;
 
-    @BindView(R.id.header_text)
-    TextView headerText;
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
+
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout headerLayout;
 
     private Subject<Boolean> progressSubject;
 
@@ -130,7 +144,11 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        headerText.setText(getString(R.string.register_title));
+        headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
+        txtTitle.setText(getString(R.string.register_title));
+        txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
+        imgBack.setVisibility(View.GONE);
+        imgSave.setVisibility(View.GONE);
 
         unbinder = ButterKnife.bind(this);
 
@@ -224,9 +242,9 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
             if (!result.first) {
                 String error;
                 if (result.second == CommonCheck.Error.FIELD_EMPTY) {
-                    error = getString(R.string.login_email_empty);
+                    error = getString(R.string.email_invalid);
                 } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
-                    error = getString(R.string.login_email_invalid);
+                    error = getString(R.string.email_invalid);
                 } else {
                     error = Strings.EMPTY;
                 }
@@ -237,9 +255,9 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
             if (!result.first) {
                 String error;
                 if (result.second == CommonCheck.Error.FIELD_EMPTY) {
-                    error = getString(R.string.login_password_empty);
+                    error = getString(R.string.password_invalid);
                 } else if (result.second == CommonCheck.Error.PASSWORD_LENGTH) {
-                    error = getString(R.string.login_password_length);
+                    error = getString(R.string.password_invalid);
                 } else {
                     error = Strings.EMPTY;
                 }

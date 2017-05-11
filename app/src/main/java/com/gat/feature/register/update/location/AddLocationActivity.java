@@ -31,6 +31,7 @@ import com.gat.data.response.ServerResponse;
 import com.gat.data.user.UserAddressData;
 import com.gat.feature.register.update.category.AddCategoryActivity;
 import com.gat.feature.register.update.category.AddCategoryScreen;
+import com.gat.repository.entity.UsuallyLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -159,9 +160,18 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 getPlaceIdSubject.subscribe(this::getPlaceIdFromAddress),
                 getLocationSubject.subscribe(this::getLocationFromPlaceId),
                 updateLocationSubject.subscribe(this::onUpdateLocation),
-                notFoundSubject.subscribe(this::placeNotFound)
-
+                notFoundSubject.subscribe(this::placeNotFound),
+                getPresenter().userInfo().subscribe(user -> {
+                    if (!user.usuallyLocation().isEmpty()) {
+                        UsuallyLocation usuallyLocation = user.usuallyLocation().get(0);
+                        selectedLocation = new LatLng(usuallyLocation.getLatitude(), usuallyLocation.getLongitude());
+                        inputAddress = usuallyLocation.getAddress();
+                        updateLocationGUI(false);
+                    }
+                })
         );
+
+        getPresenter().loadUser();
 
         progressDialog = new ProgressDialog(this);
 
@@ -226,6 +236,9 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 String text = this.locationText.getText().toString();
                 if (text != null && !text.trim().isEmpty()) {
                     getPlaceIdFromAddress(text);
+                    InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(locationText.getWindowToken(), 0);
+                } else {
                     InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(locationText.getWindowToken(), 0);
                 }
@@ -423,10 +436,10 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "Access granted");
                     isLocationAccessGranted = true;
+                    updateMappingGUI();
                 }
             }
         }
-        updateMappingGUI();
     }
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
@@ -453,17 +466,15 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         if (selectedLocation != null) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(selectedLocation));
             locationText.setText(inputAddress);
-        } else if (isLocationAccessGranted) {
+        }
+        if (isLocationAccessGranted) {
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
             lastKnownLocation = LocationServices.FusedLocationApi
                     .getLastLocation(googleApiClient);
+            addCurrentLocation(lastKnownLocation, selectedLocation != null ? false : true);
         } else {
-            // Cannot search
-            selectedLocation = null;
-            inputAddress = Strings.EMPTY;
-
             googleMap.setMyLocationEnabled(false);
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
@@ -520,13 +531,6 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 }
                 countryCode = addresses.get(0).getCountryCode();
                 Log.d(TAG, "CountryCode:"+countryCode);
-            }
-
-            if (!Strings.isNullOrEmpty(inputAddress)) {
-                selectedLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                addCurrentLocation(lastKnownLocation, false);
-            } else {
-                addCurrentLocation(lastKnownLocation, true);
             }
         }
 

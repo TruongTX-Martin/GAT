@@ -2,9 +2,13 @@ package com.gat.feature.login.ForgotPassword;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Pair;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,8 +44,17 @@ public class ResetPasswordActivity extends ScreenActivity<LoginScreen, LoginPres
     @BindView(R.id.btn_send)
     Button btnVerify;
 
-    @BindView(R.id.header_text)
-    TextView headerText;
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
+
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout headerLayout;
 
 
     CompositeDisposable disposable;
@@ -54,7 +67,12 @@ public class ResetPasswordActivity extends ScreenActivity<LoginScreen, LoginPres
 
         emailTextView.setText(getScreen().email());
 
-        headerText.setText(getString(R.string.login_forgot_title));
+        headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
+        txtTitle.setText(getString(R.string.forgot_password));
+        txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
+        imgBack.setVisibility(View.GONE);
+        imgSave.setVisibility(View.GONE);
+
 
         disposable = new CompositeDisposable(
                 getPresenter().changePasswordResult().subscribe(this::onSuccess),
@@ -69,9 +87,9 @@ public class ResetPasswordActivity extends ScreenActivity<LoginScreen, LoginPres
             if (!result.first) {
                 String error;
                 if (result.second == CommonCheck.Error.FIELD_EMPTY) {
-                    error = getString(R.string.login_password_empty);
+                    error = getString(R.string.password_invalid);
                 } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
-                    error = getString(R.string.login_password_length);
+                    error = getString(R.string.password_invalid);
                 } else {
                     error = Strings.EMPTY;
                 }
