@@ -45,15 +45,15 @@
 
             <ImageView
                 android:id="@+id/imgEditPersonal"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="@dimen/size_layout_edit"
+                android:layout_height="@dimen/size_layout_edit"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_circle" />
 
             <ImageView
                 android:id="@+id/imgEdit"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/size_icon_edit"
+                android:layout_height="@dimen/size_icon_edit"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_edit_personal" />
         </RelativeLayout>
@@ -61,7 +61,7 @@
         <TextView
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/name_user"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="20dp"
@@ -75,15 +75,15 @@
         <TextView
             android:id="@+id/txtAddress"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/address_user"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginRight="80dp"
             android:textColor="#919191"
+            android:layout_below="@+id/txtName"
+            android:layout_toRightOf="@+id/imgAvatar"
             android:text="Address"
             android:textSize="@dimen/address_user"
-            android:layout_alignBottom="@+id/layoutEdit"
-            android:layout_toEndOf="@+id/imgAvatar" />
+            />
     </RelativeLayout>
 
     <RelativeLayout

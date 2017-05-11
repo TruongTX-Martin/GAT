@@ -88,22 +88,31 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                     holder.txtStatus.setVisibility(View.VISIBLE);
                     holder.txtStatus.setText(ClientUtils.getStringLanguage(R.string.is_borrowing));
                 }
+            }else if(entity.getAvailableStatus() == 0 && entity.getRequestingStatus() == 1) {
+                holder.imgExtend.setVisibility(View.VISIBLE);
+                if(entity.getRecordStatus() == 0) {
+                    holder.txtWaitAgreed.setVisibility(View.VISIBLE);
+                    holder.txtWaitAgreed.setText(ClientUtils.getStringLanguage(R.string.wait_for_accept_borrow));
+                }else if(entity.getRecordStatus() == 1) {
+                    holder.txtWaitAgreed.setVisibility(View.VISIBLE);
+                    holder.txtWaitAgreed.setText(ClientUtils.getStringLanguage(R.string.wait_your_turn));
+                }else if (entity.getRecordStatus() == 2) {
+                    holder.txtWaitAgreed.setVisibility(View.VISIBLE);
+                    holder.txtWaitAgreed.setText(ClientUtils.getStringLanguage(R.string.is_connecting));
+                }else if (entity.getRecordStatus() == 3) {
+                    holder.txtWaitAgreed.setVisibility(View.VISIBLE);
+                    holder.txtWaitAgreed.setText(ClientUtils.getStringLanguage(R.string.is_borrowing));
+                }
             }
-            holder.btnBorrow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BorrowRequestInput input = new BorrowRequestInput();
-                    input.setEditionId(entity.getEditionId());
-                    fragmentBookSharing.requestBorrowBook(input);
-                }
+            holder.btnBorrow.setOnClickListener(v -> {
+                BorrowRequestInput input = new BorrowRequestInput();
+                input.setEditionId(entity.getEditionId());
+                fragmentBookSharing.requestBorrowBook(input);
             });
-            holder.btnWaitBorrow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BorrowRequestInput input = new BorrowRequestInput();
-                    input.setEditionId(entity.getEditionId());
-                    fragmentBookSharing.requestBorrowBook(input);
-                }
+            holder.btnWaitBorrow.setOnClickListener(v -> {
+                BorrowRequestInput input = new BorrowRequestInput();
+                input.setEditionId(entity.getEditionId());
+                fragmentBookSharing.requestBorrowBook(input);
             });
         }
         if (getItemCount() > 9 && position == (getItemCount() - 1)) {

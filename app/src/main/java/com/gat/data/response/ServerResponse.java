@@ -30,6 +30,8 @@ public class ServerResponse<T> {
     public static ServerResponse NO_LOGIN = new ServerResponse(Strings.EMPTY, HTTP_CODE.NONE, new LoginResponseData(Strings.EMPTY, Strings.EMPTY));
     public static ServerResponse TOKEN_CHANGED = new ServerResponse("Login token was changed.", HTTP_CODE.TOKEN, new LoginResponseData(Strings.EMPTY, Strings.EMPTY));
 
+
+
     String message;
     int code;
     T data;

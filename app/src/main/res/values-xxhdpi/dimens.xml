@@ -6,6 +6,8 @@
     <dimen name="size_img_profile">50dp</dimen>
     <dimen name="name_user">10.7sp</dimen>
     <dimen name="address_user">8sp</dimen>
+    <dimen name="size_layout_edit">17dp</dimen>
+    <dimen name="size_icon_edit">7.7dp</dimen>
 
     <dimen name="size_img_circle">17dp</dimen>
     <dimen name="size_ic_circle">7.7dp</dimen>
