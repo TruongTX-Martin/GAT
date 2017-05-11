@@ -39,4 +39,11 @@ public class UsuallyLocation implements Serializable{
         return address;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
 }

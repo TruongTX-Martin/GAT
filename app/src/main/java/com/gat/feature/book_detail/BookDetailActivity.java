@@ -117,7 +117,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     RecyclerView recyclerView;
 
     private CompositeDisposable disposables;
-    EvaluationItemAdapter adapter;
+    private EvaluationItemAdapter adapter;
 
     @Override
     protected int getLayoutResource() {
@@ -274,17 +274,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
             case ReadingState.RED:
                 buttonReadingState.setText(getResources().getString(R.string.red_book));
-                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
+                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, R.drawable.arrow_down_white, 0);
                 break;
 
             case ReadingState.READING:
                 buttonReadingState.setText(getResources().getString(R.string.reading_book));
-                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
+                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, R.drawable.arrow_down_white, 0);
                 break;
 
             case ReadingState.TO_READ:
                 buttonReadingState.setText(getResources().getString(R.string.want_to_read));
-                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
+                buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, R.drawable.arrow_down_white, 0);
                 break;
         }
     }
@@ -417,18 +417,38 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                     .setImageUrl(Uri.parse(ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_DEFAULT)))
                     .setUserGenerated(true)
                     .build();
+
+            // if book isbn_13 =null -> get isbn_10, if isbn_10 = null -> default
+            String bookIsbn = "0-553-57340-3";
+            if (mBookInfo.getIsbn13() != null) {
+                bookIsbn = mBookInfo.getIsbn13();
+            } else {
+                if (mBookInfo.getIsbn10() != null) {
+                    bookIsbn = mBookInfo.getIsbn10();
+                }
+            }
+
             // Create an object
             object = new ShareOpenGraphObject.Builder()
                     .putString("og:type", "books.book")
                     .putString("og:title", mBookInfo.getTitle())
                     .putString("og:description", mBookInfo.getDescription())
-                    .putString("books:isbn", (mBookInfo.getIsbn10() == null || mBookInfo.getIsbn10().isEmpty()) ? "0-553-57340-3" : mBookInfo.getIsbn10())
+                    .putString("books:isbn", bookIsbn)
                     .putPhoto("og:image", photo)
                     .build();
         }
 
+        // action wants_to_read or reads
+        String actionRead = "books.wants_to_read";
+        if (buttonReadingState.getTag() != null) {
+            if ( (int) buttonReadingState.getTag() == ReadingState.RED) {
+                actionRead = "books.reads";
+            }
+        }
+        MZDebug.w("BookDetailActivity", "state = " + buttonReadingState.getTag() + ", action= " + actionRead);
+
         ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
-                    .setActionType("books.reads")
+                    .setActionType(actionRead)
                     .putObject("book", object)
                     .build();
 
@@ -445,7 +465,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             public void onSuccess(Sharer.Result result) {
                 MZDebug.d(BookDetailActivity.class.getSimpleName(), "shared successfully");
                 //add your code to handle successful sharing
-                Toast.makeText(BookDetailActivity.this, "share success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BookDetailActivity.this, "Chia sẻ thành công", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -456,9 +476,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             @Override
             public void onError(FacebookException error) {
                 MZDebug.d(BookDetailActivity.class.getSimpleName(), "SHARING ERROR: \n\r" + error.getMessage());
-                //add your code to handle sharing error
-                Toast.makeText(BookDetailActivity.this, "Share Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-
             }
         });
         shareDialog.show(BookDetailActivity.this, content);

@@ -50,7 +50,7 @@ public interface BookDataSource {
 
     Observable<EvaluationItemResponse> getBookEvaluationByUser (int editionId);
 
-    Observable<List<UserResponse>> getEditionSharingUser (int editionId);
+    Observable<List<UserResponse>> getEditionSharingUser (int editionId, Integer userId, Float latitude, Float longitude);
 
     Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler);
 
