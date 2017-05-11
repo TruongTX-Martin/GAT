@@ -153,15 +153,24 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         }
     }
 
-    public void setTabDesire(int position) {
-        mTabLayout.setScrollPosition(position,0f,true);
-        mViewPager.setCurrentItem(position);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mIntentReceiver,
+                new IntentFilter(NotificationConfig.NOTIFICATION_SERVICE));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+
         Views.hideKeyboard(this);
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mIntentReceiver);
+        super.onPause();
     }
 
     @Override
@@ -169,9 +178,33 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onDestroy();
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Constance.RESULT_UPDATEUSER){
+            personalFragment.requestPersonalInfo();
+        }
+
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if(fragment instanceof MainSettingFragment) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public void onBackPressed() {
         // your code.
+    }
+
+    public void setTabDesire(int position) {
+        mTabLayout.setScrollPosition(position,0f,true);
+        mViewPager.setCurrentItem(position);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -217,39 +250,5 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Constance.RESULT_UPDATEUSER){
-            personalFragment.requestPersonalInfo();
-        }
 
-        List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if(fragment instanceof MainSettingFragment) {
-                    fragment.onActivityResult(requestCode, resultCode, data);
-                    break;
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        // register GCM registration complete receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mIntentReceiver,
-                new IntentFilter(NotificationConfig.NOTIFICATION_SERVICE));
-
-        // clear the notification area when the app is opened
-        NotificationUtils.clearNotifications(getApplicationContext());
-
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mIntentReceiver);
-        super.onPause();
-    }
 }

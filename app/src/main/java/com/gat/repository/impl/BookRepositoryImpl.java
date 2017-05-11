@@ -12,6 +12,7 @@ import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.data.response.impl.Keyword;
 import com.gat.repository.BookRepository;
 import com.gat.repository.datasource.BookDataSource;
+import com.gat.repository.datasource.UserDataSource;
 import com.gat.repository.entity.Book;
 
 import java.util.List;
@@ -27,10 +28,13 @@ public class BookRepositoryImpl implements BookRepository {
 
     private final Lazy<BookDataSource> networkDataSourceLazy;
     private final Lazy<BookDataSource> localDataSourceLazy;
+    private final Lazy<UserDataSource> localUserDataSourceLazy;
 
-    public BookRepositoryImpl(Lazy<BookDataSource> networkDataSourceLazy, Lazy<BookDataSource> localDataSourceLazy){
+    public BookRepositoryImpl(Lazy<BookDataSource> networkDataSourceLazy, Lazy<BookDataSource> localDataSourceLazy,
+                              Lazy<UserDataSource> localUserDataSourceLazy){
         this.networkDataSourceLazy = networkDataSourceLazy;
         this.localDataSourceLazy = localDataSourceLazy;
+        this.localUserDataSourceLazy = localUserDataSourceLazy;
     }
 
     @Override
