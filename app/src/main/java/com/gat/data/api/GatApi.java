@@ -269,7 +269,10 @@ public interface GatApi {
 
     @GET("book/get_edition_sharing_user")
     Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> getEditionSharingUser (
-            @Query("editionId") int editionId
+            @Query("editionId") int editionId,
+            @Query("userId") Integer userId,
+            @Query("latitude") Float latitude,
+            @Query("longitude") Float longitude
     );
 
     @FormUrlEncoded

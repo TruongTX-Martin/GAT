@@ -297,12 +297,12 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<List<UserResponse>> getEditionSharingUser(int editionId) {
+    public Observable<List<UserResponse>> getEditionSharingUser(int editionId, Integer userId, Float latitude, Float longitude) {
         MZDebug.w("____________________________ getEditionSharingUser ___________________________");
 
         GatApi api = dataComponent.getPublicGatApi();
         Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> responseObservable;
-        responseObservable = api.getEditionSharingUser(editionId);
+        responseObservable = api.getEditionSharingUser(editionId, userId, latitude, longitude);
 
         return responseObservable.map(response -> {
             List<UserResponse> list = response.body().data().getResultInfo();

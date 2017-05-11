@@ -1,62 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    card_view:cardElevation="0dp"
-    card_view:cardBackgroundColor="@android:color/transparent">
+    android:background="?android:selectableItemBackground"
+    android:orientation="vertical"
+    android:padding="@dimen/paddingNormal">
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="90dp"
+        android:background="@android:color/white">
 
-    <LinearLayout
+        <ImageView
+            android:id="@+id/image_view_book_cover"
+            android:layout_width="70dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/demo_book_cover" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text_view_book_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_bottom_small"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Stephen KingSADSD"
+        android:textColor="@color/colorTextViewDark"
+        android:textSize="@dimen/normal_text_view_size" />
+
+    <RatingBar
+        android:id="@+id/rating_bar_book"
+        style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground"
-        android:orientation="vertical"
-        android:padding="@dimen/paddingNormal">
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="0.5" />
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="90dp"
-            android:background="@android:color/white">
-
-            <ImageView
-                android:id="@+id/image_view_book_cover"
-                android:layout_width="70dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:src="@drawable/demo_book_cover" />
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/text_view_book_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Stephen KingSADSD"
-            android:textColor="@color/colorTextViewDark"
-            android:layout_marginTop="@dimen/margin_top_bottom_small"
-            android:textSize="@dimen/normal_text_view_size" />
-
-        <RatingBar
-            android:id="@+id/rating_bar_book"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:stepSize="0.5" />
-
-    </LinearLayout>
-
-</android.support.v7.widget.CardView>
+</LinearLayout>

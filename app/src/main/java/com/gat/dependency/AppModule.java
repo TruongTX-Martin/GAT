@@ -70,8 +70,9 @@ public class AppModule {
     @Provides
     @Singleton
     BookRepository provideBookRepository(@Named("network")Lazy<BookDataSource> networkDataSourceLazy,
-                                         @Named("local")Lazy<BookDataSource> localDataSourceLazy){
-        return new BookRepositoryImpl(networkDataSourceLazy, localDataSourceLazy);
+                                         @Named("local")Lazy<BookDataSource> localDataSourceLazy,
+                                         @Named("local") Lazy<UserDataSource> localUserDataSourceLazy){
+        return new BookRepositoryImpl(networkDataSourceLazy, localDataSourceLazy, localUserDataSourceLazy);
     }
 
     @Provides

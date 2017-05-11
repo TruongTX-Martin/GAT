@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.Strings;
+import com.gat.common.util.Views;
 import com.gat.feature.login.ForgotPassword.ForgotPasswordActivity;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
@@ -84,6 +85,7 @@ public class ChangePasswordFragment extends ScreenFragment<ChangePasswordScreen,
 
     @OnClick(R.id.image_view_back)
     void onBackPress() {
+        Views.hideKeyboard(getActivity());
         delegate.goToMainSetting(KeyBackToMain.BACK_BUTTON);
     }
 
