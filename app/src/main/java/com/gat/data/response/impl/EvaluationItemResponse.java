@@ -18,7 +18,7 @@ public class EvaluationItemResponse implements Parcelable{
     private float value;
     private String review;
     private boolean spoiler;
-    private String evaluationTime;
+    private long evaluationTime;
 
     protected EvaluationItemResponse(Parcel in) {
         evaluationId = in.readString();
@@ -30,7 +30,7 @@ public class EvaluationItemResponse implements Parcelable{
         value = in.readFloat();
         review = in.readString();
         spoiler = in.readByte() != 0;
-        evaluationTime = in.readString();
+        evaluationTime = in.readLong();
     }
 
     public static final Creator<EvaluationItemResponse> CREATOR = new Creator<EvaluationItemResponse>() {
@@ -89,7 +89,7 @@ public class EvaluationItemResponse implements Parcelable{
         return spoiler;
     }
 
-    public String getEvaluationTime() {
+    public long getEvaluationTime() {
         return evaluationTime;
     }
 
@@ -125,6 +125,6 @@ public class EvaluationItemResponse implements Parcelable{
         dest.writeFloat(value);
         dest.writeString(review);
         dest.writeByte((byte) (spoiler ? 1 : 0));
-        dest.writeString(evaluationTime);
+        dest.writeLong(evaluationTime);
     }
 }

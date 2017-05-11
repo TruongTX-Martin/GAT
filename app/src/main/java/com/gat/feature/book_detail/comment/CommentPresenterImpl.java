@@ -9,6 +9,7 @@ import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.BookRepository;
 import com.gat.repository.UserRepository;
+import com.gat.repository.entity.User;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -27,11 +28,15 @@ public class CommentPresenterImpl implements CommentPresenter{
     private final Subject<String> subjectPostCommentSuccess;
     private final Subject<String> subjectPostCommentFailure;
 
+    private UseCase<User> useCaseLoadUser;
+    private final Subject<User> subjectLoadUserSuccess;
+
     public CommentPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
         subjectPostCommentSuccess = PublishSubject.create();
         subjectPostCommentFailure = PublishSubject.create();
+        subjectLoadUserSuccess = PublishSubject.create();
     }
 
 
@@ -69,5 +74,25 @@ public class CommentPresenterImpl implements CommentPresenter{
     @Override
     public Observable<String> onPostCommentFailure() {
         return subjectPostCommentFailure.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void loadUserCached() {
+        useCaseLoadUser = useCaseFactory.getUser();
+        useCaseLoadUser.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    subjectLoadUserSuccess.onNext(user);
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: CommentPresenterImpl loadUserCached __________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
+    }
+
+    @Override
+    public Observable<User> onLoadUserCachedSuccess() {
+        return subjectLoadUserSuccess.subscribeOn(schedulerFactory.main());
     }
 }

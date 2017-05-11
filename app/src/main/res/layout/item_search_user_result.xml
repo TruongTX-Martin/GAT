@@ -7,7 +7,7 @@
 
     <com.gat.common.customview.CircleImage
         android:id="@+id/image_view_user"
-        android:src="@drawable/demo_book_cover"
+        android:src="@drawable/default_user_icon"
         android:layout_width="60dp"
         android:layout_marginRight="@dimen/margin_horizontal_large"
         android:layout_height="60dp" />
@@ -38,6 +38,7 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="60dp"
+        android:visibility="gone"
         android:layout_height="60dp"/>
 
 

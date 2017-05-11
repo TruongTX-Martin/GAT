@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.TrackGPS;
 import com.gat.data.response.BookResponse;
@@ -246,11 +248,10 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             TextView textViewName = (TextView) viewItem.findViewById(R.id.tv_people_near_suggest_name);
 
             // set data
-            if ( null != userItem.getImageId() && ! userItem.getImageId().isEmpty()) {
-                Glide.with(getActivity()).
-                        load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                                + userItem.getImageId() + "?size=s").into(imageViewAvatar);
+            if ( ! TextUtils.isEmpty(userItem.getImageId())) {
+                ClientUtils.setImage(imageViewAvatar, R.drawable.default_user_icon, ClientUtils.getUrlImage(userItem.getImageId(), ClientUtils.SIZE_SMALL));
             }
+
             textViewName.setText(userItem.getName());
             imageViewAvatar.setTag(userItem); // pass object -> tag
 

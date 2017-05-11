@@ -1,6 +1,7 @@
 package com.gat.feature.book_detail.list_user_sharing_book;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,8 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BorrowResponse;
+import com.gat.feature.book_detail.BookDetailActivity;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -27,6 +30,7 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     private CompositeDisposable disposable;
     private UserSharingItemAdapter adapter;
     private ProgressDialog progressDialog;
+    private boolean isRequestBorrow = false;
 
     @Override
     protected int getLayoutResource() {
@@ -79,6 +83,10 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
 
     @OnClick(R.id.image_button_cancel)
     void onBack () {
+        if (isRequestBorrow) {
+            Intent returnIntent = new Intent();
+            setResult(RESULT_OK, returnIntent);
+        }
         finish();
     }
 
@@ -96,7 +104,6 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     public void onButtonBorrowClick(int position, UserResponse userResponse) {
         positionClicked= position;
         progressDialog.show();
-        Toast.makeText(this, "position: " + position + ", User: " + userResponse.getName(), Toast.LENGTH_SHORT).show();
         getPresenter().requestBorrowBook(userResponse.getEditionId(), userResponse.getUserId());
     }
 
@@ -113,8 +120,8 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
 
     private void onRequestBorrowSuccess (BorrowResponse borrowResponse) {
         hideProgress();
+        isRequestBorrow = true;
         adapter.updateBorrowStatus(positionClicked, borrowResponse.getRecordStatus());
-
     }
 
     private void onRequestBorrowFailure (String message) {
