@@ -3,6 +3,7 @@ package com.gat.feature.editinfo;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +21,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -34,6 +37,7 @@ import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.feature.editinfo.entity.EditInfoInput;
+import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.start.StartActivity;
@@ -97,6 +101,8 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     private File fileImage;
 
     private CompositeDisposable disposablesEditInfo;
+    private Dialog dialog;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,6 +131,11 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                 txtAddress.setText(user.usuallyLocation().get(0).getAddress());
             }
         }
+
+        dialog = new Dialog(this);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_login);
+        dialog.setCanceledOnTouchOutside(false);
     }
 
     private void handleEvent() {
@@ -156,6 +167,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
 
     private void editInfoError(ServerResponse<ResponseData> error) {
+        progressBar.setVisibility(View.GONE);
         ClientUtils.showToast(error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
@@ -320,22 +332,38 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        AlertDialog.Builder alertboxDowload = new AlertDialog.Builder(this);
-        alertboxDowload.setTitle("Huỷ thay đổi");
-        alertboxDowload.setMessage("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
-        alertboxDowload.setCancelable(false);
-        alertboxDowload.setPositiveButton("Có",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        backToPreviousActivity();
-                    }
-                });
-        alertboxDowload.setNegativeButton("Không",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        alertboxDowload.show();
+//        AlertDialog.Builder alertboxDowload = new AlertDialog.Builder(this);
+//        alertboxDowload.setTitle("Huỷ thay đổi");
+//        alertboxDowload.setMessage("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
+//        alertboxDowload.setCancelable(false);
+//        alertboxDowload.setPositiveButton("Có",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        backToPreviousActivity();
+//                    }
+//                });
+//        alertboxDowload.setNegativeButton("Không",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                    }
+//                });
+//        alertboxDowload.show();
+        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
+        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
+        txtTitle.setText("Huỷ thay đổi");
+        txtContent.setText("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
+        Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
+        Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+        btnCancle.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        btnOk.setOnClickListener(v -> {
+            backToPreviousActivity();
+            dialog.dismiss();
+        });
+        if(dialog != null && !dialog.isShowing()){
+            dialog.show();
+        }
     }
 
 

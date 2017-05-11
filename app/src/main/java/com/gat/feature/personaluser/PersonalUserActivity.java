@@ -167,6 +167,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         TextView txtTitleTwo = (TextView) tabTwo.findViewById(R.id.txtTitle);
         txtTitleTwo.setText("Sách đang đọc");
         tabLayout.getTabAt(1).setCustomView(tabTwo);
+        tabLayout.setSelectedTabIndicatorHeight(0);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -204,6 +205,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             txtNumberSharing.setText(totalSharing + "");
             List<BookSharingEntity> list = data.getListDataReturn(BookSharingEntity.class);
             fragmentBookUserSharing.setListBook(list);
+            
         }
     }
 

@@ -4,8 +4,11 @@
 
     <!--user instance screen-->
     <dimen name="size_img_profile">100dp</dimen>
-    <dimen name="name_user">21.3dp</dimen>
-    <dimen name="address_user">16dp</dimen>
+    <dimen name="name_user">21.3sp</dimen>
+    <dimen name="address_user">16sp</dimen>
+    <dimen name="size_layout_edit">34dp</dimen>
+    <dimen name="size_icon_edit">15.3dp</dimen>
+
 
     <dimen name="size_img_circle">17dp</dimen>
     <dimen name="size_ic_circle">7.7dp</dimen>

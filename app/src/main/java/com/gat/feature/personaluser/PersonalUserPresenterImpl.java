@@ -1,6 +1,7 @@
 package com.gat.feature.personaluser;
 
 import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
@@ -197,6 +198,10 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
                     requestBorrowBookResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
+//                    if (throwable instanceof LoginException)
+//                        requestBorrowBookError.onNext(ServerResponse.TOKEN_CHANGED);
+//                    else
+//                        requestBorrowBookError.onNext(ServerResponse.EXCEPTION);
                     if (throwable instanceof CommonException)
                         requestBorrowBookError.onNext(((CommonException)throwable).getMessage());
                     else {

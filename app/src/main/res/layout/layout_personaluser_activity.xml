@@ -80,6 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="65dp"
             app:tabGravity="fill"
+            app:tabBackground="@drawable/personal_tab_color_selector"
             app:tabMode="fixed" />
 
         <com.gat.common.view.NonSwipeableViewPager
