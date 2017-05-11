@@ -205,6 +205,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             txtNumberSharing.setText(totalSharing + "");
             List<BookSharingEntity> list = data.getListDataReturn(BookSharingEntity.class);
             fragmentBookUserSharing.setListBook(list);
+            
         }
     }
 
