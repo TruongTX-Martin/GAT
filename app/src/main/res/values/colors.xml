@@ -37,6 +37,7 @@
     <color name="coolBlue">#5396b9</color>
 
     <color name="blue_button">#8ec3df</color>
+    <color name="green_button">#5396b9</color>
 
     <color name="tab_background_selected">@color/colorBlue</color>
     <color name="tab_background_unselected">@android:color/white</color>
