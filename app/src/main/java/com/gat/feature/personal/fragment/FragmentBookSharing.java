@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.util.DataLocal;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookSharingAdapter;
@@ -133,7 +134,10 @@ public class FragmentBookSharing extends Fragment {
         initView();
         handleEvent();
         showLoading();
-        if (currentInput != null) {
+        if (DataLocal.getPersonalInputSharing() != null ) {
+            currentInput = DataLocal.getPersonalInputSharing();
+            searchBook(currentInput);
+        }else if(currentInput != null) {
             searchBook(currentInput);
         }
         return rootView;
@@ -233,7 +237,7 @@ public class FragmentBookSharing extends Fragment {
         View customView = inflater.inflate(R.layout.layout_popup_book_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT);
         popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.setOutsideTouchable(true);
@@ -244,6 +248,13 @@ public class FragmentBookSharing extends Fragment {
         RelativeLayout layoutNotSharingOverlay = (RelativeLayout) customView.findViewById(R.id.layoutMyBookOverLay);
         RelativeLayout layoutLostBorder = (RelativeLayout) customView.findViewById(R.id.layoutBookLostBorder);
         RelativeLayout layoutLostOverlay = (RelativeLayout) customView.findViewById(R.id.layoutBookLostOverlay);
+        RelativeLayout layoutRoot = (RelativeLayout) customView.findViewById(R.id.layoutParrent);
+        layoutRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
         imgClose.setOnClickListener(v -> {
             if (currentInput.isSharingFilter() == isSharing && currentInput.isNotSharingFilter() == isNotSharing
                     && currentInput.isLostFilter() == isLost) {
@@ -321,6 +332,7 @@ public class FragmentBookSharing extends Fragment {
 
     private void searchBook(BookInstanceInput input) {
         if (input == null) return;
+        DataLocal.savePersonalInputSharing(input);
         try {
             isRequesting = true;
             parrentActivity.requestBookInstance(input);

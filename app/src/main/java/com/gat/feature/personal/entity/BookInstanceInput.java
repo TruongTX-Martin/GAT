@@ -1,5 +1,7 @@
 package com.gat.feature.personal.entity;
 
+import org.json.JSONObject;
+
 /**
  * Created by truongtechno on 30/03/2017.
  */
@@ -15,10 +17,46 @@ public class BookInstanceInput {
 
 
 
+
+    public BookInstanceInput() {
+    }
+
     public BookInstanceInput(boolean sharingFilter, boolean notSharingFilter, boolean lostFilter) {
         this.sharingFilter = sharingFilter;
         this.notSharingFilter = notSharingFilter;
         this.lostFilter = lostFilter;
+    }
+
+    public String getString() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("sharingFilter", sharingFilter);
+            object.put("notSharingFilter", notSharingFilter);
+            object.put("lostFilter", lostFilter);
+        } catch (Exception e) {
+        }
+        return object.toString();
+    }
+    public static BookInstanceInput getObject(String jsonString) {
+        BookInstanceInput input = new BookInstanceInput();
+        try {
+            JSONObject object = new JSONObject(jsonString);
+            if (object.has("sharingFilter")) {
+               boolean sharingFilter = object.getBoolean("sharingFilter");
+                input.setSharingFilter(sharingFilter);
+            }
+            if (object.has("notSharingFilter")) {
+                boolean notSharingFilter = object.getBoolean("notSharingFilter");
+                input.setNotSharingFilter(notSharingFilter);
+            }
+            if (object.has("lostFilter")) {
+                boolean lostFilter = object.getBoolean("lostFilter");
+                input.setLostFilter(lostFilter);
+            }
+
+        } catch (Exception e) {
+        }
+        return input;
     }
 
     public void setPage(int page) {

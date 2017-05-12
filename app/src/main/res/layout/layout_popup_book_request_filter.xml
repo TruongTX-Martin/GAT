@@ -1,395 +1,402 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:id="@+id/layoutRoot"
+    android:background="#8C000000"
     android:orientation="vertical">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CACACA" />
-
-    <RelativeLayout
-        android:id="@+id/layoutTop"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
-
-        <ImageView
-            android:id="@+id/imgFilter"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_filter_green" />
-
-        <RelativeLayout
-            android:id="@+id/layoutClose"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignParentRight="true">
-
-            <ImageView
-                android:id="@+id/imgClose"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_cancle" />
-        </RelativeLayout>
-
-
-        <TextView
-            android:id="@+id/txtFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/imgFilter"
-            android:text="Bộ lọc"
-            android:textColor="#5297ba"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CACACA" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/layoutLeft"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CACACA" />
+
+        <RelativeLayout
+            android:id="@+id/layoutTop"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/imgFilter"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_filter_green" />
 
             <RelativeLayout
-                android:id="@+id/layoutRequestToYou"
-                android:layout_width="match_parent"
-                android:layout_height="80dp">
+                android:id="@+id/layoutClose"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true">
 
-                <View
-                    android:id="@+id/viewTo"
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="#5297ba" />
-
-                <TextView
-                    android:id="@+id/txtRequestToYou"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/imgClose"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_centerInParent="true"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_toRightOf="@+id/viewTo"
-                    android:gravity="center"
-                    android:text="Yêu cầu tới bạn"
-                    android:textColor="#000000"
-                    android:textSize="17dp"
-                    android:textStyle="bold" />
-
-                <RelativeLayout
-                    android:id="@+id/layoutRequestToYouOverlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:background="#C8d7d7d7"
-                    android:visibility="gone"
-                    />
-
+                    android:src="@drawable/ic_cancle" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/layoutRequestFromYou"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <View
-                    android:id="@+id/viewFrom"
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="#5297ba" />
+            <TextView
+                android:id="@+id/txtFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/imgFilter"
+                android:text="Bộ lọc"
+                android:textColor="#5297ba"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/txtRequestFromYou"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_toRightOf="@+id/viewFrom"
-                    android:gravity="center"
-                    android:text="Yêu cầu từ bạn"
-                    android:textColor="#000000"
-                    android:textSize="17dp"
-                    android:textStyle="bold" />
-
-                <RelativeLayout
-                    android:id="@+id/layoutRequestFromYouOverlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#C8d7d7d7" />
-            </RelativeLayout>
-
-        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CACACA" />
 
         <LinearLayout
-            android:id="@+id/layoutRight"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="20dp"
-                android:background="@android:color/transparent">
-
+            <LinearLayout
+                android:id="@+id/layoutLeft"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/layoutWaiting"
+                    android:id="@+id/layoutRequestToYou"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_layout_filter_book">
+                    android:layout_height="80dp">
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/ic_circle_white" />
-
-                    <ImageView
-                        android:id="@+id/imgCheckReaded"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="15dp"
-                        android:src="@drawable/ic_check_filter_book" />
+                    <View
+                        android:id="@+id/viewTo"
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="#5297ba" />
 
                     <TextView
-                        android:id="@+id/txtWaiting"
+                        android:id="@+id/txtRequestToYou"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="Đang đợi đồng ý"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_toRightOf="@+id/viewTo"
+                        android:gravity="center"
+                        android:text="Yêu cầu tới bạn"
+                        android:textColor="#000000"
+                        android:textSize="17dp"
                         android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:id="@+id/layoutRequestToYouOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="#C8d7d7d7"
+                        android:visibility="gone" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/layoutWaitingOverlay"
+                    android:id="@+id/layoutRequestFromYou"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_layout_filter_book_not_choosed"
-                    android:visibility="gone" />
+                    android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:id="@+id/layoutWaitingBorder"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/border_layout_filter_book"
-                    android:visibility="visible" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="20dp"
-                android:background="@android:color/transparent">
-
-                <RelativeLayout
-                    android:id="@+id/layoutContacting"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_layout_filter_book">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/ic_circle_white" />
-
-                    <ImageView
-                        android:id="@+id/imgCheckContacting"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="15dp"
-                        android:src="@drawable/ic_check_filter_book" />
+                    <View
+                        android:id="@+id/viewFrom"
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="#5297ba" />
 
                     <TextView
-                        android:id="@+id/txtContacting"
+                        android:id="@+id/txtRequestFromYou"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="Đang liên lạc"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_toRightOf="@+id/viewFrom"
+                        android:gravity="center"
+                        android:text="Yêu cầu từ bạn"
+                        android:textColor="#000000"
+                        android:textSize="17dp"
                         android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:id="@+id/layoutRequestFromYouOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#C8d7d7d7" />
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/layoutContactingOverLay"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_layout_filter_book_not_choosed"
-                    android:visibility="gone" />
+            </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/layoutContactingBorder"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/border_layout_filter_book"
-                    android:visibility="visible" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/layoutRight"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="20dp"
-                android:background="@android:color/transparent">
+                android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/layoutBorrowing"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_layout_filter_book">
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/transparent">
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentLeft="true"
+
+                    <RelativeLayout
+                        android:id="@+id/layoutWaiting"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/ic_circle_white" />
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book">
 
-                    <ImageView
-                        android:id="@+id/imgCheckBorrowing"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentLeft="true"
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/ic_circle_white" />
+
+                        <ImageView
+                            android:id="@+id/imgCheckReaded"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="15dp"
+                            android:src="@drawable/ic_check_filter_book" />
+
+                        <TextView
+                            android:id="@+id/txtWaiting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Đang đợi đồng ý"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/layoutWaitingOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="15dp"
-                        android:src="@drawable/ic_check_filter_book" />
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book_not_choosed"
+                        android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/txtBorrowing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="Đang mượn"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="15dp"
-                        android:textStyle="bold" />
+                    <RelativeLayout
+                        android:id="@+id/layoutWaitingBorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_layout_filter_book"
+                        android:visibility="visible" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/transparent">
+
+                    <RelativeLayout
+                        android:id="@+id/layoutContacting"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/ic_circle_white" />
+
+                        <ImageView
+                            android:id="@+id/imgCheckContacting"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="15dp"
+                            android:src="@drawable/ic_check_filter_book" />
+
+                        <TextView
+                            android:id="@+id/txtContacting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Đang liên lạc"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/layoutContactingOverLay"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book_not_choosed"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/layoutContactingBorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_layout_filter_book"
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/layoutBorrowingOverlay"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_layout_filter_book_not_choosed"
-                    android:visibility="visible" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/transparent">
 
-                <RelativeLayout
-                    android:id="@+id/layoutBorrowingBorder"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/border_layout_filter_book"
-                    android:visibility="gone" />
+                    <RelativeLayout
+                        android:id="@+id/layoutBorrowing"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book">
 
-            </RelativeLayout>
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/ic_circle_white" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:background="@android:color/transparent">
+                        <ImageView
+                            android:id="@+id/imgCheckBorrowing"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="15dp"
+                            android:src="@drawable/ic_check_filter_book" />
 
-                <RelativeLayout
-                    android:id="@+id/layoutOther"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_layout_filter_book">
+                        <TextView
+                            android:id="@+id/txtBorrowing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Đang mượn"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentLeft="true"
+                    <RelativeLayout
+                        android:id="@+id/layoutBorrowingOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/ic_circle_white" />
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book_not_choosed"
+                        android:visibility="visible" />
 
-                    <ImageView
-                        android:id="@+id/imgCheckOther"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="15dp"
-                        android:src="@drawable/ic_check_filter_book" />
+                    <RelativeLayout
+                        android:id="@+id/layoutBorrowingBorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_layout_filter_book"
+                        android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/txtOther"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="Khác"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="15dp"
-                        android:textStyle="bold" />
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/layoutOtherOverlay"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_layout_filter_book_not_choosed"
-                    android:visibility="visible" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:background="@android:color/transparent">
 
-                <RelativeLayout
-                    android:id="@+id/layoutOtherBorder"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/border_layout_filter_book"
-                    android:visibility="gone" />
+                    <RelativeLayout
+                        android:id="@+id/layoutOther"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book">
 
-            </RelativeLayout>
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/ic_circle_white" />
 
+                        <ImageView
+                            android:id="@+id/imgCheckOther"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="15dp"
+                            android:src="@drawable/ic_check_filter_book" />
+
+                        <TextView
+                            android:id="@+id/txtOther"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Khác"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/layoutOtherOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_layout_filter_book_not_choosed"
+                        android:visibility="visible" />
+
+                    <RelativeLayout
+                        android:id="@+id/layoutOtherBorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_layout_filter_book"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
-
-
-</LinearLayout>
+</RelativeLayout>

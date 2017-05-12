@@ -1,5 +1,6 @@
 package com.gat.feature.bookdetailowner;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
 import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.login.LoginScreen;
@@ -214,7 +217,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     int borrowingRecordId = 0;
     private BookDetailEntity bookDetail;
     private RequestStatusInput statusInput = new RequestStatusInput();
-
+    private Context context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,6 +226,8 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
 
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
                 getPresenter().onErrorChangeStatus().subscribe(this::getBookDetailError));
+        context = getApplicationContext();
+        
         initView();
         handleEvent();
     }
@@ -302,7 +307,9 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         imgEditionBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(bookDetail.getEditionInfo().getEditionId() > 0){
+                    MainActivity.start(context, BookDetailActivity.class, BookDetailScreen.instance(bookDetail.getEditionInfo().getEditionId()));
+                }
             }
         });
 
