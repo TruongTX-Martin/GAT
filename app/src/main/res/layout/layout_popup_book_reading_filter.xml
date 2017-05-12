@@ -1,246 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:id="@+id/layoutRoot"
+    android:background="#8C000000"
     android:orientation="vertical">
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CACACA" />
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/layoutTop"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
 
-        <ImageView
-            android:id="@+id/imgFilter"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_filter_green" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CACACA" />
 
         <RelativeLayout
-            android:id="@+id/layoutClose"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignParentRight="true"
-            >
+            android:id="@+id/layoutTop"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
             <ImageView
-                android:id="@+id/imgClose"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_cancle" />
+                android:id="@+id/imgFilter"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_filter_green" />
+
+            <RelativeLayout
+                android:id="@+id/layoutClose"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:id="@+id/imgClose"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_cancle" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/txtFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/imgFilter"
+                android:text="Bộ lọc"
+                android:textColor="#5297ba"
+                android:textSize="16dp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CACACA" />
 
-        <TextView
-            android:id="@+id/txtFilter"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/imgFilter"
-            android:text="Bộ lọc"
-            android:textColor="#5297ba"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CACACA" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/transparent">
+            <RelativeLayout
+                android:id="@+id/layoutReaded"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_layout_filter_book">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_circle_white" />
+
+                <ImageView
+                    android:id="@+id/imgCheckReaded"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/ic_check_filter_book" />
+
+                <TextView
+                    android:id="@+id/txtBookReaded"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Sách đã đọc"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutReadedOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_layout_filter_book_not_choosed"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/layoutReadedBorder"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/border_layout_filter_book"
+                android:visibility="visible" />
+        </RelativeLayout>
 
 
         <RelativeLayout
-            android:id="@+id/layoutReaded"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_layout_filter_book">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent">
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentLeft="true"
+            <RelativeLayout
+                android:id="@+id/layoutReading"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_layout_filter_book">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_circle_white" />
+
+                <ImageView
+                    android:id="@+id/imgCheckReading"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/ic_check_filter_book" />
+
+                <TextView
+                    android:id="@+id/txtReading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Sách đang đọc"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutReadingOverLay"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_circle_white" />
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_layout_filter_book_not_choosed"
+                android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/imgCheckReaded"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:src="@drawable/ic_check_filter_book" />
-
-            <TextView
-                android:id="@+id/txtBookReaded"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Sách đã đọc"
-                android:textColor="@color/colorWhite"
-                android:textSize="15dp"
-                android:textStyle="bold" />
-
-
+            <RelativeLayout
+                android:id="@+id/layoutReadingBorder"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/border_layout_filter_book"
+                android:visibility="visible" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/layoutReadedOverlay"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_layout_filter_book_not_choosed"
-            android:visibility="gone" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent">
 
-        <RelativeLayout
-            android:id="@+id/layoutReadedBorder"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/border_layout_filter_book"
-            android:visibility="visible" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/layoutToRead"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_layout_filter_book">
 
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_circle_white" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/transparent">
+                <ImageView
+                    android:id="@+id/imgCheckToRead"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/ic_check_filter_book" />
 
-        <RelativeLayout
-            android:id="@+id/layoutReading"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_layout_filter_book">
+                <TextView
+                    android:id="@+id/txtToRead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Sách sẽ đọc"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentLeft="true"
+            <RelativeLayout
+                android:id="@+id/layoutToReadOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_circle_white" />
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_layout_filter_book_not_choosed"
+                android:visibility="visible" />
 
-            <ImageView
-                android:id="@+id/imgCheckReading"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:src="@drawable/ic_check_filter_book" />
+            <RelativeLayout
+                android:id="@+id/layoutToReadBorder"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/border_layout_filter_book"
+                android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/txtReading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Sách đang đọc"
-                android:textColor="@color/colorWhite"
-                android:textSize="15dp"
-                android:textStyle="bold" />
         </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layoutReadingOverLay"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_layout_filter_book_not_choosed"
-            android:visibility="gone" />
-
-        <RelativeLayout
-            android:id="@+id/layoutReadingBorder"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/border_layout_filter_book"
-            android:visibility="visible" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@android:color/transparent">
-
-        <RelativeLayout
-            android:id="@+id/layoutToRead"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_layout_filter_book">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_circle_white" />
-
-            <ImageView
-                android:id="@+id/imgCheckToRead"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:src="@drawable/ic_check_filter_book" />
-
-            <TextView
-                android:id="@+id/txtToRead"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Sách sẽ đọc"
-                android:textColor="@color/colorWhite"
-                android:textSize="15dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layoutToReadOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_layout_filter_book_not_choosed"
-            android:visibility="visible" />
-
-        <RelativeLayout
-            android:id="@+id/layoutToReadBorder"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/border_layout_filter_book"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

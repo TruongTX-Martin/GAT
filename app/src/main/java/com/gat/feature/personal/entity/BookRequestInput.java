@@ -2,6 +2,8 @@ package com.gat.feature.personal.entity;
 
 import com.gat.common.util.Strings;
 
+import org.json.JSONObject;
+
 /**
  * Created by root on 13/04/2017.
  */
@@ -25,7 +27,67 @@ public class BookRequestInput {
     private String paramSharing = Strings.EMPTY;
     private String paramBorrow = Strings.EMPTY;
 
-    public BookRequestInput(boolean borrowWaitConfirm,boolean borrowContacting,boolean borrowBorrowing,boolean borrowOther) {
+    public BookRequestInput() {
+    }
+
+    public String getString() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("sharingWaitConfirm", sharingWaitConfirm);
+            object.put("sharingContacting", sharingContacting);
+            object.put("sharingBorrowing", sharingBorrowing);
+            object.put("sharingOther", sharingOther);
+            object.put("borrowWaitConfirm", borrowWaitConfirm);
+            object.put("borrowContacting", borrowContacting);
+            object.put("borrowBorrowing", borrowBorrowing);
+            object.put("borrowOther", borrowOther);
+        } catch (Exception e) {
+        }
+        return object.toString();
+    }
+    public static BookRequestInput getObject(String jsonString) {
+        BookRequestInput input = new BookRequestInput();
+        try {
+            JSONObject object = new JSONObject(jsonString);
+            if (object.has("sharingWaitConfirm")) {
+                boolean sharingWaitConfirm = object.getBoolean("sharingWaitConfirm");
+                input.setSharingWaitConfirm(sharingWaitConfirm);
+            }
+            if (object.has("sharingContacting")) {
+                boolean sharingContacting = object.getBoolean("sharingContacting");
+                input.setSharingContacting(sharingContacting);
+            }
+            if (object.has("sharingBorrowing")) {
+                boolean sharingBorrowing = object.getBoolean("sharingBorrowing");
+                input.setSharingBorrowing(sharingBorrowing);
+            }
+            if (object.has("sharingOther")) {
+                boolean sharingOther = object.getBoolean("sharingOther");
+                input.setSharingOther(sharingOther);
+            }
+            if (object.has("borrowWaitConfirm")) {
+                boolean borrowWaitConfirm = object.getBoolean("borrowWaitConfirm");
+                input.setBorrowWaitConfirm(borrowWaitConfirm);
+            }
+            if (object.has("borrowContacting")) {
+                boolean borrowContacting = object.getBoolean("borrowContacting");
+                input.setBorrowContacting(borrowContacting);
+            }
+            if (object.has("borrowBorrowing")) {
+                boolean borrowBorrowing = object.getBoolean("borrowBorrowing");
+                input.setBorrowBorrowing(borrowBorrowing);
+            }
+            if (object.has("borrowOther")) {
+                boolean borrowOther = object.getBoolean("borrowOther");
+                input.setBorrowOther(borrowOther);
+            }
+
+        } catch (Exception e) {
+        }
+        return input;
+    }
+
+    public BookRequestInput(boolean borrowWaitConfirm, boolean borrowContacting, boolean borrowBorrowing, boolean borrowOther) {
         this.borrowWaitConfirm = borrowWaitConfirm;
         this.borrowContacting = borrowContacting;
         this.borrowBorrowing = borrowBorrowing;

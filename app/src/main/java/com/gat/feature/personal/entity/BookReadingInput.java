@@ -1,5 +1,7 @@
 package com.gat.feature.personal.entity;
 
+import org.json.JSONObject;
+
 /**
  * Created by truongtechno on 30/03/2017.
  */
@@ -13,10 +15,47 @@ public class BookReadingInput {
 
     private int page = 1;
     private int per_page = 10;
-    public BookReadingInput(boolean readFilter,boolean readingFilter, boolean toReadFilter) {
+
+    public BookReadingInput() {
+    }
+
+    public BookReadingInput(boolean readFilter, boolean readingFilter, boolean toReadFilter) {
         this.readFilter = readFilter;
         this.readingFilter = readingFilter;
         this.toReadFilter = toReadFilter;
+    }
+
+
+    public String getString() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("readingFilter", readingFilter);
+            object.put("toReadFilter", toReadFilter);
+            object.put("readFilter", readFilter);
+        } catch (Exception e) {
+        }
+        return object.toString();
+    }
+    public static BookReadingInput getObject(String jsonString) {
+        BookReadingInput input = new BookReadingInput();
+        try {
+            JSONObject object = new JSONObject(jsonString);
+            if (object.has("readingFilter")) {
+                boolean readingFilter = object.getBoolean("readingFilter");
+                input.setReadingFilter(readingFilter);
+            }
+            if (object.has("toReadFilter")) {
+                boolean toReadFilter = object.getBoolean("toReadFilter");
+                input.setToReadFilter(toReadFilter);
+            }
+            if (object.has("readFilter")) {
+                boolean readFilter = object.getBoolean("readFilter");
+                input.setReadFilter(readFilter);
+            }
+
+        } catch (Exception e) {
+        }
+        return input;
     }
 
     public void setPage(int page) {

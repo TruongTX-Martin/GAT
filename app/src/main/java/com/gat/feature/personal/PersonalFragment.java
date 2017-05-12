@@ -22,6 +22,7 @@ import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
+import com.gat.common.util.DataLocal;
 import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
@@ -280,9 +281,15 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             }
             if (/*userInfo.userId() > 0*/userInfo.isValid()) {
                 BookReadingInput readingInput = new BookReadingInput(true, false, false);
+                if(DataLocal.getPersonalInputReading() != null) {
+                    readingInput = DataLocal.getPersonalInputReading();
+                }
                 readingInput.setUserId(userInfo.userId());
                 requestReadingBooks(readingInput);
                 BookInstanceInput currentInput = new BookInstanceInput(true, false, false);
+                if (DataLocal.getPersonalInputSharing() != null) {
+                    currentInput = DataLocal.getPersonalInputSharing();
+                }
                 fragmentBookSharing.setCurrentInput(currentInput);
                 requestBookInstance(currentInput);
             }
@@ -352,11 +359,13 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     public void requestReadingBooks(BookReadingInput input) {
         getPresenter().requestReadingBooks(input);
         fragmentBookReading.setCurrentInput(input);
+        DataLocal.savePersonalInputReading(input);
     }
 
     //request bookrequest
     public void requestBookRequest(BookRequestInput input) {
         getPresenter().requestBookRequests(input);
+        DataLocal.savePersonalInputRequest(input);
     }
 
     //handle get bookInstance return
