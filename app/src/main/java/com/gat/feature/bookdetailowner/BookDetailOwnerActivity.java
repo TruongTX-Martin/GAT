@@ -227,6 +227,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
                 getPresenter().onErrorChangeStatus().subscribe(this::getBookDetailError));
         context = getApplicationContext();
+        
         initView();
         handleEvent();
     }
