@@ -3,7 +3,10 @@ package com.gat.feature.book_detail;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,6 +38,7 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.widget.ShareDialog;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.customview.ViewMoreTextView;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.UserResponse;
@@ -172,6 +176,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         getPresenter().getBookEditionEvaluation();
 
         ratingBarUserRate.setOnRatingBarChangeListener(this);
+
+        // setup style RatingBar Comment
+        LayerDrawable stars = (LayerDrawable) ratingBarUserRate.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(0).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(1).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
@@ -308,7 +318,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private void setupRecyclerViewComments () {
         adapter = new EvaluationItemAdapter();
-        this.recyclerView.setHasFixedSize(true);
+        this.recyclerView.setHasFixedSize(false);
         this.recyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         this.recyclerView.setNestedScrollingEnabled(false);
@@ -324,6 +334,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         textViewRating.setText(String.valueOf(book.getRateAvg()));
         ratingBarBook.setRating(book.getRateAvg());
         textViewBookDescription.setText(book.getDescription());
+        ViewMoreTextView.makeTextViewResizable(textViewBookDescription, 5, "Xem thêm", true);
         if (mBookInfo.getImageId() != null && !mBookInfo.getImageId().isEmpty()) {
             imageViewBookCover.setDrawingCacheEnabled(true);
             ClientUtils.setImage(imageViewBookCover, R.drawable.default_book_cover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_SMALL));

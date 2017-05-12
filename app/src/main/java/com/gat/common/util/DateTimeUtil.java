@@ -57,14 +57,19 @@ public class DateTimeUtil {
     public static String calculateTimeAgo (long milliseconds) {
 
         Date now = new Date();
-        long hoursAgo = TimeUnit.MILLISECONDS.toHours(now.getTime() - milliseconds);
+        long minutesAgo = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - milliseconds);
 
-        if (hoursAgo <=1) {
-            return TimeUnit.MILLISECONDS.toMinutes(now.getTime() - milliseconds) + " phút";
-        } else if (hoursAgo >=24){
-            return TimeUnit.MILLISECONDS.toDays(now.getTime() - milliseconds) + " ngày";
+        if (minutesAgo >= 1440) { // 24h x 60p = 1440
+            long daysAgo= TimeUnit.MILLISECONDS.toDays(now.getTime() - milliseconds);
+            if (daysAgo >= 30) {
+                return Math.ceil(daysAgo/30) + " tháng";
+            } else {
+                return TimeUnit.MILLISECONDS.toDays(now.getTime() - milliseconds) + " ngày";
+            }
+        } else if (minutesAgo >= 60) {
+            return TimeUnit.MILLISECONDS.toHours(now.getTime() - milliseconds) + " giờ";
         } else {
-            return hoursAgo + " giờ";
+            return minutesAgo + " phút";
         }
     }
 

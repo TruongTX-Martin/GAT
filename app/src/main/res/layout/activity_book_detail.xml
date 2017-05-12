@@ -92,7 +92,7 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/normal_text_view_size" />
 
-        <RatingBar
+        <com.gat.common.customview.MZRatingBar
             android:id="@+id/rating_bar_book"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
@@ -100,9 +100,7 @@
             android:layout_below="@+id/text_view_book_author"
             android:layout_marginBottom="@dimen/margin_top_bottom_normal"
             android:layout_toEndOf="@+id/image_view_book_cover"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:stepSize="0.1" />
+            android:numStars="5" />
 
         <TextView
             android:id="@+id/text_view_rating"
@@ -215,7 +213,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:numStars="5"
-                    android:stepSize="0.1" />
+                    />
 
                 <TextView
                     android:id="@+id/text_view_comment_by_user"
@@ -262,7 +260,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_horizontal_large"
                 android:layout_marginRight="@dimen/margin_horizontal_large"
-                android:maxLines="6"
                 android:text="..."
                 android:ellipsize="end"
                 android:textColor="@color/colorTextViewDark" />

@@ -1,6 +1,7 @@
 package com.gat.feature.book_detail.adapter;
 
 import android.support.annotation.LayoutRes;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.customview.ViewMoreTextView;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.DateTimeUtil;
 
@@ -52,6 +54,7 @@ public class EvaluationItemViewHolder extends ItemViewHolder<EvaluationItem> {
         textViewName.setText(item.evaluation().getName());
         ratingBarComment.setRating(item.evaluation().getValue());
         textViewCommentEvaluation.setText(item.evaluation().getReview());
+        ViewMoreTextView.makeTextViewResizable(textViewCommentEvaluation, 3, mContext.getString(R.string.view_more), false);
 
         if ( ! TextUtils.isEmpty(item.evaluation().getImageId())) {
             ClientUtils.setImage(imageViewAvatar, R.drawable.default_user_icon,

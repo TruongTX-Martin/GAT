@@ -3,10 +3,12 @@
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorPrimaryDark">#0288D1</color>
     <color name="colorPrimaryLight">#B3E5FC</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#03A9F4</color>
 
     <color name="colorRedPrimaryDark">#d70e0e</color>
     <color name="backgroundWindow">#EAEAEA</color>
+
+    <color name="colorRating">#f4c312</color>
 
     <color name="backgroundCard">#FFFFFF</color>
     <color name="backgroundGreen">#7cc576</color>

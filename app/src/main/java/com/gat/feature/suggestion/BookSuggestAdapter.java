@@ -65,9 +65,6 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
             ClientUtils.setImage(holder.ivBooksCoverList, R.drawable.default_book_cover,
                     ClientUtils.getUrlImage(item.getImageId(), ClientUtils.SIZE_SMALL));
         }
-
-        LayerDrawable stars = (LayerDrawable) holder.ratingBar.getProgressDrawable();
-        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override

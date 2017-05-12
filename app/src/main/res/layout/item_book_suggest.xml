@@ -27,13 +27,13 @@
         android:textColor="@color/colorTextViewDark"
         android:textSize="@dimen/normal_text_view_size" />
 
-    <RatingBar
+    <com.gat.common.customview.MZRatingBar
         android:id="@+id/rating_bar_book"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:isIndicator="true"
         android:numStars="5"
-        android:stepSize="0.5" />
+        />
 
 </LinearLayout>

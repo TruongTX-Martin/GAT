@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:textSize="@dimen/smaller_text_view_size"
         android:text=".. days ago" />
 
     <TextView
@@ -31,7 +32,7 @@
         android:textColor="@color/colorTextViewDark"
         android:textSize="@dimen/large_text_view_size" />
 
-    <RatingBar
+    <com.gat.common.customview.MZRatingBar
         android:id="@+id/rating_bar_comment"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
@@ -51,7 +52,6 @@
         android:layout_below="@+id/rating_bar_comment"
         android:layout_marginBottom="@dimen/margin_top_bottom_normal"
         android:layout_toEndOf="@+id/image_view_avatar"
-        android:maxLines="4"
         android:textColor="@color/colorTextViewDark" />
 
 
