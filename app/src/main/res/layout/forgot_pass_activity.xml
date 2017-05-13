@@ -6,7 +6,7 @@
     android:background="@color/colorWhite"
     android:id="@+id/forgot_password_view">
 
-    <include layout="@layout/header_blue"/>
+    <include layout="@layout/layout_activity_top"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
             android:drawableStart="@drawable/email_input_icon"
             android:hint="@string/login_email_hint"
             android:inputType="textEmailAddress"
-            android:textSize="@dimen/normal_textsize"
+            android:textSize="@dimen/normal_textsize_l"
             android:background="@drawable/text_edit_shape_white"/>
     </android.support.design.widget.TextInputLayout>
 

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/barcode_layout">
 
-    <include layout="@layout/header_blue"/>
+    <include layout="@layout/layout_activity_top"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,16 +26,15 @@
 
         <Button
             android:id="@+id/btn_light"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/btn_width"
             android:layout_height="@dimen/btn_height"
             android:layout_marginBottom="24dp"
-            android:layout_marginLeft="@dimen/margin_left_right"
-            android:layout_marginRight="@dimen/margin_left_right"
             android:layout_marginTop="24dp"
+            android:layout_gravity="center_horizontal"
             android:background="@drawable/bg_rounded_blue"
-            android:drawableEnd="@drawable/scan_ic_selected"
-            android:paddingEnd="@dimen/padding_end"
-            android:paddingStart="@dimen/padding_start"
+            android:drawableStart="@drawable/light_ic"
+            android:paddingStart="@dimen/light_padding_start"
+            android:paddingEnd="@dimen/light_padding_end"
             android:paddingTop="5dp"
             android:text="@string/btn_turn_on_light"
             android:textColor="@color/colorWhite" />

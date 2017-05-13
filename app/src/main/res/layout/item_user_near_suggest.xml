@@ -10,8 +10,8 @@
 
     <com.gat.common.customview.CircleImage xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/iv_people_near_suggest_avatar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/suggestion_user_img_size"
+        android:layout_height="@dimen/suggestion_user_img_size"
         android:layout_gravity="top|center_horizontal"
         android:src="@drawable/default_user_icon"
         app:civ_border_color="#4392bb"
@@ -26,6 +26,7 @@
         android:gravity="center"
         android:maxLines="1"
         android:ellipsize="end"
+        android:textSize="@dimen/small_textsize_s"
         android:text="@string/default_info_snippet"
         android:textColor="#4e4e4e" />
 </LinearLayout>

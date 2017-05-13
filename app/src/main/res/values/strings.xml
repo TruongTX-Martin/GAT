@@ -225,6 +225,9 @@
     <string name="ask_for_logout">Bạn thực sự muốn thoát</string>
 
 
+    <!-- Error message -->
+    <string name="password_invalid">Password is invalid</string>
+    <string name="email_invalid">Email is invalid</string>
     <!-- fonts -->
     <string name="font_family_light">sans-serif-light</string>
     <string name="font_family_medium">sans-serif-medium</string>

@@ -29,10 +29,10 @@ public interface LoginPresenter extends Presenter {
     Observable<ServerResponse<LoginResponseData>> changePasswordResult();
     void changePassword(String password);
 
+    // No use
     Observable<Boolean> loginFirebase();
     void loginOnFirebase();
 
-    // No use
     void loadLocalUser();
     Observable<LoginData> loadLocalLoginData();
     void login();

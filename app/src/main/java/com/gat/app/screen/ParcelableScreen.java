@@ -8,6 +8,7 @@ import com.gat.data.firebase.entity.NotificationParcelable;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
+import com.gat.data.response.impl.Category;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
@@ -36,8 +37,10 @@ import com.gat.feature.setting.main.MainSettingScreen;
 import com.gat.feature.suggestion.SuggestionScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
+import com.gat.repository.entity.InterestCategory;
 import com.gat.repository.entity.User;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -160,6 +163,8 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof AddLocationScreen) {
 
         } else if (screen instanceof AddCategoryScreen) {
+            AddCategoryScreen addCategoryScreen = (AddCategoryScreen)screen;
+            dest.writeList(addCategoryScreen.categories());
 
         } else if (screen instanceof SuggestionScreen) {
 
@@ -196,7 +201,8 @@ public class ParcelableScreen implements Parcelable {
             dest.writeFloat(commentScreen.value());
             dest.writeString(commentScreen.comment());
         } else if (screen instanceof ScanScreen) {
-
+            ScanScreen scanScreen = (ScanScreen)screen;
+            dest.writeInt(scanScreen.from());
         } else if (screen instanceof MainSettingScreen) {
 
         } else if (screen instanceof AddEmailPasswordScreen) {
@@ -248,7 +254,11 @@ public class ParcelableScreen implements Parcelable {
                 screen = AddLocationScreen.instance();
                 break;
             case ADD_CATEGORY:
-                screen = AddCategoryScreen.instance();
+                List<InterestCategory> list = in.readArrayList(InterestCategory.class.getClassLoader());
+                if (list != null)
+                    screen = AddCategoryScreen.instance(list);
+                else
+                    screen = AddCategoryScreen.instance();
                 break;
             case SUGGESTION:
                 screen = SuggestionScreen.instance();
@@ -298,7 +308,9 @@ public class ParcelableScreen implements Parcelable {
             case CHANGE_PASSWORD:
                 screen = ChangePasswordScreen.instance();
                 break;
-
+            case SCAN:
+                screen = ScanScreen.instance(in.readInt());
+                break;
             case NOTIFICATION:
                 screen = NotificationScreen.instance();
                 break;

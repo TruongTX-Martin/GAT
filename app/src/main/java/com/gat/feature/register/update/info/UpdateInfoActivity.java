@@ -77,9 +77,9 @@ public class UpdateInfoActivity extends Activity {
                 if (!result.first) {
                     String error;
                     if (result.second == CommonCheck.Error.FIELD_EMPTY) {
-                        error = getString(R.string.login_email_empty);
+                        error = getString(R.string.email_invalid);
                     } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
-                        error = getString(R.string.login_email_invalid);
+                        error = getString(R.string.email_invalid);
                     } else {
                         error = Strings.EMPTY;
                     }
@@ -90,9 +90,9 @@ public class UpdateInfoActivity extends Activity {
                 if (!result.first) {
                     String error;
                     if (result.second == CommonCheck.Error.FIELD_EMPTY) {
-                        error = getString(R.string.login_password_empty);
+                        error = getString(R.string.password_invalid);
                     } else if (result.second == CommonCheck.Error.EMAIL_INVALID) {
-                        error = getString(R.string.login_password_length);
+                        error = getString(R.string.password_invalid);
                     } else {
                         error = Strings.EMPTY;
                     }

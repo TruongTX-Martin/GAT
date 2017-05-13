@@ -38,7 +38,7 @@ import dagger.Provides;
 @Module
 public class AppModule {
     private final String BASE_URL = "http://gat-test-ver1.azurewebsites.net/api/";
-    private final String LANG_EN = "en";
+    private final String LANG_EN = "vi";
 
     private Application application;
 

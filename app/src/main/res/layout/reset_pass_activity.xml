@@ -6,7 +6,7 @@
     android:background="@color/colorWhite"
     android:id="@+id/verify_token_view">
 
-    <include layout="@layout/header_blue"/>
+    <include layout="@layout/layout_activity_top"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -42,7 +42,8 @@
             android:inputType="textPassword"
             android:hint="@string/new_password_hint"
             android:background="@drawable/text_edit_shape_white"
-            android:textSize="@dimen/normal_textsize"/>
+            android:maxLength="10"
+            android:textSize="@dimen/normal_textsize_l"/>
     </android.support.design.widget.TextInputLayout>
 
     <Button

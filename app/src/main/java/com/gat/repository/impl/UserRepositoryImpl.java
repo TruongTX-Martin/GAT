@@ -213,12 +213,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<ServerResponse> updateLocation(String address, LatLng location) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().updateLocation(address, (float)location.longitude, (float)location.latitude));
+        return Observable.defer(() -> networkUserDataSourceLazy.get().updateLocation(address, (float)location.longitude, (float)location.latitude))
+                .doOnNext(response -> networkUserDataSourceLazy.get().getPersonalInfo()
+                        .doOnNext(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson())))));
     }
 
     @Override
     public Observable<ServerResponse> updateCategories(List<Integer> categories) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().updateCategories(categories));
+        return Observable.defer(() -> networkUserDataSourceLazy.get().updateCategories(categories))
+                .doOnNext(response -> networkUserDataSourceLazy.get().getPersonalInfo()
+                        .doOnNext(rawData -> Observable.just(rawData.getDataReturn(User.typeAdapter(new Gson())))));
     }
 
     @Override

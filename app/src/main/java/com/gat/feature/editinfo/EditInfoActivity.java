@@ -40,6 +40,10 @@ import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
+import com.gat.feature.register.update.category.AddCategoryActivity;
+import com.gat.feature.register.update.category.AddCategoryScreen;
+import com.gat.feature.register.update.location.AddLocationActivity;
+import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
@@ -47,6 +51,8 @@ import com.gat.repository.entity.User;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -149,12 +155,14 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             @Override
             public void onClick(View v) {
                 //mr.Duc redirect here
+                start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
             }
         });
         layoutFavorit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //mr.Duc redirect here
+                start(getApplicationContext(), AddCategoryActivity.class, AddCategoryScreen.instance(user.interestCategory()));
             }
         });
     }

@@ -9,12 +9,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,8 +64,17 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     @BindView(R.id.btn_light)
     Button lightBtn;
 
-    @BindView(R.id.header_text)
-    TextView headerText;
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
+
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout headerLayout;
 
     private boolean isTorchOn = false;
 
@@ -82,7 +94,7 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
 
     @Override
     protected ScanScreen getDefaultScreen() {
-        return ScanScreen.instance();
+        return ScanScreen.FROM_TAB;
     }
 
     @Override
@@ -91,7 +103,15 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
                              @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        headerText.setText(getString(R.string.scan_barcode_header));
+        headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
+        txtTitle.setText(getString(R.string.register_title));
+        txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
+        if (getScreen().from() == ScanScreen.From.SEARCH)
+            imgBack.setImageResource(R.drawable.narrow_back_black);
+        else
+            imgBack.setVisibility(View.GONE);
+        imgSave.setVisibility(View.GONE);
+
 
         Log.d(TAG, "onCreateView");
         disposables = new CompositeDisposable(
@@ -118,6 +138,11 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
             isTorchOn = !isTorchOn;
             changeBtnText();
         });
+
+        if (getScreen().from() == ScanScreen.From.SEARCH)
+            imgBack.setOnClickListener(v -> {
+                // TODO go back to search screen
+            });
 
         return view;
     }
@@ -177,7 +202,6 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
         if (CommonCheck.checkIsbnCode(isbn)) {
             getPresenter().searchByIsbn(isbn);
         } else {
-            Toast.makeText(getContext(), getString(R.string.isbn_invalid), Toast.LENGTH_SHORT).show();
             showErrorDialog(getString(R.string.isbn_invalid), getString(R.string.isbn_invalid_message));
             scannerView.resumeCameraPreview(this);
         }
@@ -217,7 +241,7 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     }
 
     private void onError(String error) {
-        showErrorDialog(error, getString(R.string.book_not_found));
+        showErrorDialog(getString(R.string.book_not_found), error);
         scannerView.resumeCameraPreview(this);
     }
 

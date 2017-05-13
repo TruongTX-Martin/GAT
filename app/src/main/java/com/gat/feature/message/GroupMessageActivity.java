@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -38,6 +40,15 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
     @BindView(R.id.message_recycler)
     RecyclerView recyclerView;
 
+    @BindView(R.id.txtTitle)
+    TextView messageHeader;
+
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
+
     private LoadMoreScrollListener loadMoreScrollListener;
     private GroupMessageAdapter groupMessageAdapter;
 
@@ -51,6 +62,10 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
                 getPresenter().loadingEvents().subscribe(this::onLoadingEvent)
 
         );
+
+        imgBack.setImageResource(R.drawable.narrow_back_black);
+        imgSave.setVisibility(View.GONE);
+
         groupMessageAdapter = new GroupMessageAdapter();
         recyclerView.setAdapter(groupMessageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));

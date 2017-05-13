@@ -6,10 +6,14 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gat.R;
@@ -22,11 +26,15 @@ import com.gat.feature.main.MainActivity;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterPresenter;
 import com.gat.feature.register.RegisterScreen;
+import com.gat.feature.register.update.location.AddLocationActivity;
+import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 import com.gat.repository.entity.BookCategory;
+import com.gat.repository.entity.InterestCategory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -49,6 +57,18 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
     @BindView(R.id.btn_add_category)
     Button addCateBtn;
 
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
+
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout headerLayout;
+
     private Unbinder unbinder;
     private BookCategory bookCategories[];
     private ProgressDialog progressDialog;
@@ -63,13 +83,20 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        unbinder = ButterKnife.bind(this, findViewById(R.id.category_view));
+
+        headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
+        txtTitle.setText(getString(R.string.register_category_header));
+        txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
+        imgBack.setImageResource(R.drawable.narrow_back_black);
+        imgSave.setVisibility(View.GONE);
+
         progressDialog =  new ProgressDialog(this);
         disposables = new CompositeDisposable(
                 getPresenter().updateResult().subscribe(this::onUpdateSuccess),
                 getPresenter().onError().subscribe(this::onUpdateError)
         );
 
+        List<InterestCategory> savedCategoryList = getScreen().categories();
         // Initialize category list
         bookCategories = new BookCategory[MAX_CATE];
         Resources res = getResources();
@@ -77,7 +104,16 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
         TypedArray names = res.obtainTypedArray(R.array.category_name);
         TypedArray categoryId = res.obtainTypedArray(R.array.category_id);
         for (int i = 0; i < MAX_CATE; i++) {
-            bookCategories[i] = BookCategory.instance(names.getString(i), icons.getResourceId(i, 0), false, categoryId.getInt(i, 0));
+            boolean isFavor = false;
+            if (savedCategoryList != null && savedCategoryList.size() > 0) {
+                for (Iterator<InterestCategory> iterator = savedCategoryList.iterator(); iterator.hasNext();) {
+                    if (iterator.next().getCategoryId() == categoryId.getInt(i, 0)) {
+                        isFavor = true;
+                        break;
+                    }
+                }
+            }
+            bookCategories[i] = BookCategory.instance(names.getString(i), icons.getResourceId(i, 0), isFavor, categoryId.getInt(i, 0));
         }
 
         CategoryAdapter categoryAdapter = new CategoryAdapter(this, bookCategories);
@@ -107,12 +143,16 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
             onUpdating(true);
             getPresenter().setCategories(listCate);
         });
+
+        imgBack.setOnClickListener(v -> {
+            start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
+            this.finish();
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
     }
 
     @Override
