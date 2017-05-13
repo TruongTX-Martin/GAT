@@ -2,11 +2,14 @@ package com.gat.feature.suggestion.search;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.gat.R;
 import com.gat.common.adapter.Item;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.listener.LoadMoreScrollListener;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
@@ -113,8 +117,15 @@ public class SearchResultFragment extends Fragment
             return;
         }
 
+        Spanned styledText;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            styledText = Html.fromHtml("Hiển thị " + ClientUtils.formatColorAndSize(String.valueOf(list.size()), "#000000", 16) + " kết quả tìm kiếm", Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            styledText = Html.fromHtml("Hiển thị " + ClientUtils.formatColorAndSize(String.valueOf(list.size()), "#000000", 16) + " kết quả tìm kiếm");
+        }
+
         String totalString = String.format(getString(R.string.show_count_search_result), list.size());
-        this.textViewTitle.setText(totalString);
+        this.textViewTitle.setText(styledText);
 
         this.searchResultAdapter.clearAllItems();
         List<Item> listItems = SearchBuilder.transformListBook(list);

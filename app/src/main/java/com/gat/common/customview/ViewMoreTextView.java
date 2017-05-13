@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.gat.common.util.MZDebug;
+
 /**
  * Created by mryit on 5/12/2017.
  */
@@ -57,7 +59,12 @@ public class ViewMoreTextView {
                                     viewMore), TextView.BufferType.SPANNABLE);
                 } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
                     int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
-                    String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() - DEFAULT_END_CHARACTERS) + "... " + expandText;
+
+                    MZDebug.w("Text comment: " + tv.getText());
+                    String text = Html.fromHtml(tv.getText().toString()).toString();
+                    if (tv.getText().length() > (expandText.length() + DEFAULT_END_CHARACTERS)) {
+                        text = tv.getText().subSequence(0, lineEndIndex - expandText.length() - DEFAULT_END_CHARACTERS) + "... " + expandText;
+                    }
                     tv.setText(text);
                     tv.setMovementMethod(LinkMovementMethod.getInstance());
                     tv.setText(

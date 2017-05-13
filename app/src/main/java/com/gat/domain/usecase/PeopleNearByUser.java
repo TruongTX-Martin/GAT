@@ -1,5 +1,6 @@
 package com.gat.domain.usecase;
 
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.ServerResponse;
 import com.gat.repository.UserRepository;
 import com.gat.repository.entity.UserNearByDistance;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by mozaa on 01/04/2017.
  */
-public class PeopleNearByUser extends  UseCase<List<UserNearByDistance>> {
+public class PeopleNearByUser extends  UseCase<DataResultListResponse<UserNearByDistance>> {
 
     private final UserRepository repository;
     private final LatLng currentLocation;
@@ -31,7 +32,7 @@ public class PeopleNearByUser extends  UseCase<List<UserNearByDistance>> {
 
 
     @Override
-    protected Observable<List<UserNearByDistance>>createObservable() {
+    protected Observable<DataResultListResponse<UserNearByDistance>>createObservable() {
         return repository.getPeopleNearByUser(currentLocation, neLocation, wsLocation, page, sizeOfPage);
     }
 

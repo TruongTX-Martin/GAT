@@ -87,42 +87,39 @@ public class NotificationAdapter extends ItemAdapter {
 
     public boolean setItems(List<NotifyEntity> list) {
 
-        try {
-            if (list == null || list.isEmpty()) {
-                return false;
-            }
-
-            List<Item> listItems = new ArrayList<>();
-            NotificationItem item;
-            DateTimeItem timeHeader;
-
-            // add first item
-            String timeToday = DateTimeUtil.transformDate(list.get(0).beginTime());
-            timeHeader = DateTimeItem.instance(timeToday);
-            listItems.add(timeHeader);
-
-            item = NotificationItem.instance(list.get(0));
-            listItems.add(item);
-
-            // add next item to end of list.
-            for (int i = 1, z = list.size(); i < z; i++) {
-
-                String string = DateTimeUtil.transformDate(list.get(i).beginTime());
-                String stringPrev = DateTimeUtil.transformDate(list.get(i - 1).beginTime());
-
-                if (!string.equals(stringPrev)) {
-                    timeHeader = DateTimeItem.instance(DateTimeUtil.transformDate(list.get(i).beginTime()));
-                    listItems.add(timeHeader);
-                }
-
-                item = NotificationItem.instance(list.get(i));
-                listItems.add(item);
-            }
-
-            setItem(listItems);
-            notifyDataSetChanged();
-        } catch (Exception e) {
+        if (list == null || list.isEmpty()) {
+            return false;
         }
+
+        List<Item> listItems = new ArrayList<>();
+        NotificationItem item;
+        DateTimeItem timeHeader;
+
+        // add first item
+        String timeToday = DateTimeUtil.transformDate(list.get(0).beginTime());
+        timeHeader = DateTimeItem.instance(timeToday);
+        listItems.add(timeHeader);
+
+        item = NotificationItem.instance(list.get(0));
+        listItems.add(item);
+
+        // add next item to end of list.
+        for (int i = 1, z = list.size(); i < z; i++) {
+
+            String string = DateTimeUtil.transformDate(list.get(i).beginTime());
+            String stringPrev = DateTimeUtil.transformDate(list.get(i - 1).beginTime());
+
+            if (!string.equals(stringPrev)) {
+                timeHeader = DateTimeItem.instance(DateTimeUtil.transformDate(list.get(i).beginTime()));
+                listItems.add(timeHeader);
+            }
+
+            item = NotificationItem.instance(list.get(i));
+            listItems.add(item);
+        }
+
+        setItem(listItems);
+        notifyDataSetChanged();
 
         return true;
     }

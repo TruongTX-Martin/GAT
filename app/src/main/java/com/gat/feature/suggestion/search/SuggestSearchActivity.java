@@ -18,6 +18,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.event.LoadingEvent;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
@@ -116,9 +117,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
                 getPresenter().onError().subscribe(this::onSearchFailure)
         );
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Đang tìm kiếm..");
-        progressDialog.setCancelable(false);
+        progressDialog = ClientUtils.createProgressDialog(SuggestSearchActivity.this);
 
         setupViewPager(mViewPager);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -184,6 +183,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
                 if (TextUtils.isEmpty(editTextSearch.getText().toString())) {
                     imageButtonScan.setTag(BUTTON_TYPE.SCAN);
                     imageButtonScan.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.scan_ic_selected, null));
+                    Views.hideKeyboard(SuggestSearchActivity.this);
                 } else {
                     editTextSearch.setText(Strings.EMPTY);
                 }
@@ -201,8 +201,9 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     OnTabSelectedListener onTabSelectedListener = new OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            mCurrentTab = tab.getPosition();
+            Views.hideKeyboard(SuggestSearchActivity.this);
 
+            mCurrentTab = tab.getPosition();
             switch (mCurrentTab) {
                 case TAB_POS.TAB_BOOK:
                     MZDebug.w("_______________________________ Request list history BOOK");
@@ -246,6 +247,8 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     @Override
     public void onUserTapOnHistoryKeyword(String keyword) {
         editTextSearch.setText(keyword);
+        imageButtonScan.setTag(BUTTON_TYPE.CLEAR);
+        imageButtonScan.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_cancle, null));
         showProgress();
         startSearchWithKeyword(keyword);
     }
@@ -254,7 +257,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     public boolean onTouch(View v, MotionEvent event) {
 
         if (MotionEvent.ACTION_UP != event.getAction()) {
-            return true;
+            return false;
         }
 
         if (TextUtils.isEmpty(editTextSearch.getText().toString())) {
@@ -262,7 +265,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
             imageButtonScan.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_cancle, null));
         }
 
-        return true;
+        return false;
     }
 
 

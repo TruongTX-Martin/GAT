@@ -226,7 +226,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<List<UserNearByDistance>> getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage) {
+    public Observable<DataResultListResponse<UserNearByDistance>> getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage) {
         return Observable.defer(()
                 -> networkUserDataSourceLazy.get().getPeopleNearByUserByDistance(
                         (float) userLocation.longitude, (float) userLocation.latitude,

@@ -59,7 +59,7 @@ public interface UserRepository {
     Observable<ServerResponse> updateLocation(String address, LatLng location);
     Observable<ServerResponse> updateCategories(List<Integer> categories);
 
-    Observable<List<UserNearByDistance>>
+    Observable<DataResultListResponse<UserNearByDistance>>
             getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage);
 
     Observable<DataResultListResponse<UserResponse>>

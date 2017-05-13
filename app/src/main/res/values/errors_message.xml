@@ -3,5 +3,12 @@
     <string name="err_email_empty">Bạn cần nhập Email.</string>
     <string name="err_password_empty">Bạn cần nhập password.</string>
 
+    <string name="err_discard_title">Huỷ thay đổi</string>
+    <string name="err_discard_message">Bạn muốn huỷ bỏ thông tin đã sửa đổi?</string>
+    
+    <string name="err_notice">Thông báo</string>
+    <string name="err">Lỗi</string>
+    <string name="err_required_login">Để sử dụng chức năng này bạn phải đăng nhập vào tài khoản của mình</string>
+
 
 </resources>

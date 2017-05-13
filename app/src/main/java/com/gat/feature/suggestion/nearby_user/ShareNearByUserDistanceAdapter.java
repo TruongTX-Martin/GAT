@@ -41,12 +41,12 @@ public class ShareNearByUserDistanceAdapter
         notifyDataSetChanged();
     }
 
-    protected void addListItems (List<UserNearByDistance> list) {
-        this.listItems.addAll(list);
-        Collections.sort(this.listItems, new UserNearByDistanceComparator());
-
-        notifyDataSetChanged();
-    }
+//    protected void addListItems (List<UserNearByDistance> list) {
+//        this.listItems.addAll(list);
+//        Collections.sort(this.listItems, new UserNearByDistanceComparator());
+//
+//        notifyDataSetChanged();
+//    }
 
     @Override
     public UserSharingNearViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -73,6 +73,10 @@
     <dimen name="error_popup_padding_lr">30dp</dimen>
     <dimen name="error_btn_width">145dp</dimen>
 
+    <dimen name="button_width_small">100dp</dimen>
+    <dimen name="button_width_normal">120dp</dimen>
+    <dimen name="button_width_large">140dp</dimen>
+
     <dimen name="tab_ico_width">27dp</dimen>
     <dimen name="tab_ico_height">24dp</dimen>
     <dimen name="tab_text_size">6.7sp</dimen>

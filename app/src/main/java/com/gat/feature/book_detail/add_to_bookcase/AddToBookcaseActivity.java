@@ -1,5 +1,6 @@
 package com.gat.feature.book_detail.add_to_bookcase;
 
+import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +18,6 @@ import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -124,11 +124,27 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
 
     @OnClick(R.id.image_view_back)
     void onBack () {
-        if (isStateChanged) {
-            // show dialog ask for discard
-        } else {
+
+        if ( ! isStateChanged) {
             finish();
+            return;
         }
+
+        // show dialog ask for discard
+        ClientUtils.showAlertDialog(AddToBookcaseActivity.this,
+                    getString(R.string.err_discard_title),
+                    getString(R.string.err_discard_message),
+                    null, null, new ClientUtils.OnDialogPressed() {
+                        @Override
+                        public void onClickAccept() {
+                            finish();
+                        }
+
+                        @Override
+                        public void onClickRefuse() {
+                            // do nothing
+                        }
+                    });
     }
 
     @OnClick(R.id.image_view_save)

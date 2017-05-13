@@ -11,8 +11,7 @@
         android:layout_height="@dimen/navigation_header_height"
         android:background="@color/backgroundApp"
         android:paddingLeft="@dimen/paddingLarge"
-        android:paddingRight="@dimen/paddingSmall"
-        android:paddingTop="@dimen/paddingLarge">
+        android:paddingRight="@dimen/paddingSmall">
 
         <Button
             android:id="@+id/button_cancel"
@@ -22,12 +21,14 @@
             android:background="@android:color/transparent"
             android:text="@string/cancel"
             android:textAllCaps="false"
+            android:layout_centerVertical="true"
             android:textColor="@android:color/white" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_toStartOf="@+id/button_cancel"
+            android:layout_centerVertical="true"
             android:background="@color/colorBlueDark">
 
             <EditText
@@ -57,7 +58,6 @@
                 android:src="@drawable/scan_ic_selected" />
 
         </FrameLayout>
-
 
     </RelativeLayout>
 

@@ -95,7 +95,7 @@ public interface UseCaseFactory {
 
     UseCase<List<BookResponse>> suggestBooksAfterLogin();
 
-    UseCase<List<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage);
+    UseCase<DataResultListResponse<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage);
 
     UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage);
 

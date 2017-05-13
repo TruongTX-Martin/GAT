@@ -27,9 +27,6 @@ import butterknife.ButterKnife;
 
 public class SearchBookResultViewHolder extends ItemViewHolder<SearchBookResultItem> {
 
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
-
     @BindView(R.id.image_view_book_cover)
     ImageView imageViewBookCover;
 

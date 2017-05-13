@@ -377,6 +377,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
         if (evaluation == null) {
             ratingBarUserRate.setRating(0);
+            textViewCommentByUser.setVisibility(View.GONE);
             buttonComment.setText(getResources().getString(R.string.write_comment));
         } else {
             ratingBarUserRate.setRating(evaluation.getValue());
@@ -384,8 +385,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             // nếu review chưa có hoặc null -> button text: Viết bình luận
             // nếu đã có review -> button text : Sửa bình luận
             if (TextUtils.isEmpty(evaluation.getReview())) {
+                textViewCommentByUser.setVisibility(View.GONE);
                 buttonComment.setText(getResources().getString(R.string.write_comment));
             } else {
+                textViewCommentByUser.setVisibility(View.VISIBLE);
                 textViewCommentByUser.setText(evaluation.getReview());
                 buttonComment.setText(getResources().getString(R.string.edit_comment));
             }

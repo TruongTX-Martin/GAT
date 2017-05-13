@@ -1,6 +1,7 @@
 package com.gat.feature.suggestion.nearby_user;
 
 import com.gat.common.util.MZDebug;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
@@ -29,8 +30,8 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
 
-    UseCase<List<UserNearByDistance>> useCaseUserNear;
-    Subject<List<UserNearByDistance>> resultUserNearSubject;
+    UseCase<DataResultListResponse<UserNearByDistance>> useCaseUserNear;
+    Subject<DataResultListResponse<UserNearByDistance>> resultUserNearSubject;
 
     private final Subject<String> errorSubject;
 
@@ -58,16 +59,17 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
         useCaseUserNear = useCaseFactory.peopleNearByUser(userLocation, neLocation, wsLocation, mCurrentPage, SIZE_OF_PAGE);
         useCaseUserNear.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
-                .onNext(listUser -> {
-                    resultUserNearSubject.onNext(listUser);
+                .onNext(data -> {
+                    resultUserNearSubject.onNext(data);
                 })
                 .onError(throwable -> {
                     MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
+                    errorSubject.onNext("Failed");
                 }).execute();
     }
 
     @Override
-    public Observable<List<UserNearByDistance>> onPeopleNearByUserSuccess() {
+    public Observable<DataResultListResponse<UserNearByDistance>> onPeopleNearByUserSuccess() {
         return resultUserNearSubject.subscribeOn(schedulerFactory.main());
     }
 

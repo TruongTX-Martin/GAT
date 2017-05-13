@@ -251,7 +251,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance(float currentLongitude, float currentLatitude, float neLongitude, float neLatitude, float wsLongitude, float wsLatitude, int page, int size_of_page) {
+    public Observable<DataResultListResponse<UserNearByDistance>> getPeopleNearByUserByDistance(float currentLongitude, float currentLatitude, float neLongitude, float neLatitude, float wsLongitude, float wsLatitude, int page, int size_of_page) {
         throw new UnsupportedOperationException();
     }
 

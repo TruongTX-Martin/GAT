@@ -30,6 +30,13 @@
             android:layout_weight="4"
             android:background="@android:color/white" />
 
+        <TextView
+            android:id="@+id/text_view_total"
+            android:layout_width="match_parent"
+            android:text="Hiển thị 0 kết quả tìm kiếm"
+            android:layout_margin="@dimen/margin_horizontal_small"
+            android:layout_height="wrap_content" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_users_near"
             android:layout_width="wrap_content"

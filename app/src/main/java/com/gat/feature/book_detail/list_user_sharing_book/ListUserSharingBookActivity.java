@@ -11,8 +11,6 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BorrowResponse;
-import com.gat.feature.book_detail.BookDetailActivity;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -100,9 +98,11 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     }
 
     private int positionClicked;
+    private UserResponse mUserResponse;
     @Override
     public void onButtonBorrowClick(int position, UserResponse userResponse) {
         positionClicked= position;
+        mUserResponse = userResponse;
         progressDialog.show();
         getPresenter().requestBorrowBook(userResponse.getEditionId(), userResponse.getUserId());
     }
@@ -121,7 +121,7 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     private void onRequestBorrowSuccess (BorrowResponse borrowResponse) {
         hideProgress();
         isRequestBorrow = true;
-        adapter.updateBorrowStatus(positionClicked, borrowResponse.getRecordStatus());
+        adapter.updateBorrowStatus(positionClicked, mUserResponse, borrowResponse.getRecordStatus());
     }
 
     private void onRequestBorrowFailure (String message) {

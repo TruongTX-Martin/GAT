@@ -107,6 +107,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: getBookInfo __________________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectOnError.onNext("Failed");
                 })
                 .execute();
     }

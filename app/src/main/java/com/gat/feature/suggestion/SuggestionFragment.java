@@ -19,17 +19,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.app.fragment.ScreenFragment;
-import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.TrackGPS;
 import com.gat.data.response.BookResponse;
-import com.gat.data.response.ServerResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.share.SharedData;
 import com.gat.feature.book_detail.BookDetailActivity;
 import com.gat.feature.book_detail.BookDetailScreen;
@@ -44,7 +41,6 @@ import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -217,13 +213,15 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 //        startActivity(intent);
     }
 
-    void onPeopleNearByUserByDistanceSuccess(List<UserNearByDistance> list) {
+    void onPeopleNearByUserByDistanceSuccess(DataResultListResponse<UserNearByDistance> data) {
         MZDebug.i("_________________________________________ onPeopleNearByUserByDistance Success");
         if (llUserNearSuggest.getChildCount() > 0) {
             return;
         }
 
-        if (null == list || list.isEmpty()) {
+        mListUserDistance = data.getResultInfo(); // use this to pass along to ShareNearByUserDistanceActivity
+
+        if (null == mListUserDistance || mListUserDistance.isEmpty()) {
             TextView textView = new TextView(mContext);
             textView.setText(mContext.getResources().getString(R.string.msg_no_user_near));
             textView.setWidth(llUserNearSuggest.getWidth());
@@ -233,13 +231,12 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             return;
         }
 
-        mListUserDistance = list; // use this to pass along to ShareNearByUserDistanceActivity
         View viewItem;
         UserNearByDistance userItem;
-        int size = list.size() < 5 ? list.size() : 5;
+        int size = mListUserDistance.size() < 5 ? mListUserDistance.size() : 5;
 
         for (int i = 0; i < size; i++) {
-            userItem = list.get(i);
+            userItem = mListUserDistance.get(i);
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             viewItem = inflater.inflate(R.layout.item_user_near_suggest, llUserNearSuggest, false);
 

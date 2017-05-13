@@ -1,5 +1,6 @@
 package com.gat.feature.suggestion.nearby_user;
 
+import com.gat.data.response.DataResultListResponse;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import com.rey.mvp2.Presenter;
@@ -13,7 +14,7 @@ import io.reactivex.Observable;
 public interface ShareNearByUserDistancePresenter extends Presenter {
 
     void requestUserNearOnTheMap(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
-    Observable<List<UserNearByDistance>> onPeopleNearByUserSuccess();
+    Observable<DataResultListResponse<UserNearByDistance>> onPeopleNearByUserSuccess();
 
     Observable<String> onError();
 }

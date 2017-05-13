@@ -41,7 +41,6 @@ public @interface UserSharingType {
      *
      * -> info text -> View.GONE
      */
-
     // && recordStatus = 0 -> button text =  Đợi đồng ý
     int WAIT_FOR_ACCEPT = 4;
 

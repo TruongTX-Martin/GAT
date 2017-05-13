@@ -216,7 +216,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<List<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage) {
+    public UseCase<DataResultListResponse<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage) {
         return new PeopleNearByUser(userRepositoryLazy.get(), userLocation, neLocation, wsLocation, page, sizeOfPage);
     }
 

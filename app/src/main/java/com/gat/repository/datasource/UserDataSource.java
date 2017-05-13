@@ -72,7 +72,7 @@ public interface UserDataSource {
     Observable<ServerResponse> updateLocation(String address, float longitude, float latitude);
     Observable<ServerResponse> updateCategories(List<Integer> categories);
 
-    Observable<List<UserNearByDistance>> getPeopleNearByUserByDistance
+    Observable<DataResultListResponse<UserNearByDistance>> getPeopleNearByUserByDistance
             (float currentLongitude, float currentLatitude,
              float neLongitude, float neLatitude,
              float wsLongitude, float wsLatitude,

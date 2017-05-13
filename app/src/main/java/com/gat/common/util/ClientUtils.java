@@ -7,8 +7,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -76,6 +78,12 @@ public class ClientUtils {
     public static String formatColor(String input,String color){
         return "<font color=\""+ color +"\">" + input + "</font>";
     }
+
+    public static String formatColorAndSize(String input,String color, int size){
+        return "<font size=\"" + size + "\" color=\""+ color +"\">" + input + "</font>";
+    }
+
+
     public static String getDateFromString(long input){
         Date date=new Date(input + 1000);
         SimpleDateFormat formatBack = new SimpleDateFormat("dd-MM-yyyy");
@@ -190,6 +198,58 @@ public class ClientUtils {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.custom_progress_dialog);
         // dialog.setMessage(Message);
+        return dialog;
+    }
+
+
+    public interface OnDialogPressed {
+        void onClickAccept ();
+
+        void onClickRefuse ();
+    }
+
+    public static AlertDialog showAlertDialog (@NonNull Context context, @NonNull String title, @Nullable String message,
+                                               @Nullable String accept_text, @Nullable String refuse_text,
+                                               @Nullable OnDialogPressed callback) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View view = layoutInflater.inflate(R.layout.custom_alert_dialog, null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+
+        if (message == null) {
+            TextView textHeader = (TextView) view.findViewById(R.id.textViewTitle);
+            textHeader.setText(title);
+        } else {
+            TextView textHeader = (TextView) view.findViewById(R.id.textViewTitle);
+            textHeader.setText(title);
+
+            TextView textContent = (TextView) view.findViewById(R.id.textViewMessage);
+            textContent.setText(message);
+        }
+
+        Button buttonAccept = (Button) view.findViewById(R.id.buttonAccept);
+        Button buttonRefuse = (Button) view.findViewById(R.id.buttonRefuse);
+
+        if ( ! TextUtils.isEmpty(accept_text)) {
+            buttonAccept.setText(accept_text);
+        }
+        if ( ! TextUtils.isEmpty(refuse_text)) {
+            buttonRefuse.setText(refuse_text);
+        }
+
+        buttonAccept.setOnClickListener(v -> {
+            callback.onClickAccept();
+        });
+
+        buttonRefuse.setOnClickListener(v -> {
+            dialog.dismiss();
+            callback.onClickRefuse();
+        });
+
+        dialog.show();
+
         return dialog;
     }
 

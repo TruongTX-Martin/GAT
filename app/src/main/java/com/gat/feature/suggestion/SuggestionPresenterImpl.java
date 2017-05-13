@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
@@ -35,8 +36,8 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     private UseCase<List<BookResponse>> useCaseBookSuggest;
     private final Subject<List<BookResponse>> resultBooksSuggestSubject;
 
-    private UseCase<List<UserNearByDistance>> userNearByDistance;
-    private final Subject<List<UserNearByDistance>> resultListUserNearByDistance;
+    private UseCase<DataResultListResponse<UserNearByDistance>> userNearByDistance;
+    private final Subject<DataResultListResponse<UserNearByDistance>> resultListUserNearByDistance;
 
     private UseCase<Integer> unReadGroupMessageUseCase;
     private final Subject<Integer> unReadGroupMessageSubject;
@@ -164,7 +165,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     }
 
     @Override
-    public Observable<List<UserNearByDistance>> onPeopleNearByUserSuccess() {
+    public Observable<DataResultListResponse<UserNearByDistance>> onPeopleNearByUserSuccess() {
         return resultListUserNearByDistance.subscribeOn(schedulerFactory.main());
     }
 

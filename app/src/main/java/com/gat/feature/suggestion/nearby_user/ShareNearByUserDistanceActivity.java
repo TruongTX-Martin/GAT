@@ -12,14 +12,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.MZDebug;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.feature.suggestion.CompareListUtil;
+import com.gat.feature.suggestion.nearby_user.adapter.OnItemLoadMoreClickListener;
+import com.gat.feature.suggestion.nearby_user.adapter.UserNearByDistanceAdapter;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,7 +38,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -49,13 +50,13 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Created by mozaa on 30/03/2017.
  */
 
-public class    ShareNearByUserDistanceActivity
+public class ShareNearByUserDistanceActivity
         extends ScreenActivity<ShareNearByUserDistanceScreen, ShareNearByUserDistancePresenter>
         implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnMarkerClickListener,
-        IRecyclerViewItemClickListener{
+        IRecyclerViewItemClickListener, OnItemLoadMoreClickListener{
 
     public static final String TAG = ShareNearByUserDistanceActivity.class.getSimpleName();
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 2000;
@@ -64,6 +65,9 @@ public class    ShareNearByUserDistanceActivity
     public static final String PASS_LIST_USER_DISTANCE = "LIST_USERS";
     public static final String PASS_USER_LOCATION_LATITUDE = "USER_LOCATION_LATITUDE";
     public static final String PASS_USER_LOCATION_LONGITUDE = "USER_LOCATION_LONGITUDE";
+
+    @BindView(R.id.text_view_total)
+    TextView textViewTotal;
 
     @BindView(R.id.rv_users_near)
     RecyclerView mRecyclerViewUsersNear;
@@ -82,7 +86,7 @@ public class    ShareNearByUserDistanceActivity
     private LocationRequest mLocationRequest;
     private Marker mCurrentLocationMaker;
     private int mReasonMapMoved;
-    private ShareNearByUserDistanceAdapter adapter;
+    private UserNearByDistanceAdapter adapter;
     private List<UserNearByDistance> mListUsers;
     private List<Marker> mListMarker;
 
@@ -104,6 +108,13 @@ public class    ShareNearByUserDistanceActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // setup adapter & recycler view
+        adapter = new UserNearByDistanceAdapter();
+        adapter.setOnLoadMoreClickListener(this);
+        mRecyclerViewUsersNear.setLayoutManager(
+                new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerViewUsersNear.setAdapter(adapter);
 
         // composite presenter
         disposables = new CompositeDisposable(
@@ -311,29 +322,31 @@ public class    ShareNearByUserDistanceActivity
         return true;
     }
 
-    private void onListUserNearComplete(List<UserNearByDistance> list) {
+    private void onListUserNearComplete(DataResultListResponse<UserNearByDistance> data) {
         MZDebug.i("________________onListUserNearComplete________________________________________");
-        if (adapter == null) {
-            mListUsers = list;
 
-            adapter = new ShareNearByUserDistanceAdapter(getApplicationContext(), mListUsers, this);
-            mRecyclerViewUsersNear.setLayoutManager(
-                    new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-            mRecyclerViewUsersNear.setAdapter(adapter);
-
-            mListMarker = addListMarker(mListUsers);
+        if (data == null || data.getResultInfo() == null) {
             return;
         }
 
-        // so sánh mListUsers và list
-        // nếu user nào ở list mà có trong mListUsers thì ko thêm
-        // nếu user nào ở list mà không có trong mListUser thì thêm vào mListUsers để add vào map
-        // update những user thêm được vào map
-        List<UserNearByDistance> listDestination = CompareListUtil.destinationListUserNear(mListUsers, list);
-        MZDebug.w("List destination size = " + listDestination.size());
-        adapter.addListItems(listDestination);
+        textViewTotal.setText(String.format(getString(R.string.show_count_search_result), data.getResultInfo().size()));
 
-        mListMarker.addAll(addListMarker(listDestination));
+        // nếu totalResult > size của List user thì isCanLoadMore = true
+        adapter.setItems(data.getResultInfo(), data.getTotalResult() > data.getResultInfo().size() ? true:false);
+
+        // add list user vào map
+        if (mListMarker == null) {
+            mListUsers = data.getResultInfo();
+            mListMarker = addListMarker(mListUsers);
+        } else {
+            // nếu user nào ở list mà không có trong mListUser thì thêm vào mListUsers để add vào map
+            List<UserNearByDistance> listDestination = CompareListUtil.destinationListUserNear(mListUsers, data.getResultInfo());
+            mListMarker.addAll(addListMarker(listDestination));
+        }
+    }
+
+    private void onLoadMoreUserComplete (DataResultListResponse<UserNearByDistance> data) {
+
     }
 
     // request list user near failed
@@ -387,5 +400,10 @@ public class    ShareNearByUserDistanceActivity
         moveCameraToNewLatLng(new LatLng(mListUsers.get(position).getLatitude(),
                 mListUsers.get(position).getLongitude()));
         Toast.makeText(this, "user id: " + mListUsers.get(position).getUserId(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadMoreClick() {
+        Toast.makeText(this, "request load more", Toast.LENGTH_SHORT).show();
     }
 }

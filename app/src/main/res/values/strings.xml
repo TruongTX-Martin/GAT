@@ -136,7 +136,6 @@
 
     <string name="cancel">Huỷ</string>
 
-
     <string name="msg_allow_location">To see all of users sharing book around of you. You need enable location permission!</string>
     <string name="msg_no_user_near">Không có người chia sẻ gần bạn, nhấp xem thêm để hiển thị nhiều hơn. </string>
     <string name="total_comments">Lượt nhận xét</string>
@@ -222,8 +221,7 @@
     <string name="in_twitter_connection">Đang kết nối với tài khoản twitter %1$s</string>
     <string name="logout">Thoát tài khoản</string>
     <string name="new_password_hint">Input new password</string>
-    <string name="ask_for_logout">Bạn thực sự muốn thoát</string>
-
+    <string name="ask_for_logout">Bạn thực sự muốn thoát?</string>
 
     <!-- Error message -->
     <string name="password_invalid">Password is invalid</string>
@@ -235,5 +233,10 @@
     <string name="font_family_condensed">sans-serif-condensed</string>
     <string name="font_family_black">sans-serif-black</string>
     <string name="font_family_thin">sans-serif-thin</string>
+
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="login">Đăng nhập</string>
+    <string name="dont_care">Bỏ qua</string>
 
 </resources>
