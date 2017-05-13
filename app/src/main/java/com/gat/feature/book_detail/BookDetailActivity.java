@@ -3,12 +3,16 @@ package com.gat.feature.book_detail;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +38,7 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.widget.ShareDialog;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.customview.ViewMoreTextView;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.UserResponse;
@@ -71,8 +76,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private static final int RC_UPDATE_READING_STATUS = 0x01;
     private static final int RC_UPDATE_COMMENT = 0x02;
+    private static final int RC_UPDATE_BOOKCASE = 0x03;
+    private static final int RC_VIEW_USER_SHARING = 0x04;
     public static final String KEY_UPDATE_READING_STATUS = "status";
     public static final String KEY_UPDATE_COMMENT = "comment";
+    public static final String KEY_UPDATE_BOOKCASE = "bookcase";
+    public static final String KEY_VIEW_USER_SHARING = "view_user_sharing";
 
     @BindView(R.id.image_view_book_cover)
     ImageView imageViewBookCover;
@@ -167,6 +176,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         getPresenter().getBookEditionEvaluation();
 
         ratingBarUserRate.setOnRatingBarChangeListener(this);
+
+        // setup style RatingBar Comment
+        LayerDrawable stars = (LayerDrawable) ratingBarUserRate.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(0).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(1).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
@@ -201,6 +216,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
         } else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
+        } else if (requestCode == RC_UPDATE_BOOKCASE && resultCode == RESULT_OK) {
+            getPresenter().getEditionSharingUsers();
+        } else if (requestCode == RC_VIEW_USER_SHARING && resultCode == RESULT_OK) {
+            getPresenter().getEditionSharingUsers();
         }
     }
 
@@ -238,11 +257,19 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.button_comment)
     void onGoComment () {
-        if (mEvaluationByUser == null) {
+        if (mBookInfo == null) {
             return;
         }
-        MZDebug.w("BookDetailActivity:onGoComment: " + mEvaluationByUser.toString());
-        startForResult(this, CommentActivity.class, CommentScreen.instance(mEvaluationByUser), RC_UPDATE_COMMENT);
+        MZDebug.w("BookDetailActivity:onGoComment");
+
+        float value = 0;
+        String comment = "";
+        if (mEvaluationByUser != null) {
+            value = mEvaluationByUser.getValue();
+            comment = TextUtils.isEmpty(mEvaluationByUser.getReview()) ? "" : mEvaluationByUser.getReview();
+        }
+
+        startForResult(this, CommentActivity.class, CommentScreen.instance(mBookInfo.getEditionId(), value, comment), RC_UPDATE_COMMENT);
     }
 
     @OnClick(R.id.image_button_plus)
@@ -250,17 +277,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         if (null == mBookInfo) {
             return;
         }
-        start(this, AddToBookcaseActivity.class, AddToBookcaseScreen.instance(mBookInfo));
+        startForResult(this, AddToBookcaseActivity.class, AddToBookcaseScreen.instance(mBookInfo), RC_UPDATE_BOOKCASE);
     }
 
     @OnClick(R.id.button_view_list)
     void onViewListSharingThisBook () {
-        if (mListUserSharing == null) {
+        if (mListUserSharing == null || mListUserSharing.isEmpty()) {
             return;
         }
 
         MZDebug.e("BookDetailActivity: position 0= " + mListUserSharing.get(0).toString() );
-        start(this, ListUserSharingBookActivity.class, ListUserSharingBookScreen.instance(mListUserSharing));
+        startForResult(this, ListUserSharingBookActivity.class, ListUserSharingBookScreen.instance(mListUserSharing), RC_VIEW_USER_SHARING);
     }
 
     private void updateButtonReadingStatus (int status) {
@@ -291,7 +318,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private void setupRecyclerViewComments () {
         adapter = new EvaluationItemAdapter();
-        this.recyclerView.setHasFixedSize(true);
+        this.recyclerView.setHasFixedSize(false);
         this.recyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         this.recyclerView.setNestedScrollingEnabled(false);
@@ -307,9 +334,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         textViewRating.setText(String.valueOf(book.getRateAvg()));
         ratingBarBook.setRating(book.getRateAvg());
         textViewBookDescription.setText(book.getDescription());
+        ViewMoreTextView.makeTextViewResizable(textViewBookDescription, 5, "Xem thêm", true);
         if (mBookInfo.getImageId() != null && !mBookInfo.getImageId().isEmpty()) {
             imageViewBookCover.setDrawingCacheEnabled(true);
-            ClientUtils.setImage(imageViewBookCover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_SMALL));
+            ClientUtils.setImage(imageViewBookCover, R.drawable.default_book_cover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_SMALL));
         }
     }
 
@@ -343,25 +371,29 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private EvaluationItemResponse mEvaluationByUser;
     private void onGetBookEvaluationByUser (EvaluationItemResponse evaluation) {
         mEvaluationByUser = evaluation;
-        mEvaluationByUser.setName(mUser.name());
 
         MZDebug.w("onGetEditionSharingUsersSuccess: " + evaluation.toString());
         llComment.setVisibility(View.VISIBLE);
 
-        ratingBarUserRate.setRating(evaluation.getValue());
-        textViewCommentByUser.setText(evaluation.getReview() == null ? "" : evaluation.getReview());
-        if (evaluation.getValue()!= 0 ||  evaluation.getReview() != null) {
-            buttonComment.setVisibility(View.VISIBLE);
-            if (evaluation.getReview() != null && !evaluation.getReview().isEmpty()) {
-                buttonComment.setText(getResources().getString(R.string.edit_comment));
-            } else {
+        if (evaluation == null) {
+            ratingBarUserRate.setRating(0);
+            buttonComment.setText(getResources().getString(R.string.write_comment));
+        } else {
+            ratingBarUserRate.setRating(evaluation.getValue());
+
+            // nếu review chưa có hoặc null -> button text: Viết bình luận
+            // nếu đã có review -> button text : Sửa bình luận
+            if (TextUtils.isEmpty(evaluation.getReview())) {
                 buttonComment.setText(getResources().getString(R.string.write_comment));
+            } else {
+                buttonComment.setText(getResources().getString(R.string.edit_comment));
             }
         }
     }
 
     private void onGetEvaluationByUserFailure (String message) {
-        llComment.setVisibility(View.GONE);
+        ratingBarUserRate.setRating(0);
+        buttonComment.setText(getResources().getString(R.string.write_comment));
     }
 
     private void onError (String message) {

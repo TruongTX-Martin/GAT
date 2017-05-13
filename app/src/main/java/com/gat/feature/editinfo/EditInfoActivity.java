@@ -331,23 +331,6 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-//        AlertDialog.Builder alertboxDowload = new AlertDialog.Builder(this);
-//        alertboxDowload.setTitle("Huỷ thay đổi");
-//        alertboxDowload.setMessage("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
-//        alertboxDowload.setCancelable(false);
-//        alertboxDowload.setPositiveButton("Có",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        backToPreviousActivity();
-//                    }
-//                });
-//        alertboxDowload.setNegativeButton("Không",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                    }
-//                });
-//        alertboxDowload.show();
         TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
         TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
         txtTitle.setText("Huỷ thay đổi");

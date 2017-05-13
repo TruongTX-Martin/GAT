@@ -7,27 +7,14 @@
     android:orientation="vertical"
     android:padding="@dimen/paddingNormal">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="90dp"
-        android:background="@android:color/white">
-
-        <ImageView
-            android:id="@+id/image_view_book_cover"
-            android:layout_width="70dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/demo_book_cover" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/image_view_book_cover"
+        android:layout_width="70dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_book_cover" />
 
     <TextView
         android:id="@+id/text_view_book_name"
@@ -40,13 +27,13 @@
         android:textColor="@color/colorTextViewDark"
         android:textSize="@dimen/normal_text_view_size" />
 
-    <RatingBar
+    <com.gat.common.customview.MZRatingBar
         android:id="@+id/rating_bar_book"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:isIndicator="true"
         android:numStars="5"
-        android:stepSize="0.5" />
+        />
 
 </LinearLayout>

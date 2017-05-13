@@ -12,7 +12,7 @@
         android:layout_height="70dp"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="@dimen/paddingLarge"
-        android:src="@drawable/demo_people_near" />
+        android:src="@drawable/default_user_icon" />
 
     <TextView
         android:id="@+id/tv_distance"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="100m"
+        android:text="..."
         android:textColor="@color/colorTextViewGray"
         android:textSize="@dimen/small_text_view_size" />
 
@@ -31,7 +31,7 @@
         android:layout_toEndOf="@+id/iv_user_avatar"
         android:layout_toStartOf="@+id/tv_distance"
         android:maxLines="1"
-        android:text="Andy pham"
+        android:text="..."
         android:textColor="@color/colorTextViewDark"
         android:textSize="@dimen/large_text_view_size" />
 
@@ -45,7 +45,7 @@
         android:layout_toEndOf="@+id/iv_user_avatar"
         android:layout_toStartOf="@+id/tv_distance"
         android:maxLines="1"
-        android:text="23 Nguyễn Lương Bằng, Đống Đa, Hà Nội"
+        android:text="..."
         android:textColor="@color/colorTextViewGray"
         android:textSize="@dimen/small_text_view_size" />
 

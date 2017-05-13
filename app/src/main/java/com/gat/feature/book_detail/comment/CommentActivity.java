@@ -3,6 +3,7 @@ package com.gat.feature.book_detail.comment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.repository.entity.User;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -30,7 +32,6 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
     EditText editTextComment;
 
     private CompositeDisposable disposable;
-    private EvaluationItemResponse evaluation;
 
     @Override
     protected int getLayoutResource() {
@@ -44,18 +45,17 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
 
     @Override
     protected Object getPresenterKey() {
-        return CommentScreen.instance(getScreen().evaluation());
+        return CommentScreen.instance(getScreen().editionId(), getScreen().value(), getScreen().comment());
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        evaluation = getScreen().evaluation();
-
         disposable = new CompositeDisposable(
                 getPresenter().onPostCommentSuccess().subscribe(this::onPostCommentSuccess),
-                getPresenter().onPostCommentFailure().subscribe(this::onPostCommentFailure)
+                getPresenter().onPostCommentFailure().subscribe(this::onPostCommentFailure),
+                getPresenter().onLoadUserCachedSuccess().subscribe(this::onLoadUserCacheSuccess)
         );
 
     }
@@ -64,10 +64,8 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
     protected void onResume() {
         super.onResume();
 
-        MZDebug.w("CommentActivity:onResume: " + evaluation.toString());
-
-        textViewUserName.setText(evaluation.getName());
-        editTextComment.setText(evaluation.getReview() == null? "" : evaluation.getReview());
+        getPresenter().loadUserCached();
+        editTextComment.setText(TextUtils.isEmpty(getScreen().comment()) ? "" : getScreen().comment());
     }
 
     @Override
@@ -83,11 +81,10 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
 
     @OnClick(R.id.button_post_comment)
     void onButtonPostCommentTap () {
-        getPresenter().postComment(evaluation.getEditionId(), evaluation.getValue(), editTextComment.getText().toString(), false);
+        getPresenter().postComment(getScreen().editionId(), getScreen().value(), editTextComment.getText().toString(), false);
     }
 
     private void onPostCommentSuccess (String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Intent returnIntent = new Intent();
         returnIntent.putExtra(BookDetailActivity.KEY_UPDATE_COMMENT, editTextComment.getText().toString());
         setResult(RESULT_OK, returnIntent);
@@ -98,4 +95,7 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void onLoadUserCacheSuccess (User user) {
+        textViewUserName.setText(user.name());
+    }
 }

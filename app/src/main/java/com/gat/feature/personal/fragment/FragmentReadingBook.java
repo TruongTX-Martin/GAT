@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.util.DataLocal;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
 import com.gat.feature.personal.adapter.BookReadingAdapter;
@@ -180,7 +181,7 @@ public class FragmentReadingBook extends Fragment {
         View customView = inflater.inflate(R.layout.layout_popup_book_reading_filter, null);
         PopupWindow popupWindow = new PopupWindow(customView,
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT);
         popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.setOutsideTouchable(true);
@@ -191,6 +192,8 @@ public class FragmentReadingBook extends Fragment {
         RelativeLayout layoutReadingOverlay = (RelativeLayout) customView.findViewById(R.id.layoutReadingOverLay);
         RelativeLayout layoutToReadBorder = (RelativeLayout) customView.findViewById(R.id.layoutToReadBorder);
         RelativeLayout layoutToReadOverlay = (RelativeLayout) customView.findViewById(R.id.layoutToReadOverlay);
+        RelativeLayout layoutRoot = (RelativeLayout) customView.findViewById(R.id.layoutRoot);
+        layoutRoot.setOnClickListener(v -> popupWindow.dismiss());
         layoutReadedBorder.setOnClickListener(v -> {
             layoutReadedBorder.setVisibility(View.GONE);
             layoutReadedOverlay.setVisibility(View.VISIBLE);
@@ -262,6 +265,7 @@ public class FragmentReadingBook extends Fragment {
 
     private void searchBook(BookReadingInput input) {
         if (input == null) return;
+
         isRequesting = true;
         parrentActivity.requestReadingBooks(input);
         if (input.getPage() == 1) {

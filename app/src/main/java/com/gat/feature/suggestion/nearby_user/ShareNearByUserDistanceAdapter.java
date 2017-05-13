@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gat.R;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
+import com.gat.common.util.ClientUtils;
 import com.gat.repository.entity.UserNearByDistance;
 
 import java.util.Collections;
@@ -63,9 +64,7 @@ public class ShareNearByUserDistanceAdapter
     public void onBindViewHolder(UserSharingNearViewHolder holder, int position) {
         UserNearByDistance user = getItem(position);
         if ( null != user.getImageId() && ! user.getImageId().isEmpty()) {
-            Glide.with(mContext).
-                    load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                            + user.getImageId() + "?size=s").into(holder.imageViewUserAvatar);
+            ClientUtils.setImage(holder.imageViewUserAvatar, R.drawable.default_user_icon, ClientUtils.getUrlImage(user.getImageId(), ClientUtils.SIZE_SMALL));
         }
 
         holder.textViewDistance.setText(String.valueOf(user.getDistance()));

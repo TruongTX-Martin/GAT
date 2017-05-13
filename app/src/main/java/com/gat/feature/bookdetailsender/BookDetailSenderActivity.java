@@ -1,5 +1,6 @@
 package com.gat.feature.bookdetailsender;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
@@ -195,6 +198,8 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     @BindView(R.id.txtRating)
     TextView txtRating;
 
+    private Context context;
+
 
 
     private RequestStatusInput statusInput = new RequestStatusInput();
@@ -211,7 +216,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                 getPresenter().onErrorBookDetail().subscribe(this::getBookDetailError));
         disposablesRequestBookByBorrower = new CompositeDisposable(getPresenter().getResponseSenderChangeStatus().subscribe(this::requestBookByBorrowerSuccess),
                 getPresenter().onErrorSenderChangeStatus().subscribe(this::getBookDetailError));
-
+        context = getApplicationContext();
         initView();
         handleEvent();
     }
@@ -264,7 +269,9 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         imgEditionBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(bookDetail.getEditionInfo().getEditionId() > 0){
+                    MainActivity.start(context, BookDetailActivity.class, BookDetailScreen.instance(bookDetail.getEditionInfo().getEditionId()));
+                }
             }
         });
         imgBorrower.setOnClickListener(v -> BookDetailSenderActivity.start(getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(bookDetail.getOwnerInfo().getUserId())));

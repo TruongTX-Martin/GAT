@@ -1,6 +1,7 @@
 package com.gat.feature.suggestion.search.viewholder;
 
 import android.support.annotation.LayoutRes;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.feature.suggestion.search.item.SearchUserResultItem;
 
@@ -49,26 +51,8 @@ public class SearchUserResultViewHolder extends ItemViewHolder<SearchUserResultI
         textViewUserName.setText(item.userResponse().getName());
         textViewAddress.setText(item.userResponse().getAddress());
 
-
-        if ( ! item.userResponse().getImageId().isEmpty()) {
-            MZDebug.e(" URL IMG: " + "http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                    + item.userResponse().getImageId() + "?size=");
-
-            Glide.with(mContext).
-                    load("http://gatbook-api-v1.azurewebsites.net/api/common/get_image/"
-                            + item.userResponse().getImageId() + "?size=s").listener(new RequestListener<String, GlideDrawable>() {
-                @Override
-                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                    progressBar.setVisibility(View.GONE);
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                    progressBar.setVisibility(View.GONE);
-                    return false;
-                }
-            }).into(imageViewUser);
+        if ( ! TextUtils.isEmpty(item.userResponse().getImageId())) {
+            ClientUtils.setImage(imageViewUser, R.drawable.default_user_icon, ClientUtils.getUrlImage(item.userResponse().getImageId(), ClientUtils.SIZE_SMALL));
         }
 
     }

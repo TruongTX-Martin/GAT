@@ -1,5 +1,6 @@
 package com.gat.feature.book_detail.comment;
 
+import com.gat.repository.entity.User;
 import com.rey.mvp2.Presenter;
 
 import io.reactivex.Observable;
@@ -13,5 +14,8 @@ public interface CommentPresenter extends Presenter {
     void postComment (int editionId, float rating, String review, boolean spoiler);
     Observable<String> onPostCommentSuccess ();
     Observable<String> onPostCommentFailure ();
+
+    void loadUserCached ();
+    Observable<User> onLoadUserCachedSuccess ();
 
 }

@@ -16,6 +16,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
+import com.gat.common.util.DataLocal;
 import com.gat.common.util.Views;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.common.util.NotificationConfig;
@@ -112,6 +113,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         super.onCreate(savedInstanceState);
 
         ClientUtils.context = getApplicationContext();
+        DataLocal.init(getApplicationContext());
         instance = this;
 
         // setup view pager
