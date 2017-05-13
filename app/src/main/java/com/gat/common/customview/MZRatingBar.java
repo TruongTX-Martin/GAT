@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.RatingBar;
-import com.gat.R;
 
 /**
  * Created by mryit on 5/12/2017.
@@ -37,7 +35,7 @@ public class MZRatingBar extends RatingBar {
 
         stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        stars.getDrawable(1).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(1).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
 
     }
 }

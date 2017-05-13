@@ -4,10 +4,15 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -43,7 +48,7 @@ import android.widget.Toast;
  */
 
 public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, SuggestSearchPresenter>
-        implements OnFragmentRequestLoadMore, EditText.OnEditorActionListener,
+        implements OnFragmentRequestLoadMore, EditText.OnEditorActionListener, EditText.OnTouchListener,
         OnUserTapOnKeyword{
 
     @BindView(R.id.tab_layout)
@@ -54,6 +59,15 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     @BindView(R.id.edit_text_search)
     EditText editTextSearch;
+
+    @BindView(R.id.image_button_search_scan)
+    ImageButton imageButtonScan;
+
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface BUTTON_TYPE {
+        int SCAN    = 0;
+        int CLEAR   = 1;
+    }
 
     @Retention(RetentionPolicy.SOURCE)
     public @interface TAB_POS {
@@ -110,8 +124,12 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.addOnTabSelectedListener(onTabSelectedListener);
 
+        // set tag button scan: default = BUTTON_TYPE.SCAN
+        imageButtonScan.setTag(BUTTON_TYPE.SCAN);
+
         // listen whenever user tap on search button
         editTextSearch.setOnEditorActionListener(this);
+        editTextSearch.setOnTouchListener(this);
     }
 
     @Override
@@ -154,6 +172,23 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     @OnClick(R.id.image_button_search_scan)
     void onButtonSearchScanTap () {
+        int type = (int) imageButtonScan.getTag();
+
+        switch (type) {
+            case BUTTON_TYPE.SCAN:
+                // start activity scan
+
+                break;
+
+            case BUTTON_TYPE.CLEAR:
+                if (TextUtils.isEmpty(editTextSearch.getText().toString())) {
+                    imageButtonScan.setTag(BUTTON_TYPE.SCAN);
+                    imageButtonScan.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.scan_ic_selected, null));
+                } else {
+                    editTextSearch.setText(Strings.EMPTY);
+                }
+                break;
+        }
 
     }
 
@@ -203,22 +238,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         }
 
         showProgress();
-        switch (mCurrentTab) {
-            case TAB_POS.TAB_BOOK:
-                MZDebug.w("_____________________ TAB_BOOK: " + editTextSearch.getText().toString());
-                getPresenter().searchBookWithTitle(editTextSearch.getText().toString());
-                break;
-
-            case TAB_POS.TAB_AUTHOR:
-                MZDebug.w("___________________ TAB_AUTHOR: " + editTextSearch.getText().toString());
-                getPresenter().searchBookWithAuthor(editTextSearch.getText().toString());
-                break;
-
-            case TAB_POS.TAB_USER:
-                MZDebug.w("_____________________ TAB_USER: " + editTextSearch.getText().toString());
-                getPresenter().searchUserWithName(editTextSearch.getText().toString());
-                break;
-        }
+        startSearchWithKeyword(editTextSearch.getText().toString());
 
         return true;
     }
@@ -226,6 +246,43 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     @Override
     public void onUserTapOnHistoryKeyword(String keyword) {
         editTextSearch.setText(keyword);
+        showProgress();
+        startSearchWithKeyword(keyword);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if (MotionEvent.ACTION_UP != event.getAction()) {
+            return true;
+        }
+
+        if (TextUtils.isEmpty(editTextSearch.getText().toString())) {
+            imageButtonScan.setTag(BUTTON_TYPE.CLEAR);
+            imageButtonScan.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_cancle, null));
+        }
+
+        return true;
+    }
+
+
+    private void startSearchWithKeyword (String keyword) {
+        switch (mCurrentTab) {
+            case TAB_POS.TAB_BOOK:
+                MZDebug.w("_____________________ TAB_BOOK: " + keyword);
+                getPresenter().searchBookWithTitle(keyword);
+                break;
+
+            case TAB_POS.TAB_AUTHOR:
+                MZDebug.w("___________________ TAB_AUTHOR: " + keyword);
+                getPresenter().searchBookWithAuthor(keyword);
+                break;
+
+            case TAB_POS.TAB_USER:
+                MZDebug.w("_____________________ TAB_USER: " + keyword);
+                getPresenter().searchUserWithName(keyword);
+                break;
+        }
     }
 
     @Override

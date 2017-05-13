@@ -350,12 +350,6 @@ public class DebugBookDataSource implements BookDataSource {
     @Override
     public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
         MZDebug.w("______________________________________ selfAddInstance _____________ [ DEBUG ]");
-
-//        ServerResponse serverResponse = new ServerResponse("Success", 200, null);
-//        return Observable.fromCallable(() -> {
-//            return serverResponse;
-//        }).delay(0, TimeUnit.MILLISECONDS);
-
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse>> responseObservable;
         responseObservable = api.selfAddInstance(editionId, sharingStatus, numberOfBook);

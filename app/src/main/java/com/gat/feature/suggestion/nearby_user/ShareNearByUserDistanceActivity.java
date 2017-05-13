@@ -49,7 +49,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Created by mozaa on 30/03/2017.
  */
 
-public class ShareNearByUserDistanceActivity
+public class    ShareNearByUserDistanceActivity
         extends ScreenActivity<ShareNearByUserDistanceScreen, ShareNearByUserDistancePresenter>
         implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,

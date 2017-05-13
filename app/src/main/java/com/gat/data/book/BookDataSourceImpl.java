@@ -345,7 +345,7 @@ public class BookDataSourceImpl implements BookDataSource {
 
     @Override
     public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
-        MZDebug.w("______________________________________ selfAddInstance _____________ [ DEBUG ]");
+        MZDebug.w("______________________________________ selfAddInstance ______________________ ");
 
 //        ServerResponse serverResponse = new ServerResponse("Success", 200, null);
 //        return Observable.fromCallable(() -> {

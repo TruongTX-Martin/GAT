@@ -44,4 +44,7 @@ public interface BookDetailPresenter extends Presenter {
     Observable<User> onUserLoggedIn ();
     Observable<String> onUserNotLoggedIn ();
 
+    void postRating (int editionId, float rating, String review, boolean spoiler);
+    Observable<String> onRatingSuccess ();
+
 }

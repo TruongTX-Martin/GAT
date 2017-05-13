@@ -1,11 +1,9 @@
 package com.gat.feature.book_detail;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,15 +20,11 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.internal.CallbackManagerImpl;
 import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareOpenGraphAction;
 import com.facebook.share.model.ShareOpenGraphContent;
 import com.facebook.share.model.ShareOpenGraphObject;
@@ -57,12 +51,7 @@ import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.repository.entity.User;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -127,6 +116,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private CompositeDisposable disposables;
     private EvaluationItemAdapter adapter;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -152,6 +142,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mProgressDialog = ClientUtils.createProgressDialog(BookDetailActivity.this);
         getPresenter().setEditionId(getScreen().editionId());
         setupRecyclerViewComments();
 
@@ -167,13 +158,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 getPresenter().onUserNotLoggedIn().subscribe(this::onUserNotLoggedIn),
                 getPresenter().onUpdateReadingStatusSuccess().subscribe(this::onUpdateReadingStatusSuccess),
                 getPresenter().onUpdateReadingStatusFailure().subscribe(this::onUpdateReadingStatusFailure),
-                getPresenter().onGetEvaluationByUserFailure().subscribe(this::onGetEvaluationByUserFailure)
+                getPresenter().onGetEvaluationByUserFailure().subscribe(this::onGetEvaluationByUserFailure),
+                getPresenter().onRatingSuccess().subscribe(this::onPostRatingSuccess)
         );
-
-        getPresenter().isUserLoggedIn();
-        getPresenter().getBookInfo();
-        getPresenter().getEditionSharingUsers();
-        getPresenter().getBookEditionEvaluation();
 
         ratingBarUserRate.setOnRatingBarChangeListener(this);
 
@@ -181,12 +168,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         LayerDrawable stars = (LayerDrawable) ratingBarUserRate.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
-        stars.getDrawable(1).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(1).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        getPresenter().isUserLoggedIn();
+        getPresenter().getBookInfo();
+        getPresenter().getEditionSharingUsers();
+        getPresenter().getBookEditionEvaluation();
     }
 
     @Override
@@ -199,6 +191,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     protected void onDestroy() {
         super.onDestroy();
         disposables.dispose();
+        hideProgress();
+        mProgressDialog = null;
     }
 
     @Override
@@ -327,10 +321,14 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private BookInfo mBookInfo;
     private void onGetBookInfoSuccess (BookInfo book) {
+        hideProgress();
+
         mBookInfo = book;
         MZDebug.w(" onGetBookInfoSuccess: " + book.toString());
         textViewBookName.setText(book.getTitle());
-        textViewBookAuthor.setText(book.getAuthor().get(0).getAuthorName());
+        if (book.getAuthor() != null && !book.getAuthor().isEmpty()) {
+            textViewBookAuthor.setText(book.getAuthor().get(0).getAuthorName());
+        }
         textViewRating.setText(String.valueOf(book.getRateAvg()));
         ratingBarBook.setRating(book.getRateAvg());
         textViewBookDescription.setText(book.getDescription());
@@ -343,15 +341,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private List<EvaluationItemResponse> listEvaluations;
     private void onGetBookEditionEvaluationSuccess (List<EvaluationItemResponse> list) {
+        hideProgress();
+
         listEvaluations = list;
         adapter.setItem(EvaluationBuilder.transformListEvaluation(list));
         MZDebug.w("onGetBookEditionEvaluationSuccess: " + list.get(0).toString());
     }
 
-
     private void onGetSelfReadingStatusSuccess (BookReadingInfo bookReadingInfo) {
         MZDebug.w("onGetSelfReadingStatusSuccess: " + bookReadingInfo.toString());
 
+        hideProgress();
         updateButtonReadingStatus(bookReadingInfo.getReadingStatus());
     }
 
@@ -386,6 +386,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             if (TextUtils.isEmpty(evaluation.getReview())) {
                 buttonComment.setText(getResources().getString(R.string.write_comment));
             } else {
+                textViewCommentByUser.setText(evaluation.getReview());
                 buttonComment.setText(getResources().getString(R.string.edit_comment));
             }
         }
@@ -397,6 +398,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     }
 
     private void onError (String message) {
+        hideProgress();
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
@@ -410,13 +412,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private void onUserNotLoggedIn (String message) {
         // hide button comment, rating, string comment
         llComment.setVisibility(View.GONE);
-        buttonReadingState.setClickable(false);
     }
 
     private void onUpdateReadingStatusSuccess (String message) {
         buttonReadingState.setClickable(true);
         buttonReadingState.setTag(ReadingState.TO_READ);
-        buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, 0, 0);
+        buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, R.drawable.arrow_down_white, 0);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
@@ -515,12 +516,25 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-        if (null == mEvaluationByUser) {
-            return;
+        if (fromUser) {
+            ratingBarUserRate.setRating(rating);
+            showProgress();
+            // spoiler default = false
+            getPresenter().postRating(mBookInfo.getEditionId(), rating, textViewCommentByUser.getText().toString(), false);
         }
-        ratingBarUserRate.setRating(rating);
-        mEvaluationByUser.setValue(rating);
-
     }
 
+    private void onPostRatingSuccess (String message) {
+        hideProgress();
+    }
+
+    private void showProgress () {
+        mProgressDialog.show();
+    }
+
+    private void hideProgress () {
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
 }

@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -35,13 +37,14 @@
                 android:layout_marginRight="45dp"
                 android:background="@android:color/transparent"
                 android:drawablePadding="10dp"
-                android:drawableStart="@drawable/ic_search_draw"
+                android:drawableStart="@drawable/ic_search_white"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"
                 android:maxLines="1"
                 android:paddingLeft="10dp"
                 android:textColor="@android:color/white"
+                android:scrollbars="horizontal"
                 android:textCursorDrawable="@null" />
 
             <ImageButton
@@ -50,7 +53,8 @@
                 android:layout_height="40dp"
                 android:layout_gravity="right"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_search_scan" />
+                android:layout_marginRight="@dimen/margin_horizontal_normal"
+                android:src="@drawable/scan_ic_selected" />
 
         </FrameLayout>
 

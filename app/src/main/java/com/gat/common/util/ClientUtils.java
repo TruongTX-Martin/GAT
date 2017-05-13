@@ -1,35 +1,36 @@
 package com.gat.common.util;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.gat.R;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -176,6 +177,20 @@ public class ClientUtils {
         }else{
             return d<0 ? -(i+1) : i+1;
         }
+    }
+
+    public static ProgressDialog createProgressDialog(Context mContext) {
+        ProgressDialog dialog = new ProgressDialog(mContext);
+        try {
+            dialog.show();
+        } catch (WindowManager.BadTokenException ex) {
+            Log.w("ClientUtils", "createProgressDialog: \n\r" + Log.getStackTraceString(ex));
+        }
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.custom_progress_dialog);
+        // dialog.setMessage(Message);
+        return dialog;
     }
 
 }

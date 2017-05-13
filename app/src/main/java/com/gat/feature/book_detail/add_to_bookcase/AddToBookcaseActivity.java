@@ -1,8 +1,10 @@
 package com.gat.feature.book_detail.add_to_bookcase;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
@@ -58,8 +61,11 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
 
     private int mTotalBook = 0;
     private int mNewTotalBook = 0;
+    private int mFirstSharing = 1; // 1 : toggle = true, 0: toggle = false
+    private boolean isStateChanged = false;
 
     private CompositeDisposable disposable;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -74,32 +80,60 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mProgressDialog = ClientUtils.createProgressDialog(AddToBookcaseActivity.this);
 
         disposable = new CompositeDisposable(
                 getPresenter().onGetBookTotalInstanceSuccess().subscribe(this::onGetBookTotalInstanceSuccess),
                 getPresenter().onAddBookInstanceSuccess().subscribe(this::onAddBookInstanceSuccess),
                 getPresenter().onAddBookInstanceFailure().subscribe(this::onFailure)
         );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         setupBookInfoDisplay(getScreen().bookInfo());
-
         getPresenter().setEditionId(getScreen().bookInfo().getEditionId());
         getPresenter().getBookTotalInstance();
+        toggleButton.setOnClickListener(view -> {
+            int newSharing = 0;
+            if (toggleButton.isChecked()) {
+                newSharing = 1;
+            }
+
+            if (mFirstSharing == newSharing) {
+                imageViewSave.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_check_gray, null));
+                imageViewSave.setClickable(false);
+                isStateChanged = false;
+            } else {
+                imageViewSave.setClickable(true);
+                imageViewSave.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_check_green, null));
+                isStateChanged = true;
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         disposable.dispose();
+        hideProgress();
+        mProgressDialog = null;
     }
 
     @OnClick(R.id.image_view_back)
     void onBack () {
-        finish();
+        if (isStateChanged) {
+            // show dialog ask for discard
+        } else {
+            finish();
+        }
     }
 
     @OnClick(R.id.image_view_save)
     void onSave () {
+        showProgress();
         imageViewSave.setClickable(false);
         getPresenter().addBookInstance(toggleButton.isChecked() ? 1:0, mNewTotalBook - mTotalBook);
     }
@@ -125,23 +159,33 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     private void setupBookInfoDisplay (BookInfo bookInfo) {
         MZDebug.w(TAG, bookInfo.toString());
         textViewBookName.setText(bookInfo.getTitle());
-        textViewBookAuthor.setText(bookInfo.getAuthor() == null ? "" : bookInfo.getAuthor().get(0).getAuthorName());
+        if (bookInfo.getAuthor() != null && !bookInfo.getAuthor().isEmpty()) {
+            textViewBookAuthor.setText(bookInfo.getAuthor().get(0).getAuthorName());
+        }
         ratingBarBook.setRating(bookInfo.getRateAvg());
         textViewRating.setText(String.valueOf(bookInfo.getRateAvg()));
+
+        if ( ! TextUtils.isEmpty(bookInfo.getImageId())) {
+            ClientUtils.setImage(imageViewBookCover, R.drawable.default_book_cover,
+                    ClientUtils.getUrlImage(bookInfo.getImageId(), ClientUtils.SIZE_SMALL));
+        }
     }
 
     private void updateImageState () {
         if (mNewTotalBook <= mTotalBook) {
             imageViewSave.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_check_gray, null));
             imageViewSave.setClickable(false);
-            return;
+            isStateChanged = false;
         } else {
             imageViewSave.setClickable(true);
             imageViewSave.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_check_green, null));
+            isStateChanged = true;
         }
     }
 
     private void onGetBookTotalInstanceSuccess(BookInstanceInfo bookInstanceInfo) {
+        hideProgress();
+
         mTotalBook = bookInstanceInfo.getBorrowingTotal() +
                 bookInstanceInfo.getLostTotal() +
                 bookInstanceInfo.getNotSharingTotal() +
@@ -150,21 +194,35 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
         textViewTotalBook.setText(String.valueOf(mTotalBook));
         if (bookInstanceInfo.getNotSharingTotal() > 0) {
             toggleButton.setChecked(false);
+            mFirstSharing = 0;
         } else {
             toggleButton.setChecked(true);
+            mFirstSharing = 1;
         }
+
     }
 
     private void onAddBookInstanceSuccess (String message) {
+        hideProgress();
+
         imageViewSave.setClickable(true);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         finish();
     }
 
-
     private void onFailure (String message) {
+        hideProgress();
         imageViewSave.setClickable(true);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void showProgress () {
+        mProgressDialog.show();
+    }
+
+    private void hideProgress () {
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
 }

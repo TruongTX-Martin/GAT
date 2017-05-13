@@ -47,13 +47,15 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     private final Subject<String> subjectSelfUpdateReadingStatus;
     private final Subject<String> subjectSelfUpdateReadingFailure;
 
-    private final Subject<String> onError;
+    private final Subject<String> subjectOnError;
 
     private final Subject<User> subjectUserLoggedIn;
     private final Subject<String> subjectUserNotLoggedIn;
 
-    private int mEditionId;
+    private UseCase<ServerResponse> useCasePostRating;
+    private final Subject<String> subjectPostRatingSuccess;
 
+    private int mEditionId;
 
     public BookDetailPresenterImpl(UseCaseFactory useCaseFactory,
                                    SchedulerFactory schedulerFactory) {
@@ -66,13 +68,14 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
         subjectReadingStatus = PublishSubject.create();
         subjectEditionSharingUsers = PublishSubject.create();
         subjectBookEvaluationByUser = PublishSubject.create();
-        onError = PublishSubject.create();
+        subjectOnError = PublishSubject.create();
         subjectSelfUpdateReadingStatus = PublishSubject.create();
         subjectEvaluationByUserFailure = PublishSubject.create();
         subjectReadingStatusFailure = PublishSubject.create();
         subjectSelfUpdateReadingFailure = PublishSubject.create();
         subjectUserLoggedIn = PublishSubject.create();
         subjectUserNotLoggedIn = PublishSubject.create();
+        subjectPostRatingSuccess = PublishSubject.create();
     }
 
     @Override
@@ -254,7 +257,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
 
     @Override
     public Observable<String> onError() {
-        return onError.subscribeOn(schedulerFactory.main());
+        return subjectOnError.subscribeOn(schedulerFactory.main());
     }
 
     @Override
@@ -287,5 +290,25 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     @Override
     public Observable<String> onUserNotLoggedIn() {
         return subjectUserNotLoggedIn.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void postRating(int editionId, float rating, String review, boolean spoiler) {
+        useCasePostRating = useCaseFactory.postComment(editionId, (int) rating, review, spoiler);
+        useCasePostRating.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(serverResponse -> {
+                    subjectPostRatingSuccess.onNext(serverResponse.message());
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: postComment __________________________________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                    subjectOnError.onNext("Failed");
+                }).execute();
+    }
+
+    @Override
+    public Observable<String> onRatingSuccess() {
+        return subjectPostRatingSuccess.subscribeOn(schedulerFactory.main());
     }
 }
