@@ -19,7 +19,6 @@
 
     <dimen name="smaller_textsize">10sp</dimen>
     <dimen name="small_textsize">13sp</dimen>
-    <dimen name="normal_textsize">14sp</dimen>
 
     <dimen name="smaller_text_view_size">10sp</dimen>
     <dimen name="small_text_view_size">12sp</dimen>
@@ -87,4 +86,31 @@
     <dimen name="btn_width">290dp</dimen>
     <dimen name="light_padding_start">30dp</dimen>
     <dimen name="light_padding_end">30dp</dimen>
+
+    <!-- define text size based on xhdpi -->
+    <!-- ex: header of intro page-->
+    <dimen name="header_textsize_l">18sp</dimen>
+    <!-- ex: normal use for header of each page-->
+    <dimen name="header_textsize_m">17sp</dimen>
+    <!-- ex: for name of user on user page-->
+    <dimen name="header_textsize_s">16sp</dimen>
+    <!-- ex: normal text, almost case will use it -->
+    <dimen name="normal_textsize_l">14sp</dimen>
+    <!-- ex: normal text, almost case will use it -->
+    <dimen name="normal_textsize_m">13sp</dimen>
+    <dimen name="normal_textsize_s">12sp</dimen>
+    <!-- ex: small text, using in page near user -->
+    <dimen name="small_textsize_l">11sp</dimen>
+    <!-- ex: very small text, using in home page (name of book, name of user...) and using in text of tablayout -->
+    <dimen name="small_textsize_s">10sp</dimen>
+
+    <!-- for personal page -->
+    <dimen name="size_layout_edit">25dp</dimen>
+    <dimen name="size_icon_edit">11.5dp</dimen>
+    <dimen name="size_img_profile">75dp</dimen>
+
+    <dimen name="header_margin_lr">14.5dp</dimen>
+    <dimen name="suggestion_user_img_size">52dp</dimen>
+    <dimen name="suggestion_cover_width">60.6dp</dimen>
+    <dimen name="suggestion_cover_height">100.5dp</dimen>
 </resources>

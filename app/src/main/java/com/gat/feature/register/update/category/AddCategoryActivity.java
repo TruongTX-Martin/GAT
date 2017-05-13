@@ -31,8 +31,10 @@ import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.feature.search.SearchActivity;
 import com.gat.feature.search.SearchScreen;
 import com.gat.repository.entity.BookCategory;
+import com.gat.repository.entity.InterestCategory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -94,6 +96,7 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
                 getPresenter().onError().subscribe(this::onUpdateError)
         );
 
+        List<InterestCategory> savedCategoryList = getScreen().categories();
         // Initialize category list
         bookCategories = new BookCategory[MAX_CATE];
         Resources res = getResources();
@@ -101,7 +104,16 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
         TypedArray names = res.obtainTypedArray(R.array.category_name);
         TypedArray categoryId = res.obtainTypedArray(R.array.category_id);
         for (int i = 0; i < MAX_CATE; i++) {
-            bookCategories[i] = BookCategory.instance(names.getString(i), icons.getResourceId(i, 0), false, categoryId.getInt(i, 0));
+            boolean isFavor = false;
+            if (savedCategoryList != null && savedCategoryList.size() > 0) {
+                for (Iterator<InterestCategory> iterator = savedCategoryList.iterator(); iterator.hasNext();) {
+                    if (iterator.next().getCategoryId() == categoryId.getInt(i, 0)) {
+                        isFavor = true;
+                        break;
+                    }
+                }
+            }
+            bookCategories[i] = BookCategory.instance(names.getString(i), icons.getResourceId(i, 0), isFavor, categoryId.getInt(i, 0));
         }
 
         CategoryAdapter categoryAdapter = new CategoryAdapter(this, bookCategories);

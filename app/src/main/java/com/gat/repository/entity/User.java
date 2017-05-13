@@ -1,5 +1,6 @@
 package com.gat.repository.entity;
 
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.gat.common.util.Strings;
@@ -22,12 +23,14 @@ public abstract class User implements Serializable {
     public static int INVALID_USERID = 0;
     public static User NONE = builder().userId(INVALID_USERID).name(Strings.EMPTY)
             .usuallyLocation(new ArrayList<>())
+            .interestCategory(new ArrayList<>())
             .build();
     public static User DEFAULT = builder().userId(INVALID_USERID)       // TODO make default user
             .name("Invalid user")
             .email("")
             .imageId("33328625223")
             .usuallyLocation(new ArrayList<>())
+            .interestCategory(new ArrayList<>())
             .build();
     public boolean isValid() {
         return userId() != INVALID_USERID;
@@ -53,6 +56,7 @@ public abstract class User implements Serializable {
     public abstract @Nullable String twitterName();
 
     public abstract List<UsuallyLocation> usuallyLocation();
+    public abstract List<InterestCategory> interestCategory();
 
     public static Builder builder(){
         return new AutoValue_User.Builder()
@@ -69,7 +73,9 @@ public abstract class User implements Serializable {
                 .googleId(Strings.EMPTY)
                 .googleName(Strings.EMPTY)
                 .twitterId(Strings.EMPTY)
-                .twitterName(Strings.EMPTY);
+                .twitterName(Strings.EMPTY)
+                .interestCategory(new ArrayList<>())
+                .usuallyLocation(new ArrayList<>());
     }
 
     @AutoValue.Builder
@@ -90,8 +96,8 @@ public abstract class User implements Serializable {
         public abstract Builder googleName(String googleName);
         public abstract Builder twitterId(String twitterId);
         public abstract Builder twitterName(String twitterName);
-
         public abstract Builder usuallyLocation(List<UsuallyLocation> list);
+        public abstract Builder interestCategory(List<InterestCategory> list);
         public abstract User build();
     }
 

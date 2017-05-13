@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:textSize="@dimen/normal_textsize"
+                android:textSize="@dimen/normal_textsize_l"
                 android:lines="1"
                 android:layout_marginStart="@dimen/message_input_margin"
                 android:layout_marginEnd="@dimen/message_input_margin"

@@ -68,7 +68,7 @@
             android:layout_toLeftOf="@+id/layoutEdit"
             android:layout_toRightOf="@+id/imgAvatar"
             android:textColor="#202020"
-            android:textSize="@dimen/name_user"
+            android:textSize="@dimen/header_textsize_s"
             android:text="Name "
             android:textStyle="bold" />
 
@@ -78,11 +78,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="80dp"
-            android:textColor="#919191"
+            android:textColor="@color/colorGray"
             android:layout_below="@+id/txtName"
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="Address"
-            android:textSize="@dimen/address_user"
+            android:textSize="@dimen/normal_textsize_s"
             />
     </RelativeLayout>
 

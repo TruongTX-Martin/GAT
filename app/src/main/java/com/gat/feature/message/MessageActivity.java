@@ -100,6 +100,7 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
 
         );
 
+        messageHeader.setText(getString(R.string.message_header));
         imgBack.setImageResource(R.drawable.narrow_back_black);
         imgSave.setVisibility(View.GONE);
 

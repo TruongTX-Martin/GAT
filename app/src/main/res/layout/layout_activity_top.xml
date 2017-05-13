@@ -12,16 +12,16 @@
         android:layout_height="25dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/header_margin_lr"
         android:src="@drawable/narrow_back_white" />
 
     <ImageView
         android:id="@+id/imgSave"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="@dimen/header_margin_lr"
         android:src="@drawable/ic_check" />
 
     <TextView
@@ -32,9 +32,8 @@
         android:layout_toLeftOf="@+id/imgSave"
         android:layout_toRightOf="@+id/imgBack"
         android:gravity="center_horizontal"
-        android:text="SỬA THÔNG TIN CÁ NHÂN"
-        android:textColor="#ffffff"
-        android:textSize="18dp" />
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/header_textsize_m" />
 
     <View
         android:layout_width="match_parent"

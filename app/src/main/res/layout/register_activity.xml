@@ -29,7 +29,7 @@
             android:scaleType="fitCenter"
             android:text="@string/register_face_btn"
             android:drawableStart="@drawable/facebook_btn"
-            android:textSize="@dimen/normal_textsize"/>
+            android:textSize="@dimen/normal_textsize_l"/>
         <Button
             android:id="@+id/twitter_register_btn"
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:drawablePadding="10dp"
             android:scaleType="fitCenter"
             android:text="@string/register_twitter_btn"
-            android:textSize="@dimen/normal_textsize"
+            android:textSize="@dimen/normal_textsize_l"
             android:drawableStart="@drawable/twitter_btn"/>
         <Button
             android:id="@+id/google_register_btn"
@@ -55,7 +55,7 @@
             android:scaleType="fitCenter"
             android:text="@string/register_google_btn"
             android:drawableStart="@drawable/google_btn"
-            android:textSize="@dimen/normal_textsize"/>
+            android:textSize="@dimen/normal_textsize_l"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="20dp"
@@ -78,9 +78,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="@string/login_email_hint"
-                android:textSize="@dimen/normal_textsize"
-                android:drawableStart="@drawable/email_input_icon"
+                android:textSize="@dimen/normal_textsize_l"
                 android:drawablePadding="10dp"
+                android:drawableStart="@drawable/email_input_icon"
                 android:background="@drawable/text_edit_shape_white"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
@@ -98,7 +98,7 @@
                 android:hint="@string/login_password_hint"
                 android:drawableStart="@drawable/pass_input_icon"
                 android:drawablePadding="10dp"
-                android:textSize="@dimen/normal_textsize"
+                android:textSize="@dimen/normal_textsize_l"
                 android:maxLength="10"
                 android:background="@drawable/text_edit_shape_white"/>
         </android.support.design.widget.TextInputLayout>
@@ -114,7 +114,7 @@
             android:background="@drawable/bg_rounded_blue"
             android:textColor="@color/colorWhite"
             android:text="@string/register_btn"
-            android:textSize="@dimen/normal_textsize"
+            android:textSize="@dimen/normal_textsize_l"
             android:drawableEnd="@drawable/forma_1"
             android:paddingEnd="@dimen/padding_end"
             android:paddingStart="@dimen/padding_start"
