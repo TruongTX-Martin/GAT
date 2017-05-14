@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
+import com.gat.common.event.NetWorkEvent;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
 import com.gat.common.util.DataLocal;
@@ -38,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by mryit on 3/26/2017.
@@ -153,6 +155,18 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         if (Notification.isValid(getScreen().notificationParcelable().getNotification())) {
             CommonCheck.processNotification(getScreen().notificationParcelable().getNotification(), this);
         }
+
+//        if(!EventBus.getDefault().isRegistered(MainActivity.class)) {
+//            EventBus.getDefault().registerSticky(MainActivity.class);
+//        }
+    }
+
+    public void onEventMainThread(NetWorkEvent event) {
+        if(event.isConnected()) {
+
+        }else{
+
+        }
     }
 
     @Override
@@ -208,6 +222,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         mTabLayout.setScrollPosition(position,0f,true);
         mViewPager.setCurrentItem(position);
     }
+    ScanFragment scanFragment;
 
     @Override
     public void goTo631PageRequest () {
@@ -216,11 +231,13 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         mViewPager.setCurrentItem(TAB_POS.TAB_PERSONAL);
 
         // go to page request in personal fragment
+        personalFragment.setTabDesire(2);
     }
 
 
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
+        scanFragment = new ScanFragment();
         personalFragment.setMainActivity(this);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");

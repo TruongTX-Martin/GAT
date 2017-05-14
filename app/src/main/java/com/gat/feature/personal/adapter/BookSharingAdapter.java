@@ -18,6 +18,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.customview.MZRatingBar;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
@@ -80,19 +81,6 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
                 holder.mySwitch.setVisibility(View.GONE);
                 holder.txtShared.setVisibility(View.GONE);
             }
-//            if (entity.getSharingStatus() == 2 || entity.getSharingStatus() == 1) {
-//                holder.imgExtend.setVisibility(View.VISIBLE);
-//                holder.mySwitch.setVisibility(View.VISIBLE);
-//                holder.txtShared.setVisibility(View.GONE);
-//            } else if (entity.getSharingStatus() == 0) {
-//                holder.imgExtend.setVisibility(View.GONE);
-//                holder.mySwitch.setVisibility(View.VISIBLE);
-//                holder.txtShared.setVisibility(View.VISIBLE);
-//            } else {
-//                holder.imgExtend.setVisibility(View.GONE);
-//                holder.mySwitch.setVisibility(View.GONE);
-//                holder.txtShared.setVisibility(View.GONE);
-//            }
             if (!Strings.isNullOrEmpty(entity.getTitle())) {
                 holder.txtTitle.setText(entity.getTitle());
             }
@@ -175,7 +163,7 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
     public class BookSharingViewHolder extends RecyclerView.ViewHolder {
         TextView txtTitle, txtAuthor, txtBorrowFrom, txtShared;
         ImageView imgBook, imgExtend;
-        RatingBar ratingBar;
+        MZRatingBar ratingBar;
         Switch mySwitch;
         RelativeLayout viewParrent, layoutDelete;
         LinearLayout layoutTitle;
@@ -189,7 +177,7 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
             txtShared = (TextView) view.findViewById(R.id.txtShared);
             imgBook = (ImageView) view.findViewById(R.id.imgAvatar);
             imgExtend = (ImageView) view.findViewById(R.id.imgExtend);
-            ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+            ratingBar = (MZRatingBar) view.findViewById(R.id.ratingBar);
             mySwitch = (Switch) view.findViewById(R.id.mySwitch);
             viewParrent = (RelativeLayout) view.findViewById(R.id.rootView);
             layoutDelete = (RelativeLayout) view.findViewById(R.id.layoutDelete);

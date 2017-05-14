@@ -187,6 +187,11 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
         }
     }
 
+
+    public void stopCamera() {
+        scannerView.stopCamera();
+    }
+
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");

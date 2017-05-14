@@ -186,4 +186,7 @@ public class BookRequestEntity {
                 ", isHeader=" + isHeader +
                 '}';
     }
+    public void setRecordStatus(int recordStatus) {
+        this.recordStatus = recordStatus;
+    }
 }

@@ -77,8 +77,8 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                     }else{
                         holder.layoutConfirm.setVisibility(View.GONE);
                     }
-                    holder.txtAgreed.setOnClickListener(v -> fragment.agreedRequest(entity));
-                    holder.txtReject.setOnClickListener(v -> fragment.rejectRequest(entity));
+                    holder.txtAgreed.setOnClickListener(v -> fragment.agreedRequest(entity,position,true));
+                    holder.txtReject.setOnClickListener(v -> fragment.rejectRequest(entity,position,false));
                     if(!Strings.isNullOrEmpty(entity.getEditionTitle())) {
                         holder.txtNameBook.setText(Html.fromHtml(ClientUtils.formatColor("Gửi yêu cầu mượn sách ","#000000") + ClientUtils.formatColor(entity.getEditionTitle(),"#5297ba")), TextView.BufferType.SPANNABLE);
                     }
@@ -100,7 +100,7 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                     setTextStatus(holder.txtStatus,entity.getRecordStatus());
                     holder.layoutConfirm.setVisibility(View.GONE);
                     if(!Strings.isNullOrEmpty(entity.getEditionTitle())) {
-                        holder.txtNameBook.setText(Html.fromHtml(ClientUtils.formatColor("Yêu cầu mượn sách ","#000000") + ClientUtils.formatColor(entity.getEditionTitle(),"#5297ba")), TextView.BufferType.SPANNABLE);
+                        holder.txtNameBook.setText(Html.fromHtml(ClientUtils.formatColor("Nhận yêu cầu mượn sách ","#000000") + ClientUtils.formatColor(entity.getEditionTitle(),"#5297ba") + ClientUtils.formatColor(" từ bạn","#000000")), TextView.BufferType.SPANNABLE);
                     }
                 }
                 holder.layoutClick.setOnClickListener(v -> {

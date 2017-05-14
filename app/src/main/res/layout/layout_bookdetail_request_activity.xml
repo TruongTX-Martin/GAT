@@ -68,17 +68,15 @@
                 android:layout_toRightOf="@+id/imgEditionBook"
                 android:orientation="horizontal">
 
-                <RatingBar
+
+                <com.gat.common.customview.MZRatingBar
                     android:id="@+id/ratingBar"
-                    style="@style/CustomRatingBar"
+                    style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtAuthor"
-                    android:layout_toRightOf="@+id/imgAvatar"
-                    android:layout_gravity="center_vertical"
+                    android:isIndicator="true"
                     android:numStars="5"
-                    android:stepSize="0.01"
-                    android:isIndicator="true" />
+                    />
 
                 <TextView
                     android:id="@+id/txtRating"

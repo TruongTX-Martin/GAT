@@ -114,13 +114,22 @@ public class FragmentBookUserSharing extends Fragment {
         }));
     }
 
-    public void requestBorrowBook(BorrowRequestInput input){
+    private BookSharingEntity currentRequest;
+    private int currentPosition;
+    public void requestBorrowBook(BookSharingEntity entity,BorrowRequestInput input,int position){
+        this.currentRequest = entity;
+        this.currentPosition = position;
         parrentActivity.requestBorrowBook(input);
     }
 
-    public void refreshAdapterSharingBook() {
-        currentInput.setPage(1);
-        requestBook(currentInput);
+    public void refreshAdapterSharingBook(int recordStatus) {
+        currentRequest.setRecordStatus(recordStatus);
+        currentRequest.setRequestingStatus(1);
+        listBook.remove(currentPosition);
+        listBook.add(currentPosition,currentRequest);
+        adapter.notifyDataSetChanged();
+//        currentInput.setPage(1);
+//        requestBook(currentInput);
 //        if(listBook != null && listBook.size() > 0) {
 //            for (int i=0; i< listBook.size() ; i++) {
 //                BookSharingEntity entity = listBook.get(i);

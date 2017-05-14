@@ -1,6 +1,7 @@
 package com.gat.common.util;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,12 +19,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -65,7 +68,7 @@ public class ClientUtils {
     }
 
     public static String getUrlImage(String image, String size) {
-        return Constance.BASE_URL_IMAGE + "common/get_image/" + (Strings.isNullOrEmpty(image) ? DEFAULT_IMAGE : image)+ "?size=" + size;
+        return Constance.BASE_URL_IMAGE + "common/get_image/" + (Strings.isNullOrEmpty(image) ? DEFAULT_IMAGE : image) + "?size=" + size;
     }
 
     public static void setImage(ImageView image, int drawble, String url) {
@@ -75,23 +78,24 @@ public class ClientUtils {
     }
 
     public static void setImage(ImageView image, String url) {
-        if(image != null){
+        if (image != null) {
             Glide.with(context).load(url).crossFade().diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true).fitCenter().into(image);
         }
     }
 
-    public static String formatColor(String input,String color){
-        return "<font color=\""+ color +"\">" + input + "</font>";
+
+    public static String formatColor(String input, String color) {
+        return "<font color=\"" + color + "\">" + input + "</font>";
     }
 
-    public static String formatColorAndSize(String input,String color, int size){
-        return "<font size=\"" + size + "\" color=\""+ color +"\">" + input + "</font>";
+    public static String formatColorAndSize(String input, String color, int size) {
+        return "<font size=\"" + size + "\" color=\"" + color + "\">" + input + "</font>";
     }
 
 
-    public static String getDateFromString(long input){
-        Date date=new Date(input + 1000);
+    public static String getDateFromString(long input) {
+        Date date = new Date(input + 1000);
         SimpleDateFormat formatBack = new SimpleDateFormat("dd-MM-yyyy");
         try {
             String dateConvert = formatBack.format(date);
@@ -99,10 +103,10 @@ public class ClientUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  "";
+        return "";
     }
 
-    public static Bitmap loadBitmap(ImageView imageView, String url, OnBitmapLoaded onBitmapLoaded){
+    public static Bitmap loadBitmap(ImageView imageView, String url, OnBitmapLoaded onBitmapLoaded) {
         Bitmap bitmap = null;
         Glide.with(context)
                 .load(url)
@@ -120,10 +124,12 @@ public class ClientUtils {
 
 
     public interface OnBitmapLoaded {
-        void onBitmapLoaded (Bitmap bitmap);
+        void onBitmapLoaded(Bitmap bitmap);
     }
 
-    public static @Nullable Bitmap getBitmapFromURL(String src) {
+    public static
+    @Nullable
+    Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -160,6 +166,7 @@ public class ClientUtils {
         button.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
+
     public static boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -170,26 +177,46 @@ public class ClientUtils {
     public static void showViewNotInternet(View view) {
         LayoutInflater inflater = LayoutInflater.from(context);
         ViewGroup viewGroup = (ViewGroup) view;
-        View viewChild =  inflater.inflate(R.layout.layout_intenet_notconnect,null);
+        View viewChild = inflater.inflate(R.layout.layout_intenet_notconnect, null);
+//        viewChild.setId(Constance.ID_VIEW_NETWORK);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         viewChild.setLayoutParams(params);
-        viewGroup.removeAllViews();
+        if (viewGroup.getChildCount() > 0) {
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View view1 = viewGroup.getChildAt(i);
+                view1.setVisibility(View.GONE);
+            }
+        }
         viewGroup.addView(viewChild);
     }
 
-    public static String getStringLanguage(int i){
+    public static void hideViewNotInternet(View view) {
+        ViewGroup viewGroup = (ViewGroup) view;
+        if (viewGroup.getChildCount() > 0) {
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View view1 = viewGroup.getChildAt(i);
+//                if (view1.getId() == Constance.ID_VIEW_NETWORK) {
+//                    view1.setVisibility(View.GONE);
+//                } else {
+//                    view1.setVisibility(View.VISIBLE);
+//                }
+            }
+        }
+    }
+
+    public static String getStringLanguage(int i) {
         return context.getResources().getString(i);
     }
 
-    public static int roundDouble(double d){
+    public static int roundDouble(double d) {
         double dAbs = Math.abs(d);
         int i = (int) dAbs;
         double result = dAbs - (double) i;
-        if(result<0.5){
-            return d<0 ? -i : i;
-        }else{
-            return d<0 ? -(i+1) : i+1;
+        if (result < 0.5) {
+            return d < 0 ? -i : i;
+        } else {
+            return d < 0 ? -(i + 1) : i + 1;
         }
     }
 
@@ -209,14 +236,14 @@ public class ClientUtils {
 
 
     public interface OnDialogPressed {
-        void onClickAccept ();
+        void onClickAccept();
 
-        void onClickRefuse ();
+        void onClickRefuse();
     }
 
-    public static AlertDialog showAlertDialog (@NonNull Context context, @NonNull String title, @Nullable String message,
-                                               @Nullable String accept_text, @Nullable String refuse_text,
-                                               @Nullable OnDialogPressed callback) {
+    public static AlertDialog showAlertDialog(@NonNull Context context, @NonNull String title, @Nullable String message,
+                                              @Nullable String accept_text, @Nullable String refuse_text,
+                                              @Nullable OnDialogPressed callback) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -238,10 +265,10 @@ public class ClientUtils {
         Button buttonAccept = (Button) view.findViewById(R.id.buttonAccept);
         Button buttonRefuse = (Button) view.findViewById(R.id.buttonRefuse);
 
-        if ( ! TextUtils.isEmpty(accept_text)) {
+        if (!TextUtils.isEmpty(accept_text)) {
             buttonAccept.setText(accept_text);
         }
-        if ( ! TextUtils.isEmpty(refuse_text)) {
+        if (!TextUtils.isEmpty(refuse_text)) {
             buttonRefuse.setText(refuse_text);
         }
 
@@ -259,7 +286,7 @@ public class ClientUtils {
         return dialog;
     }
 
-    public static <T extends ScreenActivity> void showRequiredLoginDialog (Activity activity, T screen) {
+    public static <T extends ScreenActivity> void showRequiredLoginDialog(Activity activity, T screen) {
         showAlertDialog(activity, activity.getString(R.string.err_notice),
                 activity.getString(R.string.err_required_login), activity.getString(R.string.login),
                 activity.getString(R.string.dont_care), new ClientUtils.OnDialogPressed() {
@@ -274,6 +301,25 @@ public class ClientUtils {
                         // do nothing
                     }
                 });
+    }
+
+    public static void showDialogError(Context context, String title, String message) {
+        Dialog dialog = new Dialog(context);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_error);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
+        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
+        Button btnAgreed = (Button) dialog.findViewById(R.id.btnAgreed);
+        txtTitle.setText(title);
+        txtContent.setText(message);
+        btnAgreed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
 }

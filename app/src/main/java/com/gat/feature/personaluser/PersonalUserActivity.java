@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,6 +23,9 @@ import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
+import com.gat.feature.login.LoginActivity;
+import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
@@ -85,6 +89,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     private CompositeDisposable disposablesBookUserReading;
     private CompositeDisposable disposableBorrowBook;
     private CompositeDisposable disposableUserVisitorInfo;
+    private CompositeDisposable disposablesCheckLogin;
     private User currentUser;
 
     int userId;
@@ -106,6 +111,9 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
         disposableUserVisitorInfo = new CompositeDisposable(getPresenter().getResponseVisitorInfo().subscribe(this::getUserVisitorInfoSuccess),
                 getPresenter().onErrorVisitorInfo().subscribe(this::getBookUserSharingError));
+        disposablesCheckLogin = new CompositeDisposable(getPresenter().checkLoginSucess().subscribe(this::checkLoginSuccess),
+                getPresenter().checkLoginFailed().subscribe(this::checkLoginFailed));
+
         requestUserVisitorInfo(userId);
     }
 
@@ -208,13 +216,22 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
         }
     }
+    public void checkLogin() {
+        getPresenter().checkLogin();
+    }
+
+    private void checkLoginSuccess(String input) {
+        //do nothing
+    }
+    private void checkLoginFailed(String input) {
+    }
 
     private void getBookUserSharingError(ServerResponse<ResponseData> error) {
         ClientUtils.showToast(error.message());
     }
 
     private void borrowBookError(String  error) {
-        ClientUtils.showToast(error);
+        ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error);
     }
 
     private void getUserVisitorInfoSuccess(User user) {
@@ -230,7 +247,9 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             if (!Strings.isNullOrEmpty(data.getMessage())) {
                 ClientUtils.showToast(data.getMessage());
             }
-            fragmentBookUserSharing.refreshAdapterSharingBook();
+            
+            BookSharingEntity entity = (BookSharingEntity) data.getDataReturn(BookSharingEntity.class);
+            fragmentBookUserSharing.refreshAdapterSharingBook(entity.getRecordStatus());
         }
     }
     private void getBookUserReadingSuccess(Data data){

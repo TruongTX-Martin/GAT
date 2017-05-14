@@ -231,4 +231,10 @@
     <string name="email_invalid">Email không hợp lệ</string>
 
 
+    <!--Dialog-->
+    <string name="strYes">Yes</string>
+    <string name="strNo">No</string>
+    <string name="strAgreed">Agreed</string>
+    <string name="titleError">Error</string>
+
 </resources>

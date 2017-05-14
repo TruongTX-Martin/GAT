@@ -74,6 +74,8 @@ public class BookSharingEntity {
     @SerializedName("recordStatus")
     private int recordStatus;
 
+
+
     public void setAvailableStatus(int availableStatus) {
         this.availableStatus = availableStatus;
     }
@@ -244,4 +246,5 @@ public class BookSharingEntity {
     public int getBorrowingRecordId() {
         return borrowingRecordId;
     }
+
 }

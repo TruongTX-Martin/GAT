@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.adapter.ViewPagerAdapter;
+import com.gat.common.event.NetWorkEvent;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.DataLocal;
@@ -52,6 +53,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -101,6 +103,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         this.mainActivity = mainActivity;
     }
 
+    public void setTabDesire(int position) {
+        tabLayout.setScrollPosition(position,0f,true);
+        viewPager.setCurrentItem(position);
+    }
+
     @Override
     protected int getLayoutResource() {
         return R.layout.layout_personal_activity;
@@ -133,7 +140,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
 
         disposablesChangeBookSharingStatus = new CompositeDisposable(getPresenter().getResponseBookSharingStatus().subscribe(this::changeBookSharingStatusSuccess),
-                getPresenter().onErrorBookSharingStatus().subscribe(this::getBookInstanceError));
+                getPresenter().onErrorBookSharingStatus().subscribe(this::changeStatusBookError));
 
         disposablesReadingBooks = new CompositeDisposable(getPresenter().getResponseReadingBooks().subscribe(this::getReadingBooksSuccess),
                 getPresenter().onErrorReadingBooks().subscribe(this::getBookInstanceError));
@@ -142,7 +149,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
                 getPresenter().onErrorBookRequest().subscribe(this::getBookInstanceError));
 
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
-                getPresenter().onErrorChangeStatus().subscribe(this::getBookInstanceError));
+                getPresenter().onErrorChangeStatus().subscribe(this::changeBookSharingStatusSuccess));
         disposablesCheckLogin = new CompositeDisposable(getPresenter().checkLoginSucess().subscribe(this::checkLoginSuccess),
                 getPresenter().checkLoginFailed().subscribe(this::checkLoginFailed));
 
@@ -155,6 +162,15 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         handleEvent();
         return rootView;
     }
+
+
+//    public void isConnected(boolean isConnected) {
+//        if(isConnected) {
+//            ClientUtils.hideViewNotInternet(layoutTop);
+//        }else{
+//            ClientUtils.showViewNotInternet(layoutTop);
+//        }
+//    }
 
     private void initView() {
         viewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.viewpager);
@@ -310,9 +326,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
         if (data != null) {
-            if (data.getStatusCode() == 200) {
-            }
             ClientUtils.showToast(data.getMessage());
+            fragmentBookRequest.refreshAdapter();
         }
     }
 
@@ -344,7 +359,6 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     //get book instance
     public void requestBookInstance(BookInstanceInput input) {
         if (!ClientUtils.isOnline()) {
-            ClientUtils.showViewNotInternet(layoutTop);
             return;
         }
         getPresenter().requestBookInstance(input);
@@ -384,16 +398,19 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     private void getBookInstanceError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         }
     }
 
+    private void changeStatusBookError(String error) {
+        ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error);
+    }
+
 
     private void changeBookSharingStatusSuccess(String data) {
         if (!Strings.isNullOrEmpty(data)) {
-            fragmentBookSharing.refreshDate();
+//            fragmentBookSharing.refreshDate();
         }
     }
 
@@ -436,6 +453,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         disposablesChangeBookSharingStatus.dispose();
         disposablesReadingBooks.dispose();
         disposablesBooksRequest.dispose();
+        disposablesRequestBookByOwner.dispose();
+        disposablesCheckLogin.dispose();
+        EventBus.getDefault().unregister(this);
     }
 
 }

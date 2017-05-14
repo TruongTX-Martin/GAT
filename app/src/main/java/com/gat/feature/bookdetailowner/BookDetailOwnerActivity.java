@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.customview.MZRatingBar;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
@@ -80,7 +81,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     TextView txtEditionAuthor;
 
     @BindView(R.id.ratingBar)
-    RatingBar ratingBar;
+    MZRatingBar ratingBar;
 
     @BindView(R.id.txtNumberComment)
     TextView txtNumberComment; @BindView(R.id.layoutSendRequest)
@@ -227,7 +228,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
                 getPresenter().onErrorChangeStatus().subscribe(this::getBookDetailError));
         context = getApplicationContext();
-        
+
         initView();
         handleEvent();
     }
@@ -326,6 +327,8 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         ClientUtils.showToast(error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }else{
+            ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
         }
     }
 
@@ -400,9 +403,9 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 //on hold - not change status
                 layoutSendRequest.setVisibility(View.VISIBLE);
                 txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
-                txtWaitForTurnMessage.setVisibility(View.VISIBLE);
-                layoutParrentWaitForTurn.setVisibility(View.VISIBLE);
                 layoutBottomLeft.setVisibility(View.GONE);
+                layoutParrentWaitForTurn.setVisibility(View.VISIBLE);
+                txtWaitForTurnMessage.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 //contacting
@@ -512,5 +515,12 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     protected BookDetailOwnerScreen getDefaultScreen() {
         // TODO return null here
         return BookDetailOwnerScreen.instance(0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposablesBookDetail.dispose();
+        disposablesRequestBookByOwner.dispose();
     }
 }

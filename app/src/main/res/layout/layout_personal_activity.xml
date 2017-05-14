@@ -69,7 +69,7 @@
             android:layout_toRightOf="@+id/imgAvatar"
             android:textColor="#202020"
             android:textSize="@dimen/header_textsize_s"
-            android:text="Name "
+            android:text="GAT"
             android:textStyle="bold" />
 
         <TextView
@@ -81,7 +81,6 @@
             android:textColor="@color/colorGray"
             android:layout_below="@+id/txtName"
             android:layout_toRightOf="@+id/imgAvatar"
-            android:text="Address"
             android:textSize="@dimen/normal_textsize_s"
             />
     </RelativeLayout>
@@ -94,7 +93,7 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="@dimen/tablayout_height"
             app:tabGravity="fill"
             app:tabBackground="@drawable/personal_tab_color_selector"
             app:tabMode="fixed" />

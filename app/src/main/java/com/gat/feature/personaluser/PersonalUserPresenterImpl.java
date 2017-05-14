@@ -1,5 +1,8 @@
 package com.gat.feature.personaluser;
 
+import android.util.Log;
+
+import com.gat.common.util.MZDebug;
 import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
 import com.gat.data.response.ResponseData;
@@ -61,6 +64,16 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
     private final Subject<ServerResponse<ResponseData>> visitorInfoError;
     private UseCase<User> getVisitorUsecase;
 
+
+    //check login
+    private CompositeDisposable checkLoginDisposable;
+    private final Subject<String> checkLoginResultSubject;
+    private final Subject<String> checkLoginInputSubject;
+    private final Subject<String> checkLoginError;
+
+    private final UseCase<User> loadLocalUser;
+    private boolean isLogin;
+
     public PersonalUserPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
@@ -83,6 +96,11 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         visitorInfoInputSubject = BehaviorSubject.create();
 
 
+        this.checkLoginError = PublishSubject.create();
+        checkLoginResultSubject = PublishSubject.create();
+        checkLoginInputSubject = BehaviorSubject.create();
+
+        loadLocalUser = useCaseFactory.getUser();
     }
 
     @Override
@@ -102,6 +120,24 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         visitorInfoDisposable = new CompositeDisposable(
                 visitorInfoInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getVisitorInfo)
         );
+
+
+        //start get personal data
+        loadLocalUser.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    MZDebug.w("local login: " + user.isValid());
+                    if (user.isValid()) {
+                        isLogin = true;
+                    } else {
+                        isLogin = false;
+                    }
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
     }
 
     @Override
@@ -110,6 +146,7 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         bookUserReadingDisposable.dispose();
         requestBorrowBookDisposable.dispose();
         visitorInfoDisposable.dispose();
+        checkLoginDisposable.dispose();
     }
 
     @Override
@@ -171,6 +208,21 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
     @Override
     public Observable<ServerResponse<ResponseData>> onErrorVisitorInfo() {
         return visitorInfoError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void checkLogin() {
+        checkLoginInputSubject.onNext("");
+    }
+
+    @Override
+    public Observable<String> checkLoginSucess() {
+        return checkLoginResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> checkLoginFailed() {
+        return checkLoginError.observeOn(schedulerFactory.main());
     }
 
     private void getVisitorInfo(int userId) {
@@ -249,4 +301,6 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
                 )
                 .execute();
     }
+
+
 }

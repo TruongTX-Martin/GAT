@@ -239,4 +239,9 @@
     <string name="login">Đăng nhập</string>
     <string name="dont_care">Bỏ qua</string>
 
+    <string name="strYes">Yes</string>
+    <string name="strNo">No</string>
+    <string name="strAgreed">Agreed</string>
+    <string name="titleError">Lỗi</string>
+
 </resources>

@@ -104,14 +104,17 @@
     <dimen name="normal_textsize_m">13sp</dimen>
     <dimen name="normal_textsize_s">12sp</dimen>
     <!-- ex: small text, using in page near user -->
-    <dimen name="small_textsize_l">11sp</dimen>
     <!-- ex: very small text, using in home page (name of book, name of user...) and using in text of tablayout -->
+    <dimen name="small_textsize_l">11sp</dimen>
     <dimen name="small_textsize_s">10sp</dimen>
 
     <!-- for personal page -->
-    <dimen name="size_layout_edit">25dp</dimen>
+    <dimen name="size_layout_edit">25.5dp</dimen>
     <dimen name="size_icon_edit">11.5dp</dimen>
     <dimen name="size_img_profile">75dp</dimen>
+    <dimen name="tablayout_height">62.5dp</dimen>
+    <dimen name="book_width">45dp</dimen>
+    <dimen name="book_height">67dp</dimen>
 
     <dimen name="header_margin_lr">14.5dp</dimen>
     <dimen name="suggestion_user_img_size">52dp</dimen>

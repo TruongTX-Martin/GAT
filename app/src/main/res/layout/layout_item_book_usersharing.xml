@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="45dp"
-            android:layout_height="67dp"
+            android:layout_width="@dimen/book_width"
+            android:layout_height="@dimen/book_height"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:src="@drawable/twitter_btn" />
@@ -31,13 +31,13 @@
 
             <Button
                 android:id="@+id/btnBorrow"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
                 android:background="@drawable/bg_button_borrow"
                 android:text="Mượn sách"
                 android:textColor="#ffffff"
                 android:visibility="gone"
-                android:textSize="12dp" />
+                android:textSize="@dimen/small_textsize_l" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -67,13 +67,14 @@
 
             <Button
                 android:id="@+id/btnWaitBorrow"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
                 android:background="@drawable/bg_button_wait_borrow"
                 android:text="Đợi mượn"
                 android:textColor="#ffffff"
                 android:visibility="gone"
-                android:textSize="12dp" />
+                android:textSize="@dimen/small_textsize_l"
+                />
 
 
         </RelativeLayout>
@@ -86,7 +87,7 @@
             android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="name"
-            android:textSize="13dp"
+            android:textSize="@dimen/normal_textsize_m"
             android:textColor="#000000" />
 
         <TextView
@@ -97,7 +98,7 @@
             android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="author"
-            android:textSize="9dp"
+            android:textSize="@dimen/small_textsize_l"
             android:textColor="#919191" />
 
         <LinearLayout
@@ -122,6 +123,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
+                android:textSize="@dimen/small_textsize_l"
                 android:layout_gravity="center_vertical"
                 />
         </LinearLayout>
