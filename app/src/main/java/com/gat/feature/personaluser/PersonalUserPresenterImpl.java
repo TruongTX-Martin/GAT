@@ -146,7 +146,7 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
         bookUserReadingDisposable.dispose();
         requestBorrowBookDisposable.dispose();
         visitorInfoDisposable.dispose();
-        checkLoginDisposable.dispose();
+        //checkLoginDisposable.dispose(); bug crash
     }
 
     @Override

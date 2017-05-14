@@ -22,10 +22,10 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         if(intent.getExtras()!=null) {
             NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
             if(ni!=null && ni.getState()==NetworkInfo.State.CONNECTED) {
-                ClientUtils.showToast("Network connected");
+                ClientUtils.showToast(context, "Network connected");
                 EventBus.getDefault().postSticky(new NetWorkEvent(true));
             } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
-                ClientUtils.showToast("Network not connected");
+                ClientUtils.showToast(context, "Network not connected");
                 EventBus.getDefault().postSticky(new NetWorkEvent(false));
             }
         }

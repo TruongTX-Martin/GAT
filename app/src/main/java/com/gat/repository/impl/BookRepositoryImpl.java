@@ -107,18 +107,14 @@ public class BookRepositoryImpl implements BookRepository {
         return Observable.defer(()-> localUserDataSourceLazy.get().loadUser())
                 .flatMap(user -> {
 
-                    int userId = 0;
                     Float latitude = null;
                     Float longitude = null;
 
-                    if (user != null) {
-                        userId = user.userId();
-                        if (user.usuallyLocation() != null && !user.usuallyLocation().isEmpty()) {
+                    if (user.usuallyLocation() != null && !user.usuallyLocation().isEmpty()) {
 
-                        }
                     }
 
-                    return networkDataSourceLazy.get().getEditionSharingUser(editionId, userId, latitude, longitude);
+                    return networkDataSourceLazy.get().getEditionSharingUser(editionId, user.userId(), latitude, longitude);
         });
     }
 

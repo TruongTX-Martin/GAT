@@ -61,7 +61,7 @@ public class ClientUtils {
     private static final String DEFAULT_IMAGE = "33328625223";       // TODO default image path
 
 
-    public static void showToast(String text) {
+    public static void showToast(Context context, String text) {
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
         toast.show();

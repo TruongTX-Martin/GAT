@@ -38,17 +38,13 @@ public interface BookDetailPresenter extends Presenter {
     Observable<String> onUpdateReadingStatusSuccess ();
     Observable<String> onUpdateReadingStatusFailure ();
 
-    Observable<String> onError ();
+    void postRating (int editionId, float rating, String review, boolean spoiler);
+    Observable<String> onRatingSuccess ();
 
     void isUserLoggedIn ();
     Observable<User> onUserLoggedIn ();
     Observable<String> onUserNotLoggedIn ();
 
-    void postRating (int editionId, float rating, String review, boolean spoiler);
-    Observable<String> onRatingSuccess ();
-
-    void checkLogin();
-    Observable<Boolean> onCheckLoginDone ();
-
+    Observable<String> onError ();
 
 }

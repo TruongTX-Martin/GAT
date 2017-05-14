@@ -324,7 +324,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     }
 
     private void getBookDetailError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(error.message());
+        ClientUtils.showToast(this, error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         }else{
@@ -350,7 +350,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
                 initView();
                 requestDetailBook();
             }
-            ClientUtils.showToast(data.getMessage());
+            ClientUtils.showToast(this, data.getMessage());
         }
     }
 
@@ -389,7 +389,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
             txtNumberSharing.setText(borrowerInfo.getSharingCount()+"");
             txtNumberReading.setText(borrowerInfo.getReadCount()+"");
         }
-        ClientUtils.showToast("Record status:"+recordStatus);
+        ClientUtils.showToast(this, "Record status:"+recordStatus);
         switch (recordStatus){
             case 0:
                 //wait to confirm

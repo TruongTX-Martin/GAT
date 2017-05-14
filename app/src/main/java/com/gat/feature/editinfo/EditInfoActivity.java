@@ -176,13 +176,13 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     private void editInfoError(ServerResponse<ResponseData> error) {
         progressBar.setVisibility(View.GONE);
-        ClientUtils.showToast(error.message());
+        ClientUtils.showToast(this, error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         }
     }
     private void editInfoSuccess(String message) {
-        ClientUtils.showToast(message);
+        ClientUtils.showToast(this, message);
         progressBar.setVisibility(View.GONE);
         backToPreviousActivity();
     }
@@ -190,7 +190,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     private void updateProfile() {
         String name = edtName.getText().toString().trim();
         if (Strings.isNullOrEmpty(name)) {
-            ClientUtils.showToast("Bạn không được để trống tên");
+            ClientUtils.showToast(this, "Bạn không được để trống tên");
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
@@ -282,7 +282,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                         }
                     }
                 } else {
-                    ClientUtils.showToast("User not allow access device");
+                    ClientUtils.showToast(this, "User not allow access device");
                 }
                 break;
             default:
@@ -309,7 +309,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     chooseImage();
                 } else {
-                    ClientUtils.showToast("User rejected");
+                    ClientUtils.showToast(getApplicationContext(),"User rejected");
                 }
                 break;
         }

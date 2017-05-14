@@ -8,6 +8,8 @@ import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
+import com.gat.repository.entity.User;
+
 import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -58,6 +60,24 @@ public class NotificationPresenterImpl implements NotificationPresenter {
                 return;
             }
         }
+
+        UseCase<User> loadLocalUser = useCaseFactory.getUser();
+        loadLocalUser.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    if (user != null && user.isValid()) {
+                        loadNotify();
+                    }
+
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
+    }
+
+    private void loadNotify () {
 
         useCaseNotifications = useCaseFactory.getUserNotification(mCurrentPage, PER_PAGE);
         useCaseNotifications.executeOn(schedulerFactory.io())

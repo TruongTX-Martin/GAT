@@ -227,7 +227,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     private void getBookUserSharingError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(error.message());
+        ClientUtils.showToast(this, error.message());
     }
 
     private void borrowBookError(String  error) {
@@ -245,7 +245,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     private void borrowBookSuccess(Data data){
         if(data != null) {
             if (!Strings.isNullOrEmpty(data.getMessage())) {
-                ClientUtils.showToast(data.getMessage());
+                ClientUtils.showToast(this,data.getMessage());
             }
             
             BookSharingEntity entity = (BookSharingEntity) data.getDataReturn(BookSharingEntity.class);

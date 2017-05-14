@@ -164,10 +164,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 getPresenter().onUpdateReadingStatusSuccess().subscribe(this::onUpdateReadingStatusSuccess),
                 getPresenter().onUpdateReadingStatusFailure().subscribe(this::onUpdateReadingStatusFailure),
                 getPresenter().onGetEvaluationByUserFailure().subscribe(this::onGetEvaluationByUserFailure),
-                getPresenter().onRatingSuccess().subscribe(this::onPostRatingSuccess),
-                getPresenter().onCheckLoginDone().subscribe(this::onCheckLoginDone)
+                getPresenter().onRatingSuccess().subscribe(this::onPostRatingSuccess)
         );
-        getPresenter().checkLogin();
 
         ratingBarUserRate.setOnRatingBarChangeListener(this);
 
@@ -231,7 +229,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.image_button_go_share)
     void onGoShare () {
-        if ( ! isLoggedIn) {
+        if (mUser == null) {
             showLoginDialog();
             return;
         }
@@ -241,7 +239,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.button_reading_state)
     void updateReadingState () {
-        if ( ! isLoggedIn) {
+        if (mUser == null) {
             showLoginDialog();
             return;
         }
@@ -254,10 +252,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // + 1: Reading - đang đọc
         // + 2: To read - sẽ đọc
         // khi nhấp vào thì sẽ gọi SelfUpdateReadingActivity
-        if (buttonReadingState.getTag() == null) {
-            showLoginDialog();
-            return;
-        }
         if ( (int)buttonReadingState.getTag() == ReadingState.REMOVE) {
             getPresenter().updateReadingStatus();
             buttonReadingState.setClickable(false);
@@ -272,10 +266,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     @OnClick(R.id.button_comment)
     void onGoComment () {
         if (mBookInfo == null) {
-            return;
-        }
-        if (mUser == null) {
-            showLoginDialog();
             return;
         }
         float value = 0;
@@ -303,6 +293,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     @OnClick(R.id.button_view_list)
     void onViewListSharingThisBook () {
         if (mListUserSharing == null || mListUserSharing.isEmpty()) {
+            return;
+        }
+
+        if (mUser == null) {
+            showLoginDialog();
             return;
         }
 
@@ -434,11 +429,13 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private User mUser;
     private void onUserLoggedIn (User user) {
         mUser = user;
+        MZDebug.w("FINAL onUserNotLoggedIn: \n\r" + user.toString());
         getPresenter().getBookEvaluationByUser();
         getPresenter().getSelfReadingStatus();
     }
 
     private void onUserNotLoggedIn (String message) {
+        MZDebug.w("FINAL onUserNotLoggedIn");
         // hide button comment, rating, string comment
         llComment.setVisibility(View.GONE);
     }
@@ -481,13 +478,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                     .build();
 
             // if book isbn_13 =null -> get isbn_10, if isbn_10 = null -> default
-            String bookIsbn = "0-553-57340-3";
-            if (mBookInfo.getIsbn13() != null) {
+            String bookIsbn = "1556154844";
+            if ( ! TextUtils.isEmpty(mBookInfo.getIsbn13())) {
                 bookIsbn = mBookInfo.getIsbn13();
-            } else {
-                if (mBookInfo.getIsbn10() != null) {
+            } else if ( ! TextUtils.isEmpty(mBookInfo.getIsbn10())){
                     bookIsbn = mBookInfo.getIsbn10();
-                }
             }
 
             // Create an object

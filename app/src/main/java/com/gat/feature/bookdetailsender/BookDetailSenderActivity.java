@@ -284,7 +284,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
 
 
     private void getBookDetailError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(error.message());
+        ClientUtils.showToast(this, error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         }else{
@@ -307,7 +307,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     private void requestBookByBorrowerSuccess(ChangeStatusResponse data) {
         if (data != null) {
             if(data.getStatusCode() == 200){
-                ClientUtils.showToast(data.getMessage());
+                ClientUtils.showToast(this, data.getMessage());
                 initView();
                 requestDetailData();
             }
@@ -353,7 +353,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                 ratingBar.setRating((float) editionInfo.getRateAvg());
                 txtRating.setText(editionInfo.getRateAvg()+"");
             }
-            ClientUtils.showToast("Record status:"+ recordStatus);
+            ClientUtils.showToast(this, "Record status:"+ recordStatus);
             switch (recordStatus){
                 case 0:
                     //wait to confirm

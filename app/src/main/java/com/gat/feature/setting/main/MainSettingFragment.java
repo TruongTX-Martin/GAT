@@ -1,6 +1,7 @@
 package com.gat.feature.setting.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -28,6 +29,7 @@ import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
+import com.gat.feature.book_detail.BookDetailActivity;
 import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
@@ -88,6 +90,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     private CallbackManager callbackManager;
     private TwitterAuthClient twitterAuthClient;
     private ProgressDialog progressDialog;
+    private MainActivity mainActivity;
 
     public MainSettingFragment (ISettingDelegate delegate) {
         this.delegate = delegate;;
@@ -116,7 +119,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mainActivity = (MainActivity) getActivity();
         callbackManager = CallbackManager.Factory.create();
         createGoogleApiClient();
         createTwitterClient();
@@ -191,18 +194,26 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     @OnClick(R.id.button_add_email_password)
     void onAddEmailPasswordTap () {
+        if (mUser == null) {
+            ClientUtils.showRequiredLoginDialog(mainActivity,mainActivity);
+            return;
+        }
         delegate.goToAddEmailPassword();
     }
 
     @OnClick(R.id.button_change_password)
     void onChangePasswordTap () {
+        if (mUser == null) {
+            ClientUtils.showRequiredLoginDialog(mainActivity,mainActivity);
+            return;
+        }
         delegate.goToChangePassword();
     }
 
     @OnClick(R.id.button_edit_profile)
     void editProfile () {
         if (mUser == null) {
-            MZDebug.w("_______________________________________ User info null");
+            ClientUtils.showRequiredLoginDialog(mainActivity,mainActivity);
             return;
         }
         delegate.goToEditProfile(mUser);
@@ -211,6 +222,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     @OnClick(R.id.button_facebook)
     void onFacebookTap () {
         if (mUser == null) {
+            ClientUtils.showRequiredLoginDialog(mainActivity,mainActivity);
             return;
         }
         if ( ! TextUtils.isEmpty(mFacebookUserName)) {
@@ -227,6 +239,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     @OnClick(R.id.button_twitter)
     void onTwitterTap () {
         if (mUser == null) {
+            ClientUtils.showRequiredLoginDialog(mainActivity,mainActivity);
             return;
         }
         if ( ! TextUtils.isEmpty(mTwitterUserName)) {
@@ -241,6 +254,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     @OnClick(R.id.button_google)
     void onGoogleTap () {
         if (mUser == null) {
+            ClientUtils.showRequiredLoginDialog(mainActivity,mainActivity);
             return;
         }
         if ( ! TextUtils.isEmpty(mGoogleUserName)) {
@@ -255,6 +269,12 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     @OnClick(R.id.button_logout)
     void onLogoutTap () {
+
+        if (mUser == null) {
+            MainActivity.startAndClear(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getResources().getString(R.string.ask_for_logout));
         builder.setPositiveButton(android.R.string.yes, (dialog, id) -> {
@@ -269,11 +289,11 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     private User mUser;
     private void onLoadUserSuccess (User user ) {
-        mUser = user;
-        if (null == user) {
+        if (null == user || !user.isValid()) {
             return;
         }
 
+        mUser = user;
         // setup ui
 
         // show password button
@@ -450,8 +470,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     private void onSignOutSuccess (Boolean result) {
         hideProgress();
-        MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
-        getActivity().finish();
+        MainActivity.startAndClear(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
     }
 
     private void hideProgress () {

@@ -313,11 +313,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     private void getBookDetailError(String error) {
-        ClientUtils.showToast("Error:" + error);
+        ClientUtils.showToast(getActivity(), "Error:" + error);
     }
 
     private void getUserInfoError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(error.message());
+        ClientUtils.showToast(getActivity(), error.message());
     }
 
     public void requestBookOwner(RequestStatusInput statusInput) {
@@ -326,7 +326,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
         if (data != null) {
-            ClientUtils.showToast(data.getMessage());
+            ClientUtils.showToast(getActivity(), data.getMessage());
             fragmentBookRequest.refreshAdapter();
         }
     }

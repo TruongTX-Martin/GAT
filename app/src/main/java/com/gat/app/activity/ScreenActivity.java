@@ -38,6 +38,12 @@ public abstract class ScreenActivity<S extends Screen, P extends Presenter> exte
         context.startActivity(intent);
     }
 
+    public static <S extends Screen, P extends Presenter, T extends ScreenActivity<S, P>> void startAndClear(Context context, Class<T> activityClass, S screen){
+        Intent intent = new Intent(context, activityClass)
+                .putExtra(EXTRA_SCREEN, new ParcelableScreen(screen))
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+    }
 
     public static <S extends Screen, P extends Presenter, T extends ScreenActivity<S, P>> void startForResult(Activity activity, Class<T> activityClass, S screen, int requestCode){
         Intent intent = new Intent(activity, activityClass)
