@@ -31,7 +31,7 @@
         android:textColor="#4e4e4e"
         android:textSize="17dp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
@@ -39,28 +39,18 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnOk"
-            android:layout_width="0dp"
+            android:id="@+id/btnAgreed"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:layout_marginRight="25dp"
             android:textColor="#ffffff"
             android:textSize="16dp"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:background="@drawable/bg_button_dialog"
-            android:text="@string/strYes" />
+            android:text="@string/strAgreed" />
 
-        <Button
-            android:id="@+id/btnCancle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:textColor="#ffffff"
-            android:textSize="16dp"
-            android:layout_marginLeft="25dp"
-            android:background="@drawable/bg_button_dialog"
-            android:text="@string/strNo" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

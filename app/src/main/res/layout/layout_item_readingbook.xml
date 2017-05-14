@@ -24,7 +24,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:textColor="#000000"
-                android:textSize="14dp"
+                android:textSize="@dimen/normal_textsize_l"
                 android:textStyle="bold" />
 
 
@@ -36,7 +36,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:textColor="#929292"
-                android:textSize="14dp" />
+                android:textSize="@dimen/normal_textsize_l"
+                />
         </LinearLayout>
 
         <View
@@ -53,16 +54,16 @@
 
         <ImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="45dp"
-            android:layout_height="67dp"
+            android:layout_width="@dimen/book_width"
+            android:layout_height="@dimen/book_height"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:src="@drawable/twitter_btn" />
 
         <ImageView
             android:id="@+id/imgExtend"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="7.5dp"
+            android:layout_height="13dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
@@ -74,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="50dp"
             android:layout_marginTop="10dp"
+            android:textSize="@dimen/normal_textsize_m"
             android:layout_toLeftOf="@+id/imgExtend"
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="name"
@@ -88,6 +90,7 @@
             android:layout_toLeftOf="@+id/imgExtend"
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="author"
+            android:textSize="@dimen/small_textsize_l"
             android:textColor="#000000" />
 
         <LinearLayout
@@ -99,14 +102,14 @@
             android:layout_toRightOf="@+id/imgAvatar"
             android:orientation="horizontal">
 
-            <RatingBar
+            <com.gat.common.customview.MZRatingBar
                 android:id="@+id/ratingBar"
-                style="@style/CustomRatingBar"
+                style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:isIndicator="true"
                 android:numStars="5"
-                android:stepSize="0.01" />
+                />
 
             <TextView
                 android:id="@+id/txtRating"
@@ -114,7 +117,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000000"
-                android:textSize="14dp" />
+                android:textSize="@dimen/small_textsize_l"
+                />
 
         </LinearLayout>
 

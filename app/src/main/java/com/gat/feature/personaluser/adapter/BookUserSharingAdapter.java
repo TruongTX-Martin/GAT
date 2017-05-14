@@ -107,12 +107,12 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
             holder.btnBorrow.setOnClickListener(v -> {
                 BorrowRequestInput input = new BorrowRequestInput();
                 input.setEditionId(entity.getEditionId());
-                fragmentBookSharing.requestBorrowBook(input);
+                fragmentBookSharing.requestBorrowBook(entity,input,position);
             });
             holder.btnWaitBorrow.setOnClickListener(v -> {
                 BorrowRequestInput input = new BorrowRequestInput();
                 input.setEditionId(entity.getEditionId());
-                fragmentBookSharing.requestBorrowBook(input);
+                fragmentBookSharing.requestBorrowBook(entity,input,position);
             });
         }
         if (getItemCount() > 9 && position == (getItemCount() - 1)) {

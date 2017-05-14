@@ -184,7 +184,7 @@ public class FragmentReadingBook extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.setOutsideTouchable(true);
+        popupWindow.setOutsideTouchable(false);
         RelativeLayout imgClose = (RelativeLayout) customView.findViewById(R.id.layoutClose);
         RelativeLayout layoutReadedBorder = (RelativeLayout) customView.findViewById(R.id.layoutReadedBorder);
         RelativeLayout layoutReadedOverlay = (RelativeLayout) customView.findViewById(R.id.layoutReadedOverlay);

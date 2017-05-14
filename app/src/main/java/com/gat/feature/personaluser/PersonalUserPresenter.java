@@ -36,4 +36,8 @@ public interface PersonalUserPresenter extends Presenter{
     Observable<User> getResponseVisitorInfo();
     Observable<ServerResponse<ResponseData>> onErrorVisitorInfo();
 
+
+    void checkLogin();
+    Observable<String> checkLoginSucess();
+    Observable<String> checkLoginFailed();
 }

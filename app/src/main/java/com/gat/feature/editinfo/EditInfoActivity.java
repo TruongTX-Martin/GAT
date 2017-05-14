@@ -150,7 +150,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             edtName.setText("");
         });
         imgSave.setOnClickListener(v -> updateProfile());
-        imgBack.setOnClickListener(v -> backToPreviousActivity());
+        imgBack.setOnClickListener(v -> backToPreviousView());
         layoutAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,6 +339,11 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     @Override
     public void onBackPressed() {
+        backToPreviousView();
+    }
+
+
+    private void backToPreviousView() {
         TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
         TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
         txtTitle.setText("Huỷ thay đổi");
@@ -356,6 +361,4 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             dialog.show();
         }
     }
-
-
 }

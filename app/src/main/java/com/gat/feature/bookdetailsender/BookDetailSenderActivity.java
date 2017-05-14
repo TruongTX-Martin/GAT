@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.customview.MZRatingBar;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
@@ -79,7 +80,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
 
 
     @BindView(R.id.ratingBar)
-    RatingBar ratingBar;
+    MZRatingBar ratingBar;
 
     @BindView(R.id.txtNumberComment)
     TextView txtNumberComment;
@@ -286,6 +287,8 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         ClientUtils.showToast(error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }else{
+            ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
         }
     }
 
@@ -367,6 +370,8 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     txtWaitForTurnMessage.setVisibility(View.VISIBLE);
                     layoutParrentWaitForTurn.setVisibility(View.VISIBLE);
                     layoutBottomLeft.setVisibility(View.GONE);
+                    layoutParrentCancleRequest.setVisibility(View.VISIBLE);
+                    rltCancleRequestClose.setVisibility(View.GONE);
                     break;
                 case 2:
                     //contacting

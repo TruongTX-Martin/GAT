@@ -49,7 +49,8 @@ public class BookDetailEntity {
     private String cancelTime = Strings.EMPTY;
 
     @SerializedName("rejectTime")
-    private long rejectTime ;
+    private long rejectTime;
+
 
     public int getRecordId() {
         return recordId;
@@ -220,6 +221,8 @@ public class BookDetailEntity {
         public int getReviewCount() {
             return reviewCount;
         }
+
+
     }
 
     public class BorrowerInfo {
@@ -285,6 +288,7 @@ public class BookDetailEntity {
         public int getDeleteFlag() {
             return deleteFlag;
         }
+
     }
 
     public class OwnerInfo {
@@ -350,6 +354,7 @@ public class BookDetailEntity {
         public int getDeleteFlag() {
             return deleteFlag;
         }
+
 
         public OwnerInfo(int userId, String name, String email, String imageId, int userTypeFlag, String address, int deleteFlag) {
             this.userId = userId;

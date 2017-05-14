@@ -91,4 +91,36 @@ public class BookReadingEntity {
     public boolean isHeader() {
         return isHeader;
     }
+
+    public int getReadingId() {
+        return readingId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public int getEditionId() {
+        return editionId;
+    }
+
+    public int getBorrowRecordId() {
+        return borrowRecordId;
+    }
+
+    public String getFollowDate() {
+        return followDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getCompleteDate() {
+        return completeDate;
+    }
 }

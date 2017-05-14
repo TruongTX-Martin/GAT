@@ -15,8 +15,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="@dimen/size_img_profile"
+            android:layout_height="@dimen/size_img_profile"
             android:layout_centerVertical="true"
             android:layout_margin="16dp"
             android:src="@drawable/ic_profile"
@@ -33,7 +33,7 @@
             android:layout_toLeftOf="@+id/layoutEdit"
             android:layout_toRightOf="@+id/imgAvatar"
             android:textColor="#202020"
-            android:textSize="18dp"
+            android:textSize="@dimen/header_textsize_s"
             android:text="Nguyen thi minh phong"
             android:textStyle="bold" />
 
@@ -65,7 +65,7 @@
                 android:layout_toLeftOf="@+id/imgLocation"
                 android:textColor="#919191"
                 android:layout_marginRight="50dp"
-                android:textSize="12dp" />
+                android:textSize="@dimen/normal_textsize_s" />
         </RelativeLayout>
 
 
@@ -78,7 +78,7 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="@dimen/tablayout_height"
             app:tabGravity="fill"
             app:tabBackground="@drawable/personal_tab_color_selector"
             app:tabMode="fixed" />

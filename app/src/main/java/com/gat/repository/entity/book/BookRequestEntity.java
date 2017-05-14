@@ -159,4 +159,8 @@ public class BookRequestEntity {
     public String getRejectTime() {
         return rejectTime;
     }
+
+    public void setRecordStatus(int recordStatus) {
+        this.recordStatus = recordStatus;
+    }
 }

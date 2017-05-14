@@ -26,7 +26,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:textColor="#000000"
-                android:textSize="14dp"
+                android:textSize="@dimen/normal_textsize_l"
                 android:textStyle="bold" />
 
 
@@ -66,8 +66,8 @@
 
         <ImageView
             android:id="@+id/imgExtend"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="7.5dp"
+            android:layout_height="13dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
@@ -95,7 +95,7 @@
                     android:layout_marginLeft="5dp"
                     android:text="Dang doi"
                     android:textColor="#4e4e4e"
-                    android:textSize="11dp" />
+                    android:textSize="@dimen/small_textsize_s" />
 
                 <TextView
                     android:id="@+id/txtBorrowerName"
@@ -103,6 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/txtStatus"
                     android:text="Andy Pham"
+                    android:textSize="@dimen/normal_textsize_s"
                     android:textColor="#000000"
                     android:textStyle="bold" />
             </RelativeLayout>
@@ -112,6 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layoutName"
+                android:layout_marginRight="50dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -121,12 +123,14 @@
                     android:layout_marginRight="5dp"
                     android:text="Gửi yêu cầu mượn sách"
                     android:visibility="gone"
+                    android:textSize="@dimen/small_textsize_l"
                     android:textColor="#000000" />
 
                 <TextView
                     android:id="@+id/txtNameBook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/small_textsize_l"
                     android:text="Nguoc goc loai nguoi xxxx cascascc ascascascacas"
                     />
             </LinearLayout>
@@ -150,6 +154,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:text="Đồng ý"
+                android:textSize="@dimen/normal_textsize_s"
                 android:textColor="#7cc576" />
 
             <TextView
@@ -157,6 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Từ chối"
+                android:textSize="@dimen/normal_textsize_s"
                 android:textColor="#ed1c24" />
         </LinearLayout>
 

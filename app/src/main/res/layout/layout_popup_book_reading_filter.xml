@@ -22,12 +22,12 @@
         <RelativeLayout
             android:id="@+id/layoutTop"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="45dp">
 
             <ImageView
                 android:id="@+id/imgFilter"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="17.5dp"
+                android:layout_height="16dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
@@ -41,8 +41,8 @@
 
                 <ImageView
                     android:id="@+id/imgClose"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="12.8dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_cancle" />
             </RelativeLayout>
@@ -57,7 +57,7 @@
                 android:layout_toRightOf="@+id/imgFilter"
                 android:text="Bộ lọc"
                 android:textColor="#5297ba"
-                android:textSize="16dp"
+                android:textSize="@dimen/normal_textsize_l"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -71,34 +71,34 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="29dp"
             android:background="@android:color/transparent">
 
 
             <RelativeLayout
                 android:id="@+id/layoutReaded"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_margin="5dp"
+                android:layout_margin="2.5dp"
                 android:background="@drawable/bg_layout_filter_book">
 
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_circle_white" />
 
-                <ImageView
-                    android:id="@+id/imgCheckReaded"
+                <RelativeLayout
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/ic_check_filter_book" />
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/ic_circle_white"
+                    >
+                    <ImageView
+                        android:id="@+id/imgCheckReaded"
+                        android:layout_width="8.5dp"
+                        android:layout_height="6.5dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_check_filter_book" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/txtBookReaded"
@@ -107,7 +107,7 @@
                     android:layout_centerInParent="true"
                     android:text="Sách đã đọc"
                     android:textColor="@color/colorWhite"
-                    android:textSize="15dp"
+                    android:textSize="@dimen/small_textsize_l"
                     android:textStyle="bold" />
 
 
@@ -116,16 +116,16 @@
             <RelativeLayout
                 android:id="@+id/layoutReadedOverlay"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_margin="5dp"
+                android:layout_margin="2.5dp"
                 android:background="@drawable/bg_layout_filter_book_not_choosed"
                 android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/layoutReadedBorder"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="35dp"
                 android:background="@drawable/border_layout_filter_book"
                 android:visibility="visible" />
         </RelativeLayout>
@@ -136,32 +136,32 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="22.5dp"
             android:background="@android:color/transparent">
 
             <RelativeLayout
                 android:id="@+id/layoutReading"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
+                android:layout_height="30dp"
+                android:layout_margin="2.5dp"
                 android:background="@drawable/bg_layout_filter_book">
 
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_circle_white" />
-
-                <ImageView
-                    android:id="@+id/imgCheckReading"
+                <RelativeLayout
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/ic_check_filter_book" />
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/ic_circle_white"
+                    >
+                    <ImageView
+                        android:id="@+id/imgCheckReading"
+                        android:layout_width="8.5dp"
+                        android:layout_height="6.5dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_check_filter_book" />
+                </RelativeLayout>
+
 
                 <TextView
                     android:id="@+id/txtReading"
@@ -170,23 +170,23 @@
                     android:layout_centerInParent="true"
                     android:text="Sách đang đọc"
                     android:textColor="@color/colorWhite"
-                    android:textSize="15dp"
+                    android:textSize="@dimen/small_textsize_l"
                     android:textStyle="bold" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/layoutReadingOverLay"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_margin="5dp"
+                android:layout_margin="2.5dp"
                 android:background="@drawable/bg_layout_filter_book_not_choosed"
                 android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/layoutReadingBorder"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="35dp"
                 android:background="@drawable/border_layout_filter_book"
                 android:visibility="visible" />
         </RelativeLayout>
@@ -194,7 +194,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="80dp"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginTop="20dp"
@@ -203,26 +203,26 @@
             <RelativeLayout
                 android:id="@+id/layoutToRead"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
+                android:layout_height="30dp"
+                android:layout_margin="2.5dp"
                 android:background="@drawable/bg_layout_filter_book">
 
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_circle_white" />
-
-                <ImageView
-                    android:id="@+id/imgCheckToRead"
+                <RelativeLayout
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/ic_check_filter_book" />
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/ic_circle_white"
+                    >
+                    <ImageView
+                        android:id="@+id/imgCheckToRead"
+                        android:layout_width="8.5dp"
+                        android:layout_height="6.5dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_check_filter_book" />
+                </RelativeLayout>
+
 
                 <TextView
                     android:id="@+id/txtToRead"
@@ -231,23 +231,23 @@
                     android:layout_centerInParent="true"
                     android:text="Sách sẽ đọc"
                     android:textColor="@color/colorWhite"
-                    android:textSize="15dp"
+                    android:textSize="@dimen/small_textsize_l"
                     android:textStyle="bold" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/layoutToReadOverlay"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_margin="5dp"
+                android:layout_margin="2.5dp"
                 android:background="@drawable/bg_layout_filter_book_not_choosed"
                 android:visibility="visible" />
 
             <RelativeLayout
                 android:id="@+id/layoutToReadBorder"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="35dp"
                 android:background="@drawable/border_layout_filter_book"
                 android:visibility="gone" />
 

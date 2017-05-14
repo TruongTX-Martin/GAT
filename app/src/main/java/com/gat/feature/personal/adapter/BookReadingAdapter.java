@@ -11,9 +11,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.customview.MZRatingBar;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.personaluser.PersonalUserActivity;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.repository.entity.book.BookReadingEntity;
 import com.gat.feature.personal.fragment.FragmentReadingBook;
 
@@ -87,6 +91,12 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
                         holder.layoutTitle.setVisibility(View.GONE);
                     }
                 }
+                holder.layoutBorrowFrom.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity.start(context, PersonalUserActivity.class, PersonalUserScreen.instance(entity.getBorrowFromUserId()));
+                    }
+                });
             }
 
             if(getItemCount() > 9 && position == (getItemCount() -1)){
@@ -103,7 +113,7 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
     public class  BookReadingViewHolder extends RecyclerView.ViewHolder{
         TextView txtName,txtAuthor,txtRating;
         ImageView imgAvatar;
-        RatingBar ratingBar;
+        MZRatingBar ratingBar;
         LinearLayout layoutTitle;
         TextView txtTopTitle,txtTopNumber,txtBorrowName,txtBorrowFrom;
         LinearLayout layoutBorrowFrom;
@@ -112,7 +122,7 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
             txtName = (TextView) itemView.findViewById(R.id.txtName);
             txtAuthor = (TextView) itemView.findViewById(R.id.txtAuthor);
             imgAvatar = (ImageView) itemView.findViewById(R.id.imgAvatar);
-            ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
+            ratingBar = (MZRatingBar) itemView.findViewById(R.id.ratingBar);
             layoutTitle = (LinearLayout) itemView.findViewById(R.id.layoutTitle);
             txtTopTitle = (TextView) itemView.findViewById(R.id.txtTopTitle);
             txtTopNumber = (TextView) itemView.findViewById(R.id.txtTopNumber);

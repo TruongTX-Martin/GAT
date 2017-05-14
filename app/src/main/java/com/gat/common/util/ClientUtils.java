@@ -1,5 +1,7 @@
 package com.gat.common.util;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -72,6 +75,7 @@ public class ClientUtils {
                     .skipMemoryCache(true).fitCenter().into(image);
         }
     }
+
 
     public static String formatColor(String input,String color){
         return "<font color=\""+ color +"\">" + input + "</font>";
@@ -157,11 +161,30 @@ public class ClientUtils {
         LayoutInflater inflater = LayoutInflater.from(context);
         ViewGroup viewGroup = (ViewGroup) view;
         View viewChild =  inflater.inflate(R.layout.layout_intenet_notconnect,null);
+        viewChild.setId(Constance.ID_VIEW_NETWORK);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         viewChild.setLayoutParams(params);
-        viewGroup.removeAllViews();
+        if (viewGroup.getChildCount() > 0){
+            for (int i=0; i< viewGroup.getChildCount() ; i++) {
+                View view1 = viewGroup.getChildAt(i);
+                view1.setVisibility(View.GONE);
+            }
+        }
         viewGroup.addView(viewChild);
+    }
+    public static void hideViewNotInternet(View view) {
+        ViewGroup viewGroup = (ViewGroup) view;
+        if (viewGroup.getChildCount() > 0){
+            for (int i=0; i< viewGroup.getChildCount() ; i++) {
+                View view1 = viewGroup.getChildAt(i);
+                if(view1.getId() == Constance.ID_VIEW_NETWORK) {
+                    view1.setVisibility(View.GONE);
+                }else{
+                    view1.setVisibility(View.VISIBLE);
+                }
+            }
+        }
     }
 
     public static String getStringLanguage(int i){
@@ -191,6 +214,25 @@ public class ClientUtils {
         dialog.setContentView(R.layout.custom_progress_dialog);
         // dialog.setMessage(Message);
         return dialog;
+    }
+
+    public static void showDialogError(Context context,String title,String message) {
+        Dialog dialog = new Dialog(context);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_error);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
+        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
+        Button btnAgreed = (Button) dialog.findViewById(R.id.btnAgreed);
+        txtTitle.setText(title);
+        txtContent.setText(message);
+        btnAgreed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
 }

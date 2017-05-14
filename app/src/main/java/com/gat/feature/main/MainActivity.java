@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
+import com.gat.common.event.NetWorkEvent;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
 import com.gat.common.util.DataLocal;
@@ -38,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by mryit on 3/26/2017.
@@ -153,6 +155,18 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         if (Notification.isValid(getScreen().notificationParcelable().getNotification())) {
             CommonCheck.processNotification(getScreen().notificationParcelable().getNotification(), this);
         }
+
+//        if(!EventBus.getDefault().isRegistered(MainActivity.class)) {
+//            EventBus.getDefault().registerSticky(MainActivity.class);
+//        }
+    }
+
+    public void onEventMainThread(NetWorkEvent event) {
+        if(event.isConnected()) {
+
+        }else{
+
+        }
     }
 
     @Override
@@ -208,14 +222,16 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         mTabLayout.setScrollPosition(position,0f,true);
         mViewPager.setCurrentItem(position);
     }
+    ScanFragment scanFragment;
 
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
+        scanFragment = new ScanFragment();
         personalFragment.setMainActivity(this);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
         adapter.addFragment(personalFragment, "PERSONAL");
-        adapter.addFragment(new ScanFragment(), "SCAN");
+        adapter.addFragment(scanFragment, "SCAN");
         adapter.addFragment(new NotificationFragment(), "NOTICE");
         adapter.addFragment(new SettingFragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);

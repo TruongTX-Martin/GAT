@@ -65,8 +65,8 @@ public class FragmentBookSharing extends Fragment {
     }
 
     public void refreshDate(){
-        currentInput.setPage(1);
-        searchBook(currentInput);
+//        currentInput.setPage(1);
+//        searchBook(currentInput);
     }
 
     public BookInstanceInput getCurrentInput() {
@@ -240,7 +240,7 @@ public class FragmentBookSharing extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.setOutsideTouchable(true);
+        popupWindow.setOutsideTouchable(false);
         RelativeLayout imgClose = (RelativeLayout) customView.findViewById(R.id.layoutClose);
         RelativeLayout layoutSharingBorder = (RelativeLayout) customView.findViewById(R.id.layoutSharingBorder);
         RelativeLayout layoutSharingOverlay = (RelativeLayout) customView.findViewById(R.id.layoutSharingOverlay);
@@ -249,12 +249,7 @@ public class FragmentBookSharing extends Fragment {
         RelativeLayout layoutLostBorder = (RelativeLayout) customView.findViewById(R.id.layoutBookLostBorder);
         RelativeLayout layoutLostOverlay = (RelativeLayout) customView.findViewById(R.id.layoutBookLostOverlay);
         RelativeLayout layoutRoot = (RelativeLayout) customView.findViewById(R.id.layoutParrent);
-        layoutRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-            }
-        });
+        layoutRoot.setOnClickListener(v -> popupWindow.dismiss());
         imgClose.setOnClickListener(v -> {
             if (currentInput.isSharingFilter() == isSharing && currentInput.isNotSharingFilter() == isNotSharing
                     && currentInput.isLostFilter() == isLost) {

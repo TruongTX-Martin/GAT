@@ -30,7 +30,7 @@ public interface PersonalPresenter extends Presenter{
 
     void requestChangeBookSharingStatus(BookChangeStatusInput input);
     Observable<String> getResponseBookSharingStatus();
-    Observable<ServerResponse<ResponseData>> onErrorBookSharingStatus();
+    Observable<String> onErrorBookSharingStatus();
 
     void requestReadingBooks(BookReadingInput input);
     Observable<Data> getResponseReadingBooks();
@@ -42,7 +42,7 @@ public interface PersonalPresenter extends Presenter{
 
     void requestChangeStatus(RequestStatusInput input);
     Observable<ChangeStatusResponse> getResponseChangeStatus();
-    Observable<ServerResponse<ResponseData>> onErrorChangeStatus();
+    Observable<String> onErrorChangeStatus();
 
     void checkLogin();
     Observable<String> checkLoginSucess();

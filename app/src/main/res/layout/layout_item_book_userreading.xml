@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="55dp"
-            android:layout_height="80dp"
+            android:layout_width="@dimen/book_width"
+            android:layout_height="@dimen/book_height"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:src="@drawable/twitter_btn" />
@@ -86,6 +86,7 @@
             android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
             android:text="name"
+            android:textSize="@dimen/normal_textsize_m"
             android:textColor="#000000" />
 
         <TextView
@@ -95,6 +96,7 @@
             android:layout_below="@+id/txtName"
             android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
+            android:textSize="@dimen/small_textsize_l"
             android:text="author"
             android:textColor="#919191" />
 
@@ -137,14 +139,15 @@
                 android:layout_height="wrap_content"
                 android:textColor="#202020"
                 android:text="Mượn từ"
+                android:textSize="@dimen/small_textsize_l"
                 android:layout_marginRight="5dp"
                 />
             <TextView
                 android:id="@+id/txtBorrowName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17dp"
                 android:text="ccccccc"
+                android:textSize="@dimen/small_textsize_l"
                 android:textColor="#5396b9" />
         </LinearLayout>
 

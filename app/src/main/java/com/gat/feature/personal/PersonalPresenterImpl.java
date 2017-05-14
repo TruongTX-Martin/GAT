@@ -64,7 +64,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private UseCase<String> changeBookSharingStatusUsecase;
     private Subject<String> changeBookSharingStatusResultSubject;
     private Subject<BookChangeStatusInput> changeBookSharingStatusInputSubject;
-    private Subject<ServerResponse<ResponseData>> changeBookSharingStatusError;
+    private Subject<String> changeBookSharingStatusError;
 
     //get data readingbook
     private CompositeDisposable readingBooksDisposable;
@@ -85,7 +85,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private CompositeDisposable changeStatusDisposable;
     private final Subject<ChangeStatusResponse> changeStatusResultSubject;
     private final Subject<RequestStatusInput> changeStatusInputSubject;
-    private final Subject<ServerResponse<ResponseData>> changeStatusError;
+    private final Subject<String> changeStatusError;
     private UseCase<ChangeStatusResponse> changeStatusUsecase;
 
 
@@ -203,7 +203,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorChangeStatus() {
+    public Observable<String> onErrorChangeStatus() {
         return changeStatusError.observeOn(schedulerFactory.main());
     }
 
@@ -269,7 +269,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorBookSharingStatus() {
+    public Observable<String> onErrorBookSharingStatus() {
         return changeBookSharingStatusError.observeOn(schedulerFactory.main());
     }
 
@@ -324,10 +324,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     changeStatusResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    if (throwable instanceof LoginException)
-                        changeStatusError.onNext(ServerResponse.TOKEN_CHANGED);
+                    if (throwable instanceof CommonException)
+                        changeStatusError.onNext(((CommonException)throwable).getMessage());
                     else
-                        changeStatusError.onNext(ServerResponse.EXCEPTION);
+                        changeStatusError.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(
                         () -> changeStatusUsecase = UseCases.release(changeStatusUsecase)
@@ -400,10 +400,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     changeBookSharingStatusResultSubject.onNext(reponse);
                 })
                 .onError(throwable -> {
-                    if (throwable instanceof LoginException)
-                        readingBookError.onNext(ServerResponse.TOKEN_CHANGED);
+                    if (throwable instanceof CommonException)
+                        changeBookSharingStatusError.onNext(((CommonException)throwable).getMessage());
                     else
-                        changeBookSharingStatusError.onNext(ServerResponse.EXCEPTION);
+                        changeBookSharingStatusError.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(
                         () -> changeBookSharingStatusUsecase = UseCases.release(changeBookSharingStatusUsecase)

@@ -162,7 +162,13 @@ public class FragmentBookRequest extends Fragment {
         layoutFilter.setOnClickListener(v -> showDialogFilter());
     }
 
-    public void agreedRequest(BookRequestEntity entity){
+    private BookRequestEntity currentEntity;
+    private int currentPosition;
+    private boolean agrred;
+    public void agreedRequest(BookRequestEntity entity,int position, boolean agreed){
+        currentEntity = entity;
+        currentPosition = position;
+        this.agrred = agreed;
         RequestStatusInput statusInput = new RequestStatusInput();
         statusInput.setCurrentStatus(0);
         statusInput.setNewStatus(2);
@@ -170,12 +176,26 @@ public class FragmentBookRequest extends Fragment {
         parrentFragment.requestBookOwner(statusInput);
     }
 
-    public void rejectRequest(BookRequestEntity entity){
+    public void rejectRequest(BookRequestEntity entity,int position, boolean agreed){
+        currentEntity = entity;
+        currentPosition = position;
+        this.agrred = agreed;
         RequestStatusInput statusInput = new RequestStatusInput();
         statusInput.setCurrentStatus(0);
         statusInput.setNewStatus(5);
         statusInput.setRecordId(entity.getRecordId());
         parrentFragment.requestBookOwner(statusInput);
+    }
+
+    public void refreshAdapter(){
+        if(this.agrred) {
+            currentEntity.setRecordStatus(2);
+        }else{
+            currentEntity.setRecordStatus(5);
+        }
+        listBookRequest.remove(currentPosition);
+        listBookRequest.add(currentPosition,currentEntity);
+        adapter.notifyDataSetChanged();
     }
 
     private void showLoading() {
@@ -227,7 +247,7 @@ public class FragmentBookRequest extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.setOutsideTouchable(true);
+        popupWindow.setOutsideTouchable(false);
         RelativeLayout imgClose = (RelativeLayout) customView.findViewById(R.id.layoutClose);
         TextView txtRequestToYou = (TextView) customView.findViewById(R.id.txtRequestToYou);
         TextView txtRequestFromYou = (TextView) customView.findViewById(R.id.txtRequestFromYou);
