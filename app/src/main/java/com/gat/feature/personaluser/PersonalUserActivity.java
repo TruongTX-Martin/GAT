@@ -247,6 +247,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             if (!Strings.isNullOrEmpty(data.getMessage())) {
                 ClientUtils.showToast(data.getMessage());
             }
+            
             BookSharingEntity entity = (BookSharingEntity) data.getDataReturn(BookSharingEntity.class);
             fragmentBookUserSharing.refreshAdapterSharingBook(entity.getRecordStatus());
         }
