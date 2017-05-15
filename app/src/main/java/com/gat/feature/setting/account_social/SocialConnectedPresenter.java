@@ -12,5 +12,5 @@ public interface SocialConnectedPresenter extends Presenter {
 
     void unLinkAccount (int type);
     Observable<String> onUnLinkAccountSocialSuccess ();
-
+    Observable<String> onError ();
 }

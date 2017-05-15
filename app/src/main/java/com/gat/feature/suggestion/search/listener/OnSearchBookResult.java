@@ -11,5 +11,4 @@ import java.util.List;
 public interface OnSearchBookResult {
 
     void onSearchBookResult (List<BookResponse> list);
-
 }

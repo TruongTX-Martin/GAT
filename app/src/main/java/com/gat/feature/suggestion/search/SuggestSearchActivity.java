@@ -30,6 +30,7 @@ import com.gat.feature.search.SearchScreen;
 import com.gat.feature.suggestion.search.listener.OnFragmentRequestLoadMore;
 import com.gat.feature.suggestion.search.listener.OnLoadHistorySuccess;
 import com.gat.feature.suggestion.search.listener.OnSearchBookResult;
+import com.gat.feature.suggestion.search.listener.OnSearchCanLoadMore;
 import com.gat.feature.suggestion.search.listener.OnSearchUserResult;
 import com.gat.feature.suggestion.search.listener.OnUserTapOnKeyword;
 
@@ -86,6 +87,9 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     private OnSearchBookResult onSearchBookResult;
     private OnSearchBookResult onSearchAuthorResult;
     private OnSearchUserResult onSearchUserResult;
+    private OnSearchCanLoadMore onSearchBookCanLoadMore;
+    private OnSearchCanLoadMore onSearchAuthorCanLoadMore;
+    private OnSearchCanLoadMore onSearchUserCanLoadMore;
     public static SuggestSearchActivity instance;
 
     @Override
@@ -114,7 +118,13 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
                 getPresenter().onSearchBookWithTitleSuccess().subscribe(this::onSearchBookWithTitleSuccess),
                 getPresenter().onSearchBookWithAuthorSuccess().subscribe(this::onSearchBookWithAuthorSuccess),
                 getPresenter().onSearchUserWithNameSuccess().subscribe(this::onSearchUserWithNameSuccess),
-                getPresenter().onError().subscribe(this::onSearchFailure)
+                getPresenter().onError().subscribe(this::onSearchFailure),
+                getPresenter().onCanLoadMoreBookWithTitle().subscribe(this::onCanLoadMoreBookWithTitle),
+                getPresenter().onCanLoadMoreBookWithAuthor().subscribe(this::onCanLoadMoreBookWithAuthor),
+                getPresenter().onCanLoadMoreUserWithName().subscribe(this::onCanLoadMoreUserWithName),
+                getPresenter().onLoadMoreBookWithTitleSuccess().subscribe(this::onLoadMoreBookWithTitleSuccess),
+                getPresenter().onLoadMoreBookWithAuthorSuccess().subscribe(this::onLoadMoreBookWithAuthorSuccess),
+                getPresenter().onLoadMoreUserWithNameSuccess().subscribe(this::onLoadMoreUserWithNameSuccess)
         );
 
         progressDialog = ClientUtils.createProgressDialog(SuggestSearchActivity.this);
@@ -154,16 +164,19 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         adapter.addFragment(searchResultFragment, getResources().getString(R.string.tab_book_name));
         onSearchBookHistorySuccess = searchResultFragment;
         onSearchBookResult = searchResultFragment;
+        onSearchBookCanLoadMore = searchResultFragment;
 
         SearchResultFragment searchAuthorFragment = new SearchResultFragment(TAB_POS.TAB_AUTHOR, this, this);
         adapter.addFragment(searchAuthorFragment,  getResources().getString(R.string.tab_book_author));
         onSearchAuthorHistorySuccess = searchAuthorFragment;
         onSearchAuthorResult = searchAuthorFragment;
+        onSearchAuthorCanLoadMore = searchAuthorFragment;
 
         SearchResultFragment searchUserFragment = new SearchResultFragment(TAB_POS.TAB_USER, this, this);
         adapter.addFragment(searchUserFragment,  getResources().getString(R.string.tab_user_name));
         onSearchUserHistorySuccess = searchUserFragment;
         onSearchUserResult = searchUserFragment;
+        onSearchUserCanLoadMore = searchUserFragment;
 
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
@@ -290,6 +303,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     @Override
     public void requestLoadMoreSearchResult() {
+        showProgress();
         switch (mCurrentTab) {
             case TAB_POS.TAB_BOOK:
                 getPresenter().loadMoreBookWithTitle();
@@ -338,6 +352,34 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     private void onSearchFailure (String message) {
         hideProgress();
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void onCanLoadMoreBookWithTitle (Boolean isCanLoadMore) {
+        onSearchBookCanLoadMore.onCanLoadMoreItem(TAB_POS.TAB_BOOK);
+    }
+
+    private void onCanLoadMoreBookWithAuthor (Boolean isCanLoadMore) {
+        onSearchAuthorCanLoadMore.onCanLoadMoreItem(TAB_POS.TAB_AUTHOR);
+    }
+
+    private void onCanLoadMoreUserWithName (Boolean isCanLoadMore) {
+        onSearchUserCanLoadMore.onCanLoadMoreItem(TAB_POS.TAB_USER);
+    }
+
+
+    private void onLoadMoreBookWithTitleSuccess (List<BookResponse> list) {
+        hideProgress();
+        onSearchBookCanLoadMore.onLoadMoreBookWithTitleSuccess(list);
+    }
+
+    private void onLoadMoreBookWithAuthorSuccess (List<BookResponse> list) {
+        hideProgress();
+        onSearchAuthorCanLoadMore.onLoadMoreBookWithAuthorSuccess(list);
+    }
+
+    private void onLoadMoreUserWithNameSuccess (List<UserResponse> list) {
+        hideProgress();
+        onSearchUserCanLoadMore.onLoadMoreUserSuccess(list);
     }
 
     private void showProgress () {

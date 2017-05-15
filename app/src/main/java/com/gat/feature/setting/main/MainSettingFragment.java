@@ -24,6 +24,7 @@ import com.facebook.GraphRequest;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.gat.R;
+import com.gat.app.activity.ScreenActivity;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
@@ -137,7 +138,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
                 getPresenter().onConnectFacebookSuccess().subscribe(this::onConnectFacebookSuccess),
                 getPresenter().onConnectGoogleSuccess().subscribe(this::onConnectGoogleSuccess),
                 getPresenter().onConnectTwitterSuccess().subscribe(this::onConnectTwitterSuccess),
-                getPresenter().onSignOutSuccess().subscribe(this::onSignOutSuccess)
+                getPresenter().onSignOutSuccess().subscribe(this::onSignOutSuccess),
+                getPresenter().onError().subscribe(this::onError)
         );
 
         getPresenter().loadUserInfo();
@@ -235,7 +237,6 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         LoginManager.getInstance().registerCallback(callbackManager, facebookCallback);
     }
 
-
     @OnClick(R.id.button_twitter)
     void onTwitterTap () {
         if (mUser == null) {
@@ -254,7 +255,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     @OnClick(R.id.button_google)
     void onGoogleTap () {
         if (mUser == null) {
-            ClientUtils.showRequiredLoginDialog(mainActivity,mainActivity);
+            ClientUtils.showRequiredLoginDialog(mainActivity, (ScreenActivity) mainActivity);
             return;
         }
         if ( ! TextUtils.isEmpty(mGoogleUserName)) {
@@ -381,6 +382,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         }
 
         MZDebug.w("account email:" + account.getEmail() + ", display name: " + account.getDisplayName() );
+        progressDialog.show();
         getPresenter().requestConnectSocial(account.getEmail() , account.getDisplayName(), SocialType.GOOGLE);
     }
 
@@ -401,6 +403,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
                         }
 
                         MZDebug.w("Facebook id: " + fb_id + ", name: " + fb_name);
+                        progressDialog.show();
                         getPresenter().requestConnectSocial(fb_id, fb_name, SocialType.FACEBOOK);
                     });
             Bundle parameters = new Bundle();
@@ -432,6 +435,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
                 service.verifyCredentials(true, true).enqueue(new Callback<com.twitter.sdk.android.core.models.User>() {
                     @Override
                     public void success(Result<com.twitter.sdk.android.core.models.User> resultUser) {
+                        progressDialog.show();
                         getPresenter().requestConnectSocial(
                                 String.valueOf(resultUser.data.getId()), resultUser.data.name, SocialType.TWITTER);
                     }
@@ -452,18 +456,21 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     String mFacebookUserName = "";
     private void onConnectFacebookSuccess (String username) {
+        hideProgress();
         mFacebookUserName = username;
         textViewFacebook.setText(username);
     }
 
     String mGoogleUserName = "";
     private void onConnectGoogleSuccess (String username) {
+        hideProgress();
         mGoogleUserName = username;
         textViewGoogle.setText(username);
     }
 
     String mTwitterUserName = "";
     private void onConnectTwitterSuccess (String username) {
+        hideProgress();
         mTwitterUserName = username;
         textViewTwitter.setText(username);
     }
@@ -473,9 +480,15 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         MainActivity.startAndClear(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
     }
 
+    private void onError (String message) {
+        hideProgress();
+        Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
+    }
+
     private void hideProgress () {
         if (progressDialog.isShowing()) {
             progressDialog.hide();
         }
     }
+
 }

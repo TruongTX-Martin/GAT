@@ -118,6 +118,6 @@
 
     <dimen name="header_margin_lr">14.5dp</dimen>
     <dimen name="suggestion_user_img_size">52dp</dimen>
-    <dimen name="suggestion_cover_width">60.6dp</dimen>
-    <dimen name="suggestion_cover_height">100.5dp</dimen>
+    <dimen name="suggestion_cover_width">60dp</dimen>
+    <dimen name="suggestion_cover_height">90dp</dimen>
 </resources>

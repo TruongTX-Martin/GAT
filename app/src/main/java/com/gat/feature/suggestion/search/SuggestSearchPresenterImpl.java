@@ -23,7 +23,7 @@ import io.reactivex.subjects.Subject;
 
 public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
-    private static final int SIZE_OF_PAGE = 20;
+    private static final int SIZE_OF_PAGE = 10;
     private int mPageAuthor;
     private int mPageBook;
     private int mPageUser;
@@ -32,10 +32,6 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     private boolean isCanLoadHistoryUser = true;
     private String mKeyword = "";
     private int mUserId = 0;
-
-    private DataResultListResponse<BookResponse> dataSearchBookByTitle;
-    private DataResultListResponse<BookResponse> dataSearchBookByAuthor;
-    private DataResultListResponse<UserResponse> dataSearchUserByName;
 
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
@@ -53,12 +49,18 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     // use case search
     private UseCase<DataResultListResponse<BookResponse>> useCaseSearchBookByTitle;
     private final Subject<List<BookResponse>> resultSearchBookByTitleSubject;
+    private final Subject<List<BookResponse>> resultLoadMoreBookByTitleSubject;
+    private final Subject<Boolean> subjectCanLoadMoreBookByTitle;
 
     private UseCase<DataResultListResponse<BookResponse>> useCaseSearchBookByAuthor;
     private final Subject<List<BookResponse>> resultSearchBookByAuthorSubject;
+    private final Subject<List<BookResponse>> resultLoadMoreBookByAuthorSubject;
+    private final Subject<Boolean> subjectCanLoadMoreBookByAuthor;
 
     private UseCase<DataResultListResponse<UserResponse>> useCaseSearchUserByName;
     private final Subject<List<UserResponse>> resultSearchUserByNameSubject;
+    private final Subject<List<UserResponse>> resultLoadMoreUserByNameSubject;
+    private final Subject<Boolean> subjectCanLoadMoreUserByName;
 
     // use case error
     private final Subject<String> errorSubject;
@@ -76,6 +78,12 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         resultSearchBookByAuthorSubject = PublishSubject.create();
         resultSearchUserByNameSubject = PublishSubject.create();
         errorSubject = PublishSubject.create();
+        subjectCanLoadMoreBookByTitle = PublishSubject.create();
+        subjectCanLoadMoreBookByAuthor = PublishSubject.create();
+        subjectCanLoadMoreUserByName = PublishSubject.create();
+        resultLoadMoreBookByTitleSubject = PublishSubject.create();
+        resultLoadMoreBookByAuthorSubject = PublishSubject.create();
+        resultLoadMoreUserByNameSubject = PublishSubject.create();
     }
 
     @Override
@@ -147,35 +155,37 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         mPageBook = 1;
         mKeyword = book_title;
 
-        // get current user -> user id # 0
-        // mUserId = ? éo biết lấy ở đâu
-
-        doSearchBookWithTitle (mKeyword, mUserId, mPageBook, SIZE_OF_PAGE);
+        MZDebug.w("doSearchBookWithTitle, user id: " + mUserId);
+        useCaseSearchBookByTitle = useCaseFactory.searchBookByTitle(mKeyword, mUserId, mPageBook, SIZE_OF_PAGE)
+                .executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(data -> {
+                    resultSearchBookByTitleSubject.onNext(data.getResultInfo()); // pass response to view
+                    if (data.getTotalResult() > mPageBook * SIZE_OF_PAGE ) {
+                        subjectCanLoadMoreBookByTitle.onNext(true);
+                    }
+                })
+                .onError( throwable -> {
+                    MZDebug.e("ERROR: loadHistorySearchBook ________________________________E: \n\r"
+                            + Log.getStackTraceString(throwable));
+                    errorSubject.onNext("Không thể tìm kiếm, có lỗi xảy ra.");
+                })
+                .execute();
     }
 
     @Override
     public void loadMoreBookWithTitle() {
-        // load more -> check listBook.size() < total result
-        if (dataSearchBookByTitle.getTotalResult() <= (mPageBook * SIZE_OF_PAGE)) {
-            return;
-        }
-
         // thi page +1 va load tiep
         mPageBook += 1;
 
-        // load more
-        doSearchBookWithTitle (mKeyword, mUserId, mPageBook, SIZE_OF_PAGE);
-    }
-
-    private void doSearchBookWithTitle (String keyword, int user_id, int page, int size_of_page) {
-        MZDebug.w("doSearchBookWithTitle, user id: " + user_id);
-
-        useCaseSearchBookByTitle = useCaseFactory.searchBookByTitle(keyword, user_id, page, size_of_page)
+        useCaseSearchBookByTitle = useCaseFactory.searchBookByTitle(mKeyword, mUserId, mPageBook, SIZE_OF_PAGE)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    dataSearchBookByTitle = data; // use data to check load more
-                    resultSearchBookByTitleSubject.onNext(data.getResultInfo()); // pass response to view
+                    resultLoadMoreBookByTitleSubject.onNext(data.getResultInfo()); // pass response to view
+                    if (data.getTotalResult() > mPageBook * SIZE_OF_PAGE ) {
+                        subjectCanLoadMoreBookByTitle.onNext(true);
+                    }
                 })
                 .onError( throwable -> {
                     MZDebug.e("ERROR: loadHistorySearchBook ________________________________E: \n\r"
@@ -190,6 +200,17 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     public Observable<List<BookResponse>> onSearchBookWithTitleSuccess() {
         return resultSearchBookByTitleSubject.subscribeOn(schedulerFactory.main());
     }
+
+    @Override
+    public Observable<List<BookResponse>> onLoadMoreBookWithTitleSuccess() {
+        return resultLoadMoreBookByTitleSubject.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<Boolean> onCanLoadMoreBookWithTitle() {
+        return subjectCanLoadMoreBookByTitle.subscribeOn(schedulerFactory.main());
+    }
+
 
     @Override
     public void loadHistorySearchAuthor() {
@@ -229,7 +250,6 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 }).execute();
     }
 
-
     @Override
     public Observable<List<Keyword>> onLoadHistorySearchAuthorSuccess() {
         return resultHistorySearchAuthorSubject.subscribeOn(schedulerFactory.main());
@@ -242,33 +262,15 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         mPageAuthor = 1;
         mKeyword = author;
 
-        // get current user -> user id # 0
-        // mUserId = ? éo biết lấy ở đâu
-
-        doSearchBookWithAuthor();
-    }
-
-    @Override
-    public void loadMoreBookWithAuthor() {
-
-        // load more -> check listBook.size() < total result
-        if (dataSearchBookByTitle.getTotalResult() <= (mPageBook * SIZE_OF_PAGE)) {
-            return;
-        }
-
-        // tang page len 1
-        mPageAuthor += 1;
-
-        doSearchBookWithAuthor();
-    }
-
-    private void doSearchBookWithAuthor () {
         useCaseSearchBookByAuthor = useCaseFactory.searchBookByAuthor(mKeyword, mUserId, mPageAuthor, SIZE_OF_PAGE)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    dataSearchBookByAuthor = data; // use data to process load more
                     resultSearchBookByAuthorSubject.onNext(data.getResultInfo());
+
+                    if (data.getTotalResult() > mPageAuthor * SIZE_OF_PAGE ) {
+                        subjectCanLoadMoreBookByAuthor.onNext(true);
+                    }
                 })
                 .onError( throwable -> {
                     MZDebug.e("ERROR: searchBookWithAuthor _________________________________E: \n\r"
@@ -279,9 +281,45 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     }
 
     @Override
+    public void loadMoreBookWithAuthor() {
+
+        // tang page len 1
+        mPageAuthor += 1;
+
+        useCaseSearchBookByAuthor = useCaseFactory.searchBookByAuthor(mKeyword, mUserId, mPageAuthor, SIZE_OF_PAGE)
+                .executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(data -> {
+                    resultLoadMoreBookByAuthorSubject.onNext(data.getResultInfo());
+
+                    if (data.getTotalResult() > mPageAuthor * SIZE_OF_PAGE ) {
+                        subjectCanLoadMoreBookByAuthor.onNext(true);
+                    }
+                })
+                .onError( throwable -> {
+                    MZDebug.e("ERROR: searchBookWithAuthor _________________________________E: \n\r"
+                            + Log.getStackTraceString(throwable));
+                    errorSubject.onNext("Không thể tìm kiếm, có lỗi xảy ra.");
+                })
+                .execute();
+    }
+
+
+    @Override
     public Observable<List<BookResponse>> onSearchBookWithAuthorSuccess() {
         return resultSearchBookByAuthorSubject.subscribeOn(schedulerFactory.main());
     }
+
+    @Override
+    public Observable<List<BookResponse>> onLoadMoreBookWithAuthorSuccess() {
+        return resultLoadMoreBookByAuthorSubject.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<Boolean> onCanLoadMoreBookWithAuthor() {
+        return subjectCanLoadMoreBookByAuthor.subscribeOn(schedulerFactory.main());
+    }
+
 
     @Override
     public void loadHistorySearchUser() {
@@ -331,33 +369,37 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         mPageUser = 1;
         mKeyword = name;
 
-        // get current user -> user id # 0
-        // userId = ?
+        useCaseSearchUserByName = useCaseFactory.searchUser(mKeyword, mPageUser, SIZE_OF_PAGE)
+                .executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(data -> {
+                    resultSearchUserByNameSubject.onNext(data.getResultInfo());
 
-        doSearchUserWithName();
+                    if (data.getTotalResult() > mPageUser * SIZE_OF_PAGE ) {
+                        subjectCanLoadMoreUserByName.onNext(true);
+                    }
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: searchUserWithName ___________________________________E: \n\r"
+                            + Log.getStackTraceString(throwable));
+                    errorSubject.onNext("Không thể tìm kiếm, có lỗi xảy ra.");
+                })
+                .execute();
     }
 
     @Override
     public void loadMoreUserWithName() {
-
-        // load more -> check listBook.size() < total result
-        if (dataSearchBookByTitle.getTotalResult() <= (mPageBook * SIZE_OF_PAGE)) {
-            return;
-        }
-
         mPageUser += 1;
-
-        doSearchUserWithName();
-    }
-
-    private void doSearchUserWithName () {
 
         useCaseSearchUserByName = useCaseFactory.searchUser(mKeyword, mPageUser, SIZE_OF_PAGE)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    dataSearchUserByName = data;
-                    resultSearchUserByNameSubject.onNext(data.getResultInfo());
+                    resultLoadMoreUserByNameSubject.onNext(data.getResultInfo());
+
+                    if (data.getTotalResult() > mPageUser * SIZE_OF_PAGE ) {
+                        subjectCanLoadMoreUserByName.onNext(true);
+                    }
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: searchUserWithName ___________________________________E: \n\r"
@@ -370,6 +412,16 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     @Override
     public Observable<List<UserResponse>> onSearchUserWithNameSuccess() {
         return resultSearchUserByNameSubject.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<List<UserResponse>> onLoadMoreUserWithNameSuccess() {
+        return resultLoadMoreUserByNameSubject.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<Boolean> onCanLoadMoreUserWithName() {
+        return subjectCanLoadMoreUserByName.subscribeOn(schedulerFactory.main());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.gat.feature.suggestion.nearby_user.adapter;
+package com.gat.common.adapter.impl;
 
 import com.gat.common.adapter.Item;
 import com.google.auto.value.AutoValue;

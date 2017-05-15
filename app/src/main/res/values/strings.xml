@@ -106,20 +106,23 @@
     <string name="btn_add_category">Add category</string>
     <string name="register_category_header">Favourite category</string>
 
-    <string name="scan_barcode_header">Scan barcode</string>
-    <string name="scan_barcode_guide">Move camera to barcode area\nto scan barcode</string>
-    <string name="btn_turn_on_light">Turn on light</string>
-    <string name="has_no_flash">Device has no compatible flash.</string>
-    <string name="btn_turn_off_light">Turn off flash</string>
-    <string name="isbn_invalid">Barcode is not valid.</string>
-    <string name="error_throw">Error happened.</string>
-    <string name="tab_home">Home page</string>
-    <string name="tab_personal">Personal</string>
-    <string name="tab_scanbarcode">Scan ISBN</string>
-    <string name="tab_notification">Notification</string>
-    <string name="tab_setting">Setting</string>
-    <string name="message_header">Message</string>
-    <string name="send_message_btn">Send</string>
+    <string name="scan_barcode_header">Quét barcode</string>
+    <string name="scan_barcode_guide">Di chuyển màn hình camera để quét barcode</string>
+    <string name="btn_turn_on_light">Bật đèn flash</string>
+    <string name="has_no_flash">Thiết bị không có flash.</string>
+    <string name="btn_turn_off_light">Tắt đèn flash</string>
+    <string name="isbn_invalid">Barcode không hợp lệ.</string>
+    <string name="error_throw">Có lỗi sảy ra.</string>
+
+    <string name="tab_home">Trang chủ</string>
+    <string name="tab_personal">Cá nhân</string>
+    <string name="tab_scanbarcode">Quét mã</string>
+    <string name="tab_notification">Thông báo</string>
+    <string name="tab_setting">Cài đặt</string>
+
+    <string name="message_header">Tin nhắn</string>
+    <string name="send_message_btn">Gửi</string>
+
 
     <!-- suggestion text -->
     <string name="go_setting_enable_gps">Mở Cài đặt -> Cho phép truy cập vị trí của bạn.</string>

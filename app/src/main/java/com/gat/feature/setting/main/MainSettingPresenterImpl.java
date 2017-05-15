@@ -6,11 +6,9 @@ import com.gat.common.util.MZDebug;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
-import com.gat.domain.usecase.LinkSocialAccount;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.setting.SocialType;
 import com.gat.repository.entity.User;
-
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -32,6 +30,8 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
     private final Subject<String> subjectTwitterSuccess;
     private final Subject<Boolean> subjectSignOut;
 
+    private final Subject<String> subjectOnError;
+
     public MainSettingPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
@@ -40,6 +40,7 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
         subjectGoogleSuccess = PublishSubject.create();
         subjectTwitterSuccess = PublishSubject.create();
         subjectSignOut = PublishSubject.create();
+        subjectOnError = PublishSubject.create();
     }
 
 
@@ -97,6 +98,7 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: requestConnectSocial : _______________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectOnError.onNext("Kết nối thất bại");
                 })
                 .execute();
     }
@@ -134,5 +136,10 @@ public class MainSettingPresenterImpl implements MainSettingPresenter {
     @Override
     public Observable<Boolean> onSignOutSuccess() {
         return subjectSignOut.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onError() {
+        return subjectOnError.subscribeOn(schedulerFactory.main());
     }
 }

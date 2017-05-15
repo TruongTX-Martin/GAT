@@ -1,6 +1,7 @@
 package com.gat.feature.setting.account_social;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.util.ClientUtils;
 import com.gat.feature.setting.ISettingDelegate;
 import com.gat.feature.setting.KeyBackToMain;
 
@@ -32,6 +34,7 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
     private ISettingDelegate delegate;
     private int mTypeSocial = 1;
     private String mSocialUsername = "";
+    private ProgressDialog progressDialog;
 
     public SocialConnectedFragment (ISettingDelegate delegate, int type_social, String username) {
         this.delegate = delegate;
@@ -64,7 +67,8 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
         super.onActivityCreated(savedInstanceState);
 
         disposable = new CompositeDisposable(
-            getPresenter().onUnLinkAccountSocialSuccess().subscribe(this::onDisconnectSuccess)
+                getPresenter().onUnLinkAccountSocialSuccess().subscribe(this::onDisconnectSuccess),
+                getPresenter().onError().subscribe(this::onError)
         );
 
         switch (mTypeSocial) {
@@ -83,13 +87,16 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
                 textViewSocial.setText(getString(R.string.in_google_connection, mSocialUsername));
                 break;
         }
-
+        progressDialog = ClientUtils.createProgressDialog(getActivity());
+        hideProgress();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         disposable.dispose();
+        hideProgress();
+        progressDialog = null;
     }
 
     @OnClick(R.id.image_view_back)
@@ -100,11 +107,13 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
 
     @OnClick(R.id.button_disconnect_social)
     void onButtonDisconnectTap () {
+        progressDialog.show();
         getPresenter().unLinkAccount(mTypeSocial);
     }
 
 
     private void onDisconnectSuccess (String message) {
+        hideProgress();
         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
         switch (mTypeSocial) {
             case TypeSocial.FACEBOOK:
@@ -118,6 +127,17 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
             case TypeSocial.GOOGLE:
                 delegate.goToMainSetting(KeyBackToMain.DISCONNECT_GOOGLE);
                 break;
+        }
+    }
+
+    private void onError (String message) {
+        hideProgress();
+        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void hideProgress () {
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
         }
     }
 

@@ -11,12 +11,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
-import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.DataResultListResponse;
@@ -25,7 +23,7 @@ import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.suggestion.CompareListUtil;
 import com.gat.feature.suggestion.nearby_user.adapter.IOnItemUserClickListener;
-import com.gat.feature.suggestion.nearby_user.adapter.OnItemLoadMoreClickListener;
+import com.gat.common.adapter.impl.OnItemLoadMoreClickListener;
 import com.gat.feature.suggestion.nearby_user.adapter.UserNearByDistanceAdapter;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.common.ConnectionResult;
@@ -115,14 +113,6 @@ public class ShareNearByUserDistanceActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // setup adapter & recycler view
-        adapter = new UserNearByDistanceAdapter();
-        adapter.setOnItemClickListener(this);
-        adapter.setOnLoadMoreClickListener(this);
-        mLinearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        mRecyclerViewUsersNear.setLayoutManager(mLinearLayoutManager);
-        mRecyclerViewUsersNear.setAdapter(adapter);
-
         // composite presenter
         disposables = new CompositeDisposable(
                 getPresenter().onPeopleNearByUserSuccess().subscribe(this::onListUserNearComplete),
@@ -131,16 +121,20 @@ public class ShareNearByUserDistanceActivity
                 getPresenter().onError().subscribe(this::onError)
         );
 
-        progressDialog = ClientUtils.createProgressDialog(ShareNearByUserDistanceActivity.this);
+        // setup adapter & recycler view
+        adapter = new UserNearByDistanceAdapter();
+        adapter.setOnItemClickListener(this);
+        adapter.setOnLoadMoreClickListener(this);
+        mLinearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerViewUsersNear.setLayoutManager(mLinearLayoutManager);
+        mRecyclerViewUsersNear.setAdapter(adapter);
 
         // setup google map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // get LIST USER, CURRENT LOCATION passed via bundle
-//        Bundle bundle = getIntent().getExtras();
-//        mListUserShareNearByDistance = bundle.getParcelableArrayList(PASS_LIST_USER_DISTANCE);
+        progressDialog = ClientUtils.createProgressDialog(ShareNearByUserDistanceActivity.this);
     }
 
     @Override

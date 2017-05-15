@@ -3,14 +3,15 @@ package com.gat.feature.suggestion;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.app.fragment.ScreenFragment;
@@ -39,7 +39,6 @@ import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
 import com.gat.feature.suggestion.search.SuggestSearchActivity;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
-import com.gat.feature.suggestion.search.item.SearchUserResultItem;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -69,6 +68,9 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
     @BindView(R.id.recycler_view_suggest_books)
     RecyclerView mRecyclerViewSuggestBooks;
+
+    @BindView(R.id.ll_user_near_parent)
+    LinearLayout llUseNearParent;
 
     @BindView(R.id.ll_user_near_suggest)
     LinearLayout llUserNearSuggest;
@@ -231,17 +233,23 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             textView.setHeight(llUserNearSuggest.getHeight());
 
             llUserNearSuggest.addView(textView);
-            return;
+            return; // no user found, so return from there
         }
 
         View viewItem;
         UserNearByDistance userItem;
-        int size = mListUserDistance.size() < 5 ? mListUserDistance.size() : 5;
+        int size = mListUserDistance.size() < 10 ? mListUserDistance.size() : 10; // show 10 users
 
         for (int i = 0; i < size; i++) {
             userItem = mListUserDistance.get(i);
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             viewItem = inflater.inflate(R.layout.item_user_near_suggest, llUserNearSuggest, false);
+
+            // set width for user items
+            llUseNearParent.getWidth();
+            LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) viewItem.getLayoutParams();
+            params.width=  (int) Math.floor(llUseNearParent.getWidth()/5);
+            viewItem.setLayoutParams(params);
 
             // init view
             ImageView imageViewAvatar = (ImageView) viewItem.findViewById(R.id.iv_people_near_suggest_avatar);
@@ -249,7 +257,8 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
             // set data
             if ( ! TextUtils.isEmpty(userItem.getImageId())) {
-                ClientUtils.setImage(imageViewAvatar, R.drawable.default_user_icon, ClientUtils.getUrlImage(userItem.getImageId(), ClientUtils.SIZE_SMALL));
+                ClientUtils.setImage(imageViewAvatar, R.drawable.default_user_icon,
+                        ClientUtils.getUrlImage(userItem.getImageId(), ClientUtils.SIZE_SMALL));
             }
 
             textViewName.setText(userItem.getName());

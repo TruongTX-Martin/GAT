@@ -63,7 +63,7 @@ public class SuggestionPresenterImpl implements SuggestionPresenter {
     @Override
     public void onCreate() {
         mPage = 1;
-        SIZE_OF_PAGE = 5;
+        SIZE_OF_PAGE = 10   ;
     }
 
     @Override

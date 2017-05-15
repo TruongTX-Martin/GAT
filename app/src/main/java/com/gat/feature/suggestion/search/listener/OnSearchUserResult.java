@@ -11,5 +11,4 @@ import java.util.List;
 public interface OnSearchUserResult {
 
     void onSearchUserResult (List<UserResponse> list);
-
 }
