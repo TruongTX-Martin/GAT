@@ -26,13 +26,14 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
     private boolean isCanLoadMore;
     private List<UserNearByDistance> mListUsers;
 
-
     private final UseCaseFactory useCaseFactory;
     private final SchedulerFactory schedulerFactory;
 
     UseCase<DataResultListResponse<UserNearByDistance>> useCaseUserNear;
     Subject<DataResultListResponse<UserNearByDistance>> resultUserNearSubject;
+    Subject<DataResultListResponse<UserNearByDistance>> subjectLoadMoreSuccess;
 
+    private final Subject<Boolean> subjectCanLoadMore;
     private final Subject<String> errorSubject;
 
     public ShareNearByUserDistancePresenterImpl (
@@ -41,8 +42,10 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
 
+        subjectLoadMoreSuccess = PublishSubject.create();
         resultUserNearSubject = PublishSubject.create();
         errorSubject = PublishSubject.create();
+        subjectCanLoadMore = PublishSubject.create();
     }
 
     @Override
@@ -52,15 +55,31 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
     }
 
     @Override
-    public void onDestroy() {}
+    public void onDestroy() {
+        this.userLocation = null;
+        this.neLocation = null;
+        this.wsLocation = null;
+    }
 
+    private LatLng userLocation;
+    private LatLng neLocation;
+    private LatLng wsLocation;
     @Override
     public void requestUserNearOnTheMap(LatLng userLocation, LatLng neLocation, LatLng wsLocation) {
+        this.userLocation = userLocation;
+        this.neLocation = neLocation;
+        this.wsLocation = wsLocation;
+        mCurrentPage = 1; // Mỗi lần lấy thì thì current page phải = 1
+
         useCaseUserNear = useCaseFactory.peopleNearByUser(userLocation, neLocation, wsLocation, mCurrentPage, SIZE_OF_PAGE);
         useCaseUserNear.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
                     resultUserNearSubject.onNext(data);
+                    // nếu tổng mà lớn hơn trang hiện tại * size trang thì có thể load more
+                    if (data.getTotalResult() > (mCurrentPage *SIZE_OF_PAGE)) {
+                        subjectCanLoadMore.onNext(true);
+                    }
                 })
                 .onError(throwable -> {
                     MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
@@ -71,6 +90,37 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
     @Override
     public Observable<DataResultListResponse<UserNearByDistance>> onPeopleNearByUserSuccess() {
         return resultUserNearSubject.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void requestLoadMoreUser() {
+        mCurrentPage += 1; // tang page len 1 khi load more
+        MZDebug.w("Page = " + mCurrentPage);
+        useCaseUserNear = useCaseFactory.peopleNearByUser(userLocation, neLocation, wsLocation, mCurrentPage, SIZE_OF_PAGE);
+        useCaseUserNear.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(data -> {
+                    subjectLoadMoreSuccess.onNext(data);
+
+                    // nếu tổng mà lớn hơn trang hiện tại * size trang thì có thể load more
+                    if (data.getTotalResult() > (mCurrentPage *SIZE_OF_PAGE)) {
+                        subjectCanLoadMore.onNext(true);
+                    }
+                })
+                .onError(throwable -> {
+                    MZDebug.e("_______________________requestUserNearOnTheMap____onError_________");
+                    errorSubject.onNext("Failed");
+                }).execute();
+    }
+
+    @Override
+    public Observable<DataResultListResponse<UserNearByDistance>> onLoadMoreUserSuccess() {
+        return subjectLoadMoreSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<Boolean> onCanLoadMore() {
+        return subjectCanLoadMore.subscribeOn(schedulerFactory.main());
     }
 
     @Override

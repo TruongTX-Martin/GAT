@@ -135,6 +135,7 @@ public class PaperUserDataSource implements UserDataSource {
     @Override
     public Observable<Boolean> signOut() {
         return Observable.fromCallable(() -> {
+            book.delete(KEY_LOGINDATA);
             book.delete(KEY_USER);
             return true;
         });

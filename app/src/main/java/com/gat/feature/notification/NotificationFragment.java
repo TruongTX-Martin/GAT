@@ -1,5 +1,7 @@
 package com.gat.feature.notification;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,16 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.NotifyEntity;
+import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
+import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
+import com.gat.feature.main.IMainDelegate;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.message.GroupMessageActivity;
+import com.gat.feature.message.MessageActivity;
+import com.gat.feature.message.presenter.GroupMessageScreen;
+import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.notification.adapter.NotificationAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -25,6 +32,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mryit on 4/27/2017.
  */
 
+@SuppressLint("ValidFragment")
 public class NotificationFragment extends ScreenFragment<NotificationScreen, NotificationPresenter>
 implements NotificationAdapter.OnItemNotifyClickListener{
 
@@ -34,6 +42,11 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     private List<NotifyEntity> mListNotifies;
     private CompositeDisposable disposable;
     private NotificationAdapter adapter;
+    private IMainDelegate delegate;
+
+    public NotificationFragment (IMainDelegate callback) {
+        this.delegate = callback;
+    }
 
     @Override
     protected int getLayoutResource() {
@@ -52,6 +65,8 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         disposable = new CompositeDisposable(
                 getPresenter().onLoadUserNotificationSuccess().subscribe(this::onLoadNotifiesSuccess)
         );
+
+        getPresenter().loadUserNotification();
     }
 
     @Override
@@ -64,7 +79,6 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     @Override
     public void onStart() {
         super.onStart();
-        getPresenter().loadUserNotification();
     }
 
     @Override
@@ -87,8 +101,12 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     }
 
     private void onLoadNotifiesSuccess (List<NotifyEntity> list) {
+        if (null == list || list.isEmpty()) {
+            return;
+        }
         mListNotifies.addAll(list);
         MZDebug.w("___________________________________________ list notifies size: " + list.size());
+        MZDebug.w("Notify: " + list.get(0).toString());
 
         adapter.setItems(list);
     }
@@ -100,55 +118,61 @@ implements NotificationAdapter.OnItemNotifyClickListener{
 
         switch (item.notificationType()) {
             case NotifyType.MESSAGE_UNREAD:
-
+                MainActivity.start(getContext().getApplicationContext(), GroupMessageActivity.class, GroupMessageScreen.instance());
                 break;
 
             case NotifyType.MESSAGE_FROM:
-
+                MainActivity.start(getContext().getApplicationContext(), MessageActivity.class, MessageScreen.instance(item.referId()));
                 break;
 
             case NotifyType.BORROW_REQUEST:
-
-
+                start641RequestDetail(item.referId());
                 break;
 
             case NotifyType.BORROW_UNLUCKY:
-
-
+                start641RequestDetail(item.referId());
                 break;
 
             case NotifyType.BORROW_ACCEPT:
-
-
+                MainActivity.start(getContext().getApplicationContext(), MessageActivity.class, MessageScreen.instance(item.referId()));
                 break;
 
             case NotifyType.BORROW_NEEDED:
-
-
+                start641RequestDetail(item.referId());
                 break;
 
             case NotifyType.BORROW_REFUSE:
-
-
+                start641RequestDetail(item.referId());
                 break;
 
             case NotifyType.BORROW_LOST:
-
-
+                start641RequestDetail(item.referId());
                 break;
 
             case NotifyType.BORROW_YOUR_TOTAL:
-
-
+                start631RequestFromAnotherPerson(item.referId());
                 break;
 
             case NotifyType.BORROW_FROM_ANOTHER:
-
+                start631RequestFromAnotherPerson(item.referId());
                 break;
 
             case NotifyType.BORROW_CANCEL:
-
+                start641RequestDetail(item.referId());
                  break;
         }
+    }
+
+    private void start641RequestDetail (int borrowRecordId) {
+        Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
+        intent.putExtra("BorrowingRecordId", borrowRecordId);
+        MainActivity.instance.startActivity(intent);
+    }
+
+    private void start631RequestFromAnotherPerson (int borrowRecordId) {
+        delegate.goTo631PageRequest();
+//        Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
+//        intent.putExtra("BorrowingRecordId", borrowRecordId);
+//        MainActivity.instance.startActivity(intent);
     }
 }

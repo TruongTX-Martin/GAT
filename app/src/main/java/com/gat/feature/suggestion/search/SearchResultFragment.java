@@ -25,8 +25,11 @@ import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.Keyword;
+import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.personaluser.PersonalUserScreen;
+import com.gat.feature.search.SearchActivity;
 import com.gat.feature.suggestion.search.item.SearchBookResultItem;
 import com.gat.feature.suggestion.search.item.SearchBuilder;
 import com.gat.feature.suggestion.search.item.SearchHistoryItem;
@@ -163,11 +166,13 @@ public class SearchResultFragment extends Fragment
         } else if (item instanceof SearchBookResultItem) {
 
             SearchBookResultItem bookItem = (SearchBookResultItem) item;
-            Toast.makeText(getActivity(), "Book id: " + bookItem.bookResponse().getBookId() + ", EditionId: " + bookItem.bookResponse().getEditionId(), Toast.LENGTH_SHORT).show();
+            SuggestSearchActivity.start(getActivity().getApplicationContext(), BookDetailActivity.class,
+                    BookDetailScreen.instance( (int) bookItem.bookResponse().getEditionId()));
         } else if (item instanceof SearchUserResultItem) {
 
             SearchUserResultItem userItem = (SearchUserResultItem) item;
-            SuggestSearchActivity.start(getActivity().getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(userItem.userResponse().getUserId()));
+            SuggestSearchActivity.start(getActivity().getApplicationContext(), PersonalUserActivity.class,
+                    PersonalUserScreen.instance(userItem.userResponse().getUserId()));
 
         }
     }

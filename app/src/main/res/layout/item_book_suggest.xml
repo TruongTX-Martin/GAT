@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
     android:orientation="vertical"
-    android:padding="@dimen/paddingNormal">
+    android:paddingLeft="@dimen/paddingNormal"
+    android:paddingRight="@dimen/paddingNormal"
+    android:paddingBottom="@dimen/paddingNormal">
 
     <ImageView
         android:id="@+id/image_view_book_cover"

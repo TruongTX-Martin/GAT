@@ -1,6 +1,7 @@
 package com.gat.feature.setting.main;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -23,6 +24,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
@@ -85,6 +87,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager callbackManager;
     private TwitterAuthClient twitterAuthClient;
+    private ProgressDialog progressDialog;
 
     public MainSettingFragment (ISettingDelegate delegate) {
         this.delegate = delegate;;
@@ -123,6 +126,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Views.hideKeyboard(getActivity());
+        progressDialog = ClientUtils.createProgressDialog(getActivity());
+        progressDialog.hide();
 
         disposable = new CompositeDisposable(
                 getPresenter().onUserInfoSuccess().subscribe(this::onLoadUserSuccess),
@@ -254,6 +259,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         builder.setTitle(getResources().getString(R.string.ask_for_logout));
         builder.setPositiveButton(android.R.string.yes, (dialog, id) -> {
             dialog.dismiss();
+            progressDialog.show();
             getPresenter().requestSignOut();
         });
         builder.setNegativeButton(android.R.string.cancel, (dialog, id) -> dialog.dismiss());
@@ -443,12 +449,14 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     }
 
     private void onSignOutSuccess (Boolean result) {
-        if (result) {
-            MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
-            getActivity().finish();
-        } else {
-            Toast.makeText(mContext, "Như một sự trêu đùa của tạo hóa, bạn không thể đăng xuất lúc này.", Toast.LENGTH_SHORT).show();
-        }
+        hideProgress();
+        MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        getActivity().finish();
     }
 
+    private void hideProgress () {
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
+    }
 }

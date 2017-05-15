@@ -35,6 +35,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.customview.ViewMoreTextView;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
+import com.gat.common.util.Strings;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
@@ -50,6 +51,9 @@ import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScr
 import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
+import com.gat.feature.login.LoginScreen;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.User;
 import java.util.List;
 import butterknife.BindView;
@@ -117,6 +121,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private CompositeDisposable disposables;
     private EvaluationItemAdapter adapter;
     private ProgressDialog mProgressDialog;
+    private boolean isLoggedIn;
 
     @Override
     protected int getLayoutResource() {
@@ -143,8 +148,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         super.onCreate(savedInstanceState);
 
         mProgressDialog = ClientUtils.createProgressDialog(BookDetailActivity.this);
-        getPresenter().setEditionId(getScreen().editionId());
         setupRecyclerViewComments();
+        getPresenter().setEditionId(getScreen().editionId());
 
         disposables = new CompositeDisposable(
                 getPresenter().onGetBookInfoSuccess().subscribe(this::onGetBookInfoSuccess),
@@ -159,8 +164,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 getPresenter().onUpdateReadingStatusSuccess().subscribe(this::onUpdateReadingStatusSuccess),
                 getPresenter().onUpdateReadingStatusFailure().subscribe(this::onUpdateReadingStatusFailure),
                 getPresenter().onGetEvaluationByUserFailure().subscribe(this::onGetEvaluationByUserFailure),
-                getPresenter().onRatingSuccess().subscribe(this::onPostRatingSuccess)
+                getPresenter().onRatingSuccess().subscribe(this::onPostRatingSuccess),
+                getPresenter().onCheckLoginDone().subscribe(this::onCheckLoginDone)
         );
+        getPresenter().checkLogin();
 
         ratingBarUserRate.setOnRatingBarChangeListener(this);
 
@@ -224,11 +231,21 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.image_button_go_share)
     void onGoShare () {
+        if ( ! isLoggedIn) {
+            showLoginDialog();
+            return;
+        }
+
         showFacebookShareOpenGraph();
     }
 
     @OnClick(R.id.button_reading_state)
     void updateReadingState () {
+        if ( ! isLoggedIn) {
+            showLoginDialog();
+            return;
+        }
+
         // nếu sẽ hiển thị là Muốn đọc
         // nhấn vào thì sẽ hiện dấu tích bên trái và gọi api update status;
 
@@ -237,7 +254,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // + 1: Reading - đang đọc
         // + 2: To read - sẽ đọc
         // khi nhấp vào thì sẽ gọi SelfUpdateReadingActivity
-
+        if (buttonReadingState.getTag() == null) {
+            showLoginDialog();
+            return;
+        }
         if ( (int)buttonReadingState.getTag() == ReadingState.REMOVE) {
             getPresenter().updateReadingStatus();
             buttonReadingState.setClickable(false);
@@ -254,8 +274,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         if (mBookInfo == null) {
             return;
         }
-        MZDebug.w("BookDetailActivity:onGoComment");
-
+        if (mUser == null) {
+            showLoginDialog();
+            return;
+        }
         float value = 0;
         String comment = "";
         if (mEvaluationByUser != null) {
@@ -269,6 +291,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     @OnClick(R.id.image_button_plus)
     void onAddToBookCase () {
         if (null == mBookInfo) {
+            return;
+        }
+        if (mUser == null) {
+            showLoginDialog();
             return;
         }
         startForResult(this, AddToBookcaseActivity.class, AddToBookcaseScreen.instance(mBookInfo), RC_UPDATE_BOOKCASE);
@@ -539,5 +565,13 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         if (mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
+    }
+
+    private void showLoginDialog () {
+        ClientUtils.showRequiredLoginDialog(BookDetailActivity.this, this);
+    }
+
+    private void onCheckLoginDone (Boolean isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
     }
 }

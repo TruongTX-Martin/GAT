@@ -116,9 +116,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<Boolean> signOut() {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().signOut()
+        return Observable.defer(() -> localUserDataSourceLazy.get().signOut()
                 .flatMap(result -> localMessageDataSourceLazy.get().clearData())
-                .flatMap(result -> localUserDataSourceLazy.get().signOut())
+                .flatMap(result -> networkUserDataSourceLazy.get().signOut())
                 .doOnNext(result -> signInFirebase.signOut())
         );
     }
@@ -297,7 +297,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
-        return Observable.defer( () -> networkUserDataSourceLazy.get().getUserNotification(page, per_page));
+
+        return Observable.defer(()-> localUserDataSourceLazy.get().loadUser())
+                .flatMap(user -> {
+                    if (user == null) {
+                        return Observable.fromCallable(() -> null);
+                    }
+
+                    return networkUserDataSourceLazy.get().getUserNotification(page, per_page);
+                });
+
+        //return Observable.defer( () -> networkUserDataSourceLazy.get().getUserNotification(page, per_page));
     }
 
     @Override

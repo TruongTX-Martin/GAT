@@ -55,7 +55,10 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     private UseCase<ServerResponse> useCasePostRating;
     private final Subject<String> subjectPostRatingSuccess;
 
+    private final Subject<Boolean> subjectCheckLoginDone;
+
     private int mEditionId;
+    private boolean isLoggedIn;
 
     public BookDetailPresenterImpl(UseCaseFactory useCaseFactory,
                                    SchedulerFactory schedulerFactory) {
@@ -76,6 +79,7 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
         subjectUserLoggedIn = PublishSubject.create();
         subjectUserNotLoggedIn = PublishSubject.create();
         subjectPostRatingSuccess = PublishSubject.create();
+        subjectCheckLoginDone = PublishSubject.create();
     }
 
     @Override
@@ -311,5 +315,29 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     @Override
     public Observable<String> onRatingSuccess() {
         return subjectPostRatingSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void checkLogin() {
+        useCaseFactory.getUser().executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    if (user == null || user.isValid()) {
+                        isLoggedIn = false;
+                        subjectCheckLoginDone.onNext(false);
+                    } else {
+                        isLoggedIn = true;
+                        subjectCheckLoginDone.onNext(true);
+                    }
+                })
+                .onError(throwable -> {
+                    isLoggedIn = false;
+                })
+                .execute();
+    }
+
+    @Override
+    public Observable<Boolean> onCheckLoginDone() {
+        return subjectCheckLoginDone.subscribeOn(schedulerFactory.main());
     }
 }

@@ -29,6 +29,9 @@ public class UserNearByDistanceViewHolder extends ItemViewHolder<UserNearByDista
     @BindView(R.id.tv_full_name)
     TextView textViewFullName;
 
+    @BindView(R.id.tv_address)
+    TextView textViewAddress;
+
     @BindView(R.id.tv_lend_count)
     TextView textViewSharingCount;
 
@@ -54,6 +57,7 @@ public class UserNearByDistanceViewHolder extends ItemViewHolder<UserNearByDista
 
         textViewDistance.setText(String.valueOf(user.getDistance()));
         textViewFullName.setText(user.getName());
+        textViewAddress.setText(user.getAddress());
         textViewSharingCount.setText(String.valueOf(user.getSharingCount()));
         textViewReadingCount.setText(String.valueOf(user.getReadCount()));
     }

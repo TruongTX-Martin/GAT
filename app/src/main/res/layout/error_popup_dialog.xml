@@ -4,7 +4,8 @@
     android:layout_width="@dimen/error_popup_width"
     android:layout_height="@dimen/error_popup_height"
     android:layout_gravity="center"
-    android:background="@drawable/layout_rounded">
+    android:background="@drawable/layout_rounded"
+    android:paddingBottom="@dimen/paddingLarge">
     <TextView
         android:id="@+id/error_header"
         android:layout_width="wrap_content"

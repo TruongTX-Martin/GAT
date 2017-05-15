@@ -43,7 +43,7 @@ import butterknife.BindView;
  * Created by mryit on 3/26/2017.
  */
 
-public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
+public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> implements IMainDelegate{
 
     @Retention(RetentionPolicy.SOURCE)
     public @interface TAB_POS {
@@ -209,6 +209,16 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         mViewPager.setCurrentItem(position);
     }
 
+    @Override
+    public void goTo631PageRequest () {
+        // go to page personal
+        mTabLayout.setScrollPosition(TAB_POS.TAB_PERSONAL,0f,true);
+        mViewPager.setCurrentItem(TAB_POS.TAB_PERSONAL);
+
+        // go to page request in personal fragment
+    }
+
+
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
         personalFragment.setMainActivity(this);
@@ -216,7 +226,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> {
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
         adapter.addFragment(personalFragment, "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
-        adapter.addFragment(new NotificationFragment(), "NOTICE");
+        adapter.addFragment(new NotificationFragment(this), "NOTICE");
         adapter.addFragment(new SettingFragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);

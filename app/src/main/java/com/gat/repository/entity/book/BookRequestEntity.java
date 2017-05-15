@@ -159,4 +159,31 @@ public class BookRequestEntity {
     public String getRejectTime() {
         return rejectTime;
     }
+
+    @Override
+    public String toString() {
+        return "BookRequestEntity{" +
+                "recordId=" + recordId +
+                ", bookId=" + bookId +
+                ", editionId=" + editionId +
+                ", editionTitle='" + editionTitle + '\'' +
+                ", instanceId='" + instanceId + '\'' +
+                ", borrowerId=" + borrowerId +
+                ", borrowerName='" + borrowerName + '\'' +
+                ", borrowerImageId='" + borrowerImageId + '\'' +
+                ", ownerId=" + ownerId +
+                ", ownerName='" + ownerName + '\'' +
+                ", ownerImageId='" + ownerImageId + '\'' +
+                ", messageId='" + messageId + '\'' +
+                ", recordStatus=" + recordStatus +
+                ", recordType=" + recordType +
+                ", approveTime='" + approveTime + '\'' +
+                ", requestTime='" + requestTime + '\'' +
+                ", borrowTime='" + borrowTime + '\'' +
+                ", completeTime='" + completeTime + '\'' +
+                ", cancelTime='" + cancelTime + '\'' +
+                ", rejectTime='" + rejectTime + '\'' +
+                ", isHeader=" + isHeader +
+                '}';
+    }
 }

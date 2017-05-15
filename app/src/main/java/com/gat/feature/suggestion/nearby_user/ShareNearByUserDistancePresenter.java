@@ -16,5 +16,9 @@ public interface ShareNearByUserDistancePresenter extends Presenter {
     void requestUserNearOnTheMap(LatLng userLocation, LatLng neLocation, LatLng wsLocation);
     Observable<DataResultListResponse<UserNearByDistance>> onPeopleNearByUserSuccess();
 
+    void requestLoadMoreUser ();
+    Observable<DataResultListResponse<UserNearByDistance>> onLoadMoreUserSuccess();
+
+    Observable<Boolean> onCanLoadMore ();
     Observable<String> onError();
 }

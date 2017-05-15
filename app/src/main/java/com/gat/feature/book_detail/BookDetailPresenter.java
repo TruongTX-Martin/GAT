@@ -47,4 +47,8 @@ public interface BookDetailPresenter extends Presenter {
     void postRating (int editionId, float rating, String review, boolean spoiler);
     Observable<String> onRatingSuccess ();
 
+    void checkLogin();
+    Observable<Boolean> onCheckLoginDone ();
+
+
 }

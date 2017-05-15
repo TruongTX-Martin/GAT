@@ -17,9 +17,14 @@ import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.DataResultListResponse;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.personaluser.PersonalUserActivity;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.suggestion.CompareListUtil;
+import com.gat.feature.suggestion.nearby_user.adapter.IOnItemUserClickListener;
 import com.gat.feature.suggestion.nearby_user.adapter.OnItemLoadMoreClickListener;
 import com.gat.feature.suggestion.nearby_user.adapter.UserNearByDistanceAdapter;
 import com.gat.repository.entity.UserNearByDistance;
@@ -56,7 +61,7 @@ public class ShareNearByUserDistanceActivity
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnMarkerClickListener,
-        IRecyclerViewItemClickListener, OnItemLoadMoreClickListener{
+        OnItemLoadMoreClickListener, IOnItemUserClickListener{
 
     public static final String TAG = ShareNearByUserDistanceActivity.class.getSimpleName();
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 2000;
@@ -89,6 +94,7 @@ public class ShareNearByUserDistanceActivity
     private UserNearByDistanceAdapter adapter;
     private List<UserNearByDistance> mListUsers;
     private List<Marker> mListMarker;
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected int getLayoutResource() {
@@ -111,18 +117,21 @@ public class ShareNearByUserDistanceActivity
 
         // setup adapter & recycler view
         adapter = new UserNearByDistanceAdapter();
+        adapter.setOnItemClickListener(this);
         adapter.setOnLoadMoreClickListener(this);
-        mRecyclerViewUsersNear.setLayoutManager(
-                new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+        mLinearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerViewUsersNear.setLayoutManager(mLinearLayoutManager);
         mRecyclerViewUsersNear.setAdapter(adapter);
 
         // composite presenter
         disposables = new CompositeDisposable(
                 getPresenter().onPeopleNearByUserSuccess().subscribe(this::onListUserNearComplete),
+                getPresenter().onLoadMoreUserSuccess().subscribe(this::onLoadMoreUserComplete),
+                getPresenter().onCanLoadMore().subscribe(this::onCanLoadMore),
                 getPresenter().onError().subscribe(this::onError)
         );
 
-        progressDialog = new ProgressDialog(this);
+        progressDialog = ClientUtils.createProgressDialog(ShareNearByUserDistanceActivity.this);
 
         // setup google map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -153,6 +162,10 @@ public class ShareNearByUserDistanceActivity
     protected void onDestroy() {
         super.onDestroy();
         disposables.dispose();
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
+        progressDialog = null;
     }
 
     @OnClick(R.id.tv_header)
@@ -291,6 +304,7 @@ public class ShareNearByUserDistanceActivity
                 // kiểm tra nếu (top-left bottom-right) vẫn nằm trong khung map mà suggest fragment pass sang
                 // thì không request lấy thêm làm gì cả
                 // nếu khung màn hình map user kéo ra ngoài, thì mới request lấy list user near
+                progressDialog.show();
                 getPresenter().requestUserNearOnTheMap(mCenterLatLng, mNELatLng, mWSLatLng);
 
                 break;
@@ -316,15 +330,16 @@ public class ShareNearByUserDistanceActivity
         }
 
         UserNearByDistance user = (UserNearByDistance)marker.getTag();
-        Toast.makeText(getApplicationContext(),user.getUserId() + " : " + user.getAddress(),
-                Toast.LENGTH_SHORT).show();
+        MainActivity.start(getApplicationContext(), PersonalUserActivity.class,
+                PersonalUserScreen.instance( (int) user.getUserId()));
 
         return true;
     }
 
+
     private void onListUserNearComplete(DataResultListResponse<UserNearByDistance> data) {
         MZDebug.i("________________onListUserNearComplete________________________________________");
-
+        hideProgress();
         if (data == null || data.getResultInfo() == null) {
             return;
         }
@@ -332,7 +347,7 @@ public class ShareNearByUserDistanceActivity
         textViewTotal.setText(String.format(getString(R.string.show_count_search_result), data.getResultInfo().size()));
 
         // nếu totalResult > size của List user thì isCanLoadMore = true
-        adapter.setItems(data.getResultInfo(), data.getTotalResult() > data.getResultInfo().size() ? true:false);
+        adapter.setItems(data.getResultInfo());
 
         // add list user vào map
         if (mListMarker == null) {
@@ -341,19 +356,35 @@ public class ShareNearByUserDistanceActivity
         } else {
             // nếu user nào ở list mà không có trong mListUser thì thêm vào mListUsers để add vào map
             List<UserNearByDistance> listDestination = CompareListUtil.destinationListUserNear(mListUsers, data.getResultInfo());
+            mListUsers.addAll(listDestination);
             mListMarker.addAll(addListMarker(listDestination));
+        }
+
+        if ( ! data.getResultInfo().isEmpty()) {
+            mLinearLayoutManager.scrollToPositionWithOffset(0,0);
         }
     }
 
     private void onLoadMoreUserComplete (DataResultListResponse<UserNearByDistance> data) {
-
+        hideProgress();
+        adapter.setMoreItems(data.getResultInfo());
+        textViewTotal.setText(String.format(getString(R.string.show_count_search_result), adapter.getItemCount()));
+        // nếu user nào ở list mà không có trong mListUser thì thêm vào mListUsers để add vào map
+        List<UserNearByDistance> listDestination = CompareListUtil.destinationListUserNear(mListUsers, data.getResultInfo());
+        mListUsers.addAll(listDestination);
+        mListMarker.addAll(addListMarker(listDestination));
     }
 
     // request list user near failed
     private void onError (String message) {
+        hideProgress();
         Toast.makeText(this,message, Toast.LENGTH_LONG).show();
     }
 
+    private void onCanLoadMore (Boolean isCanLoadMore) {
+        // adapter add last item
+        adapter.addItemLoadMore();
+    }
 
     private List<Marker> addListMarker (List<UserNearByDistance> listUsers) {
         List<Marker> listMarkers = new ArrayList<>();
@@ -395,15 +426,26 @@ public class ShareNearByUserDistanceActivity
         }
     }
 
-    @Override
-    public void onItemClickListener(View v, int position) {
-        moveCameraToNewLatLng(new LatLng(mListUsers.get(position).getLatitude(),
-                mListUsers.get(position).getLongitude()));
-        Toast.makeText(this, "user id: " + mListUsers.get(position).getUserId(), Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onLoadMoreClick() {
-        Toast.makeText(this, "request load more", Toast.LENGTH_SHORT).show();
+        progressDialog.show();
+        getPresenter().requestLoadMoreUser();
+    }
+
+    private void hideProgress () {
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
+    }
+
+    @Override
+    public void onItemClickListener(int position, UserNearByDistance user) {
+
+        moveCameraToNewLatLng(new LatLng(mListUsers.get(position).getLatitude(),
+                mListUsers.get(position).getLongitude()));
+
+        MainActivity.start(getApplicationContext(), PersonalUserActivity.class,
+                PersonalUserScreen.instance( (int) user.getUserId()));
     }
 }

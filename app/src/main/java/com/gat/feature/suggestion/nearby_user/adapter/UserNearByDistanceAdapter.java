@@ -7,6 +7,8 @@ import com.gat.common.adapter.ItemAdapter;
 import com.gat.common.adapter.ItemViewHolder;
 import com.gat.common.adapter.impl.LoadingItem;
 import com.gat.common.adapter.impl.LoadingItemViewHolder;
+import com.gat.common.listener.IRecyclerViewItemClickListener;
+import com.gat.feature.book_detail.list_user_sharing_book.UserSharingItem;
 import com.gat.repository.entity.UserNearByDistance;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,6 +29,7 @@ public class UserNearByDistanceAdapter extends ItemAdapter {
     }
 
     private OnItemLoadMoreClickListener listener;
+    IOnItemUserClickListener itemClickListener;
 
     public UserNearByDistanceAdapter () {
         setReady();
@@ -34,6 +37,10 @@ public class UserNearByDistanceAdapter extends ItemAdapter {
 
     public void setOnLoadMoreClickListener (OnItemLoadMoreClickListener callback) {
         listener = callback;
+    }
+
+    public  void setOnItemClickListener (IOnItemUserClickListener callback) {
+        itemClickListener = callback;
     }
 
     @Override
@@ -67,6 +74,14 @@ public class UserNearByDistanceAdapter extends ItemAdapter {
 
             case Type.ITEM_USER:
                 viewHolder = new UserNearByDistanceViewHolder(parent, R.layout.item_user_near_on_map);
+                ItemViewHolder finalViewHolder = viewHolder;
+                viewHolder.itemView.setOnClickListener(v -> {
+                    if (itemClickListener != null) {
+                        UserNearByDistanceItem userItem = (UserNearByDistanceItem) items.get(finalViewHolder.getAdapterPosition());
+                        itemClickListener.onItemClickListener(finalViewHolder.getAdapterPosition(), userItem.user());
+                    }
+                });
+
                 break;
         }
 
@@ -74,8 +89,8 @@ public class UserNearByDistanceAdapter extends ItemAdapter {
     }
 
 
-    public void setItems (List<UserNearByDistance> list, boolean isCanLoadMore) {
-        if (list == null || list.isEmpty()) {
+    public void setItems (List<UserNearByDistance> list) {
+        if (list == null) {
             return;
         }
 
@@ -86,11 +101,6 @@ public class UserNearByDistanceAdapter extends ItemAdapter {
             listItems.add(userItem);
         }
 
-        if (isCanLoadMore) {
-            LoadMoreItem loadMoreItem = LoadMoreItem.instance();
-            listItems.add(loadMoreItem);
-        }
-
         if (items != null)
             items.clear();
 
@@ -98,8 +108,13 @@ public class UserNearByDistanceAdapter extends ItemAdapter {
         notifyDataSetChanged();
     }
 
+    public void addItemLoadMore () {
+        LoadMoreItem loadMoreItem = LoadMoreItem.instance();
+        items.add(loadMoreItem);
+        notifyDataSetChanged();
+    }
 
-    public void setMoreItems (List<UserNearByDistance> list, boolean isCanLoadMore) {
+    public void setMoreItems (List<UserNearByDistance> list) {
 
         items.remove(items.size() -1 );
 
@@ -110,17 +125,14 @@ public class UserNearByDistanceAdapter extends ItemAdapter {
             listItems.add(userItem);
         }
 
-        if (isCanLoadMore) {
-            LoadMoreItem loadMoreItem = LoadMoreItem.instance();
-            listItems.add(loadMoreItem);
-        }
-
-        setItem(listItems);
+        items.addAll(listItems);
         notifyDataSetChanged();
     }
 
     protected void clearAllItems () {
-        items.removeAll(items);
+        items.clear();
         notifyDataSetChanged();
     }
+
+
 }

@@ -27,7 +27,12 @@ import butterknife.BindView;
  * Created by ducbtsn on 5/6/17.
  */
 
-public class ResultActivity extends ScreenActivity<MainScreen, MainPresenter> {
+public class ResultActivity extends ScreenActivity<MainScreen, MainPresenter> implements IMainDelegate{
+    @Override
+    public void goTo631PageRequest() {
+
+    }
+
     @Retention(RetentionPolicy.SOURCE)
     public @interface TAB_POS {
         int TAB_HOME            = 0;
@@ -128,7 +133,7 @@ public class ResultActivity extends ScreenActivity<MainScreen, MainPresenter> {
         adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
         adapter.addFragment(personalFragment, "PERSONAL");
         adapter.addFragment(new ScanFragment(), "SCAN");
-        adapter.addFragment(new NotificationFragment(), "NOTICE");
+        adapter.addFragment(new NotificationFragment(this), "NOTICE");
         adapter.addFragment(new Fragment(), "SETTING");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);

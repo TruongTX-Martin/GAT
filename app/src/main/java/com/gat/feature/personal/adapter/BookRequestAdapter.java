@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
+import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
 import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
@@ -53,6 +54,7 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
     @Override
     public void onBindViewHolder(BookRequestViewHolder holder, int position) {
             BookRequestEntity entity = listBookRequest.get(position);
+        MZDebug.w("BookRequest: " + entity.toString());
             if (entity != null) {
                 if (entity.getRecordType() == 1) {
                     //yeu cau toi ban

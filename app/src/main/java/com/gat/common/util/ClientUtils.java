@@ -1,5 +1,6 @@
 package com.gat.common.util;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -28,6 +29,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.gat.R;
+import com.gat.app.activity.ScreenActivity;
+import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.login.LoginScreen;
+import com.gat.feature.start.StartActivity;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -251,6 +257,23 @@ public class ClientUtils {
         dialog.show();
 
         return dialog;
+    }
+
+    public static <T extends ScreenActivity> void showRequiredLoginDialog (Activity activity, T screen) {
+        showAlertDialog(activity, activity.getString(R.string.err_notice),
+                activity.getString(R.string.err_required_login), activity.getString(R.string.login),
+                activity.getString(R.string.dont_care), new ClientUtils.OnDialogPressed() {
+                    @Override
+                    public void onClickAccept() {
+                        // start screen
+                        screen.start(activity.getApplicationContext(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+                    }
+
+                    @Override
+                    public void onClickRefuse() {
+                        // do nothing
+                    }
+                });
     }
 
 }

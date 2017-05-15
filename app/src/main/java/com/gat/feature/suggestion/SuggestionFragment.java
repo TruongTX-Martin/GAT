@@ -33,10 +33,13 @@ import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.message.GroupMessageActivity;
 import com.gat.feature.message.presenter.GroupMessageScreen;
+import com.gat.feature.personaluser.PersonalUserActivity;
+import com.gat.feature.personaluser.PersonalUserScreen;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceActivity;
 import com.gat.feature.suggestion.nearby_user.ShareNearByUserDistanceScreen;
 import com.gat.feature.suggestion.search.SuggestSearchActivity;
 import com.gat.feature.suggestion.search.SuggestSearchScreen;
+import com.gat.feature.suggestion.search.item.SearchUserResultItem;
 import com.gat.repository.entity.UserNearByDistance;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -253,8 +256,10 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             imageViewAvatar.setTag(userItem); // pass object -> tag
 
             imageViewAvatar.setOnClickListener(view -> {
+
                 UserNearByDistance item = (UserNearByDistance) view.getTag();
-                Toast.makeText(getActivity(), "User id: " + item.getUserId(), Toast.LENGTH_SHORT).show();
+                MainActivity.start(getActivity().getApplicationContext(), PersonalUserActivity.class,
+                        PersonalUserScreen.instance( (int) item.getUserId()));
             });
 
             // add child view

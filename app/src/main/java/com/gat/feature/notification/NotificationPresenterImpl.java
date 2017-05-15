@@ -63,6 +63,9 @@ public class NotificationPresenterImpl implements NotificationPresenter {
         useCaseNotifications.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
+                    if (null == data) {
+                        return;
+                    }
                     MZDebug.w("______________________ loadUserNotification SUCCESS, size: " +
                             data.getResultInfo().size());
                     mCurrentPage ++;
