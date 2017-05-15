@@ -1,4 +1,4 @@
-package com.gat.feature.suggestion.nearby_user.adapter;
+package com.gat.common.adapter.impl;
 
 /**
  * Created by mryit on 5/13/2017.

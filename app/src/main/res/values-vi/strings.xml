@@ -110,20 +110,22 @@
     <string name="btn_add_category">Add category</string>
     <string name="register_category_header">Favourite category</string>
 
-    <string name="scan_barcode_header">Scan barcode</string>
-    <string name="scan_barcode_guide">Move camera to barcode area\nto scan barcode</string>
-    <string name="btn_turn_on_light">Turn on light</string>
-    <string name="has_no_flash">Device has no compatible flash.</string>
-    <string name="btn_turn_off_light">Turn off flash</string>
-    <string name="isbn_invalid">Barcode is not valid.</string>
-    <string name="error_throw">Error happened.</string>
-    <string name="tab_home">Home page</string>
-    <string name="tab_personal">Personal</string>
-    <string name="tab_scanbarcode">Scan ISBN</string>
-    <string name="tab_notification">Notification</string>
-    <string name="tab_setting">Setting</string>
-    <string name="message_header">Message</string>
-    <string name="send_message_btn">Send</string>
+    <string name="scan_barcode_header">Quét barcode</string>
+    <string name="scan_barcode_guide">Di chuyển màn hình camera để quét barcode</string>
+    <string name="btn_turn_on_light">Bật đèn flash</string>
+    <string name="has_no_flash">Thiết bị không có flash.</string>
+    <string name="btn_turn_off_light">Tắt đèn flash</string>
+    <string name="isbn_invalid">Barcode không hợp lệ.</string>
+    <string name="error_throw">Có lỗi sảy ra.</string>
+
+    <string name="tab_home">Trang chủ</string>
+    <string name="tab_personal">Cá nhân</string>
+    <string name="tab_scanbarcode">Quét mã</string>
+    <string name="tab_notification">Thông báo</string>
+    <string name="tab_setting">Cài đặt</string>
+    <string name="message_header">Tin nhắn</string>
+    <string name="send_message_btn">Gửi</string>
+
 
     <!-- suggestion text -->
     <string name="go_setting_enable_gps">Mở Cài đặt -> Cho phép truy cập vị trí của bạn.</string>
@@ -139,7 +141,6 @@
     <string name="book_reading">Sách đang đọc</string>
 
     <string name="cancel">Huỷ</string>
-
 
     <string name="msg_allow_location">To see all of users sharing book around of you. You need enable location permission!</string>
     <string name="msg_no_user_near">Không có người chia sẻ gần bạn, nhấp xem thêm để hiển thị nhiều hơn. </string>
@@ -181,7 +182,7 @@
     <string name="post_the_share">ĐĂNG CHIA SẺ</string>
     <string name="remove_from_reading_list">Xóa khỏi danh sách đọc</string>
     <string name="ask_remove_from_reading_list">Bạn muốn xóa cuốn sách này khỏi danh sách sách đọc?</string>
-    <string name="book_not_found">Không tìm thấy dữ liệu.</string>
+    <string name="book_not_found">The ISBN is not found on our system.</string>
     <string name="isbn_invalid_message">Your ISBN is not valid. Please try again with another book.</string>
     <string name="inputLocationHint">Enter your location</string>
 
@@ -224,17 +225,29 @@
     <string name="in_facebook_connection">Đang kết nối với tài khoản facebook %1$s</string>
     <string name="in_google_connection">Đang kết nối với tài khoản google %1$s</string>
     <string name="in_twitter_connection">Đang kết nối với tài khoản twitter %1$s</string>
-
+    <string name="logout">Thoát tài khoản</string>
+    <string name="new_password_hint">Input new password</string>
+    <string name="ask_for_logout">Bạn thực sự muốn thoát?</string>
 
     <!-- Error message -->
-    <string name="password_invalid">Mật khẩu không hợp lệ</string>
-    <string name="email_invalid">Email không hợp lệ</string>
+    <string name="password_invalid">Password is invalid</string>
+    <string name="email_invalid">Email is invalid</string>
+    <!-- fonts -->
+    <string name="font_family_light">sans-serif-light</string>
+    <string name="font_family_medium">sans-serif-medium</string>
+    <string name="font_family_regular">sans-serif</string>
+    <string name="font_family_condensed">sans-serif-condensed</string>
+    <string name="font_family_black">sans-serif-black</string>
+    <string name="font_family_thin">sans-serif-thin</string>
 
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="login">Đăng nhập</string>
+    <string name="dont_care">Bỏ qua</string>
 
-    <!--Dialog-->
     <string name="strYes">Yes</string>
     <string name="strNo">No</string>
     <string name="strAgreed">Agreed</string>
-    <string name="titleError">Error</string>
+    <string name="titleError">Lỗi</string>
 
 </resources>

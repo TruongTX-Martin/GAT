@@ -239,11 +239,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         scanFragment = new ScanFragment();
         personalFragment.setMainActivity(this);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new SuggestionFragment(), "HOME PAGE");
-        adapter.addFragment(personalFragment, "PERSONAL");
-        adapter.addFragment(new ScanFragment(), "SCAN");
-        adapter.addFragment(new NotificationFragment(this), "NOTICE");
-        adapter.addFragment(new SettingFragment(), "SETTING");
+        adapter.addFragment(new SuggestionFragment(), getString(R.string.tab_home));
+        adapter.addFragment(personalFragment, getString(R.string.tab_personal));
+        adapter.addFragment(new ScanFragment(), getString(R.string.tab_scanbarcode));
+        adapter.addFragment(new NotificationFragment(this), getString(R.string.tab_notification));
+        adapter.addFragment(new SettingFragment(), getString(R.string.tab_setting));
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
     }
@@ -275,6 +275,14 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
                 break;
             default:
                 throw new UnsupportedOperationException();
+        }
+    }
+
+    public void onEventMainThread(NetWorkEvent event) {
+        if(event.isConnected()) {
+
+        }else{
+
         }
     }
 

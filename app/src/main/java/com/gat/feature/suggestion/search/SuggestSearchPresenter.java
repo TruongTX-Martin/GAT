@@ -19,6 +19,8 @@ public interface SuggestSearchPresenter extends Presenter {
     void searchBookWithTitle (String book_title);
     void loadMoreBookWithTitle();
     Observable<List<BookResponse>> onSearchBookWithTitleSuccess();
+    Observable<List<BookResponse>> onLoadMoreBookWithTitleSuccess();
+    Observable<Boolean> onCanLoadMoreBookWithTitle ();
 
 
     void loadHistorySearchAuthor();
@@ -27,6 +29,8 @@ public interface SuggestSearchPresenter extends Presenter {
     void searchBookWithAuthor (String author);
     void loadMoreBookWithAuthor();
     Observable<List<BookResponse>> onSearchBookWithAuthorSuccess();
+    Observable<List<BookResponse>> onLoadMoreBookWithAuthorSuccess();
+    Observable<Boolean> onCanLoadMoreBookWithAuthor ();
 
 
     void loadHistorySearchUser();
@@ -35,6 +39,8 @@ public interface SuggestSearchPresenter extends Presenter {
     void searchUserWithName (String name);
     void loadMoreUserWithName ();
     Observable<List<UserResponse>> onSearchUserWithNameSuccess();
+    Observable<List<UserResponse>> onLoadMoreUserWithNameSuccess();
+    Observable<Boolean> onCanLoadMoreUserWithName ();
 
     Observable<String> onError();
 

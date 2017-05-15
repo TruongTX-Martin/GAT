@@ -363,10 +363,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private List<EvaluationItemResponse> listEvaluations;
     private void onGetBookEditionEvaluationSuccess (List<EvaluationItemResponse> list) {
         hideProgress();
+        if (list == null || list.isEmpty()) {
+            return;
+        }
 
         listEvaluations = list;
         adapter.setItem(EvaluationBuilder.transformListEvaluation(list));
-        MZDebug.w("onGetBookEditionEvaluationSuccess: " + list.get(0).toString());
     }
 
     private void onGetSelfReadingStatusSuccess (BookReadingInfo bookReadingInfo) {

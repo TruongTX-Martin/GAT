@@ -23,11 +23,13 @@ public class SocialConnectedPresenterImpl implements SocialConnectedPresenter {
 
     private UseCase<ServerResponse> useCaseUnLinkSocial;
     private final Subject<String> subjectUnLinkSuccess;
+    private final Subject<String> subjectError;
 
     public SocialConnectedPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
         subjectUnLinkSuccess = PublishSubject.create();
+        subjectError = PublishSubject.create();
     }
 
 
@@ -52,6 +54,7 @@ public class SocialConnectedPresenterImpl implements SocialConnectedPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: unLinkAccount : ______________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+                    subjectError.onNext("Failed");
                 })
                 .execute();
     }
@@ -59,5 +62,10 @@ public class SocialConnectedPresenterImpl implements SocialConnectedPresenter {
     @Override
     public Observable<String> onUnLinkAccountSocialSuccess() {
         return subjectUnLinkSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onError() {
+        return subjectError.subscribeOn(schedulerFactory.main());
     }
 }

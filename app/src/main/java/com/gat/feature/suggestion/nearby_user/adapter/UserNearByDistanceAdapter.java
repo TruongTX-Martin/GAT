@@ -5,10 +5,11 @@ import com.gat.R;
 import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemAdapter;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.adapter.impl.LoadMoreItem;
+import com.gat.common.adapter.impl.LoadMoreViewHolder;
 import com.gat.common.adapter.impl.LoadingItem;
 import com.gat.common.adapter.impl.LoadingItemViewHolder;
-import com.gat.common.listener.IRecyclerViewItemClickListener;
-import com.gat.feature.book_detail.list_user_sharing_book.UserSharingItem;
+import com.gat.common.adapter.impl.OnItemLoadMoreClickListener;
 import com.gat.repository.entity.UserNearByDistance;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,7 +30,7 @@ public class UserNearByDistanceAdapter extends ItemAdapter {
     }
 
     private OnItemLoadMoreClickListener listener;
-    IOnItemUserClickListener itemClickListener;
+    private IOnItemUserClickListener itemClickListener;
 
     public UserNearByDistanceAdapter () {
         setReady();

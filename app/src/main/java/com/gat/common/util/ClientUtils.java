@@ -288,12 +288,14 @@ public class ClientUtils {
 
     public static <T extends ScreenActivity> void showRequiredLoginDialog(Activity activity, T screen) {
         showAlertDialog(activity, activity.getString(R.string.err_notice),
-                activity.getString(R.string.err_required_login), activity.getString(R.string.login),
+                activity.getString(R.string.err_required_login),
+                activity.getString(R.string.login),
                 activity.getString(R.string.dont_care), new ClientUtils.OnDialogPressed() {
                     @Override
                     public void onClickAccept() {
-                        // start screen
-                        screen.start(activity.getApplicationContext(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+                        // .start not clear back stack -> bug (can not start next time),
+                        // -> resolved by use .startAndClear
+                        screen.startAndClear(activity.getApplicationContext(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
                     }
 
                     @Override

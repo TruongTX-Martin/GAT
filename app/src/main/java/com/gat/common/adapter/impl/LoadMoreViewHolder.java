@@ -1,10 +1,11 @@
-package com.gat.feature.suggestion.nearby_user.adapter;
+package com.gat.common.adapter.impl;
 
 import android.support.annotation.LayoutRes;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

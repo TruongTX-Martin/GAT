@@ -20,4 +20,6 @@ public interface MainSettingPresenter extends Presenter {
 
     void requestSignOut();
     Observable<Boolean> onSignOutSuccess();
+
+    Observable<String> onError ();
 }
