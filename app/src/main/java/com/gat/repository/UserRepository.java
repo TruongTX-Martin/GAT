@@ -73,6 +73,7 @@ public interface UserRepository {
     Observable<Data> getReadingBooks(BookReadingInput input);
     Observable<Data> getBookInstance(BookInstanceInput input);
     Observable<String> updateUserInfo(EditInfoInput input);
+    Observable<String> removeBook(int instanceId);
 
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
     Observable<Data> getBookDetail(Integer input);

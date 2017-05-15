@@ -193,7 +193,6 @@ public class FragmentReadingBook extends Fragment {
         RelativeLayout layoutToReadBorder = (RelativeLayout) customView.findViewById(R.id.layoutToReadBorder);
         RelativeLayout layoutToReadOverlay = (RelativeLayout) customView.findViewById(R.id.layoutToReadOverlay);
         RelativeLayout layoutRoot = (RelativeLayout) customView.findViewById(R.id.layoutRoot);
-        layoutRoot.setOnClickListener(v -> popupWindow.dismiss());
         layoutReadedBorder.setOnClickListener(v -> {
             layoutReadedBorder.setVisibility(View.GONE);
             layoutReadedOverlay.setVisibility(View.VISIBLE);

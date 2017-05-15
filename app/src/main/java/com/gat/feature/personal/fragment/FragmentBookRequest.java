@@ -263,7 +263,6 @@ public class FragmentBookRequest extends Fragment {
         layoutOtherBorder = (RelativeLayout) customView.findViewById(R.id.layoutOtherBorder);
         layoutOtherOverlay = (RelativeLayout) customView.findViewById(R.id.layoutOtherOverlay);
 
-        layoutRoot.setOnClickListener(v -> popupWindow.dismiss());
         imgClose.setOnClickListener(v -> {
             if (sharingWaitToConfirm == currentInput.isSharingWaitConfirm()
                     && sharingContacting == currentInput.isSharingContacting()

@@ -392,4 +392,10 @@ public interface GatApi {
     @POST("user/sign_out")
     Observable<Response<ServerResponse<SimpleResponse>>> signOut();
 
+    @FormUrlEncoded
+    @POST("book/selfremove_instance")
+    Observable<Response<ServerResponse<Data>>> removeBook (
+            @Field("instanceId") int instanceId
+    );
+
 }

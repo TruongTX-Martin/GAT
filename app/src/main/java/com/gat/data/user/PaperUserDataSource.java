@@ -212,6 +212,11 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
+    public Observable<String> removeBook(int instanceId) {
+        return null;
+    }
+
+    @Override
     public Observable<ServerResponse<LoginResponseData>> login(LoginData data) {
         throw new UnsupportedOperationException();
     }

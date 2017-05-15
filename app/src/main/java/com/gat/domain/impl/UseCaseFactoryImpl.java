@@ -387,4 +387,9 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
         return new SignOut(userRepositoryLazy.get());
     }
 
+    @Override
+    public UseCase<String> removeBook(int instanceId) {
+        return new RemoveBook(userRepositoryLazy.get(),instanceId);
+    }
+
 }

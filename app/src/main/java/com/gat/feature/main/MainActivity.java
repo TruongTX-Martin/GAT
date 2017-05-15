@@ -161,14 +161,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
 //        }
     }
 
-    public void onEventMainThread(NetWorkEvent event) {
-        if(event.isConnected()) {
-
-        }else{
-
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -216,6 +208,13 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     @Override
     public void onBackPressed() {
         // your code.
+        int currentTab = mTabLayout.getSelectedTabPosition();
+        if(currentTab > 0) {
+            currentTab --;
+            setTabDesire(currentTab);
+        }else {
+            finish();
+        }
     }
 
     public void setTabDesire(int position) {

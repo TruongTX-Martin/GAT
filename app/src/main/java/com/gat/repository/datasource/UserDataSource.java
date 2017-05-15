@@ -104,6 +104,7 @@ public interface UserDataSource {
     Observable<ServerResponse> linkSocialAccount (String socialID, String socialName , int socialType);
     Observable<ServerResponse<FirebasePassword>> addEmailPassword (String email, String password);
     Observable<ServerResponse> changeOldPassword(String newPassword, String oldPassword);
+    Observable<String> removeBook(int instanceId);
 
 
 }

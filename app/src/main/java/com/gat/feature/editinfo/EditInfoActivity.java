@@ -108,6 +108,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     private CompositeDisposable disposablesEditInfo;
     private Dialog dialog;
+    private boolean isEditData;
 
 
     @Override
@@ -151,19 +152,15 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         });
         imgSave.setOnClickListener(v -> updateProfile());
         imgBack.setOnClickListener(v -> backToPreviousView());
-        layoutAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mr.Duc redirect here
+        layoutAddress.setOnClickListener(v -> {
+            //mr.Duc redirect here
+            try {
                 start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
-            }
+            }catch (Exception e){}
         });
-        layoutFavorit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mr.Duc redirect here
-                start(getApplicationContext(), AddCategoryActivity.class, AddCategoryScreen.instance(user.interestCategory()));
-            }
+        layoutFavorit.setOnClickListener(v -> {
+            //mr.Duc redirect here
+            start(getApplicationContext(), AddCategoryActivity.class, AddCategoryScreen.instance(user.interestCategory()));
         });
     }
 
@@ -232,6 +229,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     }
 
     private void checkPermission() {
+        isEditData = true;
         if (Build.VERSION.SDK_INT > 22) {
             try {
                 String[] mPermission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -282,7 +280,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                         }
                     }
                 } else {
-                    ClientUtils.showToast(this, "User not allow access device");
+//                    ClientUtils.showToast(this, "User not allow access device");
                 }
                 break;
             default:
@@ -344,21 +342,33 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
 
     private void backToPreviousView() {
-        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
-        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
-        txtTitle.setText("Huỷ thay đổi");
-        txtContent.setText("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
-        Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
-        Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-        btnCancle.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-        btnOk.setOnClickListener(v -> {
+        if(isEditData()) {
+            TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
+            TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
+            txtTitle.setText("Huỷ thay đổi");
+            txtContent.setText("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
+            Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
+            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+            btnCancle.setOnClickListener(v -> {
+                dialog.dismiss();
+            });
+            btnOk.setOnClickListener(v -> {
+                backToPreviousActivity();
+                dialog.dismiss();
+            });
+            if(dialog != null && !dialog.isShowing()){
+                dialog.show();
+            }
+        }else{
             backToPreviousActivity();
-            dialog.dismiss();
-        });
-        if(dialog != null && !dialog.isShowing()){
-            dialog.show();
         }
+
+    }
+
+    private boolean isEditData() {
+        if (isEditData || (!edtName.getText().toString().trim().equals(user.name()))) {
+            return true;
+        }
+        return false;
     }
 }

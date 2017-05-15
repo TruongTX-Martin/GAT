@@ -163,4 +163,6 @@ public interface UseCaseFactory {
 
     UseCase<Boolean> signOut ();
 
+    UseCase<String> removeBook (int instanceId);
+
 }

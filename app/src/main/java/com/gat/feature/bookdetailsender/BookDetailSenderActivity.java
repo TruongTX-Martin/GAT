@@ -42,6 +42,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScreen, BookDetailSenderPresenter> {
 
+    @BindView(R.id.layoutBack)
+    RelativeLayout layoutBack;
+
     @BindView(R.id.imgBack)
     ImageView imgBack;
 
@@ -252,7 +255,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     }
 
     private void handleEvent(){
-        imgBack.setOnClickListener(v -> finish());
+        layoutBack.setOnClickListener(v -> finish());
         layoutParrentCancleRequest.setOnClickListener(v -> {
             if(recordStatus == 0){
                 statusInput.setCurrentStatus(0);

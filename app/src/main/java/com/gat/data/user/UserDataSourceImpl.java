@@ -540,6 +540,17 @@ public class UserDataSourceImpl implements UserDataSource {
         });
     }
 
+    @Override
+    public Observable<String> removeBook(int instanceId) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.removeBook(instanceId);
+        return responseObservable.map(response -> {
+            ServerResponse serverResponse = CommonCheck.checkResponse(response);
+            serverResponse.code(response.code());
+            return serverResponse.message();
+        });
+    }
+
 
     @Override
     public void storeLoginToken(String token) {

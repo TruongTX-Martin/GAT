@@ -47,4 +47,8 @@ public interface PersonalPresenter extends Presenter{
     void checkLogin();
     Observable<String> checkLoginSucess();
     Observable<String> checkLoginFailed();
+
+    void removeBook(int instanceId);
+    Observable<String> getResponseRemoveBook();
+    Observable<String> onErrorRemoveBook();
 }

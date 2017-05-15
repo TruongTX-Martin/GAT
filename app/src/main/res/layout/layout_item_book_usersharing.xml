@@ -79,65 +79,75 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/txtName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@+id/layoutRight"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:text="name"
-            android:textSize="@dimen/normal_textsize_m"
-            android:textColor="#000000" />
-
-        <TextView
-            android:id="@+id/txtAuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtName"
-            android:layout_toLeftOf="@+id/layoutRight"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:text="author"
-            android:textSize="@dimen/small_textsize_l"
-            android:textColor="#919191" />
 
         <LinearLayout
-            android:id="@+id/layoutRating"
+            android:id="@+id/layoutCenter"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtAuthor"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/layoutRight"
             android:layout_toRightOf="@+id/imgAvatar"
-            android:orientation="horizontal">
+            >
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="name"
+                android:textSize="@dimen/normal_textsize_m"
+                android:textColor="#000000" />
 
-            <RatingBar
-                android:id="@+id/ratingBar"
-                style="@style/CustomRatingBar"
+            <TextView
+                android:id="@+id/txtAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtName"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="5dp"
-                android:numStars="5" />
+                android:layout_toLeftOf="@+id/layoutRight"
+                android:layout_toRightOf="@+id/imgAvatar"
+                android:text="author"
+                android:textSize="@dimen/small_textsize_l"
+                android:textColor="#919191" />
+
+            <LinearLayout
+                android:id="@+id/layoutRating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtAuthor"
+                android:layout_toRightOf="@+id/imgAvatar"
+                android:orientation="horizontal">
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="@style/CustomRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtName"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:numStars="5" />
+                <TextView
+                    android:id="@+id/txtRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/small_textsize_l"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/txtRating"
+                android:id="@+id/txtStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="@dimen/small_textsize_l"
-                android:layout_gravity="center_vertical"
-                />
+                android:layout_below="@+id/layoutRating"
+                android:layout_toRightOf="@+id/imgAvatar"
+                android:visibility="gone"
+                android:textSize="10dp"
+                android:text="Đang được mượn"
+                android:textColor="#000000" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layoutRating"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:visibility="gone"
-            android:textSize="10dp"
-            android:text="Đang được mượn"
-            android:textColor="#000000" />
+
     </RelativeLayout>
 
     <View

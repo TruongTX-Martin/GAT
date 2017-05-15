@@ -264,6 +264,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Observable<String> removeBook(int instanceId) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().removeBook(instanceId));
+    }
+
+    @Override
     public Observable<Data> getBookUserSharing(BookSharingUserInput input) {
         return Observable.defer(() -> localUserDataSourceLazy.get().loadUser())
                 .map(user -> {

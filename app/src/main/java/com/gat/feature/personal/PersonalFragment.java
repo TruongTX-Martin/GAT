@@ -82,6 +82,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private CompositeDisposable disposablesBooksRequest;
     private CompositeDisposable disposablesRequestBookByOwner;
     private CompositeDisposable disposablesCheckLogin;
+    private CompositeDisposable disposablesRemoveBook;
 
     //init fragment
     private FragmentBookSharing fragmentBookSharing;
@@ -152,6 +153,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
                 getPresenter().onErrorChangeStatus().subscribe(this::changeBookSharingStatusSuccess));
         disposablesCheckLogin = new CompositeDisposable(getPresenter().checkLoginSucess().subscribe(this::checkLoginSuccess),
                 getPresenter().checkLoginFailed().subscribe(this::checkLoginFailed));
+
+        disposablesRemoveBook = new CompositeDisposable(getPresenter().getResponseRemoveBook().subscribe(this::removeBookSuccess),
+                getPresenter().onErrorRemoveBook().subscribe(this::checkLoginFailed));
 
         initView();
 
@@ -339,6 +343,14 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         //do nothing
     }
 
+    private void removeBookSuccess(String data){
+        fragmentBookSharing.updateAfterDelete();
+    }
+
+    public void removeBookInstance(int instanceId){
+        getPresenter().removeBook(instanceId);
+    }
+
 
     private void checkLoginFailed(String input) {
         //show dialog
@@ -436,11 +448,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private void getBookRequestSuccess(Data data) {
         if (data != null) {
             int totalBrowing = data.getBorrowingTotal();
-            int totalWaiting = data.getWaitingTotal();
-            txtNumberRequest.setText(totalBrowing + "");
+            int totalSharing = data.getTotalSharing();
+            txtNumberRequest.setText(totalSharing + "");
             List<BookRequestEntity> listBookRequest = data.getListDataReturn(BookRequestEntity.class);
             fragmentBookRequest.setNumberRequestFromYou(totalBrowing);
-            fragmentBookRequest.setNumberRequestToYou(totalWaiting);
+            fragmentBookRequest.setNumberRequestToYou(totalSharing);
             fragmentBookRequest.setListBookRequest(listBookRequest);
         }
     }
