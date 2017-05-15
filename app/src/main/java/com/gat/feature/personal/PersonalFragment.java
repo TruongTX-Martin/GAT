@@ -345,6 +345,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void removeBookSuccess(String data){
         fragmentBookSharing.updateAfterDelete();
+        
     }
 
     public void removeBookInstance(int instanceId){
