@@ -145,11 +145,8 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
     }
 
     private void toDetailRequest(BookSharingEntity entity){
-//            Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
-//            intent.putExtra("BorrowingRecordId", entity.getBorrowingRecordId());
-//            MainActivity.instance.startActivity(intent);
         Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
-        intent.putExtra("BorrowingRecordId", entity.getBorrowingRecordId());
+        intent.putExtra("BorrowingRecordId", entity.getRecordId());
         MainActivity.instance.startActivity(intent);
     }
 

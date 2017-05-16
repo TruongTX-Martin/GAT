@@ -60,6 +60,9 @@ public class BookSharingEntity {
     @SerializedName("sharingCompletedCount")
     private int sharingCompletedCount;
 
+    @SerializedName("recordId")
+    private int recordId;
+
 
     //property for user
     @SerializedName("sharingCount")
@@ -74,7 +77,9 @@ public class BookSharingEntity {
     @SerializedName("recordStatus")
     private int recordStatus;
 
-
+    public int getRecordId() {
+        return recordId;
+    }
 
     public void setAvailableStatus(int availableStatus) {
         this.availableStatus = availableStatus;
