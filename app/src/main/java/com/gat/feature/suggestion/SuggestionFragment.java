@@ -175,6 +175,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
                 if (gps == null) {
                     gps = new TrackGPS(getActivity());
                 }
+
                 if (gps.isLocationEnabled(mContext) && gps.isGPSAvailable()) {
                     // Have permission, remove button request permission
                     llUserNearSuggest.removeAllViews();
