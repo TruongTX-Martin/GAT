@@ -35,10 +35,10 @@ public class BookDetailSenderPresenterImpl implements BookDetailSenderPresenter 
     private UseCase<Data> bookDetailUsecase;
 
     private CompositeDisposable senderChangeStatusDisposable;
-    private final Subject<ChangeStatusResponse> senderChangeStatusResultSubject;
+    private final Subject<String> senderChangeStatusResultSubject;
     private final Subject<RequestStatusInput> senderChangeStatusInputSubject;
-    private final Subject<ServerResponse<ResponseData>> senderChangeStatusError;
-    private UseCase<ChangeStatusResponse> senderChangeStatusUsecase;
+    private final Subject<String> senderChangeStatusError;
+    private UseCase<String> senderChangeStatusUsecase;
 
 
 
@@ -93,12 +93,12 @@ public class BookDetailSenderPresenterImpl implements BookDetailSenderPresenter 
     }
 
     @Override
-    public Observable<ChangeStatusResponse> getResponseSenderChangeStatus() {
+    public Observable<String> getResponseSenderChangeStatus() {
         return senderChangeStatusResultSubject.observeOn(schedulerFactory.main());
     }
 
     @Override
-    public Observable<ServerResponse<ResponseData>> onErrorSenderChangeStatus() {
+    public Observable<String> onErrorSenderChangeStatus() {
         return senderChangeStatusError.observeOn(schedulerFactory.main());
     }
 
@@ -111,10 +111,11 @@ public class BookDetailSenderPresenterImpl implements BookDetailSenderPresenter 
                     senderChangeStatusResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    if (throwable instanceof LoginException)
-                        senderChangeStatusError.onNext(ServerResponse.TOKEN_CHANGED);
-                    else
-                        senderChangeStatusError.onNext(ServerResponse.EXCEPTION);
+                    if (throwable instanceof CommonException)
+                        if (throwable instanceof CommonException)
+                            senderChangeStatusError.onNext(((CommonException)throwable).getMessage());
+                        else
+                            senderChangeStatusError.onNext(ServerResponse.EXCEPTION.message());
                 })
                 .onStop(
                         () -> senderChangeStatusUsecase = UseCases.release(senderChangeStatusUsecase)

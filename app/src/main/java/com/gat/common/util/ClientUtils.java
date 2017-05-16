@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -174,21 +177,21 @@ public class ClientUtils {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static void showViewNotInternet(View view) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        ViewGroup viewGroup = (ViewGroup) view;
-        View viewChild = inflater.inflate(R.layout.layout_intenet_notconnect, null);
-//        viewChild.setId(Constance.ID_VIEW_NETWORK);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        viewChild.setLayoutParams(params);
-        if (viewGroup.getChildCount() > 0) {
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                View view1 = viewGroup.getChildAt(i);
-                view1.setVisibility(View.GONE);
-            }
+    public static void showViewNotInternet(Context context, View view) {
+        try {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View viewInternet = inflater.inflate(R.layout.layout_intenet_notconnect, null);
+            PopupWindow windowIntenet = new PopupWindow(viewInternet, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            windowIntenet.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+            windowIntenet.setBackgroundDrawable(new BitmapDrawable());
+            windowIntenet.setOutsideTouchable(false);
+            windowIntenet.showAsDropDown(view, 0, 0);
+
+            new Handler().postDelayed(() -> windowIntenet.dismiss(),5000);
+
+        } catch (Exception e) {
         }
-        viewGroup.addView(viewChild);
     }
 
     public static void hideViewNotInternet(View view) {

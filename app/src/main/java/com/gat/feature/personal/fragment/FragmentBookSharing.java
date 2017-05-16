@@ -35,13 +35,15 @@ import com.gat.repository.entity.book.BookSharingEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.droidsonroids.gif.GifTextView;
+
 /**
  * Created by truongtechno on 29/03/2017.
  */
 
 public class FragmentBookSharing extends Fragment {
 
-    private ProgressBar progressBar, progressLoadMore;
+    private GifTextView progressBar,progressLoadMore;
     private ImageView imgFilter;
     private TextView txtMessage;
     private List<BookSharingEntity> listBook = new ArrayList<>();
@@ -155,8 +157,8 @@ public class FragmentBookSharing extends Fragment {
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        progressLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
+        progressBar = (GifTextView) rootView.findViewById(R.id.progressBar);
+        progressLoadMore = (GifTextView) rootView.findViewById(R.id.progressLoadMore);
         imgFilter = (ImageView) rootView.findViewById(R.id.imgFilter);
         txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
         layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
@@ -210,8 +212,12 @@ public class FragmentBookSharing extends Fragment {
     }
 
     public void updateAfterDelete(){
-        listBook.remove(currentDelete);
-        adapterBookSharing.notifyDataSetChanged();
+        if(currentDelete.isHeader()) {
+            searchBook(currentInput);
+        }else{
+            listBook.remove(currentDelete);
+            adapterBookSharing.notifyDataSetChanged();
+        }
     }
     public void loadMore() {
         if (isRequesting == false && isContinueMore) {

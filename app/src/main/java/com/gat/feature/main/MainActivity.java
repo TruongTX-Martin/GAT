@@ -25,6 +25,7 @@ import com.gat.data.firebase.NotificationUtils;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.firebase.entity.NotificationParcelable;
 import com.gat.data.share.SharedData;
+import com.gat.domain.usecase.SignOut;
 import com.gat.feature.notification.NotificationFragment;
 import com.gat.common.util.Constance;
 import com.gat.feature.personal.PersonalFragment;
@@ -161,6 +162,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
 //        }
     }
 
+//    public void onEventMainThread(NetWorkEvent event) {
+//        System.out.println(event);
+//    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -278,13 +284,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         }
     }
 
-    public void onEventMainThread(NetWorkEvent event) {
-        if(event.isConnected()) {
-
-        }else{
-
-        }
-    }
 
 
 }

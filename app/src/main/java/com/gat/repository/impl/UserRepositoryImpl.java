@@ -316,7 +316,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<ChangeStatusResponse> requestBookByBorrowrer(RequestStatusInput input) {
+    public Observable<String> requestBookByBorrowrer(RequestStatusInput input) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByBorrower(input));
     }
 

@@ -150,7 +150,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
                 getPresenter().onErrorBookRequest().subscribe(this::getBookInstanceError));
 
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
-                getPresenter().onErrorChangeStatus().subscribe(this::changeBookSharingStatusSuccess));
+                getPresenter().onErrorChangeStatus().subscribe(this::checkLoginFailed));
         disposablesCheckLogin = new CompositeDisposable(getPresenter().checkLoginSucess().subscribe(this::checkLoginSuccess),
                 getPresenter().checkLoginFailed().subscribe(this::checkLoginFailed));
 
@@ -317,11 +317,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     private void getBookDetailError(String error) {
-        ClientUtils.showToast(getActivity(), "Error:" + error);
+//        ClientUtils.showToast(getActivity(), "Error:" + error);
     }
 
     private void getUserInfoError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(getActivity(), error.message());
+        ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error.message());
     }
 
     public void requestBookOwner(RequestStatusInput statusInput) {
@@ -330,7 +330,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
         if (data != null) {
-            ClientUtils.showToast(getActivity(), data.getMessage());
+//            ClientUtils.showToast(getActivity(), data.getMessage());
             fragmentBookRequest.refreshAdapter();
         }
     }
@@ -372,6 +372,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     //get book instance
     public void requestBookInstance(BookInstanceInput input) {
         if (!ClientUtils.isOnline()) {
+            ClientUtils.showViewNotInternet(MainActivity.instance,layoutTop);
             return;
         }
         getPresenter().requestBookInstance(input);
@@ -413,6 +414,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private void getBookInstanceError(ServerResponse<ResponseData> error) {
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }else{
+            ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error.message());
         }
     }
 

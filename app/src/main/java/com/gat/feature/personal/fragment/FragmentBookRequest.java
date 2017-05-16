@@ -30,6 +30,8 @@ import com.gat.repository.entity.book.BookRequestEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.droidsonroids.gif.GifTextView;
+
 /**
  * Created by truongtechno on 29/03/2017.
  */
@@ -52,7 +54,7 @@ public class FragmentBookRequest extends Fragment {
     private boolean borrowingWaitToConfirm, borrowingContacting, borrowingBorrowing, borrowingOther;
 
     private TextView txtMessage;
-    private ProgressBar progressBar, progressBarLoadMore;
+    private GifTextView progressBar, progressBarLoadMore;
     private boolean isRequesting;
     private boolean isContinueMore = true;
     private boolean isInitView;
@@ -154,8 +156,8 @@ public class FragmentBookRequest extends Fragment {
 
         layoutFilter = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
         txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        progressBarLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
+        progressBar = (GifTextView) rootView.findViewById(R.id.progressBar);
+        progressBarLoadMore = (GifTextView) rootView.findViewById(R.id.progressLoadMore);
     }
 
     private void handleEvent() {

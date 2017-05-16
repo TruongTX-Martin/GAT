@@ -11,7 +11,7 @@ import io.reactivex.Observable;
  * Created by root on 29/04/2017.
  */
 
-public class RequestBookByBorrower extends UseCase<ChangeStatusResponse> {
+public class RequestBookByBorrower extends UseCase<String> {
 
     private UserRepository userRepository;
     private RequestStatusInput input;
@@ -20,7 +20,7 @@ public class RequestBookByBorrower extends UseCase<ChangeStatusResponse> {
         this.input = input;
     }
     @Override
-    protected Observable<ChangeStatusResponse> createObservable() {
+    protected Observable<String> createObservable() {
         return userRepository.requestBookByBorrowrer(input);
     }
 }

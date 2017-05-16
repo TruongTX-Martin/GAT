@@ -17,16 +17,17 @@ import de.greenrobot.event.EventBus;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
 
+    public static boolean isConnected;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getExtras()!=null) {
             NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
             if(ni!=null && ni.getState()==NetworkInfo.State.CONNECTED) {
                 ClientUtils.showToast(context, "Network connected");
-                EventBus.getDefault().postSticky(new NetWorkEvent(true));
+                isConnected = true;
             } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
-                ClientUtils.showToast(context, "Network not connected");
-                EventBus.getDefault().postSticky(new NetWorkEvent(false));
+                isConnected = false;
             }
         }
     }

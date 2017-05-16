@@ -26,6 +26,8 @@ import com.gat.data.response.UserResponse;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
+import com.gat.feature.message.MessageActivity;
+import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personaluser.entity.BookSharingUserInput;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
@@ -149,11 +151,9 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         imgBack.setOnClickListener(v -> finish());
 
         //event chating
-        imgChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
+        imgChat.setOnClickListener(v -> {
+            if(currentUser == null) return;
+            start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(currentUser.userId()));
         });
     }
 
@@ -227,7 +227,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     private void getBookUserSharingError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(this, error.message());
+        ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
     }
 
     private void borrowBookError(String  error) {

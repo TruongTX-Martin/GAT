@@ -20,6 +20,6 @@ public interface BookDetailSenderPresenter extends Presenter{
 
 
     void requestSenderChangeStatus(RequestStatusInput input);
-    Observable<ChangeStatusResponse> getResponseSenderChangeStatus();
-    Observable<ServerResponse<ResponseData>> onErrorSenderChangeStatus();
+    Observable<String> getResponseSenderChangeStatus();
+    Observable<String> onErrorSenderChangeStatus();
 }

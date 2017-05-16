@@ -96,7 +96,7 @@ public interface UserDataSource {
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
     Observable<Data> getBookDetail(Integer input);
     Observable<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
-    Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input);
+    Observable<String> requestBookByBorrower(RequestStatusInput input);
     Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
     Observable<Data> requestBorrowBook(BorrowRequestInput input);
 
