@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -19,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.esotericsoftware.kryo.serializers.VersionFieldSerializer;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.app.fragment.ScreenFragment;
@@ -165,7 +168,21 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         }
 
         if (llUserNearSuggest.getChildCount() < 2) {
-            processLocationToUpdateUserShareNearByDistance();
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                processLocationToUpdateUserShareNearByDistance();
+            } else {
+
+                if (gps == null) {
+                    gps = new TrackGPS(getActivity());
+                }
+                if (gps.isLocationEnabled(mContext) && gps.isGPSAvailable()) {
+                    // Have permission, remove button request permission
+                    llUserNearSuggest.removeAllViews();
+
+                    // request list user near
+                    processUserNearByDistance();
+                }
+            }
         }
     }
 
@@ -183,6 +200,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     public void onDestroy() {
         super.onDestroy();
         disposables.dispose();
+        gps.stopUsingGPS();
     }
 
     @OnClick(R.id.button_go_setting)
@@ -311,17 +329,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     private void processLocationToUpdateUserShareNearByDistance() {
         MZDebug.i("_______________________________ processLocationToUpdateUserShareNearByDistance");
         if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
-
-            if (gps == null) {
-                gps = new TrackGPS(getActivity());
-            }
-            if (gps.isGPSAvailable()) {
-                // Have permission, remove button request permission
-                llUserNearSuggest.removeAllViews();
-
-                // request list user near
-                processUserNearByDistance();
-            }
+            requestUserNear ();
         } else {
             MZDebug.w("onPermissionsDenied -_- ");
             // Request one permission
@@ -366,4 +374,19 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             unReadGroupMessageCnt.setVisibility(View.INVISIBLE);
         }
     }
+
+    private void requestUserNear () {
+
+        if (gps == null) {
+            gps = new TrackGPS(getActivity());
+        }
+        if (gps.isGPSAvailable()) {
+            // Have permission, remove button request permission
+            llUserNearSuggest.removeAllViews();
+
+            // request list user near
+            processUserNearByDistance();
+        }
+    }
+
 }
