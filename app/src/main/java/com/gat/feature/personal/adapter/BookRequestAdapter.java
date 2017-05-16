@@ -66,7 +66,7 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                         holder.layoutTitle.setVisibility(View.GONE);
                     }
                     if(!Strings.isNullOrEmpty(entity.getBorrowerImageId())) {
-                        ClientUtils.setImage(holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getBorrowerImageId(), Constance.IMAGE_SIZE_SMALL));
+                        ClientUtils.setImage(context, holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getBorrowerImageId(), Constance.IMAGE_SIZE_SMALL));
                     }
                     if(!Strings.isNullOrEmpty(entity.getBorrowerName())) {
                         holder.txtBorrowerName.setText(entity.getBorrowerName());
@@ -92,7 +92,7 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                         holder.layoutTitle.setVisibility(View.GONE);
                     }
                     if(!Strings.isNullOrEmpty(entity.getOwnerImageId())) {
-                        ClientUtils.setImage(holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getOwnerImageId(), Constance.IMAGE_SIZE_SMALL));
+                        ClientUtils.setImage(context, holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getOwnerImageId(), Constance.IMAGE_SIZE_SMALL));
                     }
                     if(!Strings.isNullOrEmpty(entity.getOwnerName())) {
                         holder.txtBorrowerName.setText(entity.getOwnerName());

@@ -52,7 +52,7 @@ public class UserNearByDistanceViewHolder extends ItemViewHolder<UserNearByDista
 
         UserNearByDistance user = item.user();
         if ( null != user.getImageId() && ! user.getImageId().isEmpty()) {
-            ClientUtils.setImage(imageViewUserAvatar, R.drawable.default_user_icon, ClientUtils.getUrlImage(user.getImageId(), ClientUtils.SIZE_SMALL));
+            ClientUtils.setImage(mContext, imageViewUserAvatar, R.drawable.default_user_icon, ClientUtils.getUrlImage(user.getImageId(), ClientUtils.SIZE_SMALL));
         }
 
         textViewDistance.setText(String.valueOf(user.getDistance()));

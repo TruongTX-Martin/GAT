@@ -134,7 +134,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             }
             if (!Strings.isNullOrEmpty(currentUser.imageId())) {
                 String url = ClientUtils.getUrlImage(currentUser.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
-                ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
+                ClientUtils.setImage(this, imgAvatar, R.drawable.ic_profile, url);
             }
         }
 

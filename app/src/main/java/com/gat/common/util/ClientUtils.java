@@ -37,6 +37,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseActivity;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.start.StartActivity;
 
@@ -60,7 +61,7 @@ public class ClientUtils {
     public final static String SIZE_SMALL = "s";
     public final static String SIZE_LARGE = "q";
 
-    public static Context context;
+    public static Context context; // util ma dat bien -> de bi chet lam nahh..
     private static final String DEFAULT_IMAGE = "33328625223";       // TODO default image path
 
 
@@ -74,7 +75,13 @@ public class ClientUtils {
         return Constance.BASE_URL_IMAGE + "common/get_image/" + (Strings.isNullOrEmpty(image) ? DEFAULT_IMAGE : image) + "?size=" + size;
     }
 
-    public static void setImage(ImageView image, int drawble, String url) {
+//    public static void setImage(ImageView image, int drawble, String url) {
+//        if (image != null) {
+//            Glide.with(context).load(url).placeholder(drawble).error(drawble).dontAnimate().into(image);
+//        }
+//    }
+
+    public static void setImage(Context context, ImageView image, int drawble, String url) {
         if (image != null) {
             Glide.with(context).load(url).placeholder(drawble).error(drawble).dontAnimate().into(image);
         }
@@ -308,22 +315,38 @@ public class ClientUtils {
                 });
     }
 
-    public static void showDialogError(Context context, String title, String message) {
+    public static void showChangedValueDialog (Activity activity) {
+        showAlertDialog(activity,
+                activity.getString(R.string.err_discard_title),
+                activity.getString(R.string.err_discard_message),
+                null, null, new ClientUtils.OnDialogPressed() {
+                    @Override
+                    public void onClickAccept() {
+                        activity.finish();
+                    }
+
+                    @Override
+                    public void onClickRefuse() {
+                        // do nothing
+                    }
+                });
+    }
+
+    public static void showDialogError(@NonNull Context context,
+                                       @NonNull String title, @NonNull String message) {
+
         Dialog dialog = new Dialog(context);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_dialog_error);
         dialog.setCanceledOnTouchOutside(false);
+
         TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
         TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
         Button btnAgreed = (Button) dialog.findViewById(R.id.btnAgreed);
+
         txtTitle.setText(title);
         txtContent.setText(message);
-        btnAgreed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        btnAgreed.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 

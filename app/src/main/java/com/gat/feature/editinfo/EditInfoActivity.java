@@ -128,7 +128,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         imgBack.setImageResource(R.drawable.narrow_back_black);
         if (!Strings.isNullOrEmpty(user.imageId())) {
             String url = ClientUtils.getUrlImage(user.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
-            ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
+            ClientUtils.setImage(this, imgAvatar, R.drawable.ic_profile, url);
         }
         if (!Strings.isNullOrEmpty(user.name())) {
             edtName.setText(user.name());

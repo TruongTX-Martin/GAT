@@ -14,6 +14,7 @@
 
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-feature android:name="android.hardware.camera.flash" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -37,9 +38,9 @@
 
         <activity android:name=".feature.message.MessageActivity">
             <intent-filter>
-                <action android:name="com.gat.private_message"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
+                <action android:name="com.gat.private_message" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
 
@@ -93,7 +94,8 @@
 
         <activity
             android:name=".feature.main.MainActivity"
-            android:configChanges="orientation|screenSize">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
 
         </activity>
 
@@ -101,7 +103,9 @@
 
         <activity android:name=".feature.suggestion.search.SuggestSearchActivity"></activity>
 
-        <activity android:name=".feature.book_detail.BookDetailActivity"></activity>
+        <activity
+            android:name=".feature.book_detail.BookDetailActivity"
+            android:screenOrientation="portrait"></activity>
 
         <activity android:name=".feature.book_detail.add_to_bookcase.AddToBookcaseActivity"></activity>
 
@@ -136,7 +140,7 @@
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider1937935059771206"
             android:exported="true" />
-        <receiver android:name="com.gat.common.listener.NetworkStateReceiver" >
+        <receiver android:name="com.gat.common.listener.NetworkStateReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

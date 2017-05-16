@@ -359,7 +359,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         ViewMoreTextView.makeTextViewResizable(textViewBookDescription, 5, "Xem thêm", true);
         if (mBookInfo.getImageId() != null && !mBookInfo.getImageId().isEmpty()) {
             imageViewBookCover.setDrawingCacheEnabled(true);
-            ClientUtils.setImage(imageViewBookCover, R.drawable.default_book_cover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_SMALL));
+            ClientUtils.setImage(this, imageViewBookCover, R.drawable.default_book_cover, ClientUtils.getUrlImage(mBookInfo.getImageId(), ClientUtils.SIZE_SMALL));
         }
     }
 

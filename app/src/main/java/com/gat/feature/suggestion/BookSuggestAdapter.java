@@ -62,7 +62,7 @@ public class BookSuggestAdapter extends RecyclerView.Adapter<BookSuggestAdapter.
         holder.ratingBar.setRating(item.getRateAvg());
 
         if ( ! TextUtils.isEmpty(item.getImageId())) {
-            ClientUtils.setImage(holder.ivBooksCoverList, R.drawable.default_book_cover,
+            ClientUtils.setImage(mContext, holder.ivBooksCoverList, R.drawable.default_book_cover,
                     ClientUtils.getUrlImage(item.getImageId(), ClientUtils.SIZE_SMALL));
         }
     }

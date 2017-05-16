@@ -277,7 +277,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
             // set data
             if ( ! TextUtils.isEmpty(userItem.getImageId())) {
-                ClientUtils.setImage(imageViewAvatar, R.drawable.default_user_icon,
+                ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
                         ClientUtils.getUrlImage(userItem.getImageId(), ClientUtils.SIZE_SMALL));
             }
 

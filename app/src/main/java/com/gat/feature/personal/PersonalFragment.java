@@ -297,7 +297,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             }
             if (!Strings.isNullOrEmpty(userInfo.imageId())) {
                 String url = ClientUtils.getUrlImage(userInfo.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
-                ClientUtils.setImage(imgAvatar, R.drawable.ic_profile, url);
+                ClientUtils.setImage(mContext, imgAvatar, R.drawable.ic_profile, url);
             }
             if (/*userInfo.userId() > 0*/userInfo.isValid()) {
                 BookReadingInput readingInput = new BookReadingInput(true, false, false);
