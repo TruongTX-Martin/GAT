@@ -53,7 +53,7 @@ public class GroupMessageViewHolder extends ItemViewHolder<GroupItem> {
             text.setTypeface(null, Typeface.BOLD);
         time.setText(getDateDisplay(group.timeStamp()));
         String url = ClientUtils.getUrlImage(group.userImage(), Constance.IMAGE_SIZE_ORIGINAL);
-        ClientUtils.setImage(userImage, R.drawable.steve_job, url);
+        ClientUtils.setImage(mContext, userImage, R.drawable.steve_job, url);
     }
 
     public String getGroupId() {

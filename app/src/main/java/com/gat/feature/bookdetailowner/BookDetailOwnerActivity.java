@@ -367,7 +367,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
             txtNumberComment.setText(editionInfo.getReviewCount()+"");
             if(!Strings.isNullOrEmpty(editionInfo.getImageId())) {
                 String url = ClientUtils.getUrlImage(editionInfo.getImageId(), Constance.IMAGE_SIZE_ORIGINAL);
-                ClientUtils.setImage(imgEditionBook, R.drawable.ic_profile, url);
+                ClientUtils.setImage(this, imgEditionBook, R.drawable.ic_profile, url);
             }
             ratingBar.setRating((float) editionInfo.getRateAvg());
             txtRating.setText(editionInfo.getRateAvg()+"");
@@ -384,7 +384,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
             }
             if (!Strings.isNullOrEmpty(borrowerInfo.getImageId())) {
                 String url = ClientUtils.getUrlImage(borrowerInfo.getImageId(), Constance.IMAGE_SIZE_ORIGINAL);
-                ClientUtils.setImage(imgBorrower, R.drawable.ic_profile, url);
+                ClientUtils.setImage(this, imgBorrower, R.drawable.ic_profile, url);
             }
             txtNumberSharing.setText(borrowerInfo.getSharingCount()+"");
             txtNumberReading.setText(borrowerInfo.getReadCount()+"");

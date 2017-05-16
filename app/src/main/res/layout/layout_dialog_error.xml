@@ -14,7 +14,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="25dp"
         android:gravity="center_horizontal"
-        android:text="Thông báo"
+        android:text=""
         android:textColor="#4e4e4e"
         android:textSize="17dp"
         android:textStyle="bold" />
@@ -27,7 +27,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="25dp"
         android:gravity="center_horizontal"
-        android:text="Để sử dụng chức năng này bạn phải đăng nhập vào tài khoản của mình."
+        android:text=""
         android:textColor="#4e4e4e"
         android:textSize="17dp" />
 

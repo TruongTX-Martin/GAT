@@ -131,20 +131,17 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
         }
 
         // show dialog ask for discard
-        ClientUtils.showAlertDialog(AddToBookcaseActivity.this,
-                    getString(R.string.err_discard_title),
-                    getString(R.string.err_discard_message),
-                    null, null, new ClientUtils.OnDialogPressed() {
-                        @Override
-                        public void onClickAccept() {
-                            finish();
-                        }
+        ClientUtils.showChangedValueDialog(this);
+    }
 
-                        @Override
-                        public void onClickRefuse() {
-                            // do nothing
-                        }
-                    });
+    @Override
+    public void onBackPressed() {
+
+        if (isStateChanged) {
+            ClientUtils.showChangedValueDialog(this);
+        } else {
+            finish();
+        }
     }
 
     @OnClick(R.id.image_view_save)
@@ -182,7 +179,7 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
         textViewRating.setText(String.valueOf(bookInfo.getRateAvg()));
 
         if ( ! TextUtils.isEmpty(bookInfo.getImageId())) {
-            ClientUtils.setImage(imageViewBookCover, R.drawable.default_book_cover,
+            ClientUtils.setImage(this, imageViewBookCover, R.drawable.default_book_cover,
                     ClientUtils.getUrlImage(bookInfo.getImageId(), ClientUtils.SIZE_SMALL));
         }
     }

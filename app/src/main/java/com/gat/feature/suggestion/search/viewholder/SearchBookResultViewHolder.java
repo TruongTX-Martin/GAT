@@ -61,7 +61,7 @@ public class SearchBookResultViewHolder extends ItemViewHolder<SearchBookResultI
         textViewCountComment.setText(String.valueOf(item.bookResponse().getReviewCount()));
 
         if ( ! TextUtils.isEmpty(item.bookResponse().getImageId())) {
-            ClientUtils.setImage(imageViewBookCover, R.drawable.default_book_cover,
+            ClientUtils.setImage(mContext, imageViewBookCover, R.drawable.default_book_cover,
                     ClientUtils.getUrlImage(item.bookResponse().getImageId(), ClientUtils.SIZE_SMALL));
         }
 

@@ -57,7 +57,7 @@ public class EvaluationItemViewHolder extends ItemViewHolder<EvaluationItem> {
         ViewMoreTextView.makeTextViewResizable(textViewCommentEvaluation, 3, mContext.getString(R.string.view_more), false);
 
         if ( ! TextUtils.isEmpty(item.evaluation().getImageId())) {
-            ClientUtils.setImage(imageViewAvatar, R.drawable.default_user_icon,
+            ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
                     ClientUtils.getUrlImage(item.evaluation().getImageId(), ClientUtils.SIZE_SMALL));
         }
     }

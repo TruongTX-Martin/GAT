@@ -96,7 +96,7 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
             holder.ratingBar.setRating((float) entity.getRateAvg());
             holder.txtRating.setText(entity.getRateAvg() + "");
             if (!Strings.isNullOrEmpty(entity.getImageId())) {
-                ClientUtils.setImage(holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
+                ClientUtils.setImage(context, holder.imgBook, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getImageId(), Constance.IMAGE_SIZE_SMALL));
             }
             if (entity.getSharingStatus() == 2 || entity.getSharingStatus() == 1) {
                 if (entity.isHeader()) {

@@ -3,12 +3,17 @@ package com.gat.feature.setting.change_password;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.feature.login.ForgotPassword.ForgotPasswordActivity;
@@ -26,7 +31,8 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 @SuppressLint("ValidFragment")
-public class ChangePasswordFragment extends ScreenFragment<ChangePasswordScreen, ChangePasswordPresenter> {
+public class ChangePasswordFragment extends ScreenFragment<ChangePasswordScreen, ChangePasswordPresenter>
+implements TextWatcher{
 
     @BindView(R.id.edit_text_current_password)
     EditText editTextCurrentPassword;
@@ -75,6 +81,10 @@ public class ChangePasswordFragment extends ScreenFragment<ChangePasswordScreen,
                 getPresenter().onChangePasswordSuccess().subscribe(this::onChangePasswordSuccess),
                 getPresenter().onChangePasswordFailed().subscribe(this::onChangePasswordFailed)
         );
+
+        editTextCurrentPassword.addTextChangedListener(this);
+        editTextNewPassword.addTextChangedListener(this);
+        editTextConfirmPassword.addTextChangedListener(this);
     }
 
     @Override
@@ -83,8 +93,17 @@ public class ChangePasswordFragment extends ScreenFragment<ChangePasswordScreen,
         super.onDestroy();
     }
 
+
     @OnClick(R.id.image_view_back)
     void onBackPress() {
+        if ( ! TextUtils.isEmpty(editTextCurrentPassword.getText().toString()) ||
+             ! TextUtils.isEmpty(editTextNewPassword.getText().toString()) ||
+             ! TextUtils.isEmpty(editTextConfirmPassword.getText().toString())) {
+
+            ClientUtils.showChangedValueDialog(getActivity());
+            return;
+        }
+
         Views.hideKeyboard(getActivity());
         delegate.goToMainSetting(KeyBackToMain.BACK_BUTTON);
     }
@@ -112,7 +131,30 @@ public class ChangePasswordFragment extends ScreenFragment<ChangePasswordScreen,
     }
 
     void onChangePasswordFailed (String message) {
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        ClientUtils.showDialogError(mContext, getString(R.string.err), message);
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if ( ! TextUtils.isEmpty(editTextCurrentPassword.getText().toString()) ||
+                ! TextUtils.isEmpty(editTextNewPassword.getText().toString()) ||
+                ! TextUtils.isEmpty(editTextConfirmPassword.getText().toString())) {
+
+            imageViewSave.setClickable(true);
+            imageViewSave.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_check_green, null));
+        } else {
+            imageViewSave.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_check_gray, null));
+            imageViewSave.setClickable(false);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
 }

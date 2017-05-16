@@ -482,7 +482,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     private void onError (String message) {
         hideProgress();
-        Toast.makeText(mainActivity, message, Toast.LENGTH_SHORT).show();
+        ClientUtils.showDialogError(mContext, getString(R.string.err), message);
     }
 
     private void hideProgress () {

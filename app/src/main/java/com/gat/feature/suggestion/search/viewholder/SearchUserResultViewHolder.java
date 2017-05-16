@@ -52,7 +52,7 @@ public class SearchUserResultViewHolder extends ItemViewHolder<SearchUserResultI
         textViewAddress.setText(item.userResponse().getAddress());
 
         if ( ! TextUtils.isEmpty(item.userResponse().getImageId())) {
-            ClientUtils.setImage(imageViewUser, R.drawable.default_user_icon, ClientUtils.getUrlImage(item.userResponse().getImageId(), ClientUtils.SIZE_SMALL));
+            ClientUtils.setImage(mContext, imageViewUser, R.drawable.default_user_icon, ClientUtils.getUrlImage(item.userResponse().getImageId(), ClientUtils.SIZE_SMALL));
         }
 
     }

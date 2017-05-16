@@ -50,7 +50,7 @@ public class BookUserReadingAdapter extends RecyclerView.Adapter<BookUserReading
                 holder.txtName.setText(entity.getTitle());
                 holder.txtAuthor.setText(entity.getAuthor());
                 if(!Strings.isNullOrEmpty(entity.getEditionImageId())){
-                    ClientUtils.setImage(holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getEditionImageId(), Constance.IMAGE_SIZE_SMALL));
+                    ClientUtils.setImage(context, holder.imgAvatar, R.drawable.ic_book_default, ClientUtils.getUrlImage(entity.getEditionImageId(), Constance.IMAGE_SIZE_SMALL));
                 }
                 holder.ratingBar.setRating((float) entity.getRateAvg());
                 holder.txtRating.setText(entity.getRateAvg() + "");

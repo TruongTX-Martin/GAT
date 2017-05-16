@@ -53,7 +53,7 @@ public class MessageViewHolder extends ItemViewHolder<MessageItem> {
                 userImage.setImageResource(R.drawable.gat_app_icon);
             } else {
                 String url = ClientUtils.getUrlImage(message.imageId(), Constance.IMAGE_SIZE_ORIGINAL);
-                ClientUtils.setImage(userImage, R.drawable.gat_app_icon, url);
+                ClientUtils.setImage(mContext, userImage, R.drawable.gat_app_icon, url);
             }
         }
         if (item.displayDate()) {
