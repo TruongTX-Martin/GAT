@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 
+import com.gat.app.GatApplication;
 import com.gat.app.screen.ParcelableScreen;
 import com.gat.app.screen.Screen;
 import com.gat.dependency.AppComponent;
@@ -25,6 +26,7 @@ import butterknife.Unbinder;
 public abstract class ScreenActivity<S extends Screen, P extends Presenter> extends MvpActivity<P> {
 
     private static final String EXTRA_SCREEN = "screen";
+    protected GatApplication gatApplication;
 
     private Unbinder unbinder;
     private volatile S screen;
@@ -67,6 +69,7 @@ public abstract class ScreenActivity<S extends Screen, P extends Presenter> exte
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
         unbinder = ButterKnife.bind(this);
+        gatApplication = (GatApplication) getApplication();
     }
 
     @Override

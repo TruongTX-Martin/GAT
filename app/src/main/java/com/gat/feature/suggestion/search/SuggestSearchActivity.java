@@ -128,6 +128,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         );
 
         progressDialog = ClientUtils.createProgressDialog(SuggestSearchActivity.this);
+        hideProgress();
 
         setupViewPager(mViewPager);
         mTabLayout.setupWithViewPager(mViewPager);

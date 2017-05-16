@@ -261,6 +261,7 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
         for (int i = 0; i < size; i++) {
             userItem = mListUserDistance.get(i);
+            MZDebug.w(userItem.toString());
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             viewItem = inflater.inflate(R.layout.item_user_near_suggest, llUserNearSuggest, false);
 

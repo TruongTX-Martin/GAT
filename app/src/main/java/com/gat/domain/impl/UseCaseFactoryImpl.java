@@ -23,8 +23,6 @@ import com.gat.domain.usecase.GetLoginData;
 import com.gat.domain.usecase.GetMessageList;
 import com.gat.domain.usecase.GetReadingBooks;
 import com.gat.domain.usecase.GetUser;
-import com.gat.domain.usecase.LoadMoreGroup;
-import com.gat.domain.usecase.LoadMoreMessage;
 import com.gat.domain.usecase.Login;
 import com.gat.domain.usecase.GetPersonalData;
 import com.gat.domain.usecase.Register;
@@ -231,8 +229,8 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
-        return new SearchUser(userRepositoryLazy.get(), name, page, sizeOfPage);
+    public UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage) {
+        return new SearchUser(userRepositoryLazy.get(), name, userId, page, sizeOfPage);
     }
 
     @Override

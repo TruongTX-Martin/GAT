@@ -116,7 +116,6 @@ implements NotificationAdapter.OnItemNotifyClickListener{
 
     @Override
     public void onItemNotifyClick(NotifyEntity item) {
-        Toast.makeText(mContext, "Chuyển trang theo: Notify Type: " + item.notificationType(), Toast.LENGTH_SHORT).show();
 
         switch (item.notificationType()) {
             case NotifyType.MESSAGE_UNREAD:
@@ -152,11 +151,11 @@ implements NotificationAdapter.OnItemNotifyClickListener{
                 break;
 
             case NotifyType.BORROW_YOUR_TOTAL:
-                start631RequestFromAnotherPerson(item.referId());
+                start631RequestFromAnotherPerson();
                 break;
 
             case NotifyType.BORROW_FROM_ANOTHER:
-                start631RequestFromAnotherPerson(item.referId());
+                start631RequestFromAnotherPerson();
                 break;
 
             case NotifyType.BORROW_CANCEL:
@@ -171,7 +170,7 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         MainActivity.instance.startActivity(intent);
     }
 
-    private void start631RequestFromAnotherPerson (int borrowRecordId) {
+    private void start631RequestFromAnotherPerson () {
         delegate.goTo631PageRequest();
 //        Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
 //        intent.putExtra("BorrowingRecordId", borrowRecordId);

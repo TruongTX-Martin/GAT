@@ -101,7 +101,7 @@ public interface UseCaseFactory {
 
     UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage);
 
-    UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage);
+    UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage);
 
     UseCase<List<Keyword>> getBooksSearchedKeyword();
 

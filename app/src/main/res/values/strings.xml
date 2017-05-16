@@ -130,7 +130,7 @@
     <string name="cover_content_description">Book Image Cover</string>
     <string name="iv_back_description">Back</string>
     <string name="iv_share_description">Share</string>
-    <string name="most_search_by_user">Sách được mượn nhiều nhất</string>
+    <string name="most_search_by_user">Sách được mượn nhiều</string>
     <string name="suggest">Đề xuất</string>
     <string name="view_more">Xem thêm</string>
     <string name="ic_chat_description">Chat</string>

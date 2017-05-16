@@ -262,7 +262,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage) {
         return null;
     }
 

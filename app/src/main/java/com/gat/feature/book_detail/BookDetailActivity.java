@@ -56,6 +56,9 @@ import com.gat.feature.main.MainActivity;
 import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.User;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -65,7 +68,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDetailPresenter>
-        implements RatingBar.OnRatingBarChangeListener{
+        implements RatingBar.OnRatingBarChangeListener, Observer{
 
     private static final int RC_UPDATE_READING_STATUS = 0x01;
     private static final int RC_UPDATE_COMMENT = 0x02;
@@ -570,5 +573,18 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private void onCheckLoginDone (Boolean isLoggedIn) {
         this.isLoggedIn = isLoggedIn;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        boolean isNetworkOn = gatApplication.getObserverNetworkChange().isOnline();
+
+        if (isNetworkOn) {
+            Toast.makeText(this, "Network is online", Toast.LENGTH_SHORT).show();
+            MZDebug.w("Network is online");
+        } else {
+            Toast.makeText(this, "Network is offline", Toast.LENGTH_SHORT).show();
+            MZDebug.w("Network is offline");
+        }
     }
 }

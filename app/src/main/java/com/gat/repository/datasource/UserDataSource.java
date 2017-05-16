@@ -79,7 +79,7 @@ public interface UserDataSource {
              int page, int sizeOfPage);
 
     Observable<DataResultListResponse<UserResponse>>
-    searchUser (String name, int page, int sizeOfPage);
+    searchUser (String name, int userId, int page, int sizeOfPage);
 
     Observable<List<Keyword>> getUsersSearchedKeyword();
 
