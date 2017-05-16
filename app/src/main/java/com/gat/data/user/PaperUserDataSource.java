@@ -177,7 +177,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+    public Observable<String> requestBookByBorrower(RequestStatusInput input) {
         return null;
     }
 

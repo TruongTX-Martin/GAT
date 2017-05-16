@@ -79,7 +79,7 @@ public interface UserRepository {
     Observable<Data> getBookDetail(Integer input);
     Observable<User> getUserPublicInfo(int userId);
     Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page);
-    Observable<ChangeStatusResponse> requestBookByBorrowrer(RequestStatusInput input);
+    Observable<String> requestBookByBorrowrer(RequestStatusInput input);
     Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
     Observable<Data> requestBorrowBook(BorrowRequestInput input);
 

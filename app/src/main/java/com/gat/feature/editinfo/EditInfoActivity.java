@@ -22,6 +22,7 @@ import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -139,6 +140,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             }
         }
 
+
         dialog = new Dialog(this);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_dialog_login);
@@ -162,6 +164,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             //mr.Duc redirect here
             start(getApplicationContext(), AddCategoryActivity.class, AddCategoryScreen.instance(user.interestCategory()));
         });
+        edtName.setOnFocusChangeListener((v, hasFocus) -> imgChangeName.setVisibility(View.VISIBLE));
     }
 
     private void backToPreviousActivity() {
@@ -173,9 +176,10 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     private void editInfoError(ServerResponse<ResponseData> error) {
         progressBar.setVisibility(View.GONE);
-        ClientUtils.showToast(this, error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }else{
+            ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
         }
     }
     private void editInfoSuccess(String message) {
@@ -265,12 +269,12 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                             if (bitmap != null) {
                                 try {
                                     Uri uri = data.getData();
-                                    fileImage = new File(getRealPathFromURI(uri));
                                     currentBitmap = bitmap;
                                     if (currentBitmap != null) {
                                         currentBitmap = getResizedBitmap(currentBitmap, 400);
                                     }
                                     imgAvatar.setImageBitmap(currentBitmap);
+                                    fileImage = new File(getRealPathFromURI(uri));
                                 } catch (Exception e) {
                                     System.out.println(e.getMessage());
                                 }

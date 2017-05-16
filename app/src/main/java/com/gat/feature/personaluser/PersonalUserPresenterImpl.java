@@ -276,7 +276,10 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
                     bookUserSharingResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    bookUserSharingError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        bookUserSharingError.onNext(ServerResponse.BAD_RESPONSE);
+                    else
+                        bookUserSharingError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> bookUserSharingUsecase = UseCases.release(bookUserSharingUsecase)
@@ -294,7 +297,10 @@ public class PersonalUserPresenterImpl implements PersonalUserPresenter {
                     bookUserReadingResultSubject.onNext(response);
                 })
                 .onError(throwable -> {
-                    bookUserReadingError.onError(throwable);
+                    if (throwable instanceof CommonException)
+                        bookUserReadingError.onNext(ServerResponse.BAD_RESPONSE);
+                    else
+                        bookUserReadingError.onNext(ServerResponse.EXCEPTION);
                 })
                 .onStop(
                         () -> bookUserReadingUsecase = UseCases.release(bookUserReadingUsecase)

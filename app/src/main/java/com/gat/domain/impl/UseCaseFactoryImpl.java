@@ -342,7 +342,7 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     public UseCase<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page) {
         return new GetUserNotifications(userRepositoryLazy.get(), page, per_page);
     }
-    public UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+    public UseCase<String> requestBookByBorrower(RequestStatusInput input) {
         return new RequestBookByBorrower(userRepositoryLazy.get(),input);
     }
 

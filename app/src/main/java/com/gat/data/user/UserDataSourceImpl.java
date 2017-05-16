@@ -452,16 +452,13 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+    public Observable<String> requestBookByBorrower(RequestStatusInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.requestBookByBorrower(input.getRecordId(),input.getCurrentStatus(),input.getNewStatus());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
-            ChangeStatusResponse statusResponse = new ChangeStatusResponse();
-            statusResponse.setMessage(response.message());
-            statusResponse.setStatusCode(response.code());
-            return statusResponse;
+            return response.message();
         });
     }
 

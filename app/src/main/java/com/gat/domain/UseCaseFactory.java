@@ -146,7 +146,7 @@ public interface UseCaseFactory {
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
 
     UseCase<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
-    UseCase<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input);
+    UseCase<String> requestBookByBorrower(RequestStatusInput input);
     UseCase<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
 
     UseCase<Data> requestBorrowBook(BorrowRequestInput input);

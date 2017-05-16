@@ -338,6 +338,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     private void getBookDetailSuccess(Data data) {
         if (data != null) {
             bookDetail = (BookDetailEntity) data.getDataReturn(BookDetailEntity.class);
+            if (bookDetail == null) return;
             recordStatus = bookDetail.getRecordStatus();
             updateView();
         }

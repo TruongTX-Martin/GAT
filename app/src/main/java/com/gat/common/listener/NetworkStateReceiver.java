@@ -56,4 +56,18 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         //should check null because in airplane mode it will be null
         return (netInfo != null && netInfo.isConnected());
     }
+    public static boolean isConnected;
+
+//    @Override
+//    public void onReceive(Context context, Intent intent) {
+//        if(intent.getExtras()!=null) {
+//            NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
+//            if(ni!=null && ni.getState()==NetworkInfo.State.CONNECTED) {
+//                ClientUtils.showToast(context, "Network connected");
+//                isConnected = true;
+//            } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
+//                isConnected = false;
+//            }
+//        }
+//    }
 }
