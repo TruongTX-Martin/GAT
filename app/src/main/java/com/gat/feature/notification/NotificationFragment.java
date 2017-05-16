@@ -44,6 +44,8 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     private NotificationAdapter adapter;
     private IMainDelegate delegate;
 
+    public NotificationFragment () {}
+
     public NotificationFragment (IMainDelegate callback) {
         this.delegate = callback;
     }

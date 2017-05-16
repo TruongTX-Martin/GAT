@@ -125,7 +125,7 @@
 
 
     <!-- suggestion text -->
-    <string name="go_setting_enable_gps">Mở Cài đặt -> Cho phép truy cập vị trí của bạn.</string>
+    <string name="go_setting_enable_gps">Mở Cài đặt -> Cho phép truy cập GPS, vị trí của bạn.</string>
     <string name="share_near_me">Người dùng gần bạn</string>
     <string name="cover_content_description">Book Image Cover</string>
     <string name="iv_back_description">Back</string>
@@ -139,7 +139,7 @@
 
     <string name="cancel">Huỷ</string>
 
-    <string name="msg_allow_location">To see all of users sharing book around of you. You need enable location permission!</string>
+    <string name="msg_allow_location">Cho phép truy cập vị trí để thấy người chia sẻ sách gần bạn.</string>
     <string name="msg_no_user_near">Không có người chia sẻ gần bạn, nhấp xem thêm để hiển thị nhiều hơn. </string>
     <string name="total_comments">Lượt nhận xét</string>
     <string name="history">Lịch sử</string>
