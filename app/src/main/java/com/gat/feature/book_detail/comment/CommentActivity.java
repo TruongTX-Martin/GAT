@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import com.gat.feature.book_detail.BookDetailActivity;
@@ -72,6 +73,15 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
     protected void onDestroy() {
         super.onDestroy();
         disposable.dispose();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (TextUtils.equals(getScreen().comment(), editTextComment.getText().toString())) {
+            super.onBackPressed();
+        } else {
+            ClientUtils.showChangedValueDialog(this);
+        }
     }
 
     @OnClick(R.id.image_view_back)

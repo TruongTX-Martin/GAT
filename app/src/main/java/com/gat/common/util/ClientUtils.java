@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -230,17 +231,20 @@ public class ClientUtils {
         }
     }
 
-    public static ProgressDialog createProgressDialog(Context mContext) {
-        ProgressDialog dialog = new ProgressDialog(mContext);
-        try {
-            dialog.show();
-        } catch (WindowManager.BadTokenException ex) {
-            Log.w("ClientUtils", "createProgressDialog: \n\r" + Log.getStackTraceString(ex));
-        }
+    public static AlertDialog createLoadingDialog(Context context) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View view = layoutInflater.inflate(R.layout.custom_progress_dialog, null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
         dialog.setCancelable(false);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setContentView(R.layout.custom_progress_dialog);
-        // dialog.setMessage(Message);
+
+        ImageView imageView = (ImageView) view.findViewById(R.id.image_view_loading);
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
+        Glide.with(context).load(R.raw.ic_loading_book).into(imageViewTarget);
+
         return dialog;
     }
 

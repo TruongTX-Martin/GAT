@@ -90,7 +90,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager callbackManager;
     private TwitterAuthClient twitterAuthClient;
-    private ProgressDialog progressDialog;
+    private AlertDialog progressDialog;
     private MainActivity mainActivity;
 
     public MainSettingFragment () {}
@@ -132,8 +132,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Views.hideKeyboard(getActivity());
-        progressDialog = ClientUtils.createProgressDialog(getActivity());
-        progressDialog.hide();
+        progressDialog = ClientUtils.createLoadingDialog(getActivity());
 
         disposable = new CompositeDisposable(
                 getPresenter().onUserInfoSuccess().subscribe(this::onLoadUserSuccess),

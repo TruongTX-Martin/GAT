@@ -65,7 +65,7 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     private boolean isStateChanged = false;
 
     private CompositeDisposable disposable;
-    private ProgressDialog mProgressDialog;
+    private AlertDialog mProgressDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -80,7 +80,7 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mProgressDialog = ClientUtils.createProgressDialog(AddToBookcaseActivity.this);
+        mProgressDialog = ClientUtils.createLoadingDialog(AddToBookcaseActivity.this);
 
         disposable = new CompositeDisposable(
                 getPresenter().onGetBookTotalInstanceSuccess().subscribe(this::onGetBookTotalInstanceSuccess),
@@ -93,6 +93,7 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     protected void onResume() {
         super.onResume();
 
+        showProgress();
         setupBookInfoDisplay(getScreen().bookInfo());
         getPresenter().setEditionId(getScreen().bookInfo().getEditionId());
         getPresenter().getBookTotalInstance();

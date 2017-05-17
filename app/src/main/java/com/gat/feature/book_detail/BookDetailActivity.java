@@ -8,6 +8,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -123,7 +124,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private CompositeDisposable disposables;
     private EvaluationItemAdapter adapter;
-    private ProgressDialog mProgressDialog;
+    private AlertDialog mProgressDialog;
     private boolean isLoggedIn;
 
     @Override
@@ -150,7 +151,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mProgressDialog = ClientUtils.createProgressDialog(BookDetailActivity.this);
+        mProgressDialog = ClientUtils.createLoadingDialog(BookDetailActivity.this);
         setupRecyclerViewComments();
         getPresenter().setEditionId(getScreen().editionId());
 
@@ -183,10 +184,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     protected void onResume() {
         super.onResume();
 
+        mProgressDialog.show();
         getPresenter().isUserLoggedIn();
-        getPresenter().getBookInfo();
         getPresenter().getEditionSharingUsers();
         getPresenter().getBookEditionEvaluation();
+        getPresenter().getBookInfo();
     }
 
     @Override
@@ -244,6 +246,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     void updateReadingState () {
         if (mUser == null) {
             showLoginDialog();
+            return;
+        }
+
+        if (mBookInfo == null) {
             return;
         }
 
@@ -365,7 +371,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private List<EvaluationItemResponse> listEvaluations;
     private void onGetBookEditionEvaluationSuccess (List<EvaluationItemResponse> list) {
-        hideProgress();
         if (list == null || list.isEmpty()) {
             return;
         }
@@ -377,7 +382,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private void onGetSelfReadingStatusSuccess (BookReadingInfo bookReadingInfo) {
         MZDebug.w("onGetSelfReadingStatusSuccess: " + bookReadingInfo.toString());
 
-        hideProgress();
         updateButtonReadingStatus(bookReadingInfo.getReadingStatus());
     }
 

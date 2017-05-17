@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -79,7 +80,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     }
 
     private int mCurrentTab = 0;
-    private ProgressDialog progressDialog;
+    private AlertDialog progressDialog;
     private CompositeDisposable disposables;
     private OnLoadHistorySuccess onSearchBookHistorySuccess;
     private OnLoadHistorySuccess onSearchAuthorHistorySuccess;
@@ -127,8 +128,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
                 getPresenter().onLoadMoreUserWithNameSuccess().subscribe(this::onLoadMoreUserWithNameSuccess)
         );
 
-        progressDialog = ClientUtils.createProgressDialog(SuggestSearchActivity.this);
-        hideProgress();
+        progressDialog = ClientUtils.createLoadingDialog(SuggestSearchActivity.this);
 
         setupViewPager(mViewPager);
         mTabLayout.setupWithViewPager(mViewPager);

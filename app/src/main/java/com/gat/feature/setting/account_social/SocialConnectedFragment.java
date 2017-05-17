@@ -1,6 +1,7 @@
 package com.gat.feature.setting.account_social;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,7 +35,7 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
     private ISettingDelegate delegate;
     private int mTypeSocial = 1;
     private String mSocialUsername = "";
-    private ProgressDialog progressDialog;
+    private android.support.v7.app.AlertDialog progressDialog;
 
     public SocialConnectedFragment (ISettingDelegate delegate, int type_social, String username) {
         this.delegate = delegate;
@@ -87,8 +88,7 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
                 textViewSocial.setText(getString(R.string.in_google_connection, mSocialUsername));
                 break;
         }
-        progressDialog = ClientUtils.createProgressDialog(getActivity());
-        hideProgress();
+        progressDialog = ClientUtils.createLoadingDialog(getActivity());
     }
 
     @Override
