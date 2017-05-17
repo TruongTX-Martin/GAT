@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.ClientUtils;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BorrowResponse;
 import butterknife.BindView;
@@ -115,7 +116,6 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     private void onGetUserFailure (String message) {
         setupRecyclerViewComments(0);
         adapter.setItems(getScreen().listUser());
-        Toast.makeText(this, "Không lấy được thông tin user, chưa đăng nhập?", Toast.LENGTH_SHORT).show();
     }
 
     private void onRequestBorrowSuccess (BorrowResponse borrowResponse) {
@@ -126,7 +126,7 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
 
     private void onRequestBorrowFailure (String message) {
         hideProgress();
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private void hideProgress () {

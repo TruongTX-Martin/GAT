@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.util.ClientUtils;
 import com.gat.feature.setting.ISettingDelegate;
 import com.gat.feature.setting.KeyBackToMain;
 
@@ -86,12 +87,11 @@ public class AddEmailPasswordFragment extends ScreenFragment<AddEmailPasswordScr
     }
 
     void onAddSuccess (String message) {
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
         delegate.goToMainSetting(KeyBackToMain.ADD_EMAIL_PASSWORD);
     }
 
     void onAddFailed (String message) {
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        ClientUtils.showDialogError(getActivity(), getString(R.string.err), message);
     }
 
     void onEmailEmpty (String message) {

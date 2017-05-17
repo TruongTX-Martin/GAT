@@ -1,24 +1,20 @@
 package com.gat.feature.book_detail.self_update_reading;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.feature.book_detail.BookDetailActivity;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -90,9 +86,22 @@ public class SelfUpdateReadingActivity
         disposable.dispose();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mNewReadingState == mReadingState) {
+            super.onBackPressed();
+        } else {
+            ClientUtils.showChangedValueDialog(this);
+        }
+    }
+
     @OnClick(R.id.image_view_back)
     void onBack () {
-        finish();
+        if (mNewReadingState == mReadingState) {
+            finish();
+        } else {
+            ClientUtils.showChangedValueDialog(this);
+        }
     }
 
     @OnClick(R.id.button_remove_from_reading_list)
