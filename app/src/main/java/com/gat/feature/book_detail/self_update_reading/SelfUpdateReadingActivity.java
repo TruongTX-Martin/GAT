@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
@@ -44,6 +43,7 @@ public class SelfUpdateReadingActivity
 
     private int mReadingState;
     private int mNewReadingState = -2;
+    private AlertDialog dialog;
 
     @Override
     protected int getLayoutResource() {
@@ -62,9 +62,11 @@ public class SelfUpdateReadingActivity
         super.onCreate(savedInstanceState);
 
         disposable = new CompositeDisposable(
-                getPresenter().onUpdateReadingStatusSuccess().subscribe(this::onUpdateReadingStatusSuccess)
+                getPresenter().onUpdateReadingStatusSuccess().subscribe(this::onUpdateReadingStatusSuccess),
+                getPresenter().onUnAuthorization().subscribe(this::onUnAuthorization),
+                getPresenter().onError().subscribe(this::onError)
         );
-
+        dialog = ClientUtils.createLoadingDialog(this);
         radioGroup.setOnCheckedChangeListener(this);
 
         getPresenter().setEditionId(getScreen().editionId());
@@ -84,6 +86,8 @@ public class SelfUpdateReadingActivity
     protected void onDestroy() {
         super.onDestroy();
         disposable.dispose();
+        hideProgress();
+        dialog = null;
     }
 
     @Override
@@ -113,8 +117,10 @@ public class SelfUpdateReadingActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.ask_remove_from_reading_list));
         builder.setPositiveButton(android.R.string.yes, (dialog, id) -> {
-            getPresenter().updateReadingStatus(ReadingState.REMOVE);
+
             dialog.dismiss();
+            showProgress();
+            getPresenter().updateReadingStatus(ReadingState.REMOVE);
         });
         builder.setNegativeButton(android.R.string.cancel, (dialog, id) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
@@ -124,6 +130,7 @@ public class SelfUpdateReadingActivity
     @OnClick(R.id.image_button_save)
     void onButtonSaveTap () {
         MZDebug.w("___________________________________________________________ onButtonSaveTap __");
+        showProgress();
         getPresenter().updateReadingStatus(mNewReadingState);
     }
 
@@ -169,11 +176,31 @@ public class SelfUpdateReadingActivity
     }
 
     private void onUpdateReadingStatusSuccess(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        hideProgress();
+
         Intent returnIntent = new Intent();
         returnIntent.putExtra(BookDetailActivity.KEY_UPDATE_READING_STATUS, mNewReadingState);
         setResult(RESULT_OK, returnIntent);
         finish();
+    }
+
+    private void onError (String message) {
+        ClientUtils.showDialogError(this, getString(R.string.err), message);
+    }
+
+    private void onUnAuthorization (String message) {
+        ClientUtils.showDialogUnAuthorization(this, message);
+    }
+
+
+    private void showProgress () {
+        dialog.show();
+    }
+
+    private void hideProgress () {
+        if (dialog.isShowing()) {
+            dialog.hide();
+        }
     }
 
 }

@@ -132,7 +132,7 @@
     <string name="share_near_me">Người dùng gần bạn</string>
     <string name="cover_content_description">Book Image Cover</string>
     <string name="iv_back_description">Back</string>
-    <string name="iv_share_description">Share</string>
+    <string name="iv_share_description">Chia sẻ</string>
     <string name="most_search_by_user">Sách được mượn nhiều</string>
     <string name="suggest">Đề xuất</string>
     <string name="view_more">Xem thêm</string>
@@ -182,8 +182,8 @@
     <string name="post_the_share">ĐĂNG CHIA SẺ</string>
     <string name="remove_from_reading_list">Xóa khỏi danh sách đọc</string>
     <string name="ask_remove_from_reading_list">Bạn muốn xóa cuốn sách này khỏi danh sách sách đọc?</string>
-    <string name="book_not_found">The ISBN is not found on our system.</string>
-    <string name="isbn_invalid_message">Your ISBN is not valid. Please try again with another book.</string>
+    <string name="book_not_found">Không tìm thấy ISBN này.</string>
+    <string name="isbn_invalid_message">ISBN của bạn không đúng. Vui lòng thử với cuốn sách khác.</string>
     <string name="inputLocationHint">Enter your location</string>
 
     <!-- notification -->
@@ -202,9 +202,10 @@
     <string name="notice_your_total">Bạn đang mượn %1$d quyển sách từ người dùng khác.</string>
     <string name="notice_total_request">Có %1$d người gửi yêu cầu mượn sách \“%2$s \”</string>
     <string name="notice_borrow_cancel">Huỷ yêu cầu mượn sách \“%1$s \”</string>
-    <string name="login_error_header">Login failed</string>
-    <string name="register_error_header">Register failed</string>
-    <string name="twitter_description">Login with twitter</string>
+
+    <string name="login_error_header">Đăng nhập thất bại</string>
+    <string name="register_error_header">Đăng ký thất bại</string>
+    <string name="twitter_description">Đăng nhập bằng Twitter</string>
     <string name="error_ok_btn">OK</string>
 
     <!-- setting -->
@@ -247,7 +248,7 @@
 
     <string name="strYes">Yes</string>
     <string name="strNo">No</string>
-    <string name="strAgreed">Agreed</string>
+    <string name="strAgreed">Đồng Ý</string>
     <string name="titleError">Lỗi</string>
 
 </resources>

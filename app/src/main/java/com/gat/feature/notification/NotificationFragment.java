@@ -127,27 +127,31 @@ implements NotificationAdapter.OnItemNotifyClickListener{
                 break;
 
             case NotifyType.BORROW_REQUEST:
-                start641RequestDetail(item.referId());
+                startBorrowFromAnother(item.referId());
                 break;
 
             case NotifyType.BORROW_UNLUCKY:
-                start641RequestDetail(item.referId());
+                startBorrowByMe(item.referId());
                 break;
 
             case NotifyType.BORROW_ACCEPT:
                 MainActivity.start(getContext().getApplicationContext(), MessageActivity.class, MessageScreen.instance(item.referId()));
                 break;
 
+            case NotifyType.BORROW_DONE:
+                startBorrowByMe(item.referId());
+                break;
+
             case NotifyType.BORROW_NEEDED:
-                start641RequestDetail(item.referId());
+                startBorrowByMe(item.referId());
                 break;
 
             case NotifyType.BORROW_REFUSE:
-                start641RequestDetail(item.referId());
+                startBorrowByMe(item.referId());
                 break;
 
             case NotifyType.BORROW_LOST:
-                start641RequestDetail(item.referId());
+                startBorrowByMe(item.referId());
                 break;
 
             case NotifyType.BORROW_YOUR_TOTAL:
@@ -159,12 +163,18 @@ implements NotificationAdapter.OnItemNotifyClickListener{
                 break;
 
             case NotifyType.BORROW_CANCEL:
-                start641RequestDetail(item.referId());
+                startBorrowFromAnother(item.referId());
                  break;
         }
     }
 
-    private void start641RequestDetail (int borrowRecordId) {
+    private void startBorrowFromAnother (int borrowRecordId) {
+        Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
+        intent.putExtra("BorrowingRecordId", borrowRecordId);
+        MainActivity.instance.startActivity(intent);
+    }
+
+    private void startBorrowByMe (int borrowRecordId) {
         Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
         intent.putExtra("BorrowingRecordId", borrowRecordId);
         MainActivity.instance.startActivity(intent);
@@ -172,8 +182,5 @@ implements NotificationAdapter.OnItemNotifyClickListener{
 
     private void start631RequestFromAnotherPerson () {
         delegate.goTo631PageRequest();
-//        Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
-//        intent.putExtra("BorrowingRecordId", borrowRecordId);
-//        MainActivity.instance.startActivity(intent);
     }
 }

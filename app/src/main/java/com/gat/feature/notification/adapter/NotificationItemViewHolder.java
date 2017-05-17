@@ -4,6 +4,7 @@ import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.adapter.Item;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.DateTimeUtil;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.feature.notification.NotifyType;
@@ -80,6 +82,7 @@ public class NotificationItemViewHolder extends ItemViewHolder<NotificationItem>
             case NotifyType.MESSAGE_UNREAD:
                 textViewUserName.setText("GAT Message");
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.you_have_count_message_read), item.referId()));
+                imageViewAvatar.setImageResource(R.drawable.ic_message_not_read);
                 break;
 
             case NotifyType.MESSAGE_FROM:
@@ -87,12 +90,19 @@ public class NotificationItemViewHolder extends ItemViewHolder<NotificationItem>
                 textViewMessage.setText(mContext.getResources().getString(R.string.message_to_you));
                 textViewMessageDetail.setVisibility(View.VISIBLE);
                 textViewMessageDetail.setText(item.targetName());
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
                 break;
 
             case NotifyType.BORROW_REQUEST:
                 textViewUserName.setText(item.sourceName());
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.someone_request_borrow), item.targetName()));
-
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
                 break;
 
             case NotifyType.BORROW_UNLUCKY:
@@ -105,49 +115,80 @@ public class NotificationItemViewHolder extends ItemViewHolder<NotificationItem>
                 } else {
                     styledText = Html.fromHtml(text);
                 }
-
                 textViewMessage.setText(styledText);
+
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
 
                 break;
 
             case NotifyType.BORROW_ACCEPT:
                 textViewUserName.setText(item.sourceName());
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.borrow_accept), item.targetName()));
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
+                break;
 
+            case NotifyType.BORROW_DONE:
+                textViewUserName.setText(item.sourceName());
+                textViewMessage.setText(String.format(mContext.getResources().getString(R.string.notice_has_borrow), item.targetName()));
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
                 break;
 
             case NotifyType.BORROW_NEEDED:
                 textViewUserName.setText(item.sourceName());
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.notice_borrow_needed   ), item.targetName()));
-
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
                 break;
 
             case NotifyType.BORROW_REFUSE:
                 textViewUserName.setText(item.sourceName());
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.notice_borrow_refuse   ), item.targetName()));
-
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
                 break;
 
             case NotifyType.BORROW_LOST:
                 textViewUserName.setText(item.sourceName());
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.notice_lost_book), item.targetName()));
-
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
                 break;
 
             case NotifyType.BORROW_YOUR_TOTAL:
                 textViewUserName.setText(item.sourceName());
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.notice_your_total), item.referId()));
-
+                imageViewAvatar.setImageResource(R.drawable.ic_notify_gat_admin);
                 break;
 
             case NotifyType.BORROW_FROM_ANOTHER:
                 textViewUserName.setText("GAT");
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.notice_total_request), item.referId(), item.targetName()));
+                imageViewAvatar.setImageResource(R.drawable.ic_notify_gat_admin);
                 break;
 
             case NotifyType.BORROW_CANCEL:
                 textViewUserName.setText(item.sourceName());
                 textViewMessage.setText(String.format(mContext.getResources().getString(R.string.notice_borrow_cancel), item.targetName()));
+                if ( ! TextUtils.isEmpty(item.sourceImage())) {
+                    ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon,
+                            ClientUtils.getUrlImage(item.sourceImage(), ClientUtils.SIZE_SMALL));
+                }
+
                 break;
         }
     }

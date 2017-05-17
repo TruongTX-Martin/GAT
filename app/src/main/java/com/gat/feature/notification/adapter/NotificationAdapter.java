@@ -10,6 +10,7 @@ import com.gat.common.adapter.ItemViewHolder;
 import com.gat.common.adapter.impl.LoadingItem;
 import com.gat.common.adapter.impl.LoadingItemViewHolder;
 import com.gat.common.util.DateTimeUtil;
+import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.NotifyEntity;
 
 import java.lang.annotation.Retention;
@@ -105,6 +106,8 @@ public class NotificationAdapter extends ItemAdapter {
 
         // add next item to end of list.
         for (int i = 1, z = list.size(); i < z; i++) {
+
+            MZDebug.w("Notify: " + list.get(i).toString());
 
             String string = DateTimeUtil.transformDate(list.get(i).beginTime());
             String stringPrev = DateTimeUtil.transformDate(list.get(i - 1).beginTime());

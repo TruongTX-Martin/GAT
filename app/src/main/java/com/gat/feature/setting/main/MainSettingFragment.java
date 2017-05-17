@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,6 +85,15 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     @BindView(R.id.text_view_google_account)
     TextView textViewGoogle;
+
+    @BindView(R.id.icon_facebook)
+    ImageView imageViewFacebook;
+
+    @BindView(R.id.icon_google)
+    ImageView imageViewGoogle;
+
+    @BindView(R.id.icon_twitter)
+    ImageView imageViewTwitter;
 
     private ISettingDelegate delegate;
     private CompositeDisposable disposable;
@@ -312,6 +322,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if ( ! TextUtils.isEmpty(user.faceBookId()) && ! TextUtils.isEmpty(user.faceBookName())) {
             MZDebug.w("facebook connected: " + user.faceBookName());
             textViewFacebook.setText(user.faceBookName());
+        } else {
+            imageViewGoogle.setImageResource(R.drawable.ic_facebook);
         }
 
         // check twitter connected
@@ -319,6 +331,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (! TextUtils.isEmpty(user.twitterId()) && ! TextUtils.isEmpty(user.twitterName())) {
             MZDebug.w("twitter connected: " + user.twitterName());
             textViewTwitter.setText(user.twitterName());
+        } else {
+            imageViewGoogle.setImageResource(R.drawable.ic_twitter);
         }
 
         // check google connected
@@ -326,6 +340,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (! TextUtils.isEmpty(user.googleId()) && ! TextUtils.isEmpty(user.googleName())) {
             MZDebug.w("google connected: " + user.googleName());
             textViewGoogle.setText(user.googleName());
+        } else {
+            imageViewGoogle.setImageResource(R.drawable.ic_google);
         }
     }
 

@@ -58,11 +58,12 @@ public class DateTimeUtil {
 
         Date now = new Date();
         long minutesAgo = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - milliseconds);
+        MZDebug.w("NOW = " + now.getTime() + ", TIME NOTIFY = " + milliseconds);
 
         if (minutesAgo >= 1440) { // 24h x 60p = 1440
             long daysAgo= TimeUnit.MILLISECONDS.toDays(now.getTime() - milliseconds);
             if (daysAgo >= 30) {
-                return Math.ceil(daysAgo/30) + " tháng";
+                return (int)Math.ceil(daysAgo/30) + " tháng";
             } else {
                 return TimeUnit.MILLISECONDS.toDays(now.getTime() - milliseconds) + " ngày";
             }
@@ -82,7 +83,7 @@ public class DateTimeUtil {
         int mMonth = calendar.get(Calendar.MONTH);
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-        return mDay + " tháng " + mMonth + " năm " + mYear;
+        return mDay + " tháng " + (mMonth + 1) + " năm " + mYear;
     }
 
 

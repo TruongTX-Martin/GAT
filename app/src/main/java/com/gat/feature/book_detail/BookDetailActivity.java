@@ -171,11 +171,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         mProgressDialog.show();
         getPresenter().isUserLoggedIn();
@@ -214,8 +209,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         } else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         } else if (requestCode == RC_UPDATE_BOOKCASE && resultCode == RESULT_OK) {
+            showProgress();
             getPresenter().getEditionSharingUsers();
         } else if (requestCode == RC_VIEW_USER_SHARING && resultCode == RESULT_OK) {
+            showProgress();
             getPresenter().getEditionSharingUsers();
         }
     }
@@ -254,8 +251,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // + 1: Reading - đang đọc
         // + 2: To read - sẽ đọc
         // khi nhấp vào thì sẽ gọi SelfUpdateReadingActivity
-        showProgress();
         if ( (int)buttonReadingState.getTag() == ReadingState.REMOVE) {
+            showProgress();
             getPresenter().updateReadingStatus();
             buttonReadingState.setClickable(false);
         } else {
@@ -439,7 +436,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private void onGetEvaluationByUserFailure (String message) {
         ratingBarUserRate.setRating(0);
-        buttonComment.setText(getResources().getString(R.string.write_comment));
+        textViewCommentByUser.setVisibility(View.GONE);
+        buttonComment.setVisibility(View.GONE);
     }
 
     private void onError (String message) {
@@ -450,7 +448,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private User mUser;
     private void onUserLoggedIn (User user) {
         mUser = user;
-        MZDebug.w("FINAL onUserNotLoggedIn: \n\r" + user.toString());
+        MZDebug.w("FINAL onUserLoggedIn: \n\r" + user.toString());
         getPresenter().getBookEvaluationByUser();
         getPresenter().getSelfReadingStatus();
     }
