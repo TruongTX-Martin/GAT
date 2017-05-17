@@ -1,27 +1,28 @@
 package com.gat.feature.suggestion.search;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.gat.R;
 import com.gat.common.adapter.Item;
 import com.gat.common.adapter.impl.OnItemLoadMoreClickListener;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.listener.LoadMoreScrollListener;
-import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.Keyword;
 import com.gat.feature.book_detail.BookDetailActivity;
@@ -38,8 +39,6 @@ import com.gat.feature.suggestion.search.listener.OnUserTapOnKeyword;
 import com.gat.feature.suggestion.search.listener.OnLoadHistorySuccess;
 import com.gat.feature.suggestion.search.listener.OnSearchBookResult;
 import com.gat.feature.suggestion.search.listener.OnSearchUserResult;
-
-import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,8 +57,8 @@ public class SearchResultFragment extends Fragment
     @BindView(R.id.recycler_view_search)
     RecyclerView recyclerView;
 
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
+    @BindView(R.id.image_view_loading)
+    ImageView imageLoading;
 
     private OnUserTapOnKeyword onUserTapOnKeyword;
     private OnFragmentRequestLoadMore requestLoadMore;
@@ -67,10 +66,6 @@ public class SearchResultFragment extends Fragment
     
     private LoadMoreScrollListener loadMoreScrollListener;
     private SearchBookAdapter searchResultAdapter;
-
-    private List<BookResponse> listBookByTitle;
-    private List<BookResponse> listBookByAuthor;
-    private List<UserResponse> listUsers;
 
     public SearchResultFragment() {}
 
@@ -110,9 +105,9 @@ public class SearchResultFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listBookByTitle = new ArrayList<>();
-        listBookByAuthor = new ArrayList<>();
-        listUsers = new ArrayList<>();
+
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageLoading);
+        Glide.with(getActivity()).load(R.raw.ic_loading_book).into(imageViewTarget);
     }
 
     @Override
@@ -126,47 +121,37 @@ public class SearchResultFragment extends Fragment
 
 
     @Override
-    public void onSearchBookResult(List<BookResponse> list) {
+    public void onSearchBookResult(DataResultListResponse<BookResponse> list) {
 
         hideProgress();
-        if (null == list) {
+        if (null == list || list.getResultInfo() == null) {
             MZDebug.w("WARNING: onSearchBookResult : list null _________________________________W");
             return;
         }
-        if (mTabType == SuggestSearchActivity.TAB_POS.TAB_BOOK) {
-            listBookByTitle.clear();
-            listBookByTitle.addAll(list);
-        } else if (mTabType == SuggestSearchActivity.TAB_POS.TAB_AUTHOR) {
-            listBookByAuthor.clear();
-            listBookByAuthor.addAll(list);
-        }
 
-        String totalString = String.format(getString(R.string.show_count_search_result), list.size());
+        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
         this.textViewTitle.setText(totalString);
 
-        List<Item> listItems = SearchBuilder.transformListBook(list);
+        List<Item> listItems = SearchBuilder.transformListBook(list.getResultInfo());
         this.searchResultAdapter.setItems(listItems);
     }
 
     @Override
-    public void onSearchUserResult(List<UserResponse> list) {
+    public void onSearchUserResult(DataResultListResponse<UserResponse> list) {
 
         hideProgress();
-        if (null == list) {
+        if (null == list || list.getResultInfo() == null) {
             MZDebug.w("WARNING: onSearchUserResult : list null _________________________________W");
             return;
         }
 
-        listUsers.clear();
-        listUsers.addAll(list);
-
         // set title
-        String totalString = String.format(getString(R.string.show_count_search_result), list.size());
+        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
         this.textViewTitle.setText(totalString);
 
         // set new list items result
         MZDebug.w(" onSearchUserResult set new list items");
-        List<Item> listItems = SearchBuilder.transformListUser(list);
+        List<Item> listItems = SearchBuilder.transformListUser(list.getResultInfo());
         this.searchResultAdapter.setItems(listItems);
     }
 
@@ -194,11 +179,11 @@ public class SearchResultFragment extends Fragment
     }
 
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
+        imageLoading.setVisibility(View.VISIBLE);
     }
 
     public void hideProgress() {
-        progressBar.setVisibility(View.GONE);
+        imageLoading.setVisibility(View.GONE);
     }
 
     @Override
@@ -213,29 +198,29 @@ public class SearchResultFragment extends Fragment
     }
 
     @Override
-    public void onLoadMoreBookWithTitleSuccess(List<BookResponse> list) {
-        listBookByTitle.addAll(list);
-        String totalString = String.format(getString(R.string.show_count_search_result), listBookByTitle.size());
+    public void onLoadMoreBookWithTitleSuccess(DataResultListResponse<BookResponse> list) {
+
+        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
         this.textViewTitle.setText(totalString);
 
-        this.searchResultAdapter.setMoreBookItems(list);
+        this.searchResultAdapter.setMoreBookItems(list.getResultInfo());
     }
 
     @Override
-    public void onLoadMoreBookWithAuthorSuccess(List<BookResponse> list) {
-        listBookByAuthor.addAll(list);
-        String totalString = String.format(getString(R.string.show_count_search_result), listBookByAuthor.size());
+    public void onLoadMoreBookWithAuthorSuccess(DataResultListResponse<BookResponse> list) {
+
+        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
         this.textViewTitle.setText(totalString);
 
-        this.searchResultAdapter.setMoreBookItems(list);
+        this.searchResultAdapter.setMoreBookItems(list.getResultInfo());
     }
 
     @Override
-    public void onLoadMoreUserSuccess(List<UserResponse> list) {
-        listUsers.addAll(list);
-        String totalString = String.format(getString(R.string.show_count_search_result), listUsers.size());
+    public void onLoadMoreUserSuccess(DataResultListResponse<UserResponse> list) {
+
+        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
         this.textViewTitle.setText(totalString);
 
-        this.searchResultAdapter.setMoreUserItems(list);
+        this.searchResultAdapter.setMoreUserItems(list.getResultInfo());
     }
 }

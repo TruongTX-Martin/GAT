@@ -15,53 +15,53 @@
 
     <string name="hintSearch">Search book</string>
 
-    <string name="start_login_btn">Login</string>
-    <string name="start_register_btn">Register</string>
+    <string name="start_login_btn">Đăng nhập</string>
+    <string name="start_register_btn">Đăng ký</string>
 
-    <string name="login_title">Login</string>
-    <string name="login_bysocial_title">Login by social account</string>
-    <string name="login_forgot_password">Forgot password?</string>
-    <string name="login_button">Login</string>
+    <string name="login_title">Đăng nhập</string>
+    <string name="login_bysocial_title"></string>
+    <string name="login_forgot_password">Quên mật khẩu?</string>
+    <string name="login_button">Đăng nhập</string>
     <string name="login_email_hint">Email</string>
-    <string name="login_password_hint">Password</string>
+    <string name="login_password_hint">Mật khẩu</string>
 
-    <string name="login_email_empty">Email is empty</string>
-    <string name="login_email_invalid">Email is invalid</string>
-    <string name="login_password_empty">Password is empty</string>
-    <string name="login_password_length">Password length is not valid</string>
+    <string name="login_email_empty">Email không được trống</string>
+    <string name="login_email_invalid">Email không hợp lệ</string>
+    <string name="login_password_empty">Mật khẩu không được trống</string>
+    <string name="login_password_length">Mật khẩu không hợp lệ</string>
 
-    <string name="login_fail_title">Login failed</string>
-    <string name="login_fail_mes">User name or password is wrong. Check it again</string>
-    <string name="login_forgot_title">Forgot password</string>
-    <string name="forgot_sendreq_btn">Send request</string>
-    <string name="forgot_sendreq_message">Request will be sent to email</string>
-    <string name="forgot_inputtoken_message">Please input token sent to email</string>
+    <string name="login_fail_title">Đăng nhập thất bại</string>
+    <string name="login_fail_mes">Tài khoản hoặc mật khẩu không đúng,</string>
+    <string name="login_forgot_title">Quên mật khẩu</string>
+    <string name="forgot_sendreq_btn">Gửi yêu cầu tới email</string>
+    <string name="forgot_sendreq_message">Yêu cầu thay đổi sẽ được gửi tới email bên dưới</string>
+    <string name="forgot_inputtoken_message">Nhập mã thay đổi mật khẩu  được gửi tới email</string>
     <string name="forgot_inputpass_message">Please input new password</string>
-    <string name="forgot_inputtoken_hint">Token has 6 numbers</string>
-    <string name="forgot_inputtoken_length">Correct token</string>
-    <string name="verify_token_btn">Verify token</string>
-    <string name="reset_pass_btn">Change password</string>
+    <string name="forgot_inputtoken_hint">Mã gồm 4 chữ số</string>
+    <string name="forgot_inputtoken_length">Mã hợp lệ</string>
+    <string name="verify_token_btn">Xác nhận mã </string>
+    <string name="reset_pass_btn">Quên mật khẩu</string>
 
-    <string name="register_title">Register</string>
-    <string name="register_btn">Register</string>
-    <string name="register_google_btn">Register with google account</string>
-    <string name="register_face_btn">Register with facebook account</string>
-    <string name="register_twitter_btn">Register with twitter account</string>
+    <string name="register_title">Đăng ký</string>
+    <string name="register_btn">Đăng ký</string>
+    <string name="register_google_btn">Đăng ký bằng tài khoản Google</string>
+    <string name="register_face_btn">Đăng ký bằng tài khoản Facebook</string>
+    <string name="register_twitter_btn">Đăng ký bằng tài khoản Twitter</string>
 
-    <string name="login_social_cancel">Login failed.</string>
+    <string name="login_social_cancel">Đăng nhập </string>
     <string name="register_policy">GAT terms and policy</string>
-    <string name="authenticating">Authenticating...</string>
-    <string name="register_update_info_btn">Finish register</string>
-    <string name="name_field_null">Name is required</string>
-    <string name="btn_add_location">Save location</string>
-    <string name="btn_pass_over">Next</string>
+    <string name="authenticating">Đang xác thực...</string>
+    <string name="register_update_info_btn">Đăng ký hoàn tất</string>
+    <string name="name_field_null">Tên không được để trống</string>
+    <string name="btn_add_location">Lưu vị trí</string>
+    <string name="btn_pass_over">Tiếp</string>
 
     <!-- For map -->
-    <string name="title_activity_maps">Current Place Details</string>
+    <string name="title_activity_maps">Chi tiết địa điểm hiện tại</string>
     <string name="default_info_title">Hanoi Capital</string>
-    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
-    <string name="option_get_place">Get place</string>
-    <string name="pick_place">Choose a place</string>
+    <string name="default_info_snippet">Không tìm thấy đại điểm, vui lòng cấp quyền truy cập vị trí.</string>
+    <string name="option_get_place">Lấy địa điểm</string>
+    <string name="pick_place">Chọn địa điểm</string>
 
     <!-- Intro -->
     <string name="app_tour"><u>Thăm quan ứng dụng</u></string>
@@ -73,23 +73,23 @@
     <string name="intro_content_3">Tham khảo đánh giá sách của cộng đồng người dùng và đề xuất từ GaT dành riêng cho bạn để lựa chọn cuốn sách phù hợp.</string>
 
 
-    <string name="sending_failed">Sending failed</string>
-    <string name="sending">Sending...</string>
-    <string name="verifying">Verifying...</string>
-    <string name="verify_failed">Token verify failed</string>
+    <string name="sending_failed">Gửi thất bạn</string>
+    <string name="sending">Đang gửi...</string>
+    <string name="verifying">Đang xác thực...</string>
+    <string name="verify_failed">Xác thực thất bại</string>
     <string name="pass_reseting">Changing...</string>
-    <string name="reset_pass_failed">Reset password failed.</string>
-    <string name="register_failed">Register failed</string>
-    <string name="map_connection_failed">Cannot connect to map service.</string>
-    <string name="error_auto_place">Cannot detect place.</string>
-    <string name="service_not_available">Service is not availabe</string>
-    <string name="invalid_lat_long_used">Location is invalid</string>
-    <string name="no_address_found">Address is not found</string>
-    <string name="error_detect_location">Cannot detect current location.</string>
-    <string name="update_location_failed">Cannot update location</string>
-    <string name="update_category_failed">Cannot update category</string>
-    <string name="updating">Updating...</string>
-    <string name="invalid_location">Please select location first.</string>
+    <string name="reset_pass_failed">Thay đổi mật khẩu thất bại</string>
+    <string name="register_failed">Đăng ký thất bại</string>
+    <string name="map_connection_failed">Không thể kết nối tới dịch vụ map.</string>
+    <string name="error_auto_place">Không tìm thấy địa điểm.</string>
+    <string name="service_not_available">Dịch vụ không có sẵn</string>
+    <string name="invalid_lat_long_used">Vị trí không hợp lệ</string>
+    <string name="no_address_found">Không tìm thấy địa điểm</string>
+    <string name="error_detect_location">Không thể tìm thấy vị trí hiện tại.</string>
+    <string name="update_location_failed">Không thể cập nhật vị trí</string>
+    <string name="update_category_failed">Không thể cập nhật category</string>
+    <string name="updating">Đang cập nhật...</string>
+    <string name="invalid_location">Vui lòng chọn toạ độ trước.</string>
 
     <!-- Book category -->
     <string name="category_1">Literary</string>
@@ -133,7 +133,7 @@
     <string name="cover_content_description">Book Image Cover</string>
     <string name="iv_back_description">Back</string>
     <string name="iv_share_description">Share</string>
-    <string name="most_search_by_user">Sách được mượn nhiều nhất</string>
+    <string name="most_search_by_user">Sách được mượn nhiều</string>
     <string name="suggest">Đề xuất</string>
     <string name="view_more">Xem thêm</string>
     <string name="ic_chat_description">Chat</string>
@@ -146,7 +146,7 @@
     <string name="msg_no_user_near">Không có người chia sẻ gần bạn, nhấp xem thêm để hiển thị nhiều hơn. </string>
     <string name="total_comments">Lượt nhận xét</string>
     <string name="history">Lịch sử</string>
-    <string name="show_count_search_result">Hiển thị %1$d kết quả tìm kiếm</string>
+    <string name="show_count_search_result">Hiển thị %1$d kết quả</string>
     <string name="tab_book_name">Tên sách</string>
     <string name="tab_book_author">Tác giả</string>
     <string name="tab_user_name">Người dùng</string>

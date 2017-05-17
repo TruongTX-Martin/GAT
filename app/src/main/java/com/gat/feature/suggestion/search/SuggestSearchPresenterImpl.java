@@ -48,18 +48,18 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
     // use case search
     private UseCase<DataResultListResponse<BookResponse>> useCaseSearchBookByTitle;
-    private final Subject<List<BookResponse>> resultSearchBookByTitleSubject;
-    private final Subject<List<BookResponse>> resultLoadMoreBookByTitleSubject;
+    private final Subject<DataResultListResponse<BookResponse>> resultSearchBookByTitleSubject;
+    private final Subject<DataResultListResponse<BookResponse>> resultLoadMoreBookByTitleSubject;
     private final Subject<Boolean> subjectCanLoadMoreBookByTitle;
 
     private UseCase<DataResultListResponse<BookResponse>> useCaseSearchBookByAuthor;
-    private final Subject<List<BookResponse>> resultSearchBookByAuthorSubject;
-    private final Subject<List<BookResponse>> resultLoadMoreBookByAuthorSubject;
+    private final Subject<DataResultListResponse<BookResponse>> resultSearchBookByAuthorSubject;
+    private final Subject<DataResultListResponse<BookResponse>> resultLoadMoreBookByAuthorSubject;
     private final Subject<Boolean> subjectCanLoadMoreBookByAuthor;
 
     private UseCase<DataResultListResponse<UserResponse>> useCaseSearchUserByName;
-    private final Subject<List<UserResponse>> resultSearchUserByNameSubject;
-    private final Subject<List<UserResponse>> resultLoadMoreUserByNameSubject;
+    private final Subject<DataResultListResponse<UserResponse>> resultSearchUserByNameSubject;
+    private final Subject<DataResultListResponse<UserResponse>> resultLoadMoreUserByNameSubject;
     private final Subject<Boolean> subjectCanLoadMoreUserByName;
 
     // use case error
@@ -160,7 +160,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    resultSearchBookByTitleSubject.onNext(data.getResultInfo()); // pass response to view
+                    resultSearchBookByTitleSubject.onNext(data); // pass response to view
                     if (data.getTotalResult() > mPageBook * SIZE_OF_PAGE ) {
                         subjectCanLoadMoreBookByTitle.onNext(true);
                     }
@@ -182,7 +182,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    resultLoadMoreBookByTitleSubject.onNext(data.getResultInfo()); // pass response to view
+                    resultLoadMoreBookByTitleSubject.onNext(data); // pass response to view
                     if (data.getTotalResult() > mPageBook * SIZE_OF_PAGE ) {
                         subjectCanLoadMoreBookByTitle.onNext(true);
                     }
@@ -197,12 +197,12 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
 
     @Override
-    public Observable<List<BookResponse>> onSearchBookWithTitleSuccess() {
+    public Observable<DataResultListResponse<BookResponse>> onSearchBookWithTitleSuccess() {
         return resultSearchBookByTitleSubject.subscribeOn(schedulerFactory.main());
     }
 
     @Override
-    public Observable<List<BookResponse>> onLoadMoreBookWithTitleSuccess() {
+    public Observable<DataResultListResponse<BookResponse>> onLoadMoreBookWithTitleSuccess() {
         return resultLoadMoreBookByTitleSubject.subscribeOn(schedulerFactory.main());
     }
 
@@ -266,7 +266,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    resultSearchBookByAuthorSubject.onNext(data.getResultInfo());
+                    resultSearchBookByAuthorSubject.onNext(data);
 
                     if (data.getTotalResult() > mPageAuthor * SIZE_OF_PAGE ) {
                         subjectCanLoadMoreBookByAuthor.onNext(true);
@@ -290,7 +290,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    resultLoadMoreBookByAuthorSubject.onNext(data.getResultInfo());
+                    resultLoadMoreBookByAuthorSubject.onNext(data);
 
                     if (data.getTotalResult() > mPageAuthor * SIZE_OF_PAGE ) {
                         subjectCanLoadMoreBookByAuthor.onNext(true);
@@ -306,12 +306,12 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
 
     @Override
-    public Observable<List<BookResponse>> onSearchBookWithAuthorSuccess() {
+    public Observable<DataResultListResponse<BookResponse>> onSearchBookWithAuthorSuccess() {
         return resultSearchBookByAuthorSubject.subscribeOn(schedulerFactory.main());
     }
 
     @Override
-    public Observable<List<BookResponse>> onLoadMoreBookWithAuthorSuccess() {
+    public Observable<DataResultListResponse<BookResponse>> onLoadMoreBookWithAuthorSuccess() {
         return resultLoadMoreBookByAuthorSubject.subscribeOn(schedulerFactory.main());
     }
 
@@ -373,7 +373,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    resultSearchUserByNameSubject.onNext(data.getResultInfo());
+                    resultSearchUserByNameSubject.onNext(data);
 
                     if (data.getTotalResult() > mPageUser * SIZE_OF_PAGE ) {
                         subjectCanLoadMoreUserByName.onNext(true);
@@ -395,7 +395,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
-                    resultLoadMoreUserByNameSubject.onNext(data.getResultInfo());
+                    resultLoadMoreUserByNameSubject.onNext(data);
 
                     if (data.getTotalResult() > mPageUser * SIZE_OF_PAGE ) {
                         subjectCanLoadMoreUserByName.onNext(true);
@@ -410,12 +410,12 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     }
 
     @Override
-    public Observable<List<UserResponse>> onSearchUserWithNameSuccess() {
+    public Observable<DataResultListResponse<UserResponse>> onSearchUserWithNameSuccess() {
         return resultSearchUserByNameSubject.subscribeOn(schedulerFactory.main());
     }
 
     @Override
-    public Observable<List<UserResponse>> onLoadMoreUserWithNameSuccess() {
+    public Observable<DataResultListResponse<UserResponse>> onLoadMoreUserWithNameSuccess() {
         return resultLoadMoreUserByNameSubject.subscribeOn(schedulerFactory.main());
     }
 

@@ -24,6 +24,7 @@ import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.Keyword;
 import com.gat.feature.search.SearchActivity;
@@ -335,17 +336,17 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         hideProgress();
     }
 
-    private void onSearchBookWithTitleSuccess (List<BookResponse> list) {
+    private void onSearchBookWithTitleSuccess (DataResultListResponse<BookResponse> list) {
         hideProgress();
         onSearchBookResult.onSearchBookResult(list);
     }
 
-    private void onSearchBookWithAuthorSuccess (List<BookResponse> list) {
+    private void onSearchBookWithAuthorSuccess (DataResultListResponse<BookResponse> list) {
         hideProgress();
         onSearchAuthorResult.onSearchBookResult(list);
     }
 
-    private void onSearchUserWithNameSuccess (List<UserResponse> list) {
+    private void onSearchUserWithNameSuccess (DataResultListResponse<UserResponse> list) {
         hideProgress();
         onSearchUserResult.onSearchUserResult(list);
     }
@@ -368,17 +369,17 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     }
 
 
-    private void onLoadMoreBookWithTitleSuccess (List<BookResponse> list) {
+    private void onLoadMoreBookWithTitleSuccess (DataResultListResponse<BookResponse> list) {
         hideProgress();
         onSearchBookCanLoadMore.onLoadMoreBookWithTitleSuccess(list);
     }
 
-    private void onLoadMoreBookWithAuthorSuccess (List<BookResponse> list) {
+    private void onLoadMoreBookWithAuthorSuccess (DataResultListResponse<BookResponse> list) {
         hideProgress();
         onSearchAuthorCanLoadMore.onLoadMoreBookWithAuthorSuccess(list);
     }
 
-    private void onLoadMoreUserWithNameSuccess (List<UserResponse> list) {
+    private void onLoadMoreUserWithNameSuccess (DataResultListResponse<UserResponse> list) {
         hideProgress();
         onSearchUserCanLoadMore.onLoadMoreUserSuccess(list);
     }
