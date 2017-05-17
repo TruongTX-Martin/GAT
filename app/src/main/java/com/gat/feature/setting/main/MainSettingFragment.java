@@ -93,6 +93,8 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     private ProgressDialog progressDialog;
     private MainActivity mainActivity;
 
+    public MainSettingFragment () {}
+
     public MainSettingFragment (ISettingDelegate delegate) {
         this.delegate = delegate;;
     }

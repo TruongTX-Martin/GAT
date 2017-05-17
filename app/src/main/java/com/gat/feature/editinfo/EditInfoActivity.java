@@ -22,6 +22,7 @@ import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -108,6 +109,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     private CompositeDisposable disposablesEditInfo;
     private Dialog dialog;
+    private boolean isEditData;
 
 
     @Override
@@ -138,6 +140,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             }
         }
 
+
         dialog = new Dialog(this);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_dialog_login);
@@ -151,20 +154,17 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         });
         imgSave.setOnClickListener(v -> updateProfile());
         imgBack.setOnClickListener(v -> backToPreviousView());
-        layoutAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mr.Duc redirect here
+        layoutAddress.setOnClickListener(v -> {
+            //mr.Duc redirect here
+            try {
                 start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
-            }
+            }catch (Exception e){}
         });
-        layoutFavorit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mr.Duc redirect here
-                start(getApplicationContext(), AddCategoryActivity.class, AddCategoryScreen.instance(user.interestCategory()));
-            }
+        layoutFavorit.setOnClickListener(v -> {
+            //mr.Duc redirect here
+            start(getApplicationContext(), AddCategoryActivity.class, AddCategoryScreen.instance(user.interestCategory()));
         });
+        edtName.setOnFocusChangeListener((v, hasFocus) -> imgChangeName.setVisibility(View.VISIBLE));
     }
 
     private void backToPreviousActivity() {
@@ -176,9 +176,10 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
     private void editInfoError(ServerResponse<ResponseData> error) {
         progressBar.setVisibility(View.GONE);
-        ClientUtils.showToast(this, error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }else{
+            ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
         }
     }
     private void editInfoSuccess(String message) {
@@ -232,6 +233,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     }
 
     private void checkPermission() {
+        isEditData = true;
         if (Build.VERSION.SDK_INT > 22) {
             try {
                 String[] mPermission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -267,12 +269,12 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                             if (bitmap != null) {
                                 try {
                                     Uri uri = data.getData();
-                                    fileImage = new File(getRealPathFromURI(uri));
                                     currentBitmap = bitmap;
                                     if (currentBitmap != null) {
                                         currentBitmap = getResizedBitmap(currentBitmap, 400);
                                     }
                                     imgAvatar.setImageBitmap(currentBitmap);
+                                    fileImage = new File(getRealPathFromURI(uri));
                                 } catch (Exception e) {
                                     System.out.println(e.getMessage());
                                 }
@@ -282,7 +284,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
                         }
                     }
                 } else {
-                    ClientUtils.showToast(this, "User not allow access device");
+//                    ClientUtils.showToast(this, "User not allow access device");
                 }
                 break;
             default:
@@ -344,21 +346,33 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
 
 
     private void backToPreviousView() {
-        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
-        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
-        txtTitle.setText("Huỷ thay đổi");
-        txtContent.setText("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
-        Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
-        Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-        btnCancle.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-        btnOk.setOnClickListener(v -> {
+        if(isEditData()) {
+            TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
+            TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
+            txtTitle.setText("Huỷ thay đổi");
+            txtContent.setText("Bạn muốn huỷ bỏ thông tin đã sửa đổi?");
+            Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
+            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+            btnCancle.setOnClickListener(v -> {
+                dialog.dismiss();
+            });
+            btnOk.setOnClickListener(v -> {
+                backToPreviousActivity();
+                dialog.dismiss();
+            });
+            if(dialog != null && !dialog.isShowing()){
+                dialog.show();
+            }
+        }else{
             backToPreviousActivity();
-            dialog.dismiss();
-        });
-        if(dialog != null && !dialog.isShowing()){
-            dialog.show();
         }
+
+    }
+
+    private boolean isEditData() {
+        if (isEditData || (!edtName.getText().toString().trim().equals(user.name()))) {
+            return true;
+        }
+        return false;
     }
 }

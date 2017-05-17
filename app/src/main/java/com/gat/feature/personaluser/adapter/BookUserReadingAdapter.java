@@ -13,6 +13,8 @@ import com.gat.R;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.personaluser.PersonalUserScreen;
@@ -65,6 +67,9 @@ public class BookUserReadingAdapter extends RecyclerView.Adapter<BookUserReading
                     public void onClick(View v) {
                         PersonalUserActivity.start(context, PersonalUserActivity.class, PersonalUserScreen.instance(entity.getBorrowFromUserId()));
                     }
+                });
+                holder.imgAvatar.setOnClickListener(v -> {
+                    PersonalUserActivity.start(context, BookDetailActivity.class, BookDetailScreen.instance(entity.getEditionId()));
                 });
             }
             if(getItemCount() > 9 && position == (getItemCount() -1)){

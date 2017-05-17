@@ -38,10 +38,9 @@
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
-            >
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="16dp">
 
             <ImageView
                 android:id="@+id/imgEditPersonal"
@@ -63,26 +62,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
             android:layout_toLeftOf="@+id/layoutEdit"
             android:layout_toRightOf="@+id/imgAvatar"
+            android:text="GAT"
             android:textColor="#202020"
             android:textSize="@dimen/header_textsize_s"
-            android:text="GAT"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/txtName"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="80dp"
-            android:textColor="@color/colorGray"
-            android:layout_below="@+id/txtName"
             android:layout_toRightOf="@+id/imgAvatar"
-            android:textSize="@dimen/normal_textsize_s"
-            />
+            android:textColor="@color/colorGray"
+            android:textSize="@dimen/normal_textsize_s" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -90,19 +88,34 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/layoutTop">
 
+        <View
+            android:id="@+id/viewTop"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:background="#CACACA" />
+
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tablayout_height"
-            app:tabGravity="fill"
+            android:layout_below="@+id/viewTop"
             app:tabBackground="@drawable/personal_tab_color_selector"
+            app:tabGravity="fill"
             app:tabMode="fixed" />
+
+        <View
+            android:id="@+id/viewBottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tabLayout"
+            android:background="#CACACA" />
 
         <com.gat.common.view.NonSwipeableViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/tabLayout"
+            android:layout_below="@+id/viewBottom"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </RelativeLayout>
 </RelativeLayout>

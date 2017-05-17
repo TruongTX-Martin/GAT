@@ -11,16 +11,16 @@ import org.json.JSONObject;
 public class BookRequestInput {
 
     //request to you
-    private boolean sharingWaitConfirm;
-    private boolean sharingContacting;
-    private boolean sharingBorrowing;
-    private boolean sharingOther;
+    private boolean sharingWaitConfirm = true;
+    private boolean sharingContacting = true;
+    private boolean sharingBorrowing = true;
+    private boolean sharingOther = true;
 
     //request from you
-    private boolean borrowWaitConfirm;
-    private boolean borrowContacting;
-    private boolean borrowBorrowing;
-    private boolean borrowOther;
+    private boolean borrowWaitConfirm = true;
+    private boolean borrowContacting = true;
+    private boolean borrowBorrowing = true;
+    private boolean borrowOther = true;
 
     private int page = 1;
     private int per_page = 10;

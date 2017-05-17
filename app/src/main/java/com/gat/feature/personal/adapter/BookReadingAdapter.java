@@ -15,6 +15,8 @@ import com.gat.common.customview.MZRatingBar;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.BookDetailScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.personaluser.PersonalUserScreen;
@@ -91,12 +93,13 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
                         holder.layoutTitle.setVisibility(View.GONE);
                     }
                 }
-                holder.layoutBorrowFrom.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainActivity.start(context, PersonalUserActivity.class, PersonalUserScreen.instance(entity.getBorrowFromUserId()));
-                    }
-                });
+                if(entity.getBorrowFromUserId() != 0) {
+                    holder.imgExtend.setVisibility(View.VISIBLE);
+                }else{
+                    holder.imgExtend.setVisibility(View.GONE);
+                }
+                holder.layoutBorrowFrom.setOnClickListener(v -> MainActivity.start(context, PersonalUserActivity.class, PersonalUserScreen.instance(entity.getBorrowFromUserId())));
+                holder.imgAvatar.setOnClickListener(v -> MainActivity.start(context, BookDetailActivity.class, BookDetailScreen.instance(entity.getEditionId())));
             }
 
             if(getItemCount() > 9 && position == (getItemCount() -1)){
@@ -112,7 +115,7 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
 
     public class  BookReadingViewHolder extends RecyclerView.ViewHolder{
         TextView txtName,txtAuthor,txtRating;
-        ImageView imgAvatar;
+        ImageView imgAvatar,imgExtend;
         MZRatingBar ratingBar;
         LinearLayout layoutTitle;
         TextView txtTopTitle,txtTopNumber,txtBorrowName,txtBorrowFrom;
@@ -122,6 +125,7 @@ public class BookReadingAdapter  extends RecyclerView.Adapter<BookReadingAdapter
             txtName = (TextView) itemView.findViewById(R.id.txtName);
             txtAuthor = (TextView) itemView.findViewById(R.id.txtAuthor);
             imgAvatar = (ImageView) itemView.findViewById(R.id.imgAvatar);
+            imgExtend = (ImageView) itemView.findViewById(R.id.imgExtend);
             ratingBar = (MZRatingBar) itemView.findViewById(R.id.ratingBar);
             layoutTitle = (LinearLayout) itemView.findViewById(R.id.layoutTitle);
             txtTopTitle = (TextView) itemView.findViewById(R.id.txtTopTitle);

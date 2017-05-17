@@ -1,30 +1,22 @@
 package com.gat.feature.personal;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.util.Log;
 
-import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
-import com.gat.common.util.Strings;
 import com.gat.data.exception.LoginException;
 import com.gat.data.exception.CommonException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
-import com.gat.data.user.PaperUserDataSource;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
 import com.gat.feature.bookdetailsender.entity.ChangeStatusResponse;
-import com.gat.feature.login.LoginScreen;
-import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.entity.BookInstanceInput;
 import com.gat.feature.personal.entity.BookChangeStatusInput;
 import com.gat.feature.personal.entity.BookReadingInput;
 import com.gat.feature.personal.entity.BookRequestInput;
 import com.gat.feature.personal.entity.RequestStatusInput;
-import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.Data;
 import com.gat.repository.entity.User;
 
@@ -94,13 +86,24 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     private final Subject<String> checkLoginResultSubject;
     private final Subject<String> checkLoginInputSubject;
     private final Subject<String> checkLoginError;
-
     private final UseCase<User> loadLocalUser;
+
+    //request borrow book
+    private CompositeDisposable requestRemoveBookDisposable;
+    private  UseCase<String> removeBookUsecase;
+    private final Subject<String> removeBookResultSubject;
+    private final Subject<Integer> removeBookInputSubject;
+    private final Subject<String> removeBookError;
+
     private boolean isLogin;
 
     public PersonalPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory factory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = factory;
+
+        this.removeBookError = PublishSubject.create();
+        removeBookResultSubject = PublishSubject.create();
+        removeBookInputSubject = BehaviorSubject.create();
 
         this.personalError = PublishSubject.create();
         personalResultSubject = PublishSubject.create();
@@ -158,6 +161,10 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                 changeStatusInputSubject.observeOn(schedulerFactory.main()).subscribe(this::getChangeStatus)
         );
 
+        requestRemoveBookDisposable = new CompositeDisposable(
+                removeBookInputSubject.observeOn(schedulerFactory.main()).subscribe(this::removeBookInstance)
+        );
+
         checkLoginDisposable = new CompositeDisposable(checkLoginInputSubject.
                 observeOn(schedulerFactory.main()).subscribe(this::startCheckLogin));
         // TODO 170506 do not start get personal information here
@@ -189,6 +196,7 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         requestBooksDisposable.dispose();
         changeStatusDisposable.dispose();
         checkLoginDisposable.dispose();
+        requestRemoveBookDisposable.dispose();
     }
 
     @Override
@@ -223,6 +231,21 @@ public class PersonalPresenterImpl implements PersonalPresenter {
     @Override
     public Observable<String> checkLoginFailed() {
         return checkLoginError.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void removeBook(int instanceId) {
+        removeBookInputSubject.onNext(instanceId);
+    }
+
+    @Override
+    public Observable<String> getResponseRemoveBook() {
+        return removeBookResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onErrorRemoveBook() {
+        return removeBookError.observeOn(schedulerFactory.main());
     }
 
     @Override
@@ -313,6 +336,26 @@ public class PersonalPresenterImpl implements PersonalPresenter {
         }else{
             checkLoginError.onNext("");
         }
+    }
+
+    private void removeBookInstance(int instanceId) {
+        removeBookUsecase = UseCases.release(removeBookUsecase);
+        removeBookUsecase = useCaseFactory.removeBook(instanceId);
+        removeBookUsecase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(response -> {
+                    removeBookResultSubject.onNext(response);
+                })
+                .onError(throwable -> {
+                    if (throwable instanceof CommonException)
+                        changeStatusError.onNext(((CommonException)throwable).getMessage());
+                    else
+                        changeStatusError.onNext(ServerResponse.EXCEPTION.message());
+                })
+                .onStop(
+                        () -> removeBookUsecase = UseCases.release(removeBookUsecase)
+                )
+                .execute();
     }
 
     private void getChangeStatus(RequestStatusInput input){

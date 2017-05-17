@@ -250,12 +250,12 @@ public class UserDataSourceImpl implements UserDataSource {
 
     @Override
     public Observable<DataResultListResponse<UserResponse>> searchUser
-            (String name, int page, int sizeOfPage) {
+            (String name, int userId, int page, int sizeOfPage) {
         MZDebug.i("_____________________________________ searchUser _____________________________");
 
         GatApi api = dataComponent.getPublicGatApi();
         Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> responseObservable;
-        responseObservable = api.searchUser(name, page, sizeOfPage);
+        responseObservable = api.searchUser(name, userId, page, sizeOfPage);
 
         return responseObservable.map(response -> {
             DataResultListResponse<UserResponse> data = response.body().data();
@@ -452,16 +452,13 @@ public class UserDataSourceImpl implements UserDataSource {
     }
 
     @Override
-    public Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+    public Observable<String> requestBookByBorrower(RequestStatusInput input) {
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse<Data>>> responseObservable = api.requestBookByBorrower(input.getRecordId(),input.getCurrentStatus(),input.getNewStatus());
         return responseObservable.map(response -> {
             ServerResponse<Data> serverResponse = CommonCheck.checkResponse(response);
             serverResponse.code(response.code());
-            ChangeStatusResponse statusResponse = new ChangeStatusResponse();
-            statusResponse.setMessage(response.message());
-            statusResponse.setStatusCode(response.code());
-            return statusResponse;
+            return response.message();
         });
     }
 
@@ -537,6 +534,17 @@ public class UserDataSourceImpl implements UserDataSource {
 
         return responseObservable.map(response -> {
             return response.body();
+        });
+    }
+
+    @Override
+    public Observable<String> removeBook(int instanceId) {
+        GatApi api = dataComponent.getPrivateGatApi();
+        Observable<Response<ServerResponse<Data>>> responseObservable = api.removeBook(instanceId);
+        return responseObservable.map(response -> {
+            ServerResponse serverResponse = CommonCheck.checkResponse(response);
+            serverResponse.code(response.code());
+            return serverResponse.message();
         });
     }
 

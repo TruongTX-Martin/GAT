@@ -1,18 +1,11 @@
 package com.gat.app;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.util.Base64;
-import android.util.Log;
-
 import com.gat.common.BootstrapApplication;
+import com.gat.common.listener.OnNetworkChangeListener;
 import com.gat.dependency.AppComponent;
 import com.gat.dependency.AppModule;
 import com.gat.dependency.DaggerAppComponent;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.gat.feature.book_detail.BookDetailActivity;
 
 import io.paperdb.Paper;
 
@@ -22,10 +15,14 @@ import io.paperdb.Paper;
 
 public class GatApplication extends BootstrapApplication {
 
+    OnNetworkChangeListener observerNetworkChange;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Paper.init(this);
+        observerNetworkChange = new OnNetworkChangeListener();
+        observerNetworkChange.addObserver(new BookDetailActivity());
     }
 
     @Override
@@ -33,5 +30,9 @@ public class GatApplication extends BootstrapApplication {
         return DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
+    }
+
+    public OnNetworkChangeListener getObserverNetworkChange() {
+        return observerNetworkChange;
     }
 }

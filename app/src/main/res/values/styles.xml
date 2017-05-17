@@ -56,7 +56,7 @@
     </style>
 
     <style name="TextViewHeaderTop" parent="TextViewBase">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">@dimen/header_textsize</item>
         <item name="textAllCaps">true</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
 

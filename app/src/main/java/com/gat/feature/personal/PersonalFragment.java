@@ -82,6 +82,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private CompositeDisposable disposablesBooksRequest;
     private CompositeDisposable disposablesRequestBookByOwner;
     private CompositeDisposable disposablesCheckLogin;
+    private CompositeDisposable disposablesRemoveBook;
 
     //init fragment
     private FragmentBookSharing fragmentBookSharing;
@@ -149,9 +150,12 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
                 getPresenter().onErrorBookRequest().subscribe(this::getBookInstanceError));
 
         disposablesRequestBookByOwner = new CompositeDisposable(getPresenter().getResponseChangeStatus().subscribe(this::requestBookByOwnerSuccess),
-                getPresenter().onErrorChangeStatus().subscribe(this::changeBookSharingStatusSuccess));
+                getPresenter().onErrorChangeStatus().subscribe(this::checkLoginFailed));
         disposablesCheckLogin = new CompositeDisposable(getPresenter().checkLoginSucess().subscribe(this::checkLoginSuccess),
                 getPresenter().checkLoginFailed().subscribe(this::checkLoginFailed));
+
+        disposablesRemoveBook = new CompositeDisposable(getPresenter().getResponseRemoveBook().subscribe(this::removeBookSuccess),
+                getPresenter().onErrorRemoveBook().subscribe(this::checkLoginFailed));
 
         initView();
 
@@ -313,11 +317,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     private void getBookDetailError(String error) {
-        ClientUtils.showToast(getActivity(), "Error:" + error);
+//        ClientUtils.showToast(getActivity(), "Error:" + error);
     }
 
     private void getUserInfoError(ServerResponse<ResponseData> error) {
-        ClientUtils.showToast(getActivity(), error.message());
+        ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error.message());
     }
 
     public void requestBookOwner(RequestStatusInput statusInput) {
@@ -326,7 +330,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
         if (data != null) {
-            ClientUtils.showToast(getActivity(), data.getMessage());
+//            ClientUtils.showToast(getActivity(), data.getMessage());
             fragmentBookRequest.refreshAdapter();
         }
     }
@@ -337,6 +341,15 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void checkLoginSuccess(String input) {
         //do nothing
+    }
+
+    private void removeBookSuccess(String data){
+        fragmentBookSharing.updateAfterDelete();
+        
+    }
+
+    public void removeBookInstance(int instanceId){
+        getPresenter().removeBook(instanceId);
     }
 
 
@@ -359,6 +372,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     //get book instance
     public void requestBookInstance(BookInstanceInput input) {
         if (!ClientUtils.isOnline()) {
+            ClientUtils.showViewNotInternet(MainActivity.instance,layoutTop);
             return;
         }
         getPresenter().requestBookInstance(input);
@@ -400,6 +414,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private void getBookInstanceError(ServerResponse<ResponseData> error) {
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        }else{
+            ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error.message());
         }
     }
 
@@ -436,11 +452,11 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private void getBookRequestSuccess(Data data) {
         if (data != null) {
             int totalBrowing = data.getBorrowingTotal();
-            int totalWaiting = data.getWaitingTotal();
-            txtNumberRequest.setText(totalBrowing + "");
+            int totalSharing = data.getTotalSharing();
+            txtNumberRequest.setText(totalSharing + "");
             List<BookRequestEntity> listBookRequest = data.getListDataReturn(BookRequestEntity.class);
             fragmentBookRequest.setNumberRequestFromYou(totalBrowing);
-            fragmentBookRequest.setNumberRequestToYou(totalWaiting);
+            fragmentBookRequest.setNumberRequestToYou(totalSharing);
             fragmentBookRequest.setListBookRequest(listBookRequest);
         }
     }

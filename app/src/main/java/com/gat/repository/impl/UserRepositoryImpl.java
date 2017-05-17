@@ -235,8 +235,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().searchUser(name, page, sizeOfPage));
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().searchUser(name, userId, page, sizeOfPage));
     }
     @Override
     public Observable<Data> getBookRequest(BookRequestInput input) {
@@ -261,6 +261,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<String> updateUserInfo(EditInfoInput input) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().updateUserInfo(input));
+    }
+
+    @Override
+    public Observable<String> removeBook(int instanceId) {
+        return Observable.defer( () -> networkUserDataSourceLazy.get().removeBook(instanceId));
     }
 
     @Override
@@ -311,7 +316,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<ChangeStatusResponse> requestBookByBorrowrer(RequestStatusInput input) {
+    public Observable<String> requestBookByBorrowrer(RequestStatusInput input) {
         return Observable.defer(() -> networkUserDataSourceLazy.get().requestBookByBorrower(input));
     }
 

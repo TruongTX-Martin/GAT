@@ -106,7 +106,6 @@ public class BookRequestAdapter extends RecyclerView.Adapter<BookRequestAdapter.
                 holder.layoutClick.setOnClickListener(v -> {
                     int recordType = entity.getRecordType();
                     int recodeId = entity.getRecordId();
-                    ClientUtils.showToast(this.context, "Type record:"+recordType);
                     if (recordType == 1) {
                         //sharing - user borrower -> request  by owner
                         Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);

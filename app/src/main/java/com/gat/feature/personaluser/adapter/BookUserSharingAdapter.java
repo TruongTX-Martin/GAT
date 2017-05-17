@@ -1,24 +1,31 @@
 package com.gat.feature.personaluser.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.gat.R;
 import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.BookDetailScreen;
+import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
+import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
+import com.gat.feature.main.MainActivity;
+import com.gat.feature.personaluser.PersonalUserActivity;
 import com.gat.feature.personaluser.entity.BorrowRequestInput;
 import com.gat.feature.personaluser.fragment.FragmentBookUserSharing;
 import com.gat.repository.entity.book.BookSharingEntity;
-
 import java.util.List;
 
 /**
@@ -114,10 +121,33 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
                 input.setEditionId(entity.getEditionId());
                 fragmentBookSharing.requestBorrowBook(entity,input,position);
             });
+            holder.imgBook.setOnClickListener(v -> PersonalUserActivity.start(context, BookDetailActivity.class, BookDetailScreen.instance(entity.getEditionId())));
+            holder.layoutCenter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(entity.getRequestingStatus() == 1) {
+                        toDetailRequest(entity);
+                    }
+                }
+            });
+            holder.layoutRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(entity.getRequestingStatus() == 1) {
+                        toDetailRequest(entity);
+                    }
+                }
+            });
         }
         if (getItemCount() > 9 && position == (getItemCount() - 1)) {
             fragmentBookSharing.loadMore();
         }
+    }
+
+    private void toDetailRequest(BookSharingEntity entity){
+        Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
+        intent.putExtra("BorrowingRecordId", entity.getRecordId());
+        MainActivity.instance.startActivity(intent);
     }
 
     @Override
@@ -130,7 +160,8 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
         ImageView imgBook, imgExtend;
         RatingBar ratingBar;
         Button btnBorrow, btnWaitBorrow;
-
+        LinearLayout layoutCenter;
+        RelativeLayout layoutRight;
         public BookSharingViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.txtName);
@@ -144,6 +175,8 @@ public class BookUserSharingAdapter extends RecyclerView.Adapter<BookUserSharing
             txtRating = (TextView) view.findViewById(R.id.txtRating);
             btnBorrow = (Button) view.findViewById(R.id.btnBorrow);
             btnWaitBorrow = (Button) view.findViewById(R.id.btnWaitBorrow);
+            layoutCenter = (LinearLayout) view.findViewById(R.id.layoutCenter);
+            layoutRight = (RelativeLayout) view.findViewById(R.id.layoutRight);
         }
     }
 }

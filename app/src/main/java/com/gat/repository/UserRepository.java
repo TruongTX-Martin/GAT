@@ -63,7 +63,7 @@ public interface UserRepository {
             getPeopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage);
 
     Observable<DataResultListResponse<UserResponse>>
-            searchUser (String name, int page, int sizeOfPage);
+            searchUser (String name, int userId, int page, int sizeOfPage);
 
     Observable<List<Keyword>> getUsersSearchedKeyword();
 
@@ -73,12 +73,13 @@ public interface UserRepository {
     Observable<Data> getReadingBooks(BookReadingInput input);
     Observable<Data> getBookInstance(BookInstanceInput input);
     Observable<String> updateUserInfo(EditInfoInput input);
+    Observable<String> removeBook(int instanceId);
 
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
     Observable<Data> getBookDetail(Integer input);
     Observable<User> getUserPublicInfo(int userId);
     Observable<DataResultListResponse<NotifyEntity>> getUserNotification(int page, int per_page);
-    Observable<ChangeStatusResponse> requestBookByBorrowrer(RequestStatusInput input);
+    Observable<String> requestBookByBorrowrer(RequestStatusInput input);
     Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
     Observable<Data> requestBorrowBook(BorrowRequestInput input);
 

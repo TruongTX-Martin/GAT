@@ -79,7 +79,7 @@ public interface UserDataSource {
              int page, int sizeOfPage);
 
     Observable<DataResultListResponse<UserResponse>>
-    searchUser (String name, int page, int sizeOfPage);
+    searchUser (String name, int userId, int page, int sizeOfPage);
 
     Observable<List<Keyword>> getUsersSearchedKeyword();
 
@@ -96,7 +96,7 @@ public interface UserDataSource {
     Observable<Data> getBookUserSharing(BookSharingUserInput input);
     Observable<Data> getBookDetail(Integer input);
     Observable<DataResultListResponse<NotifyEntity>> getUserNotification (int page, int per_page);
-    Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input);
+    Observable<String> requestBookByBorrower(RequestStatusInput input);
     Observable<ChangeStatusResponse> requestBookByOwner(RequestStatusInput input);
     Observable<Data> requestBorrowBook(BorrowRequestInput input);
 
@@ -104,6 +104,7 @@ public interface UserDataSource {
     Observable<ServerResponse> linkSocialAccount (String socialID, String socialName , int socialType);
     Observable<ServerResponse<FirebasePassword>> addEmailPassword (String email, String password);
     Observable<ServerResponse> changeOldPassword(String newPassword, String oldPassword);
+    Observable<String> removeBook(int instanceId);
 
 
 }

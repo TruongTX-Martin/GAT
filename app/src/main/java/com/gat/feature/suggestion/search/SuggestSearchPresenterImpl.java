@@ -369,7 +369,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         mPageUser = 1;
         mKeyword = name;
 
-        useCaseSearchUserByName = useCaseFactory.searchUser(mKeyword, mPageUser, SIZE_OF_PAGE)
+        useCaseSearchUserByName = useCaseFactory.searchUser(mKeyword, mUserId, mPageUser, SIZE_OF_PAGE)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
@@ -391,7 +391,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     public void loadMoreUserWithName() {
         mPageUser += 1;
 
-        useCaseSearchUserByName = useCaseFactory.searchUser(mKeyword, mPageUser, SIZE_OF_PAGE)
+        useCaseSearchUserByName = useCaseFactory.searchUser(mKeyword, mUserId, mPageUser, SIZE_OF_PAGE)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {

@@ -1,5 +1,6 @@
 package com.gat.feature.personal.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
@@ -19,6 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gat.R;
+import com.gat.common.listener.RecyclerItemClickListener;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.DataLocal;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personal.PersonalFragment;
@@ -30,13 +35,15 @@ import com.gat.repository.entity.book.BookSharingEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.droidsonroids.gif.GifTextView;
+
 /**
  * Created by truongtechno on 29/03/2017.
  */
 
 public class FragmentBookSharing extends Fragment {
 
-    private ProgressBar progressBar, progressLoadMore;
+    private GifTextView progressBar,progressLoadMore;
     private ImageView imgFilter;
     private TextView txtMessage;
     private List<BookSharingEntity> listBook = new ArrayList<>();
@@ -150,8 +157,8 @@ public class FragmentBookSharing extends Fragment {
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        progressLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
+        progressBar = (GifTextView) rootView.findViewById(R.id.progressBar);
+        progressLoadMore = (GifTextView) rootView.findViewById(R.id.progressLoadMore);
         imgFilter = (ImageView) rootView.findViewById(R.id.imgFilter);
         txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
         layoutBottom = (RelativeLayout) rootView.findViewById(R.id.layoutBottom);
@@ -164,31 +171,54 @@ public class FragmentBookSharing extends Fragment {
             showDialogFilter();
         });
 
-//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                BookSharingEntity entity = listBook.get(position);
-//                int borrowingRecordId = entity.getBorrowingRecordId();
-//                int sharingStatus = entity.getSharingStatus();
-//                ClientUtils.showToast("Sharing status:" + sharingStatus);
-//                if (sharingStatus == 1) {
-//                    //sharing
-//
-//                } else if (sharingStatus == 2) {
-//                    //borrowing
-//                    Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
-//                    intent.putExtra("BorrowingRecordId", borrowingRecordId);
-//                    MainActivity.instance.startActivity(intent);
-//                }
-//            }
-//
-//            @Override
-//            public void onItemLongClick(View view, int position) {
-//
-//            }
-//        }));
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                BookSharingEntity entity = listBook.get(position);
+                if(entity.getBorrowingUserId() == 0) {
+                    showDialogDeleteBook(entity);
+                }
+            }
+        }));
     }
 
+    private BookSharingEntity currentDelete;
+    private void showDialogDeleteBook(BookSharingEntity entity) {
+        Dialog dialog = new Dialog(MainActivity.instance);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_login);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
+        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
+        txtTitle.setText("Xóa sách");
+        txtContent.setText("Bạn muốn xoá sách "+ entity.getTitle() + " khỏi tủ sách của mình??");
+        Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
+        Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+        btnCancle.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        btnOk.setOnClickListener(v -> {
+            parrentActivity.removeBookInstance(entity.getInstanceId());
+            this.currentDelete = entity;
+            dialog.dismiss();
+        });
+        if(dialog != null && !dialog.isShowing()){
+            dialog.show();
+        }
+    }
+
+    public void updateAfterDelete(){
+        if(currentDelete.isHeader()) {
+            searchBook(currentInput);
+        }else{
+            listBook.remove(currentDelete);
+            adapterBookSharing.notifyDataSetChanged();
+        }
+    }
     public void loadMore() {
         if (isRequesting == false && isContinueMore) {
             showLoadMore();
@@ -249,7 +279,6 @@ public class FragmentBookSharing extends Fragment {
         RelativeLayout layoutLostBorder = (RelativeLayout) customView.findViewById(R.id.layoutBookLostBorder);
         RelativeLayout layoutLostOverlay = (RelativeLayout) customView.findViewById(R.id.layoutBookLostOverlay);
         RelativeLayout layoutRoot = (RelativeLayout) customView.findViewById(R.id.layoutParrent);
-        layoutRoot.setOnClickListener(v -> popupWindow.dismiss());
         imgClose.setOnClickListener(v -> {
             if (currentInput.isSharingFilter() == isSharing && currentInput.isNotSharingFilter() == isNotSharing
                     && currentInput.isLostFilter() == isLost) {

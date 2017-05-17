@@ -36,11 +36,15 @@ import com.gat.repository.entity.book.BookDetailEntity;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
+
 /**
  * Created by root on 23/04/2017.
  */
 
 public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScreen, BookDetailSenderPresenter> {
+
+    @BindView(R.id.layoutBack)
+    RelativeLayout layoutBack;
 
     @BindView(R.id.imgBack)
     ImageView imgBack;
@@ -202,7 +206,6 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     private Context context;
 
 
-
     private RequestStatusInput statusInput = new RequestStatusInput();
     int borrowingRecordId = 0;
     private BookDetailEntity bookDetail;
@@ -216,7 +219,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         disposablesBookDetail = new CompositeDisposable(getPresenter().getResponseBookDetail().subscribe(this::getBookDetailSuccess),
                 getPresenter().onErrorBookDetail().subscribe(this::getBookDetailError));
         disposablesRequestBookByBorrower = new CompositeDisposable(getPresenter().getResponseSenderChangeStatus().subscribe(this::requestBookByBorrowerSuccess),
-                getPresenter().onErrorSenderChangeStatus().subscribe(this::getBookDetailError));
+                getPresenter().onErrorSenderChangeStatus().subscribe(this::changeStatusError));
         context = getApplicationContext();
         initView();
         handleEvent();
@@ -251,10 +254,10 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         requestDetailData();
     }
 
-    private void handleEvent(){
-        imgBack.setOnClickListener(v -> finish());
+    private void handleEvent() {
+        layoutBack.setOnClickListener(v -> finish());
         layoutParrentCancleRequest.setOnClickListener(v -> {
-            if(recordStatus == 0){
+            if (recordStatus == 0) {
                 statusInput.setCurrentStatus(0);
                 statusInput.setNewStatus(6);
                 statusInput.setRecordId(bookDetail.getRecordId());
@@ -270,7 +273,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         imgEditionBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bookDetail.getEditionInfo().getEditionId() > 0){
+                if (bookDetail.getEditionInfo().getEditionId() > 0) {
                     MainActivity.start(context, BookDetailActivity.class, BookDetailScreen.instance(bookDetail.getEditionInfo().getEditionId()));
                 }
             }
@@ -283,38 +286,40 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     }
 
 
+    private void changeStatusError(String error) {
+        ClientUtils.showDialogError(this, ClientUtils.getStringLanguage(R.string.titleError), error);
+    }
+
     private void getBookDetailError(ServerResponse<ResponseData> error) {
         ClientUtils.showToast(this, error.message());
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
-        }else{
-            ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
+        } else {
+            ClientUtils.showDialogError(this, ClientUtils.getStringLanguage(R.string.titleError), error.message());
         }
     }
 
-    private void requestBookBorrower(RequestStatusInput input){
+    private void requestBookBorrower(RequestStatusInput input) {
         getPresenter().requestSenderChangeStatus(input);
     }
 
     private void getBookDetailSuccess(Data data) {
         if (data != null) {
             bookDetail = (BookDetailEntity) data.getDataReturn(BookDetailEntity.class);
+            if (bookDetail == null) return;
             recordStatus = bookDetail.getRecordStatus();
             updateView();
         }
     }
 
-    private void requestBookByBorrowerSuccess(ChangeStatusResponse data) {
+    private void requestBookByBorrowerSuccess(String data) {
         if (data != null) {
-            if(data.getStatusCode() == 200){
-                ClientUtils.showToast(this, data.getMessage());
-                initView();
-                requestDetailData();
-            }
+            initView();
+            requestDetailData();
         }
     }
 
-    private void requestDetailData(){
+    private void requestDetailData() {
         getPresenter().requestBookDetail(borrowingRecordId);
     }
 
@@ -334,27 +339,27 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     String url = ClientUtils.getUrlImage(ownerInfo.getImageId(), Constance.IMAGE_SIZE_ORIGINAL);
                     ClientUtils.setImage(this, imgBorrower, R.drawable.ic_profile, url);
                 }
-                txtNumberSharing.setText(ownerInfo.getSharingCount()+"");
-                txtNumberReading.setText(ownerInfo.getReadCount()+"");
+                txtNumberSharing.setText(ownerInfo.getSharingCount() + "");
+                txtNumberReading.setText(ownerInfo.getReadCount() + "");
             }
             BookDetailEntity.EditionInfo editionInfo = bookDetail.getEditionInfo();
             if (editionInfo != null) {
-                if(!Strings.isNullOrEmpty(editionInfo.getTitle())) {
+                if (!Strings.isNullOrEmpty(editionInfo.getTitle())) {
                     txtEditionName.setText(editionInfo.getTitle());
                 }
-                if(!Strings.isNullOrEmpty(editionInfo.getAuthor())) {
+                if (!Strings.isNullOrEmpty(editionInfo.getAuthor())) {
                     txtEditionAuthor.setText(editionInfo.getAuthor());
                 }
-                txtNumberComment.setText(editionInfo.getReviewCount()+"");
-                if(!Strings.isNullOrEmpty(editionInfo.getImageId())) {
+                txtNumberComment.setText(editionInfo.getReviewCount() + "");
+                if (!Strings.isNullOrEmpty(editionInfo.getImageId())) {
                     String url = ClientUtils.getUrlImage(editionInfo.getImageId(), Constance.IMAGE_SIZE_ORIGINAL);
                     ClientUtils.setImage(this, imgEditionBook, R.drawable.ic_profile, url);
                 }
                 ratingBar.setRating((float) editionInfo.getRateAvg());
-                txtRating.setText(editionInfo.getRateAvg()+"");
+                txtRating.setText(editionInfo.getRateAvg() + "");
             }
-            ClientUtils.showToast(this, "Record status:"+ recordStatus);
-            switch (recordStatus){
+            ClientUtils.showToast(this, "Record status:" + recordStatus);
+            switch (recordStatus) {
                 case 0:
                     //wait to confirm
                     layoutSendRequest.setVisibility(View.VISIBLE);

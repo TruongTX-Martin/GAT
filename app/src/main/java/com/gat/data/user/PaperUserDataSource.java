@@ -177,7 +177,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<ChangeStatusResponse> requestBookByBorrower(RequestStatusInput input) {
+    public Observable<String> requestBookByBorrower(RequestStatusInput input) {
         return null;
     }
 
@@ -208,6 +208,11 @@ public class PaperUserDataSource implements UserDataSource {
 
     @Override
     public Observable<ServerResponse> changeOldPassword(String newPassword, String oldPassword) {
+        return null;
+    }
+
+    @Override
+    public Observable<String> removeBook(int instanceId) {
         return null;
     }
 
@@ -257,7 +262,7 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage) {
         return null;
     }
 

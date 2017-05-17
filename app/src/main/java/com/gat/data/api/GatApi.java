@@ -166,6 +166,7 @@ public interface GatApi {
     @POST("search/user")
     Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> searchUser (
             @Field("name") String title,
+            @Field("userId") int userId,
             @Query("page") int page,
             @Query("per_page") int per_page
             );
@@ -391,5 +392,11 @@ public interface GatApi {
 
     @POST("user/sign_out")
     Observable<Response<ServerResponse<SimpleResponse>>> signOut();
+
+    @FormUrlEncoded
+    @POST("book/selfremove_instance")
+    Observable<Response<ServerResponse<Data>>> removeBook (
+            @Field("instanceId") int instanceId
+    );
 
 }

@@ -5,15 +5,15 @@
     android:background="#f6f6f6"
     android:orientation="vertical">
 
-    <ProgressBar
+    <pl.droidsonroids.gif.GifTextView
         android:id="@+id/progressLoadMore"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#FFFFFF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:indeterminateDrawable="@drawable/progressbar_indeterminate"
-        />
+        android:background="@drawable/ic_loading_book" />
+
 
 
     <android.support.v7.widget.RecyclerView
@@ -23,15 +23,13 @@
         android:layout_above="@+id/progressLoadMore"
         android:background="#f6f6f6"
         android:layout_alignParentTop="true" />
-    <ProgressBar
+
+    <pl.droidsonroids.gif.GifTextView
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:indeterminateDrawable="@drawable/progressbar_indeterminate"
-        />
-
+        android:background="@drawable/ic_loading_book" />
     <RelativeLayout
         android:id="@+id/layoutBottom"
         android:layout_width="wrap_content"
