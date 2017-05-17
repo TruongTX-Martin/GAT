@@ -263,6 +263,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
 
     private void handleEvent() {
         layoutBack.setOnClickListener(v -> finish());
+        
         layoutParrentCancleRequest.setOnClickListener(v -> {
             if (recordStatus == 0) {
                 statusInput.setCurrentStatus(0);
