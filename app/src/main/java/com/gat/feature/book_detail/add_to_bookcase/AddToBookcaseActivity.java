@@ -1,7 +1,6 @@
 package com.gat.feature.book_detail.add_to_bookcase;
 
 import android.support.v7.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
@@ -218,16 +216,13 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
 
     private void onAddBookInstanceSuccess (String message) {
         hideProgress();
-
-        imageViewSave.setClickable(true);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         finish();
     }
 
     private void onFailure (String message) {
         hideProgress();
         imageViewSave.setClickable(true);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private void showProgress () {

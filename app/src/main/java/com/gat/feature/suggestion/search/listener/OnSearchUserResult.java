@@ -1,5 +1,6 @@
 package com.gat.feature.suggestion.search.listener;
 
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.UserResponse;
 
 import java.util.List;
@@ -10,5 +11,5 @@ import java.util.List;
 
 public interface OnSearchUserResult {
 
-    void onSearchUserResult (List<UserResponse> list);
+    void onSearchUserResult (DataResultListResponse<UserResponse> list);
 }

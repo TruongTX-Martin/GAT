@@ -1,6 +1,7 @@
 package com.gat.feature.suggestion.search;
 
 import com.gat.data.response.BookResponse;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.Keyword;
 import com.rey.mvp2.Presenter;
@@ -18,8 +19,8 @@ public interface SuggestSearchPresenter extends Presenter {
 
     void searchBookWithTitle (String book_title);
     void loadMoreBookWithTitle();
-    Observable<List<BookResponse>> onSearchBookWithTitleSuccess();
-    Observable<List<BookResponse>> onLoadMoreBookWithTitleSuccess();
+    Observable<DataResultListResponse<BookResponse>> onSearchBookWithTitleSuccess();
+    Observable<DataResultListResponse<BookResponse>> onLoadMoreBookWithTitleSuccess();
     Observable<Boolean> onCanLoadMoreBookWithTitle ();
 
 
@@ -28,8 +29,8 @@ public interface SuggestSearchPresenter extends Presenter {
 
     void searchBookWithAuthor (String author);
     void loadMoreBookWithAuthor();
-    Observable<List<BookResponse>> onSearchBookWithAuthorSuccess();
-    Observable<List<BookResponse>> onLoadMoreBookWithAuthorSuccess();
+    Observable<DataResultListResponse<BookResponse>> onSearchBookWithAuthorSuccess();
+    Observable<DataResultListResponse<BookResponse>> onLoadMoreBookWithAuthorSuccess();
     Observable<Boolean> onCanLoadMoreBookWithAuthor ();
 
 
@@ -38,8 +39,8 @@ public interface SuggestSearchPresenter extends Presenter {
 
     void searchUserWithName (String name);
     void loadMoreUserWithName ();
-    Observable<List<UserResponse>> onSearchUserWithNameSuccess();
-    Observable<List<UserResponse>> onLoadMoreUserWithNameSuccess();
+    Observable<DataResultListResponse<UserResponse>> onSearchUserWithNameSuccess();
+    Observable<DataResultListResponse<UserResponse>> onLoadMoreUserWithNameSuccess();
     Observable<Boolean> onCanLoadMoreUserWithName ();
 
     Observable<String> onError();

@@ -1,6 +1,5 @@
 package com.gat.feature.book_detail;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -12,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,7 +34,6 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.customview.ViewMoreTextView;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
-import com.gat.common.util.Strings;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
@@ -52,14 +49,10 @@ import com.gat.feature.book_detail.list_user_sharing_book.ListUserSharingBookScr
 import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
-import com.gat.feature.login.LoginScreen;
-import com.gat.feature.main.MainActivity;
-import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.User;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -178,11 +171,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         mProgressDialog.show();
         getPresenter().isUserLoggedIn();
@@ -221,8 +209,10 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         } else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         } else if (requestCode == RC_UPDATE_BOOKCASE && resultCode == RESULT_OK) {
+            showProgress();
             getPresenter().getEditionSharingUsers();
         } else if (requestCode == RC_VIEW_USER_SHARING && resultCode == RESULT_OK) {
+            showProgress();
             getPresenter().getEditionSharingUsers();
         }
     }
@@ -262,6 +252,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // + 2: To read - sẽ đọc
         // khi nhấp vào thì sẽ gọi SelfUpdateReadingActivity
         if ( (int)buttonReadingState.getTag() == ReadingState.REMOVE) {
+            showProgress();
             getPresenter().updateReadingStatus();
             buttonReadingState.setClickable(false);
         } else {
@@ -398,6 +389,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         textViewSharingBook.setText(String.valueOf(list.size()));
     }
 
+    private int avgRating = 0;
     private EvaluationItemResponse mEvaluationByUser;
     private void onGetBookEvaluationByUser (EvaluationItemResponse evaluation) {
         mEvaluationByUser = evaluation;
@@ -408,37 +400,55 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         if (evaluation == null) {
             ratingBarUserRate.setRating(0);
             textViewCommentByUser.setVisibility(View.GONE);
-            buttonComment.setText(getResources().getString(R.string.write_comment));
+            buttonComment.setVisibility(View.GONE);
+            //buttonComment.setText(getResources().getString(R.string.write_comment));
         } else {
+            avgRating = (int) evaluation.getValue();
             ratingBarUserRate.setRating(evaluation.getValue());
 
-            // nếu review chưa có hoặc null -> button text: Viết bình luận
-            // nếu đã có review -> button text : Sửa bình luận
-            if (TextUtils.isEmpty(evaluation.getReview())) {
-                textViewCommentByUser.setVisibility(View.GONE);
-                buttonComment.setText(getResources().getString(R.string.write_comment));
-            } else {
-                textViewCommentByUser.setVisibility(View.VISIBLE);
-                textViewCommentByUser.setText(evaluation.getReview());
-                buttonComment.setText(getResources().getString(R.string.edit_comment));
+            // nếu chưa rate
+            if ( evaluation.getValue() == 0 ) {
+
+                // nếu chưa review
+                if (TextUtils.isEmpty(evaluation.getReview())) {
+                    textViewCommentByUser.setVisibility(View.GONE);
+                    buttonComment.setVisibility(View.GONE);
+                } else { // nếu đã review
+                    textViewCommentByUser.setVisibility(View.VISIBLE);
+                    textViewCommentByUser.setText(evaluation.getReview());
+                    buttonComment.setText(getResources().getString(R.string.edit_comment));
+                }
+
+            } else { // nếu đã rate thì mới viết sửa được
+
+                buttonComment.setVisibility(View.VISIBLE);
+                if (TextUtils.isEmpty(evaluation.getReview())) {
+                    textViewCommentByUser.setVisibility(View.GONE);
+                    buttonComment.setText(getResources().getString(R.string.write_comment));
+                } else {
+                    textViewCommentByUser.setVisibility(View.VISIBLE);
+                    textViewCommentByUser.setText(evaluation.getReview());
+                    buttonComment.setText(getResources().getString(R.string.edit_comment));
+                }
             }
         }
     }
 
     private void onGetEvaluationByUserFailure (String message) {
         ratingBarUserRate.setRating(0);
-        buttonComment.setText(getResources().getString(R.string.write_comment));
+        textViewCommentByUser.setVisibility(View.GONE);
+        buttonComment.setVisibility(View.GONE);
     }
 
     private void onError (String message) {
         hideProgress();
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private User mUser;
     private void onUserLoggedIn (User user) {
         mUser = user;
-        MZDebug.w("FINAL onUserNotLoggedIn: \n\r" + user.toString());
+        MZDebug.w("FINAL onUserLoggedIn: \n\r" + user.toString());
         getPresenter().getBookEvaluationByUser();
         getPresenter().getSelfReadingStatus();
     }
@@ -450,15 +460,16 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     }
 
     private void onUpdateReadingStatusSuccess (String message) {
+        hideProgress();
         buttonReadingState.setClickable(true);
         buttonReadingState.setTag(ReadingState.TO_READ);
         buttonReadingState.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_check_yellow, 0, R.drawable.arrow_down_white, 0);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void onUpdateReadingStatusFailure (String message) {
+        hideProgress();
         buttonReadingState.setClickable(true);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private static CallbackManager callbackManager;
@@ -531,7 +542,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             public void onSuccess(Sharer.Result result) {
                 MZDebug.d(BookDetailActivity.class.getSimpleName(), "shared successfully");
                 //add your code to handle successful sharing
-                Toast.makeText(BookDetailActivity.this, "Chia sẻ thành công", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -559,6 +569,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private void onPostRatingSuccess (String message) {
         hideProgress();
+
+        if (listEvaluations == null || listEvaluations.isEmpty()) {
+            ratingBarBook.setRating(avgRating);
+        }
+
+        buttonComment.setVisibility(View.VISIBLE);
+        buttonComment.setText(getResources().getString(R.string.write_comment));
+        if (mEvaluationByUser != null && ! TextUtils.isEmpty(mEvaluationByUser.getReview())) {
+            buttonComment.setText(getResources().getString(R.string.edit_comment));
+        }
+
     }
 
     private void showProgress () {

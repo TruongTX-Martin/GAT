@@ -10,5 +10,6 @@
     <string name="err">Lỗi</string>
     <string name="err_required_login">Để sử dụng chức năng này bạn phải đăng nhập vào tài khoản của mình</string>
 
+    <string name="err_other_device_logged_in">Tài khoản </string>
 
 </resources>

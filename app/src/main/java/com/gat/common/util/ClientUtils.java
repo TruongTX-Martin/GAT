@@ -37,6 +37,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.app.fragment.ScreenFragment;
 import com.gat.feature.book_detail.BookDetailActivity;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseActivity;
 import com.gat.feature.login.LoginScreen;
@@ -335,6 +336,32 @@ public class ClientUtils {
                     }
                 });
     }
+
+    public static <T extends ScreenActivity> AlertDialog showDialogUnAuthorization(T screen, String message) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(screen.getApplicationContext());
+        LayoutInflater layoutInflater = LayoutInflater.from(screen.getApplicationContext());
+        View view = layoutInflater.inflate(R.layout.layout_dialog_error, null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+
+        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
+        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
+        Button btnAgreed = (Button) dialog.findViewById(R.id.btnAgreed);
+
+        txtTitle.setText(screen.getResources().getString(R.string.err));
+        txtContent.setText(message);
+        btnAgreed.setOnClickListener(v -> {
+            dialog.dismiss();
+            screen.startAndClear(screen.getApplicationContext(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+        });
+
+        dialog.show();
+
+        return dialog;
+    }
+
 
     public static void showDialogError(@NonNull Context context,
                                        @NonNull String title, @NonNull String message) {

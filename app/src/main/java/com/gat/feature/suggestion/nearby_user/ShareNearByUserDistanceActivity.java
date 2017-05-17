@@ -1,7 +1,6 @@
 package com.gat.feature.suggestion.nearby_user;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
@@ -340,7 +338,7 @@ public class ShareNearByUserDistanceActivity
             return;
         }
 
-        textViewTotal.setText(String.format(getString(R.string.show_count_search_result), data.getResultInfo().size()));
+        textViewTotal.setText(String.format(getString(R.string.show_count_search_result), data.getTotalResult()));
 
         // nếu totalResult > size của List user thì isCanLoadMore = true
         adapter.setItems(data.getResultInfo());
@@ -364,7 +362,7 @@ public class ShareNearByUserDistanceActivity
     private void onLoadMoreUserComplete (DataResultListResponse<UserNearByDistance> data) {
         hideProgress();
         adapter.setMoreItems(data.getResultInfo());
-        textViewTotal.setText(String.format(getString(R.string.show_count_search_result), adapter.getItemCount()));
+        textViewTotal.setText(String.format(getString(R.string.show_count_search_result), data.getTotalResult()));
         // nếu user nào ở list mà không có trong mListUser thì thêm vào mListUsers để add vào map
         List<UserNearByDistance> listDestination = CompareListUtil.destinationListUserNear(mListUsers, data.getResultInfo());
         mListUsers.addAll(listDestination);
@@ -374,7 +372,7 @@ public class ShareNearByUserDistanceActivity
     // request list user near failed
     private void onError (String message) {
         hideProgress();
-        Toast.makeText(this,message, Toast.LENGTH_LONG).show();
+        ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private void onCanLoadMore (Boolean isCanLoadMore) {
