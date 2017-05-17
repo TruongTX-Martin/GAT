@@ -60,6 +60,8 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
     public void onBindViewHolder(BookSharingViewHolder holder, int position) {
         BookSharingEntity entity = list.get(position);
         if (entity != null) {
+            holder.layoutDelete.setVisibility(View.GONE);
+            holder.layoutLeft.setVisibility(View.VISIBLE);
             if (entity.getSharingStatus() == 0) {
                 //not sharing
                 holder.imgExtend.setVisibility(View.GONE);
@@ -165,7 +167,7 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
         ImageView imgBook, imgExtend;
         MZRatingBar ratingBar;
         Switch mySwitch;
-        RelativeLayout viewParrent, layoutDelete;
+        RelativeLayout viewParrent, layoutDelete,layoutLeft,rootView;
         LinearLayout layoutTitle;
         TextView txtTopTitle, txtTopNumber, txtBorrowName, txtRating;
         LinearLayout layoutBorrowFrom;
@@ -181,6 +183,8 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
             mySwitch = (Switch) view.findViewById(R.id.mySwitch);
             viewParrent = (RelativeLayout) view.findViewById(R.id.rootView);
             layoutDelete = (RelativeLayout) view.findViewById(R.id.layoutDelete);
+            layoutLeft = (RelativeLayout) view.findViewById(R.id.layoutLeft);
+            rootView = (RelativeLayout) view.findViewById(R.id.rootView);
             layoutTitle = (LinearLayout) view.findViewById(R.id.layoutTitle);
             txtTopTitle = (TextView) view.findViewById(R.id.txtTopTitle);
             txtTopNumber = (TextView) view.findViewById(R.id.txtTopNumber);

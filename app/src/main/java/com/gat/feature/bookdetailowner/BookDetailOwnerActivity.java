@@ -37,6 +37,7 @@ import com.gat.repository.entity.book.BookDetailEntity;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
+import pl.droidsonroids.gif.GifTextView;
 
 /**
  * Created by root on 26/04/2017.
@@ -213,6 +214,11 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     @BindView(R.id.txtRating)
     TextView txtRating;
 
+    @BindView(R.id.loading)
+    GifTextView loading;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout layoutMenutop;
 
 
     private CompositeDisposable disposablesBookDetail;
@@ -323,7 +329,9 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         });
     }
     private void requestBookOwner(RequestStatusInput statusInput){
+        checkInternet();
         getPresenter().requestChangeStatus(statusInput);
+        loading.setVisibility(View.VISIBLE);
     }
 
     private void getBookDetailError(ServerResponse<ResponseData> error) {
@@ -333,6 +341,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
         }else{
             ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
         }
+        loading.setVisibility(View.GONE);
     }
 
     private void getBookDetailSuccess(Data data) {
@@ -342,10 +351,13 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
             recordStatus = bookDetail.getRecordStatus();
             updateView();
         }
+        loading.setVisibility(View.GONE);
     }
 
     private void requestDetailBook(){
+        checkInternet();
         getPresenter().requestBookDetail(borrowingRecordId);
+        loading.setVisibility(View.VISIBLE);
     }
 
     private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
@@ -356,8 +368,15 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
             }
             ClientUtils.showToast(this, data.getMessage());
         }
+        loading.setVisibility(View.GONE);
     }
 
+    private void checkInternet() {
+        if (!ClientUtils.isOnline()) {
+            ClientUtils.showViewNotInternet(MainActivity.instance,layoutMenutop);
+            return;
+        }
+    }
 
     private void updateView(){
         BookDetailEntity.EditionInfo editionInfo = bookDetail.getEditionInfo();
@@ -393,7 +412,6 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
             txtNumberSharing.setText(borrowerInfo.getSharingCount()+"");
             txtNumberReading.setText(borrowerInfo.getReadCount()+"");
         }
-        ClientUtils.showToast(this, "Record status:"+recordStatus);
         switch (recordStatus){
             case 0:
                 //wait to confirm

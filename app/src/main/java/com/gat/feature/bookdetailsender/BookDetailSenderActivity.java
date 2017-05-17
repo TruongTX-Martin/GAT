@@ -36,6 +36,7 @@ import com.gat.repository.entity.book.BookDetailEntity;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
+import pl.droidsonroids.gif.GifTextView;
 
 /**
  * Created by root on 23/04/2017.
@@ -203,6 +204,12 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     @BindView(R.id.txtRating)
     TextView txtRating;
 
+    @BindView(R.id.loading)
+    GifTextView loading;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout layoutMenutop;
+
     private Context context;
 
 
@@ -288,6 +295,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
 
     private void changeStatusError(String error) {
         ClientUtils.showDialogError(this, ClientUtils.getStringLanguage(R.string.titleError), error);
+        loading.setVisibility(View.GONE);
     }
 
     private void getBookDetailError(ServerResponse<ResponseData> error) {
@@ -297,9 +305,12 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         } else {
             ClientUtils.showDialogError(this, ClientUtils.getStringLanguage(R.string.titleError), error.message());
         }
+        loading.setVisibility(View.GONE);
     }
 
     private void requestBookBorrower(RequestStatusInput input) {
+        checkInternet();
+        loading.setVisibility(View.VISIBLE);
         getPresenter().requestSenderChangeStatus(input);
     }
 
@@ -310,6 +321,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
             recordStatus = bookDetail.getRecordStatus();
             updateView();
         }
+        loading.setVisibility(View.GONE);
     }
 
     private void requestBookByBorrowerSuccess(String data) {
@@ -317,13 +329,22 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
             initView();
             requestDetailData();
         }
+        loading.setVisibility(View.GONE);
     }
 
     private void requestDetailData() {
+        checkInternet();
         getPresenter().requestBookDetail(borrowingRecordId);
+        loading.setVisibility(View.VISIBLE);
     }
 
 
+    private void checkInternet() {
+        if (!ClientUtils.isOnline()) {
+            ClientUtils.showViewNotInternet(MainActivity.instance,layoutMenutop);
+            return;
+        }
+    }
     private void updateView() {
         if (bookDetail != null) {
             BookDetailEntity.OwnerInfo ownerInfo = bookDetail.getOwnerInfo();
@@ -358,7 +379,6 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                 ratingBar.setRating((float) editionInfo.getRateAvg());
                 txtRating.setText(editionInfo.getRateAvg() + "");
             }
-            ClientUtils.showToast(this, "Record status:" + recordStatus);
             switch (recordStatus) {
                 case 0:
                     //wait to confirm

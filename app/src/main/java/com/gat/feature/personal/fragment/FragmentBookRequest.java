@@ -200,6 +200,14 @@ public class FragmentBookRequest extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    public void showLoadBook() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoadBook() {
+        progressBar.setVisibility(View.GONE);
+    }
+
     private void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);

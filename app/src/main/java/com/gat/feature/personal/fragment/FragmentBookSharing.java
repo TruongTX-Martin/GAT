@@ -71,11 +71,6 @@ public class FragmentBookSharing extends Fragment {
         this.currentInput = currentInput;
     }
 
-    public void refreshDate(){
-//        currentInput.setPage(1);
-//        searchBook(currentInput);
-    }
-
     public BookInstanceInput getCurrentInput() {
         return currentInput;
     }
@@ -125,9 +120,6 @@ public class FragmentBookSharing extends Fragment {
             hideLoadMore();
             isRequesting = false;
             adapterBookSharing.notifyDataSetChanged();
-//            adapterBookSharing = new BookSharingAdapter(this.listBook, getActivity().getApplicationContext(), this);
-//            recyclerView.setAdapter(adapterBookSharing);
-
         } catch (Exception e) {
         }
     }
@@ -179,9 +171,18 @@ public class FragmentBookSharing extends Fragment {
             @Override
             public void onItemLongClick(View view, int position) {
                 BookSharingEntity entity = listBook.get(position);
+                RelativeLayout layoutDelete = (RelativeLayout) view.findViewById(R.id.layoutDelete);
+                RelativeLayout layoutLeft = (RelativeLayout) view.findViewById(R.id.layoutLeft);
                 if(entity.getBorrowingUserId() == 0) {
-                    showDialogDeleteBook(entity);
+                    layoutDelete.setVisibility(View.VISIBLE);
+                    layoutLeft.setVisibility(View.GONE);
                 }
+                layoutDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDialogDeleteBook(entity);
+                    }
+                });
             }
         }));
     }
@@ -209,6 +210,14 @@ public class FragmentBookSharing extends Fragment {
         if(dialog != null && !dialog.isShowing()){
             dialog.show();
         }
+    }
+
+    public void showLoadBook () {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoadBook () {
+        progressBar.setVisibility(View.GONE);
     }
 
     public void updateAfterDelete(){
@@ -243,19 +252,6 @@ public class FragmentBookSharing extends Fragment {
 
     private void hideLoadMore() {
         progressLoadMore.setVisibility(View.GONE);
-    }
-
-    private void fakeData() {
-        //fake data listbook sharing
-        for (int i = 0; i < 10; i++) {
-            BookSharingEntity info = new BookSharingEntity();
-            info.setTitle("Cuộc đời, sự nghiệp Steve Jobs" + i);
-            info.setAuthor("Frank Luca" + i);
-            info.setRateCount(4);
-            info.setBorrowingUserName("Trần Duy Hưng " + i);
-            listBook.add(info);
-        }
-
     }
 
     private void showDialogFilter() {
@@ -365,9 +361,6 @@ public class FragmentBookSharing extends Fragment {
                 showLoading();
                 listBook.clear();
             }
-//            else{
-//                setTitleSharing = false;setTitleNotSharing = false;setTitleLost = false;
-//            }
         } catch (Exception e) {
         }
     }

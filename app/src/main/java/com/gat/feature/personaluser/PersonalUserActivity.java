@@ -77,6 +77,8 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     @BindView(R.id.layoutMenutop)
     RelativeLayout layoutMenutop;
 
+    @BindView(R.id.layoutBack)
+    RelativeLayout layoutBack;
     private Context context;
 
     //init fragment
@@ -148,7 +150,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     private void handleEvent(){
-        imgBack.setOnClickListener(v -> finish());
+        layoutBack.setOnClickListener(v -> finish());
 
         //event chating
         imgChat.setOnClickListener(v -> {
@@ -203,7 +205,15 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         viewPager.setAdapter(adapter);
     }
 
+    private void checkInternet() {
+        if (!ClientUtils.isOnline()) {
+            ClientUtils.showViewNotInternet(MainActivity.instance,layoutMenutop);
+            return;
+        }
+    }
+
     public void requestBookUserSharing(BookSharingUserInput input){
+        checkInternet();
         getPresenter().requestBookUserSharing(input);
     }
 
@@ -262,6 +272,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     public void requestBorrowBook(BorrowRequestInput input){
+        checkInternet();
         input.setOwnerId(currentUser.userId());
         getPresenter().requestBorrowBook(input);
     }
@@ -269,6 +280,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
 
     public void requestBookUserReading(BookReadingInput input){
+        checkInternet();
         getPresenter().requestBookUserReading(input);
     }
 

@@ -58,6 +58,7 @@ import java.util.List;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
+import pl.droidsonroids.gif.GifTextView;
 
 /**
  * Created by root on 18/04/2017.
@@ -100,10 +101,12 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     @BindView(R.id.layoutFavorit)
     RelativeLayout layoutFavorit;
 
+    @BindView(R.id.layoutBack)
+    RelativeLayout layoutBack;
 
 
     @BindView(R.id.progressBar)
-    ProgressBar progressBar;
+    GifTextView progressBar;
     private Bitmap currentBitmap;
     private File fileImage;
 
@@ -153,7 +156,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             edtName.setText("");
         });
         imgSave.setOnClickListener(v -> updateProfile());
-        imgBack.setOnClickListener(v -> backToPreviousView());
+        layoutBack.setOnClickListener(v -> backToPreviousView());
         layoutAddress.setOnClickListener(v -> {
             //mr.Duc redirect here
             try {
@@ -173,6 +176,13 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         finish();
     }
 
+    private void checkInternet() {
+        if (!ClientUtils.isOnline()) {
+            ClientUtils.showViewNotInternet(MainActivity.instance,layoutMenutop);
+            return;
+        }
+    }
+
 
     private void editInfoError(ServerResponse<ResponseData> error) {
         progressBar.setVisibility(View.GONE);
@@ -183,7 +193,6 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         }
     }
     private void editInfoSuccess(String message) {
-        ClientUtils.showToast(this, message);
         progressBar.setVisibility(View.GONE);
         backToPreviousActivity();
     }
@@ -208,6 +217,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             input.setImageBase64(encoded);
             input.setChangeImage(true);
         }
+        checkInternet();
         getPresenter().requestEditInfo(input);
     }
 

@@ -25,6 +25,8 @@ import com.gat.repository.entity.book.BookSharingEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.droidsonroids.gif.GifTextView;
+
 /**
  * Created by root on 20/04/2017.
  */
@@ -36,7 +38,7 @@ public class FragmentBookUserSharing extends Fragment {
     private BookSharingUserInput currentInput;
     private List<BookSharingEntity> listBook = new ArrayList<>();
 
-    private ProgressBar progressLoadMore,progressBar;
+    private GifTextView progressLoadMore,progressBar;
     private TextView txtMessage;
     private RecyclerView recyclerView;
     private BookUserSharingAdapter adapter;
@@ -95,8 +97,8 @@ public class FragmentBookUserSharing extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         adapter = new BookUserSharingAdapter(listBook,context,this);
         recyclerView.setAdapter(adapter);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        progressLoadMore = (ProgressBar) rootView.findViewById(R.id.progressLoadMore);
+        progressBar = (GifTextView) rootView.findViewById(R.id.progressBar);
+        progressLoadMore = (GifTextView) rootView.findViewById(R.id.progressLoadMore);
         txtMessage = (TextView) rootView.findViewById(R.id.txtMessage);
     }
 

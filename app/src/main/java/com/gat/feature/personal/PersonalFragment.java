@@ -277,6 +277,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     public void requestPersonalInfo() {
+        checkInternet();
         getPresenter().requestPersonalInfor("");
     }
 
@@ -325,12 +326,14 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     public void requestBookOwner(RequestStatusInput statusInput) {
+        checkInternet();
+        fragmentBookRequest.showLoadBook();
         getPresenter().requestChangeStatus(statusInput);
     }
 
     private void requestBookByOwnerSuccess(ChangeStatusResponse data) {
         if (data != null) {
-//            ClientUtils.showToast(getActivity(), data.getMessage());
+            fragmentBookRequest.hideLoadBook();
             fragmentBookRequest.refreshAdapter();
         }
     }
@@ -345,11 +348,13 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void removeBookSuccess(String data){
         fragmentBookSharing.updateAfterDelete();
+        fragmentBookSharing.hideLoadBook();
         
     }
 
     public void removeBookInstance(int instanceId){
         getPresenter().removeBook(instanceId);
+        fragmentBookSharing.showLoadBook();
     }
 
 
@@ -367,24 +372,34 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         if(dialog != null && !dialog.isShowing()){
             dialog.show();
         }
+        //hide loading in fragment request
+        fragmentBookRequest.hideLoadBook();
+        fragmentBookSharing.hideLoadBook();
     }
 
     //get book instance
     public void requestBookInstance(BookInstanceInput input) {
+        checkInternet();
+        getPresenter().requestBookInstance(input);
+    }
+
+    private void checkInternet() {
         if (!ClientUtils.isOnline()) {
             ClientUtils.showViewNotInternet(MainActivity.instance,layoutTop);
             return;
         }
-        getPresenter().requestBookInstance(input);
     }
 
     //change status book
     public void requestChangeStatusBook(BookChangeStatusInput input) {
+        checkInternet();
+        fragmentBookSharing.showLoadBook();
         getPresenter().requestChangeBookSharingStatus(input);
     }
 
     //request reading book
     public void requestReadingBooks(BookReadingInput input) {
+        checkInternet();
         getPresenter().requestReadingBooks(input);
         fragmentBookReading.setCurrentInput(input);
         DataLocal.savePersonalInputReading(input);
@@ -392,6 +407,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     //request bookrequest
     public void requestBookRequest(BookRequestInput input) {
+        checkInternet();
         getPresenter().requestBookRequests(input);
         DataLocal.savePersonalInputRequest(input);
     }
@@ -421,13 +437,14 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void changeStatusBookError(String error) {
         ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error);
+        fragmentBookSharing.hideLoadBook();
     }
 
 
     private void changeBookSharingStatusSuccess(String data) {
         if (!Strings.isNullOrEmpty(data)) {
-//            fragmentBookSharing.refreshDate();
         }
+        fragmentBookSharing.hideLoadBook();
     }
 
     private void getReadingBooksSuccess(Data data) {
