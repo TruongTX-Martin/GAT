@@ -114,7 +114,6 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
 
     private void onDisconnectSuccess (String message) {
         hideProgress();
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
         switch (mTypeSocial) {
             case TypeSocial.FACEBOOK:
                 delegate.goToMainSetting(KeyBackToMain.DISCONNECT_FACEBOOK);
@@ -132,7 +131,7 @@ public class SocialConnectedFragment extends ScreenFragment<SocialConnectedScree
 
     private void onError (String message) {
         hideProgress();
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        ClientUtils.showDialogError(getActivity(), getString(R.string.err), message);
     }
 
     private void hideProgress () {

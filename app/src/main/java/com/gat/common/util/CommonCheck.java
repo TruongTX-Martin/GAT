@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import com.gat.app.activity.ScreenActivity;
 import com.gat.data.exception.CommonException;
+import com.gat.data.exception.ConflictDataException;
 import com.gat.data.exception.LoginException;
 import com.gat.data.firebase.entity.Notification;
 import com.gat.data.response.ServerResponse;
@@ -163,7 +164,15 @@ public class CommonCheck {
                             ServerResponse serverResponse = ServerResponse.TOKEN_CHANGED;
                             serverResponse.message(errorContent.getString("message"));
                             throw new LoginException(serverResponse);
-                        } else {
+
+                        } else if (response.code() == ServerResponse.HTTP_CODE.CONFLICT_DATA) {
+
+                            ServerResponse serverResponse = ServerResponse.TOKEN_CHANGED;
+                            serverResponse.message(errorContent.getString("message"));
+                            throw new ConflictDataException(serverResponse);
+                        }
+
+                        else {
                             throw new CommonException(errorContent.getString("message"));
                         }
                     } else {

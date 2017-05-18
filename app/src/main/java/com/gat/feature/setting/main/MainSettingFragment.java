@@ -323,7 +323,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
             MZDebug.w("facebook connected: " + user.faceBookName());
             textViewFacebook.setText(user.faceBookName());
         } else {
-            imageViewGoogle.setImageResource(R.drawable.ic_facebook);
+            imageViewFacebook.setImageResource(R.drawable.ic_facebook);
         }
 
         // check twitter connected
@@ -332,7 +332,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
             MZDebug.w("twitter connected: " + user.twitterName());
             textViewTwitter.setText(user.twitterName());
         } else {
-            imageViewGoogle.setImageResource(R.drawable.ic_twitter);
+            imageViewTwitter.setImageResource(R.drawable.ic_twitter);
         }
 
         // check google connected
@@ -499,7 +499,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
     private void onError (String message) {
         hideProgress();
-        ClientUtils.showDialogError(mContext, getString(R.string.err), message);
+        ClientUtils.showDialogError(mainActivity, getString(R.string.err), message);
     }
 
     private void hideProgress () {

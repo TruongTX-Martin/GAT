@@ -345,6 +345,7 @@ public class ClientUtils {
         builder.setView(view);
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
         TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
@@ -363,22 +364,64 @@ public class ClientUtils {
     }
 
 
-    public static void showDialogError(@NonNull Context context,
-                                       @NonNull String title, @NonNull String message) {
+    public static AlertDialog showDialogError(@NonNull Context context, @NonNull String title, @NonNull String message) {
 
-        Dialog dialog = new Dialog(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View view = layoutInflater.inflate(R.layout.layout_dialog_error, null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.layout_dialog_error);
         dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
-        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
-        Button btnAgreed = (Button) dialog.findViewById(R.id.btnAgreed);
+        TextView txtTitle = (TextView) view.findViewById(R.id.txtTopTitle);
+        TextView txtContent = (TextView) view.findViewById(R.id.txtContent);
+        Button btnAgreed = (Button) view.findViewById(R.id.btnAgreed);
 
         txtTitle.setText(title);
         txtContent.setText(message);
         btnAgreed.setOnClickListener(v -> dialog.dismiss());
+
         dialog.show();
+
+        return dialog;
     }
+
+
+    public static AlertDialog showDialogError409(@NonNull Context context,
+                                                @NonNull String title, @NonNull String message,
+                                                @Nullable OnDialogPressed callback) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View view = layoutInflater.inflate(R.layout.layout_dialog_error, null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        TextView txtTitle = (TextView) view.findViewById(R.id.txtTopTitle);
+        TextView txtContent = (TextView) view.findViewById(R.id.txtContent);
+        Button btnAgreed = (Button) view.findViewById(R.id.btnAgreed);
+
+        txtTitle.setText(title);
+        txtContent.setText(message);
+        btnAgreed.setOnClickListener(v -> {
+            dialog.dismiss();
+
+            if (callback != null) {
+                callback.onClickAccept();
+            }
+
+        });
+
+        dialog.show();
+
+        return dialog;
+    }
+
+
 
 }
