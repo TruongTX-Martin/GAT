@@ -112,6 +112,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         return MainScreen.instance();
     }
 
+    private int previousTab = 0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,9 +128,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         setupTabLayoutIcons(mTabLayout);
         // set up icon high light
         mTabLayout.getTabAt(TAB_POS.TAB_HOME).setIcon(R.drawable.home_ic_selected);
+        previousTab = mTabLayout.getSelectedTabPosition();
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                scanFragment.cleanView();
                 selectTab(tab, true);// For refresh layout
                 mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
                 if(tab.getPosition() == 1) {
@@ -241,6 +244,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     }
 
 
+
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
         scanFragment = new ScanFragment();
@@ -248,7 +252,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), getString(R.string.tab_home));
         adapter.addFragment(personalFragment, getString(R.string.tab_personal));
-        adapter.addFragment(new ScanFragment(), getString(R.string.tab_scanbarcode));
+        adapter.addFragment(scanFragment, getString(R.string.tab_scanbarcode));
         adapter.addFragment(new NotificationFragment(this), getString(R.string.tab_notification));
         adapter.addFragment(new SettingFragment(), getString(R.string.tab_setting));
         viewPager.setOffscreenPageLimit(4);

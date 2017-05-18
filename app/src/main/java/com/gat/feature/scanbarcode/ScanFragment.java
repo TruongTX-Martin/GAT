@@ -212,6 +212,11 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
         }
     }
 
+    public void cleanView(){
+        scannerView.removeAllViews();
+        scannerView.stopCamera();
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
