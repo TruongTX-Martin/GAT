@@ -322,6 +322,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if ( ! TextUtils.isEmpty(user.faceBookId()) && ! TextUtils.isEmpty(user.faceBookName())) {
             MZDebug.w("facebook connected: " + user.faceBookName());
             textViewFacebook.setText(user.faceBookName());
+            imageViewFacebook.setImageResource(R.drawable.ic_facebook_active);
         } else {
             imageViewFacebook.setImageResource(R.drawable.ic_facebook);
         }
@@ -331,6 +332,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (! TextUtils.isEmpty(user.twitterId()) && ! TextUtils.isEmpty(user.twitterName())) {
             MZDebug.w("twitter connected: " + user.twitterName());
             textViewTwitter.setText(user.twitterName());
+            imageViewFacebook.setImageResource(R.drawable.ic_twitter_active);
         } else {
             imageViewTwitter.setImageResource(R.drawable.ic_twitter);
         }
@@ -340,6 +342,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (! TextUtils.isEmpty(user.googleId()) && ! TextUtils.isEmpty(user.googleName())) {
             MZDebug.w("google connected: " + user.googleName());
             textViewGoogle.setText(user.googleName());
+            imageViewFacebook.setImageResource(R.drawable.ic_google_active);
         } else {
             imageViewGoogle.setImageResource(R.drawable.ic_google);
         }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
+import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
 import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
@@ -36,10 +39,12 @@ import io.reactivex.disposables.CompositeDisposable;
 public class NotificationFragment extends ScreenFragment<NotificationScreen, NotificationPresenter>
 implements NotificationAdapter.OnItemNotifyClickListener{
 
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    private List<NotifyEntity> mListNotifies;
     private CompositeDisposable disposable;
     private NotificationAdapter adapter;
     private IMainDelegate delegate;
@@ -65,22 +70,30 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         super.onCreate(savedInstanceState);
 
         disposable = new CompositeDisposable(
-                getPresenter().onLoadUserNotificationSuccess().subscribe(this::onLoadNotifiesSuccess)
+                getPresenter().onLoadUserNotificationSuccess().subscribe(this::onLoadNotifiesSuccess),
+                getPresenter().onError().subscribe(this::onError),
+                getPresenter().onUnAuthorization().subscribe(this::onUnAuthorization)
         );
-
-        getPresenter().loadUserNotification();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
         setupRecyclerView();
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
+        swipeRefreshLayout.setOnRefreshListener(() -> getPresenter().loadUserNotification(true));
+
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        getPresenter().loadUserNotification(false);
     }
 
     @Override
@@ -90,7 +103,6 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     }
 
     private void setupRecyclerView () {
-        mListNotifies = new ArrayList<>();
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(
@@ -102,15 +114,17 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         recyclerView.setAdapter(adapter);
     }
 
-    private void onLoadNotifiesSuccess (List<NotifyEntity> list) {
-        if (null == list || list.isEmpty()) {
+    private void onLoadNotifiesSuccess (DataResultListResponse<NotifyEntity> data) {
+
+        swipeRefreshLayout.setRefreshing(false);
+
+        if (null == data || data.getResultInfo().isEmpty()) {
             return;
         }
-        mListNotifies.addAll(list);
-        MZDebug.w("___________________________________________ list notifies size: " + list.size());
-        MZDebug.w("Notify: " + list.get(0).toString());
 
-        adapter.setItems(list);
+        MZDebug.w("Notify: " + data.getResultInfo().get(0).toString());
+
+        adapter.setItems(data.getResultInfo());
     }
 
 
@@ -183,4 +197,17 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     private void start631RequestFromAnotherPerson () {
         delegate.goTo631PageRequest();
     }
+
+    void onError (String message) {
+        swipeRefreshLayout.setRefreshing(false);
+        ClientUtils.showDialogError(getActivity(), getString(R.string.err), message);
+    }
+
+    void onUnAuthorization (String message) {
+        swipeRefreshLayout.setRefreshing(false);
+
+        // vì là fragment nằm trong MainActivity nên phải cast sang
+        ClientUtils.showDialogUnAuthorization((MainActivity) getActivity(), message);
+    }
+
 }

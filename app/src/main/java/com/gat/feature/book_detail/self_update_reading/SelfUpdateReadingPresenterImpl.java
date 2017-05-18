@@ -3,6 +3,7 @@ package com.gat.feature.book_detail.self_update_reading;
 import android.util.Log;
 
 import com.gat.common.util.MZDebug;
+import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
@@ -79,9 +80,10 @@ public class SelfUpdateReadingPresenterImpl implements SelfUpdateReadingPresente
                             + Log.getStackTraceString(throwable));
 
                     if (throwable instanceof LoginException) {
-                        subjectUnAuthorization.onNext(ServerResponse.TOKEN_CHANGED.message());
+                        LoginException exception = (LoginException) throwable;
+                        subjectUnAuthorization.onNext(exception.responseData().message());
                     } else {
-                        subjectError.onNext(ServerResponse.EXCEPTION.message());
+                        subjectError.onNext( ((CommonException)throwable).getMessage() );
                     }
 
                 }).execute();
