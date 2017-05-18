@@ -100,7 +100,7 @@ public class NotificationPresenterImpl implements NotificationPresenter {
                             + Log.getStackTraceString(throwable));
 
                     if (throwable instanceof LoginException) {
-                        subjectOnUnAuthorization.onNext( ((LoginException)throwable).getMessage() );
+                        subjectOnUnAuthorization.onNext( ((LoginException)throwable).responseData().message() );
                     } else {
                         subjectOnError.onNext( ((CommonException)throwable).getMessage() );
                     }

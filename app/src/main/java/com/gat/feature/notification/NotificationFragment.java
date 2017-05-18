@@ -90,8 +90,8 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         getPresenter().loadUserNotification(false);
     }
@@ -183,13 +183,13 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     }
 
     private void startBorrowFromAnother (int borrowRecordId) {
-        Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
+        Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
         intent.putExtra("BorrowingRecordId", borrowRecordId);
         MainActivity.instance.startActivity(intent);
     }
 
     private void startBorrowByMe (int borrowRecordId) {
-        Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
+        Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
         intent.putExtra("BorrowingRecordId", borrowRecordId);
         MainActivity.instance.startActivity(intent);
     }
@@ -207,7 +207,7 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         swipeRefreshLayout.setRefreshing(false);
 
         // vì là fragment nằm trong MainActivity nên phải cast sang
-        ClientUtils.showDialogUnAuthorization((MainActivity) getActivity(), message);
+        ClientUtils.showDialogUnAuthorization( getActivity() ,(MainActivity) getActivity(), message);
     }
 
 }

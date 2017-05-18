@@ -45,7 +45,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.common.api.Status;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -332,7 +334,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (! TextUtils.isEmpty(user.twitterId()) && ! TextUtils.isEmpty(user.twitterName())) {
             MZDebug.w("twitter connected: " + user.twitterName());
             textViewTwitter.setText(user.twitterName());
-            imageViewFacebook.setImageResource(R.drawable.ic_twitter_active);
+            imageViewTwitter.setImageResource(R.drawable.ic_twitter_active);
         } else {
             imageViewTwitter.setImageResource(R.drawable.ic_twitter);
         }
@@ -342,7 +344,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         if (! TextUtils.isEmpty(user.googleId()) && ! TextUtils.isEmpty(user.googleName())) {
             MZDebug.w("google connected: " + user.googleName());
             textViewGoogle.setText(user.googleName());
-            imageViewFacebook.setImageResource(R.drawable.ic_google_active);
+            imageViewGoogle.setImageResource(R.drawable.ic_google_active);
         } else {
             imageViewGoogle.setImageResource(R.drawable.ic_google);
         }
@@ -404,6 +406,10 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         MZDebug.w("account email:" + account.getEmail() + ", display name: " + account.getDisplayName() );
         progressDialog.show();
         getPresenter().requestConnectSocial(account.getEmail() , account.getDisplayName(), SocialType.GOOGLE);
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                status -> {
+
+                });
     }
 
     FacebookCallback<LoginResult> facebookCallback = new FacebookCallback<LoginResult>() {
@@ -425,6 +431,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
                         MZDebug.w("Facebook id: " + fb_id + ", name: " + fb_name);
                         progressDialog.show();
                         getPresenter().requestConnectSocial(fb_id, fb_name, SocialType.FACEBOOK);
+                        LoginManager.getInstance().logOut();
                     });
             Bundle parameters = new Bundle();
             parameters.putString("fields", "id, name");
@@ -479,6 +486,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         hideProgress();
         mFacebookUserName = username;
         textViewFacebook.setText(username);
+        imageViewFacebook.setImageResource(R.drawable.ic_facebook_active);
     }
 
     String mGoogleUserName = "";
@@ -486,6 +494,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         hideProgress();
         mGoogleUserName = username;
         textViewGoogle.setText(username);
+        imageViewGoogle.setImageResource(R.drawable.ic_google_active);
     }
 
     String mTwitterUserName = "";
@@ -493,6 +502,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         hideProgress();
         mTwitterUserName = username;
         textViewTwitter.setText(username);
+        imageViewTwitter.setImageResource(R.drawable.ic_twitter_active);
     }
 
     private void onSignOutSuccess (Boolean result) {

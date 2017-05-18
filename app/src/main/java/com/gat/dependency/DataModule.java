@@ -33,6 +33,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class DataModule {
+
+    private static final int TIME_OUT_SECONDS = 60;
+
     private UserDataSource userDataSource;
     private String language;
     private String url;
@@ -51,8 +54,8 @@ public class DataModule {
     @Named("private")
     OkHttpClient providePrivateOkHttpClient() {
         return new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
                 .addInterceptor(new Interceptor() {
                     @Override
                     public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -86,8 +89,8 @@ public class DataModule {
     @Named("public")
     OkHttpClient providePublicOkHttpClient() {
         return new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
                 .addInterceptor(new Interceptor() {
                     @Override
                     public Response intercept(Chain chain) throws IOException {

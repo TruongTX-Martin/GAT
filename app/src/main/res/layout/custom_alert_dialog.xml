@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/layout_rounded"
+    android:background="@drawable/bg_layout_dialog"
     android:paddingLeft="@dimen/paddingLarge"
     android:paddingRight="@dimen/paddingLarge"
     android:paddingBottom="@dimen/paddingLarge">
@@ -13,9 +13,10 @@
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/header_textsize_m"
+        android:textSize="@dimen/header_textsize_l"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
+        android:textColor="#4e4e4e"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/error_popup_margin_top"/>
 

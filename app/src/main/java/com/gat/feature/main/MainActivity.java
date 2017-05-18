@@ -11,10 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
+import com.gat.common.customview.BadgeTabLayout;
+import com.gat.common.customview.BadgeView;
 import com.gat.common.event.NetWorkEvent;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.CommonCheck;
@@ -62,7 +66,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     NonSwipeableViewPager mViewPager;
 
     @BindView(R.id.tabLayout)
-    TabLayout mTabLayout;
+    BadgeTabLayout mTabLayout;
 
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -125,6 +129,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         // setup tab layout
         mTabLayout.setupWithViewPager(mViewPager);
         setupTabLayoutIcons(mTabLayout);
+
         // set up icon high light
         mTabLayout.getTabAt(TAB_POS.TAB_HOME).setIcon(R.drawable.home_ic_selected);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -166,7 +171,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
 //    public void onEventMainThread(NetWorkEvent event) {
 //        System.out.println(event);
 //    }
-
 
     @Override
     protected void onResume() {
@@ -214,14 +218,14 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
 
     @Override
     public void onBackPressed() {
-        // your code.
-        int currentTab = mTabLayout.getSelectedTabPosition();
-        if(currentTab > 0) {
-            currentTab --;
-            setTabDesire(currentTab);
-        }else {
-            finish();
-        }
+        // TODO Không biết đoạn code này nhằm mục đích gì-> nó gây cảm giác lỗi khi back từ fragment child
+//        int currentTab = mTabLayout.getSelectedTabPosition();
+//        if(currentTab > 0) {
+//            currentTab --;
+//            setTabDesire(currentTab);
+//        }else {
+//            finish();
+//        }
     }
 
     public void setTabDesire(int position) {
@@ -240,6 +244,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         personalFragment.setTabDesire(2);
     }
 
+    @Override
+    public void haveToPullNotifyPage(int pullCount) {
+        tabNotification.setNoticeCount(pullCount);
+    }
+
 
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
@@ -255,15 +264,16 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         viewPager.setAdapter(adapter);
     }
 
-    private void setupTabLayoutIcons (TabLayout tabLayout) {
+    private BadgeTabLayout tabNotification;
+    private void setupTabLayoutIcons (BadgeTabLayout tabLayout) {
         tabLayout.getTabAt(TAB_POS.TAB_HOME).setIcon(R.drawable.home_ic);
         tabLayout.getTabAt(TAB_POS.TAB_PERSONAL).setIcon(R.drawable.personal_ic);
         tabLayout.getTabAt(TAB_POS.TAB_SCAN).setIcon(R.drawable.scan_ic);
-        tabLayout.getTabAt(TAB_POS.TAB_NOTIFICATION).setIcon(R.drawable.notic_ic);
+        tabNotification = tabLayout.playNotification(TAB_POS.TAB_NOTIFICATION, 0);
         tabLayout.getTabAt(TAB_POS.TAB_SETTING).setIcon(R.drawable.setting_ic);
     }
 
-    private void selectTab(TabLayout.Tab tab, boolean select) {
+    private void selectTab(BadgeTabLayout.Tab tab, boolean select) {
         switch (tab.getPosition()) {
             case TAB_POS.TAB_HOME:
                 tab.setIcon(select ? R.drawable.home_ic_selected : R.drawable.home_ic);
@@ -275,7 +285,11 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
                 tab.setIcon(select ? R.drawable.scan_ic_selected : R.drawable.scan_ic);
                 break;
             case TAB_POS.TAB_NOTIFICATION:
-                tab.setIcon(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
+                //tab.setIcon(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
+
+                tabNotification.setTabIcon(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
+                tabNotification.setTitleColor(select ? R.color.colorWhite : R.color.colorGray);
+
                 break;
             case TAB_POS.TAB_SETTING:
                 tab.setIcon(select ? R.drawable.setting_ic_selected : R.drawable.setting_ic);

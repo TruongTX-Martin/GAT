@@ -12,6 +12,12 @@ public interface ChangePasswordPresenter extends Presenter {
 
     void requestChangePassword (String oldPassword, String newPassword, String confirmPassword);
     Observable<String> onChangePasswordSuccess ();
+
+
+    Observable<String> onUnAuthorization ();
+
     Observable<String> onChangePasswordFailed ();
+
+    Observable<Boolean> onShowOrHideProgress ();
 
 }

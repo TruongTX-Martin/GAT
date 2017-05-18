@@ -189,7 +189,7 @@ public class SelfUpdateReadingActivity
     }
 
     private void onUnAuthorization (String message) {
-        ClientUtils.showDialogUnAuthorization(this, message);
+        ClientUtils.showDialogUnAuthorization(this, this, message);
     }
 
 
