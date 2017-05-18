@@ -120,7 +120,7 @@
 
     <string name="tab_home">Trang chủ</string>
     <string name="tab_personal">Cá nhân</string>
-    <string name="tab_scanbarcode">Quét mã</string>
+    <string name="tab_scanbarcode">Scan Code</string>
     <string name="tab_notification">Thông báo</string>
     <string name="tab_setting">Cài đặt</string>
     <string name="message_header">Tin nhắn</string>

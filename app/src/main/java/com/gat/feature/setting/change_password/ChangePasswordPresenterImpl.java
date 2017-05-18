@@ -1,9 +1,13 @@
 package com.gat.feature.setting.change_password;
 
 import android.text.TextUtils;
+
+import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
+import com.gat.domain.UseCases;
 import com.gat.domain.usecase.UseCase;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -22,12 +26,16 @@ public class ChangePasswordPresenterImpl implements ChangePasswordPresenter {
     private UseCase<ServerResponse> useCaseChangePassword;
     private final Subject<String> subjectSuccess;
     private final Subject<String> subjectFailed;
+    private final Subject<String> subjectUnAuthorization;
+    private final Subject<Boolean> subjectWhichShowOrHideProgress;
 
     public ChangePasswordPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
         subjectSuccess = PublishSubject.create();
         subjectFailed = PublishSubject.create();
+        subjectWhichShowOrHideProgress = PublishSubject.create();
+        subjectUnAuthorization = PublishSubject.create();
     }
 
 
@@ -38,7 +46,7 @@ public class ChangePasswordPresenterImpl implements ChangePasswordPresenter {
 
     @Override
     public void onDestroy() {
-
+        useCaseChangePassword = UseCases.release(useCaseChangePassword);
     }
 
     @Override
@@ -53,14 +61,26 @@ public class ChangePasswordPresenterImpl implements ChangePasswordPresenter {
             return;
         }
 
+        subjectWhichShowOrHideProgress.onNext(true);
         useCaseChangePassword = useCaseFactory.changeOldPassword(oldPassword, newPassword);
         useCaseChangePassword.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(serverResponse -> {
+                    subjectWhichShowOrHideProgress.onNext(true);
                     subjectSuccess.onNext(serverResponse.message());
                 })
                 .onError(throwable -> {
-                    subjectFailed.onNext("Failed");
+                    subjectWhichShowOrHideProgress.onNext(false);
+
+                    if (throwable instanceof LoginException) {
+                        LoginException exception = (LoginException) throwable;
+                        subjectUnAuthorization.onNext(exception.responseData().message());
+                    } else if (throwable instanceof CommonException){
+                        subjectFailed.onNext( throwable.getMessage() );
+                    } else {
+                        subjectFailed.onNext( ServerResponse.EXCEPTION.message() );
+                    }
+
                 })
                 .execute();
     }
@@ -71,8 +91,18 @@ public class ChangePasswordPresenterImpl implements ChangePasswordPresenter {
     }
 
     @Override
+    public Observable<String> onUnAuthorization() {
+        return subjectUnAuthorization.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
     public Observable<String> onChangePasswordFailed() {
         return subjectFailed.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<Boolean> onShowOrHideProgress() {
+        return subjectWhichShowOrHideProgress.subscribeOn(schedulerFactory.main());
     }
 
 

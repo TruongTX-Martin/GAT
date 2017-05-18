@@ -33,6 +33,11 @@ public class ResultActivity extends ScreenActivity<MainScreen, MainPresenter> im
 
     }
 
+    @Override
+    public void haveToPullNotifyPage(int pullCount) {
+        // no nothing
+    }
+
     @Retention(RetentionPolicy.SOURCE)
     public @interface TAB_POS {
         int TAB_HOME            = 0;

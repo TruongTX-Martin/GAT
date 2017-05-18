@@ -8,4 +8,6 @@ public interface IMainDelegate {
 
     void goTo631PageRequest ();
 
+    void haveToPullNotifyPage (int pullCount);
+
 }

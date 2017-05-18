@@ -265,6 +265,8 @@ public class ClientUtils {
         View view = layoutInflater.inflate(R.layout.custom_alert_dialog, null);
         builder.setView(view);
         AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         if (message == null) {
             TextView textHeader = (TextView) view.findViewById(R.id.textViewTitle);
@@ -337,25 +339,25 @@ public class ClientUtils {
                 });
     }
 
-    public static <T extends ScreenActivity> AlertDialog showDialogUnAuthorization(T screen, String message) {
+    public static <T extends ScreenActivity> AlertDialog showDialogUnAuthorization(Activity activity, T screen, String message) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(screen.getApplicationContext());
-        LayoutInflater layoutInflater = LayoutInflater.from(screen.getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater layoutInflater = LayoutInflater.from(activity);
         View view = layoutInflater.inflate(R.layout.layout_dialog_error, null);
         builder.setView(view);
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        TextView txtTitle = (TextView) dialog.findViewById(R.id.txtTopTitle);
-        TextView txtContent = (TextView) dialog.findViewById(R.id.txtContent);
-        Button btnAgreed = (Button) dialog.findViewById(R.id.btnAgreed);
+        TextView txtTitle = (TextView) view.findViewById(R.id.txtTopTitle);
+        TextView txtContent = (TextView) view.findViewById(R.id.txtContent);
+        Button btnAgreed = (Button) view.findViewById(R.id.btnAgreed);
 
         txtTitle.setText(screen.getResources().getString(R.string.err));
         txtContent.setText(message);
         btnAgreed.setOnClickListener(v -> {
             dialog.dismiss();
-            screen.startAndClear(screen.getApplicationContext(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+            screen.startAndClear(activity.getApplicationContext(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         });
 
         dialog.show();
@@ -364,10 +366,10 @@ public class ClientUtils {
     }
 
 
-    public static AlertDialog showDialogError(@NonNull Context context, @NonNull String title, @NonNull String message) {
+    public static AlertDialog showDialogError(@NonNull Activity activity, @NonNull String title, @NonNull String message) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater layoutInflater = LayoutInflater.from(activity);
         View view = layoutInflater.inflate(R.layout.layout_dialog_error, null);
         builder.setView(view);
         AlertDialog dialog = builder.create();

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -48,6 +49,7 @@ implements TextWatcher{
 
     private ISettingDelegate delegate;
     private CompositeDisposable disposable;
+    private AlertDialog progressDialog;
 
     public ChangePasswordFragment (ISettingDelegate delegate) {
         this.delegate = delegate;
@@ -79,8 +81,11 @@ implements TextWatcher{
 
         disposable = new CompositeDisposable(
                 getPresenter().onChangePasswordSuccess().subscribe(this::onChangePasswordSuccess),
-                getPresenter().onChangePasswordFailed().subscribe(this::onChangePasswordFailed)
+                getPresenter().onChangePasswordFailed().subscribe(this::onChangePasswordFailed),
+                getPresenter().onUnAuthorization().subscribe(this::onUnAuthorization),
+                getPresenter().onShowOrHideProgress().subscribe(this::onWhichShowOrHideProgress)
         );
+        progressDialog = ClientUtils.createLoadingDialog(getActivity());
 
         editTextCurrentPassword.addTextChangedListener(this);
         editTextNewPassword.addTextChangedListener(this);
@@ -90,6 +95,8 @@ implements TextWatcher{
     @Override
     public void onDestroy() {
         disposable.dispose();
+        hideProgress();
+        progressDialog = null;
         super.onDestroy();
     }
 
@@ -123,17 +130,6 @@ implements TextWatcher{
                 ForgotPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
     }
 
-    void onChangePasswordSuccess (String message) {
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-
-        // back to main setting fragment
-        delegate.goToMainSetting(KeyBackToMain.BACK_CHANGE_PASSWORD);
-    }
-
-    void onChangePasswordFailed (String message) {
-        ClientUtils.showDialogError(mContext, getString(R.string.err), message);
-    }
-
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -155,6 +151,35 @@ implements TextWatcher{
 
     @Override
     public void afterTextChanged(Editable s) {
+    }
 
+    void onChangePasswordSuccess (String message) {
+
+        Views.hideKeyboard(getActivity());
+        delegate.goToMainSetting(KeyBackToMain.BACK_CHANGE_PASSWORD);
+    }
+
+    void onChangePasswordFailed (String message) {
+        ClientUtils.showDialogError(getActivity(), getString(R.string.err), message);
+    }
+
+    void onUnAuthorization (String message) {
+        ClientUtils.showDialogUnAuthorization(getActivity(), (MainActivity) getActivity(), message);
+    }
+
+    void onWhichShowOrHideProgress (Boolean isShow) {
+        Views.hideKeyboard(getActivity());
+
+        if (isShow) {
+            progressDialog.show();
+        } else {
+            hideProgress();
+        }
+    }
+
+    void hideProgress () {
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
     }
 }

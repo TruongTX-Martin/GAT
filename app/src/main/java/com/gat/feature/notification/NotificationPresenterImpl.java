@@ -1,16 +1,15 @@
 package com.gat.feature.notification;
 
 import android.util.Log;
-
 import com.gat.common.util.MZDebug;
+import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.User;
-
-import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -30,13 +29,18 @@ public class NotificationPresenterImpl implements NotificationPresenter {
     private int mTotalResult;
 
     private UseCase<DataResultListResponse<NotifyEntity>> useCaseNotifications;
-    private final Subject<List<NotifyEntity>> subjectLoadNotificationsSuccess;
+    private final Subject<DataResultListResponse<NotifyEntity>> subjectLoadNotificationsSuccess;
+
+    private final Subject<String> subjectOnError;
+    private final Subject<String> subjectOnUnAuthorization;
 
 
     public NotificationPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
         subjectLoadNotificationsSuccess = PublishSubject.create();
+        subjectOnError = PublishSubject.create();
+        subjectOnUnAuthorization = PublishSubject.create();
     }
 
 
@@ -52,14 +56,14 @@ public class NotificationPresenterImpl implements NotificationPresenter {
     }
 
     @Override
-    public void loadUserNotification() {
+    public void loadUserNotification(boolean isRefresh) {
         MZDebug.w("_______________________________________________ loadUserNotification ");
 
-        if (mTotalResult > PER_PAGE) {
-            if (mCurrentPage * PER_PAGE >= mTotalResult) {
-                return;
-            }
-        }
+//        if (mTotalResult > PER_PAGE) {
+//            if (mCurrentPage * PER_PAGE >= mTotalResult) {
+//                return;
+//            }
+//        }
 
         UseCase<User> loadLocalUser = useCaseFactory.getUser();
         loadLocalUser.executeOn(schedulerFactory.io())
@@ -68,7 +72,6 @@ public class NotificationPresenterImpl implements NotificationPresenter {
                     if (user != null && user.isValid()) {
                         loadNotify();
                     }
-
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"
@@ -90,18 +93,34 @@ public class NotificationPresenterImpl implements NotificationPresenter {
                             data.getResultInfo().size());
                     mCurrentPage ++;
                     mTotalResult = data.getNotifyTotal();
-                    subjectLoadNotificationsSuccess.onNext(data.getResultInfo());
+                    subjectLoadNotificationsSuccess.onNext(data);
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: loadUserNotification _________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
+
+                    if (throwable instanceof LoginException) {
+                        subjectOnUnAuthorization.onNext( ((LoginException)throwable).responseData().message() );
+                    } else {
+                        subjectOnError.onNext( ((CommonException)throwable).getMessage() );
+                    }
 
                 })
                 .execute();
     }
 
     @Override
-    public Observable<List<NotifyEntity>> onLoadUserNotificationSuccess() {
+    public Observable<DataResultListResponse<NotifyEntity>> onLoadUserNotificationSuccess() {
         return subjectLoadNotificationsSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onError() {
+        return subjectOnError.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onUnAuthorization() {
+        return subjectOnUnAuthorization.subscribeOn(schedulerFactory.main());
     }
 }
