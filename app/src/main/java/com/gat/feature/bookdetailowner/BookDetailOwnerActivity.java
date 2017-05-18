@@ -48,6 +48,9 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
     @BindView(R.id.layoutBack)
     RelativeLayout layoutBack;
 
+    @BindView(R.id.layoutButton)
+    RelativeLayout layoutButton;
+
     @BindView(R.id.txtTitle)
     TextView txtTitle;
 
@@ -244,7 +247,7 @@ public class BookDetailOwnerActivity extends ScreenActivity<BookDetailOwnerScree
 
     private void initView(){
         txtTitle.setText("CHI TIẾT YÊU CẦU");
-        imgSave.setVisibility(View.GONE);
+        layoutButton.setVisibility(View.INVISIBLE);
         txtTitle.setTextColor(Color.parseColor("#000000"));
         imgBack.setImageResource(R.drawable.narrow_back_black);
         // TODO remove intent

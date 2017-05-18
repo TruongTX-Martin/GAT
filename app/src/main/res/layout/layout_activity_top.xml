@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layoutMenutop"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="#ffffff">
-    
-    
+    android:layout_height="50dp">
+
+
     <RelativeLayout
         android:id="@+id/layoutBack"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        >
+        android:layout_alignParentLeft="true">
+
         <ImageView
             android:id="@+id/imgBack"
             android:layout_width="9.5dp"
@@ -23,23 +21,30 @@
 
     </RelativeLayout>
 
-
-    <ImageView
-        android:id="@+id/imgSave"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/layoutButton"
+        android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/header_margin_lr"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/ic_check" />
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:id="@+id/imgSave"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/header_margin_lr"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_check" />
+
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/imgSave"
+        android:layout_toLeftOf="@+id/layoutButton"
         android:layout_toRightOf="@+id/layoutBack"
         android:gravity="center_horizontal"
         android:textColor="@color/colorWhite"

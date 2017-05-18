@@ -47,6 +47,9 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     @BindView(R.id.layoutBack)
     RelativeLayout layoutBack;
 
+    @BindView(R.id.layoutButton)
+    RelativeLayout layoutButton;
+
     @BindView(R.id.imgBack)
     ImageView imgBack;
 
@@ -236,7 +239,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         txtTitle.setText("CHI TIẾT YÊU CẦU");
         txtTitle.setTextColor(Color.parseColor("#000000"));
         imgBack.setImageResource(R.drawable.narrow_back_black);
-        imgSave.setVisibility(View.GONE);
+        layoutButton.setVisibility(View.INVISIBLE);
         // TODO remove intent
         if (getScreen().requestId() != 0) {
             borrowingRecordId = getScreen().requestId();

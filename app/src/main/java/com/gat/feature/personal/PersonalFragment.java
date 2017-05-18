@@ -71,7 +71,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private RelativeLayout layoutInfo;
 
 
-    private RelativeLayout layoutTop;
+    private RelativeLayout layoutTop,layoutButton;
     private ImageView imgBack, imgSave;
     private TextView txtTitle;
 
@@ -185,11 +185,13 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         layoutInfo = (RelativeLayout) rootView.findViewById(R.id.layoutEdit);
 
         layoutTop = (RelativeLayout) rootView.findViewById(R.id.layoutMenutop);
+        layoutButton = (RelativeLayout) rootView.findViewById(R.id.layoutButton);
         imgBack = (ImageView) rootView.findViewById(R.id.imgBack);
         imgSave = (ImageView) rootView.findViewById(R.id.imgSave);
         txtTitle = (TextView) rootView.findViewById(R.id.txtTitle);
-        imgBack.setVisibility(View.GONE);
-        imgSave.setVisibility(View.GONE);
+        imgBack.setVisibility(View.INVISIBLE);
+        imgSave.setVisibility(View.INVISIBLE);
+        layoutButton.setVisibility(View.INVISIBLE);
         txtTitle.setText("CÁ NHÂN");
         txtTitle.setTextColor(Color.parseColor("#ffffff"));
         layoutTop.setBackgroundColor(Color.parseColor("#8ec3df"));
