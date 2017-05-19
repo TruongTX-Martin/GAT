@@ -241,6 +241,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     private void borrowBookError(String  error) {
+        fragmentBookUserSharing.hideLoadBook();
         ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error);
     }
 
@@ -261,6 +262,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
             BookSharingEntity entity = (BookSharingEntity) data.getDataReturn(BookSharingEntity.class);
             fragmentBookUserSharing.refreshAdapterSharingBook(entity.getRecordStatus());
         }
+        fragmentBookUserSharing.hideLoadBook();
     }
     private void getBookUserReadingSuccess(Data data){
         if(data != null){
@@ -275,6 +277,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         checkInternet();
         input.setOwnerId(currentUser.userId());
         getPresenter().requestBorrowBook(input);
+        fragmentBookUserSharing.showLoadBook();
     }
 
 
