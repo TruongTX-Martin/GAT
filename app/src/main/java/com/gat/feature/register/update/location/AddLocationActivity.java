@@ -411,6 +411,7 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(selectedLocation)
                     .visible(true);
+            if(googleMap == null) return;
             marker = googleMap.addMarker(markerOptions);
 
             if (cameraMove)

@@ -160,7 +160,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         layoutAddress.setOnClickListener(v -> {
             //mr.Duc redirect here
             try {
-                start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
+                start(MainActivity.instance, AddLocationActivity.class, AddLocationScreen.instance());
             }catch (Exception e){}
         });
         layoutFavorit.setOnClickListener(v -> {
