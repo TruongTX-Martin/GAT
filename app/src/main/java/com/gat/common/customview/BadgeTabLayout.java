@@ -95,6 +95,7 @@ public class BadgeTabLayout extends TabLayout {
 
     public void setNoticeCount (int notice_count) {
         if (notice_count > 0) {
+            mTextViewBadge.setVisibility(VISIBLE);
             mTextViewBadge.setText(String.valueOf(notice_count));
         } else {
             mTextViewBadge.setVisibility(GONE);

@@ -125,13 +125,6 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
 
         scannerView.setResultHandler(this);
 
-        if (this.cameraPermision) {
-            if (getUserVisibleHint()) {
-                scannerView.startCamera();
-                scannerView.setAutoFocus(true);
-            }
-        }
-
         lightBtn.setOnClickListener(v -> {
             // Turn light on
             scannerView.setFlash(!isTorchOn);

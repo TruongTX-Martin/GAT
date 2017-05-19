@@ -253,7 +253,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     }
 
 
-
     private void setupViewPager(ViewPager viewPager) {
         personalFragment = new PersonalFragment();
         scanFragment = new ScanFragment();
