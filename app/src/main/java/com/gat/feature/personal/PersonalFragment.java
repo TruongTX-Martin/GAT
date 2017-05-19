@@ -288,6 +288,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     //handle data personal return
     private void getUserInfoSuccess(Data<User> data) {
+        
         if (data != null) {
             userInfo = data.getDataReturn(User.typeAdapter(new Gson()));
             if (userInfo == null)
