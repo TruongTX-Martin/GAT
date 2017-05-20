@@ -156,6 +156,14 @@ public class FragmentBookUserSharing extends Fragment {
         progressLoadMore.setVisibility(View.GONE);
     }
 
+    public void showLoadBook() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoadBook() {
+        progressBar.setVisibility(View.GONE);
+    }
+
     private void showLoading(){
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);

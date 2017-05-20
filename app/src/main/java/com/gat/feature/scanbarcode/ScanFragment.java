@@ -206,8 +206,10 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
     }
 
     public void cleanView(){
-        scannerView.removeAllViews();
-        scannerView.stopCamera();
+        if(scannerView != null && scannerView.getChildCount() > 0){
+            scannerView.removeAllViews();
+            scannerView.stopCamera();
+        }
     }
 
     @Override

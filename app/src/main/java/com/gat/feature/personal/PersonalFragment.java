@@ -71,7 +71,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private RelativeLayout layoutInfo;
 
 
-    private RelativeLayout layoutTop,layoutButton;
+    private RelativeLayout layoutTop, layoutButton;
     private ImageView imgBack, imgSave;
     private TextView txtTitle;
 
@@ -105,7 +105,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     public void setTabDesire(int position) {
-        tabLayout.setScrollPosition(position,0f,true);
+        tabLayout.setScrollPosition(position, 0f, true);
         viewPager.setCurrentItem(position);
     }
 
@@ -279,12 +279,16 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     public void requestPersonalInfo() {
-        checkInternet();
-        getPresenter().requestPersonalInfor("");
+        try {
+            checkInternet();
+            getPresenter().requestPersonalInfor("");
+        } catch (Exception e) {
+        }
     }
 
     //handle data personal return
     private void getUserInfoSuccess(Data<User> data) {
+        
         if (data != null) {
             userInfo = data.getDataReturn(User.typeAdapter(new Gson()));
             if (userInfo == null)
@@ -293,8 +297,8 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
                 txtName.setText(userInfo.name());
                 txtAddress.setText(userInfo.name());
             }
-            if(userInfo.usuallyLocation().size() > 0){
-                if(!Strings.isNullOrEmpty(userInfo.usuallyLocation().get(0).getAddress())){
+            if (userInfo.usuallyLocation().size() > 0) {
+                if (!Strings.isNullOrEmpty(userInfo.usuallyLocation().get(0).getAddress())) {
                     txtAddress.setText(userInfo.usuallyLocation().get(0).getAddress());
                 }
             }
@@ -304,7 +308,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             }
             if (/*userInfo.userId() > 0*/userInfo.isValid()) {
                 BookReadingInput readingInput = new BookReadingInput(true, false, false);
-                if(DataLocal.getPersonalInputReading() != null) {
+                if (DataLocal.getPersonalInputReading() != null) {
                     readingInput = DataLocal.getPersonalInputReading();
                 }
                 readingInput.setUserId(userInfo.userId());
@@ -316,6 +320,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
                 fragmentBookSharing.setCurrentInput(currentInput);
                 requestBookInstance(currentInput);
             }
+            layoutInfo.setVisibility(View.VISIBLE);
         }
     }
 
@@ -324,7 +329,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     private void getUserInfoError(ServerResponse<ResponseData> error) {
-        ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error.message());
+        ClientUtils.showDialogError(MainActivity.instance, ClientUtils.getStringLanguage(R.string.titleError), error.message());
     }
 
     public void requestBookOwner(RequestStatusInput statusInput) {
@@ -348,13 +353,13 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         //do nothing
     }
 
-    private void removeBookSuccess(String data){
+    private void removeBookSuccess(String data) {
         fragmentBookSharing.updateAfterDelete();
         fragmentBookSharing.hideLoadBook();
-        
+
     }
 
-    public void removeBookInstance(int instanceId){
+    public void removeBookInstance(int instanceId) {
         getPresenter().removeBook(instanceId);
         fragmentBookSharing.showLoadBook();
     }
@@ -371,7 +376,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         btnOk.setOnClickListener(v -> {
             MainActivity.start(MainActivity.instance.getApplicationContext(), LoginActivity.class, LoginScreen.instance(Strings.EMPTY));
         });
-        if(dialog != null && !dialog.isShowing()){
+        if (dialog != null && !dialog.isShowing()) {
             dialog.show();
         }
         //hide loading in fragment request
@@ -387,7 +392,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void checkInternet() {
         if (!ClientUtils.isOnline()) {
-            ClientUtils.showViewNotInternet(MainActivity.instance,layoutTop);
+            ClientUtils.showViewNotInternet(MainActivity.instance, layoutTop);
             return;
         }
     }
@@ -432,13 +437,13 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private void getBookInstanceError(ServerResponse<ResponseData> error) {
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
             MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
-        }else{
-            ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error.message());
+        } else {
+            ClientUtils.showDialogError(MainActivity.instance, ClientUtils.getStringLanguage(R.string.titleError), error.message());
         }
     }
 
     private void changeStatusBookError(String error) {
-        ClientUtils.showDialogError(MainActivity.instance,ClientUtils.getStringLanguage(R.string.titleError),error);
+        ClientUtils.showDialogError(MainActivity.instance, ClientUtils.getStringLanguage(R.string.titleError), error);
         fragmentBookSharing.hideLoadBook();
     }
 

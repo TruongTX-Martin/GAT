@@ -137,12 +137,14 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                scanFragment.cleanView();
-                selectTab(tab, true);// For refresh layout
-                mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
-                if(tab.getPosition() == 1) {
-                    personalFragment.checkLogin();
-                }
+                try {
+                    scanFragment.cleanView();
+                    selectTab(tab, true);// For refresh layout
+                    mTabLayout.setScrollPosition(tab.getPosition(), 0, true);
+                    if(tab.getPosition() == 1) {
+                        personalFragment.checkLogin();
+                    }
+                }catch (Exception e){}
             }
 
             @Override
@@ -222,13 +224,13 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     @Override
     public void onBackPressed() {
         // TODO Không biết đoạn code này nhằm mục đích gì-> nó gây cảm giác lỗi khi back từ fragment child
-//        int currentTab = mTabLayout.getSelectedTabPosition();
-//        if(currentTab > 0) {
-//            currentTab --;
-//            setTabDesire(currentTab);
-//        }else {
-//            finish();
-//        }
+        int currentTab = mTabLayout.getSelectedTabPosition();
+        if(currentTab > 0) {
+            currentTab --;
+            setTabDesire(currentTab);
+        }else {
+            finish();
+        }
     }
 
     public void setTabDesire(int position) {
