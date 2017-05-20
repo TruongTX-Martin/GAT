@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_border_bottom"
     android:padding="@dimen/paddingLarge">
 
     <com.gat.common.customview.CircleImage
@@ -20,21 +21,24 @@
         <Button
             android:id="@+id/button_book_state"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/button_height"
             android:background="@drawable/bg_rounded_cool_blue"
             android:paddingLeft="@dimen/paddingNormal"
             android:paddingRight="@dimen/paddingNormal"
             android:textAllCaps="false"
-            android:visibility="gone"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/small_textsize_l"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_view_wait_for_accept"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:drawablePadding="@dimen/paddingLarge"
             android:drawableRight="@drawable/narrow_right_gray"
             android:textColor="@color/colorTextViewDarkNormal"
+            android:textSize="@dimen/small_textsize_s"
+            android:clickable="true"
             android:visibility="visible" />
 
     </FrameLayout>
@@ -46,7 +50,7 @@
         android:layout_toEndOf="@+id/image_view_avatar"
         android:layout_toStartOf="@+id/rl_book_state"
         android:textColor="@color/colorTextViewDark"
-        android:textSize="@dimen/large_text_view_size" />
+        android:textSize="@dimen/normal_textsize_s" />
 
     <TextView
         android:id="@+id/text_view_user_address"
@@ -57,7 +61,7 @@
         android:layout_toEndOf="@+id/image_view_avatar"
         android:layout_toStartOf="@+id/rl_book_state"
         android:textColor="@color/colorTextViewGray"
-        android:textSize="@dimen/normal_text_view_size" />
+        android:textSize="@dimen/small_textsize_l" />
 
     <TextView
         android:id="@+id/text_view_book_state"
@@ -66,6 +70,7 @@
         android:layout_below="@+id/text_view_user_address"
         android:layout_marginTop="@dimen/margin_top_bottom_normal"
         android:layout_toEndOf="@+id/image_view_avatar"
-        android:textColor="@color/colorTextViewDarkNormal" />
+        android:textColor="@color/colorTextViewDarkNormal"
+        android:textSize="@dimen/small_textsize_s" />
 
 </RelativeLayout>

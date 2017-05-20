@@ -22,4 +22,5 @@ public interface ListUserSharingBookPresenter extends Presenter {
     Observable<BorrowResponse> onRequestBorrowBookSuccess ();
     Observable<String> onRequestBorrowBookFailure ();
 
+    Observable<String> onUnAuthorization ();
 }

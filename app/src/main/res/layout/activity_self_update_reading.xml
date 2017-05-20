@@ -45,7 +45,9 @@
         android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/paddingLarge">
+        android:paddingLeft="@dimen/paddingLarge"
+        android:paddingRight="@dimen/paddingLarge"
+        android:layout_marginBottom="@dimen/margin_horizontal_large">
 
         <RadioButton
             android:id="@+id/radio_want_to_read"

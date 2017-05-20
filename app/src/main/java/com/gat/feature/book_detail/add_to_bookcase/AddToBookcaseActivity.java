@@ -16,6 +16,8 @@ import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
+import com.gat.feature.main.MainActivity;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -63,7 +65,12 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     private boolean isStateChanged = false;
 
     private CompositeDisposable disposable;
-    private AlertDialog mProgressDialog;
+
+    private AlertDialog progressDialog;
+    private AlertDialog changedValueDialog;
+    private AlertDialog errorDialog;
+    private AlertDialog unAuthorizationDialog;
+
 
     @Override
     protected int getLayoutResource() {
@@ -78,12 +85,13 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mProgressDialog = ClientUtils.createLoadingDialog(AddToBookcaseActivity.this);
+        progressDialog = ClientUtils.createLoadingDialog(AddToBookcaseActivity.this);
 
         disposable = new CompositeDisposable(
                 getPresenter().onGetBookTotalInstanceSuccess().subscribe(this::onGetBookTotalInstanceSuccess),
                 getPresenter().onAddBookInstanceSuccess().subscribe(this::onAddBookInstanceSuccess),
-                getPresenter().onAddBookInstanceFailure().subscribe(this::onFailure)
+                getPresenter().onAddBookInstanceFailure().subscribe(this::onFailure),
+                getPresenter().onUnAuthorization().subscribe(this::onUnAuthorization)
         );
     }
 
@@ -115,10 +123,22 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         disposable.dispose();
-        hideProgress();
-        mProgressDialog = null;
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+        if (unAuthorizationDialog != null) {
+            unAuthorizationDialog.dismiss();
+        }
+        if (changedValueDialog != null) {
+            changedValueDialog.dismiss();
+        }
+        if (errorDialog != null) {
+            errorDialog.dismiss();
+        }
+
+        super.onDestroy();
     }
 
     @OnClick(R.id.image_view_back)
@@ -137,7 +157,7 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     public void onBackPressed() {
 
         if (isStateChanged) {
-            ClientUtils.showChangedValueDialog(this);
+            changedValueDialog = ClientUtils.showChangedValueDialog(this);
         } else {
             finish();
         }
@@ -171,8 +191,9 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     private void setupBookInfoDisplay (BookInfo bookInfo) {
         MZDebug.w(TAG, bookInfo.toString());
         textViewBookName.setText(bookInfo.getTitle());
-        if (bookInfo.getAuthor() != null && !bookInfo.getAuthor().isEmpty()) {
-            textViewBookAuthor.setText(bookInfo.getAuthor().get(0).getAuthorName());
+
+        if ( ! TextUtils.isEmpty(getScreen().authorName())) {
+            textViewBookAuthor.setText(getScreen().authorName());
         }
         ratingBarBook.setRating(bookInfo.getRateAvg());
         textViewRating.setText(String.valueOf(bookInfo.getRateAvg()));
@@ -222,16 +243,20 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
     private void onFailure (String message) {
         hideProgress();
         imageViewSave.setClickable(true);
-        ClientUtils.showDialogError(this, getString(R.string.err), message);
+        errorDialog = ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private void showProgress () {
-        mProgressDialog.show();
+        progressDialog.show();
     }
 
     private void hideProgress () {
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
         }
+    }
+
+    void onUnAuthorization (String message) {
+        unAuthorizationDialog = ClientUtils.showDialogUnAuthorization(this, this, message);
     }
 }

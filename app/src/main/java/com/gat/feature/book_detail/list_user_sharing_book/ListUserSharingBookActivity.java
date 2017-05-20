@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -12,6 +13,9 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BorrowResponse;
+import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
+import com.gat.feature.main.MainActivity;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -28,8 +32,11 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
 
     private CompositeDisposable disposable;
     private UserSharingItemAdapter adapter;
-    private ProgressDialog progressDialog;
     private boolean isRequestBorrow = false;
+
+    AlertDialog errorDialog;
+    AlertDialog loadingDialog;
+    AlertDialog unAuthorizationDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -55,29 +62,34 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        progressDialog = new ProgressDialog(this);
+        loadingDialog = ClientUtils.createLoadingDialog(this);
 
         disposable = new CompositeDisposable(
                 getPresenter().onUserIdSuccess().subscribe(this::onGetUserSuccess),
                 getPresenter().onUserIdFailure().subscribe(this::onGetUserFailure),
                 getPresenter().onRequestBorrowBookSuccess().subscribe(this::onRequestBorrowSuccess),
-                getPresenter().onRequestBorrowBookFailure().subscribe(this::onRequestBorrowFailure)
+                getPresenter().onRequestBorrowBookFailure().subscribe(this::onRequestBorrowFailure),
+                getPresenter().onUnAuthorization().subscribe(this::onUnAuthorization)
         );
         getPresenter().setListUser(getScreen().listUser());
         getPresenter().getUserId();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onDestroy() {
-        super.onDestroy();
         disposable.dispose();
-        hideProgress();
-        progressDialog = null;
+
+        if (errorDialog != null) {
+            errorDialog.dismiss();
+        }
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+        if (unAuthorizationDialog != null) {
+            unAuthorizationDialog.dismiss();
+        }
+
+        super.onDestroy();
     }
 
     @OnClick(R.id.image_button_cancel)
@@ -104,8 +116,15 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     public void onButtonBorrowClick(int position, UserResponse userResponse) {
         positionClicked= position;
         mUserResponse = userResponse;
-        progressDialog.show();
+        loadingDialog.show();
         getPresenter().requestBorrowBook(userResponse.getEditionId(), userResponse.getUserId());
+    }
+
+    @Override
+    public void onButtonBorrowDetailsClick(int position, UserResponse userResponse) {
+        Intent intent = new Intent(this, BookDetailSenderActivity.class);
+        intent.putExtra("BorrowingRecordId", userResponse.getRecordId());
+        startActivity(intent);
     }
 
     private void onGetUserSuccess (int userId) {
@@ -126,14 +145,17 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
 
     private void onRequestBorrowFailure (String message) {
         hideProgress();
-        ClientUtils.showDialogError(this, getString(R.string.err), message);
+        errorDialog = ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private void hideProgress () {
-        if (progressDialog.isShowing()) {
-            progressDialog.hide();
+        if (loadingDialog.isShowing()) {
+            loadingDialog.hide();
         }
     }
 
+    private void onUnAuthorization (String message) {
+        unAuthorizationDialog = ClientUtils.showDialogUnAuthorization(this, this, message);
+    }
 
 }

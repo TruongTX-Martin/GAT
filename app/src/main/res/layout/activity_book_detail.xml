@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -53,9 +54,9 @@
             android:layout_width="120dp"
             android:layout_height="180dp"
             android:layout_below="@+id/fl_header"
-            android:src="@drawable/default_book_cover"
             android:layout_marginRight="@dimen/margin_horizontal_large"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_book_cover" />
 
         <TextView
             android:id="@+id/text_view_book_name"
@@ -63,8 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/fl_header"
             android:layout_toEndOf="@+id/image_view_book_cover"
-            android:text="..."
             android:lines="3"
+            android:text="..."
             android:textColor="@android:color/white"
             android:textSize="@dimen/large_text_view_size" />
 
@@ -115,10 +116,10 @@
             android:id="@+id/image_button_plus"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_toEndOf="@+id/image_view_book_cover"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/transparent"
             android:layout_below="@+id/text_view_rating"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/image_view_book_cover"
+            android:background="@android:color/transparent"
             android:clickable="true"
             android:src="@drawable/ic_button_plus_in_circle" />
 
@@ -127,8 +128,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_below="@+id/text_view_rating"
-            android:layout_marginTop="15dp"
             android:layout_marginLeft="@dimen/margin_horizontal_large"
+            android:layout_marginTop="15dp"
             android:layout_toEndOf="@+id/image_button_plus"
             android:background="@drawable/bg_reading_state_button"
             android:drawableEnd="@drawable/arrow_down_white"
@@ -164,21 +165,22 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/bg_cirle_green_height_24"
                     android:layout_marginRight="@dimen/margin_horizontal_small"
+                    android:background="@drawable/bg_cirle_green_height_24"
                     android:gravity="center"
-                    android:text="1" />
+                    android:text="1"
+                    android:textColor="@android:color/white" />
 
                 <Button
                     android:id="@+id/button_view_list"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/button_height"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/bg_rounded_cool_blue"
                     android:paddingLeft="@dimen/paddingLarge"
                     android:paddingRight="@dimen/paddingLarge"
+                    android:textSize="@dimen/small_textsize_l"
                     android:text="Xem danh sách"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white" />
@@ -192,6 +194,7 @@
                     android:layout_toStartOf="@+id/button_view_list"
                     android:lines="1"
                     android:maxLines="1"
+                    android:ellipsize="end"
                     android:text="người đang cho mượn quyển sách này"
                     android:textSize="@dimen/small_text_view_size" />
 
@@ -201,31 +204,59 @@
                 android:id="@+id/ll_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_white_border_top_bottom"
                 android:orientation="vertical"
-                android:background="@drawable/bg_border_top"
                 android:paddingLeft="@dimen/paddingLarge"
                 android:paddingRight="@dimen/paddingLarge"
-                android:paddingTop="@dimen/paddingLarge">
+                android:paddingTop="@dimen/paddingNormal">
 
-                <RatingBar
+                <com.gat.common.customview.MZRatingBar
                     android:id="@+id/rating_bar_user_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     android:layout_gravity="center_horizontal"
                     android:numStars="5"
-                    android:stepSize="1"
-                    />
+                    android:stepSize="1" />
 
-                <TextView
-                    android:id="@+id/text_view_comment_by_user"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/margin_top_bottom_normal"
-                    android:layout_marginTop="@dimen/margin_top_bottom_normal"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:textColor="@color/colorTextViewDark" />
+                    android:paddingTop="@dimen/margin_top_bottom_normal"
+                    android:paddingBottom="@dimen/margin_top_bottom_normal">
+
+                    <TextView
+                        android:id="@+id/text_view_comment_by_user"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="11.5dp"
+                        android:layout_marginRight="11.5dp"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="232asdasdasddasdasdasdsadasdasd323"
+                        android:textColor="@color/colorTextViewDark"
+                        android:textSize="@dimen/normal_textsize_s" />
+
+                    <ImageView
+                        android:id="@+id/image_view_quote_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/text_view_comment_by_user"
+                        android:layout_toLeftOf="@+id/text_view_comment_by_user"
+                        android:src="@drawable/ic_quote_left" />
+
+                    <ImageView
+                        android:id="@+id/image_view_quote_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/text_view_comment_by_user"
+                        android:layout_toRightOf="@+id/text_view_comment_by_user"
+                        android:src="@drawable/ic_quote_right" />
+
+                </RelativeLayout>
+
 
                 <Button
                     android:id="@+id/button_comment"
@@ -242,43 +273,52 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGray" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_horizontal_large"
-                android:text="@string/book_description"
-                android:textColor="@color/colorTextViewDark"
-                android:textStyle="bold" />
+                android:background="@color/colorGrayF9"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_view_book_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_horizontal_large"
-                android:layout_marginRight="@dimen/margin_horizontal_large"
-                android:text="..."
-                android:ellipsize="end"
-                android:textColor="@color/colorTextViewDark" />
+                <TextView
+                    style="@style/TextViewHeaderTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_horizontal_large"
+                    android:layout_marginTop="@dimen/margin_horizontal_large"
+                    android:text="@string/book_description"
+                    android:textColor="@color/colorTextViewDark"
+                    android:textStyle="bold"
+                    android:fontFamily="@string/font_family_regular"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_horizontal_large"
-                android:text="@string/comment"
-                android:textColor="@color/colorTextViewDark"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/text_view_book_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_horizontal_large"
+                    android:layout_marginRight="@dimen/margin_horizontal_large"
+                    android:ellipsize="end"
+                    android:text="..."
+                    android:textSize="@dimen/normal_textsize_s"
+                    android:textColor="@color/colorTextViewDark" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_comments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_horizontal_large"
-                android:layout_marginRight="@dimen/margin_horizontal_large" />
+                <TextView
+                    style="@style/TextViewHeaderTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_horizontal_large"
+                    android:layout_marginTop="@dimen/margin_horizontal_large"
+                    android:text="@string/comment"
+                    android:textColor="@color/colorTextViewDark"
+                    android:textStyle="bold" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_horizontal_large"
+                    android:layout_marginRight="@dimen/margin_horizontal_large" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

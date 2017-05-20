@@ -20,4 +20,5 @@ public interface AddToBookcasePresenter extends Presenter {
     Observable<String> onAddBookInstanceSuccess ();
     Observable<String> onAddBookInstanceFailure ();
 
+    Observable<String> onUnAuthorization ();
 }

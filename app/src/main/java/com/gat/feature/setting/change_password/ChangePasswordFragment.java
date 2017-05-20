@@ -49,7 +49,11 @@ implements TextWatcher{
 
     private ISettingDelegate delegate;
     private CompositeDisposable disposable;
+
     private AlertDialog progressDialog;
+    private AlertDialog changedValueDialog;
+    private AlertDialog errorDialog;
+    private AlertDialog unAuthorizationDialog;
 
     public ChangePasswordFragment (ISettingDelegate delegate) {
         this.delegate = delegate;
@@ -95,8 +99,20 @@ implements TextWatcher{
     @Override
     public void onDestroy() {
         disposable.dispose();
-        hideProgress();
-        progressDialog = null;
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+        if (unAuthorizationDialog != null) {
+            unAuthorizationDialog.dismiss();
+        }
+        if (changedValueDialog != null) {
+            changedValueDialog.dismiss();
+        }
+        if (errorDialog != null) {
+            errorDialog.dismiss();
+        }
+
         super.onDestroy();
     }
 
@@ -107,7 +123,7 @@ implements TextWatcher{
              ! TextUtils.isEmpty(editTextNewPassword.getText().toString()) ||
              ! TextUtils.isEmpty(editTextConfirmPassword.getText().toString())) {
 
-            ClientUtils.showChangedValueDialog(getActivity());
+            changedValueDialog = ClientUtils.showChangedValueDialog(getActivity());
             return;
         }
 
@@ -160,11 +176,11 @@ implements TextWatcher{
     }
 
     void onChangePasswordFailed (String message) {
-        ClientUtils.showDialogError(getActivity(), getString(R.string.err), message);
+        errorDialog = ClientUtils.showDialogError(getActivity(), getString(R.string.err), message);
     }
 
     void onUnAuthorization (String message) {
-        ClientUtils.showDialogUnAuthorization(getActivity(), (MainActivity) getActivity(), message);
+        unAuthorizationDialog = ClientUtils.showDialogUnAuthorization(getActivity(), (MainActivity) getActivity(), message);
     }
 
     void onWhichShowOrHideProgress (Boolean isShow) {

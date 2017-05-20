@@ -26,7 +26,7 @@
     <dimen name="large_text_view_size">16sp</dimen>
     <dimen name="larger_text_view_size">18sp</dimen>
 
-    <dimen name="header_textsize">18sp</dimen>
+    <dimen name="header_textsize">17sp</dimen>
 
     <dimen name="map_height">420dp</dimen>
     <dimen name="padding_end">30dp</dimen>

@@ -104,7 +104,7 @@ public class ScanFragment extends ScreenFragment<ScanScreen, ScanPresenter> impl
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
-        txtTitle.setText(getString(R.string.register_title));
+        txtTitle.setText(getString(R.string.tab_scanbarcode));
         txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
         if (getScreen().from() == ScanScreen.From.SEARCH)
             imgBack.setImageResource(R.drawable.narrow_back_black);

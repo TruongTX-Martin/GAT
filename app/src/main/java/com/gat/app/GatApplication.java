@@ -6,6 +6,7 @@ import com.gat.dependency.AppComponent;
 import com.gat.dependency.AppModule;
 import com.gat.dependency.DaggerAppComponent;
 import com.gat.feature.book_detail.BookDetailActivity;
+import com.gat.feature.book_detail.comment.CommentActivity;
 
 import io.paperdb.Paper;
 
@@ -21,8 +22,9 @@ public class GatApplication extends BootstrapApplication {
     public void onCreate() {
         super.onCreate();
         Paper.init(this);
+
         observerNetworkChange = new OnNetworkChangeListener();
-        observerNetworkChange.addObserver(new BookDetailActivity());
+
     }
 
     @Override

@@ -164,7 +164,7 @@ public class ClientUtils {
         return encoded;
     }
 
-    public static void showErrorDialog(String header, String content, Context context) {
+    public static AlertDialog showErrorDialog(String header, String content, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.error_popup_dialog, null);
@@ -177,6 +177,7 @@ public class ClientUtils {
         Button button = (Button) view.findViewById(R.id.btn_popup_ok);
         button.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+        return dialog;
     }
 
     public static boolean isOnline() {
@@ -303,8 +304,8 @@ public class ClientUtils {
         return dialog;
     }
 
-    public static <T extends ScreenActivity> void showRequiredLoginDialog(Activity activity, T screen) {
-        showAlertDialog(activity, activity.getString(R.string.err_notice),
+    public static <T extends ScreenActivity> AlertDialog showRequiredLoginDialog(Activity activity, T screen) {
+        return showAlertDialog(activity, activity.getString(R.string.err_notice),
                 activity.getString(R.string.err_required_login),
                 activity.getString(R.string.login),
                 activity.getString(R.string.dont_care), new ClientUtils.OnDialogPressed() {
@@ -322,8 +323,8 @@ public class ClientUtils {
                 });
     }
 
-    public static void showChangedValueDialog (Activity activity) {
-        showAlertDialog(activity,
+    public static AlertDialog showChangedValueDialog (Activity activity) {
+        return showAlertDialog(activity,
                 activity.getString(R.string.err_discard_title),
                 activity.getString(R.string.err_discard_message),
                 null, null, new ClientUtils.OnDialogPressed() {

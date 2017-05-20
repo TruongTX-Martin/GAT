@@ -93,7 +93,7 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getPresenter().loadUserNotification(false);
+        getPresenter().loadUserNotification(true);
     }
 
     @Override
@@ -102,29 +102,15 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         super.onDestroy();
     }
 
-    private void setupRecyclerView () {
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setNestedScrollingEnabled(false);
-
-        adapter = new NotificationAdapter();
-        adapter.setOnItemNotifyClick(this);
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void onLoadNotifiesSuccess (DataResultListResponse<NotifyEntity> data) {
-
-        swipeRefreshLayout.setRefreshing(false);
-
-        if (null == data || data.getResultInfo().isEmpty()) {
-            return;
+        if ( ! isVisibleToUser) {
+            // rời khỏi page này thì tắt badge
+            delegate.haveToPullNotifyPage(0);
         }
 
-        MZDebug.w("Notify: " + data.getResultInfo().get(0).toString());
-
-        adapter.setItems(data.getResultInfo());
     }
 
 
@@ -182,6 +168,32 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         }
     }
 
+    private void setupRecyclerView () {
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setNestedScrollingEnabled(false);
+
+        adapter = new NotificationAdapter();
+        adapter.setOnItemNotifyClick(this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void onLoadNotifiesSuccess (DataResultListResponse<NotifyEntity> data) {
+
+        swipeRefreshLayout.setRefreshing(false);
+
+        if (null == data || data.getResultInfo().isEmpty()) {
+            return;
+        }
+
+        MZDebug.w("Notify: " + data.getResultInfo().get(0).toString());
+        delegate.haveToPullNotifyPage(data.getNotifyTotal());
+        adapter.setItems(data.getResultInfo());
+    }
+
+
     private void startBorrowFromAnother (int borrowRecordId) {
         Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
         intent.putExtra("BorrowingRecordId", borrowRecordId);
@@ -209,5 +221,7 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         // vì là fragment nằm trong MainActivity nên phải cast sang
         ClientUtils.showDialogUnAuthorization( getActivity() ,(MainActivity) getActivity(), message);
     }
+
+
 
 }

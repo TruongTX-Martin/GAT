@@ -18,4 +18,5 @@ public interface CommentPresenter extends Presenter {
     void loadUserCached ();
     Observable<User> onLoadUserCachedSuccess ();
 
+    Observable<String> onUnAuthorization ();
 }

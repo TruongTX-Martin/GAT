@@ -19,7 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:textSize="@dimen/smaller_text_view_size"
+        android:textSize="@dimen/small_text_view_size"
+        android:layout_marginTop="2dp"
         android:text=".. days ago" />
 
     <TextView
@@ -28,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/image_view_avatar"
         android:layout_toStartOf="@+id/text_view_time_ago"
-        android:text="..."
+        android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaa"
         android:textColor="@color/colorTextViewDark"
         android:textSize="@dimen/large_text_view_size" />
 
@@ -45,12 +46,22 @@
         android:numStars="5"
         android:stepSize="0.5" />
 
+    <ImageView
+        android:id="@+id/image_view_quote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating_bar_comment"
+        android:layout_toEndOf="@+id/image_view_avatar"
+        android:src="@drawable/ic_quote_left"/>
+
     <TextView
         android:id="@+id/text_view_comment_evaluation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rating_bar_comment"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="@dimen/margin_top_bottom_normal"
+        android:layout_below="@+id/image_view_quote"
+        android:text="sdasd"
         android:layout_toEndOf="@+id/image_view_avatar"
         android:textColor="@color/colorTextViewDark" />
 

@@ -3,6 +3,9 @@ package com.gat.feature.book_detail.list_user_sharing_book;
 import android.util.Log;
 
 import com.gat.common.util.MZDebug;
+import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
+import com.gat.data.response.ServerResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.domain.SchedulerFactory;
@@ -30,6 +33,8 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
     private final Subject<BorrowResponse> subjectBorrowResponse;
     private final Subject<String> subjectRequestBorrowBookFailure;
 
+    private final Subject<String> subjectUnAuthorization;
+
     private List<UserResponse> mListUser;
 
     public ListUserSharingBookPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
@@ -39,6 +44,7 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
         subjectUserIdFailure = PublishSubject.create();
         subjectBorrowResponse = PublishSubject.create();
         subjectRequestBorrowBookFailure = PublishSubject.create();
+        subjectUnAuthorization = PublishSubject.create();
     }
 
     @Override
@@ -93,16 +99,23 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
                     if (null != borrowResponse) {
                         subjectBorrowResponse.onNext(borrowResponse);
                     } else {
-                        subjectRequestBorrowBookFailure.onNext("Failed");
+                        subjectRequestBorrowBookFailure.onNext(ServerResponse.BAD_RESPONSE.message());
                     }
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: requestBorrowBook ____________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
-                    subjectRequestBorrowBookFailure.onNext("Failed");
+
+                    if (throwable instanceof LoginException) {
+                        LoginException exception = (LoginException) throwable;
+                        subjectUnAuthorization.onNext(exception.responseData().message());
+                    } else if (throwable instanceof CommonException) {
+                        subjectRequestBorrowBookFailure.onNext(((CommonException) throwable).getMessage());
+                    } else {
+                        subjectRequestBorrowBookFailure.onNext(ServerResponse.EXCEPTION.message());
+                    }
                 })
                 .execute();
-
     }
 
     @Override
@@ -113,6 +126,11 @@ public class ListUserSharingBookPresenterImpl implements ListUserSharingBookPres
     @Override
     public Observable<String> onRequestBorrowBookFailure() {
         return subjectRequestBorrowBookFailure.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onUnAuthorization() {
+        return subjectUnAuthorization.subscribeOn(schedulerFactory.main());
     }
 
 

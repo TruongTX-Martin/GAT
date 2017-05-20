@@ -11,9 +11,12 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class AddToBookcaseScreen implements Screen {
 
-    public static AddToBookcaseScreen instance (BookInfo bookInfo){
-        return new AutoValue_AddToBookcaseScreen(bookInfo);
+    public static AddToBookcaseScreen instance (BookInfo bookInfo, String authorName){
+        return new AutoValue_AddToBookcaseScreen(bookInfo, authorName);
     }
 
     public abstract BookInfo bookInfo ();
+
+    public abstract String authorName ();
+
 }

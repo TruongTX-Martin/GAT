@@ -59,11 +59,8 @@ public class NotificationPresenterImpl implements NotificationPresenter {
     public void loadUserNotification(boolean isRefresh) {
         MZDebug.w("_______________________________________________ loadUserNotification ");
 
-//        if (mTotalResult > PER_PAGE) {
-//            if (mCurrentPage * PER_PAGE >= mTotalResult) {
-//                return;
-//            }
-//        }
+        if (isRefresh)
+            mCurrentPage = 1;
 
         UseCase<User> loadLocalUser = useCaseFactory.getUser();
         loadLocalUser.executeOn(schedulerFactory.io())

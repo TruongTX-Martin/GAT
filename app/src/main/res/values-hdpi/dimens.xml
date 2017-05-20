@@ -6,4 +6,6 @@
     <dimen name="suggestion_cover_height">90dp</dimen>
     <dimen name="item_book_suggest_height">140dp</dimen>
 
+    <dimen name="small_text_view_size">11sp</dimen>
+
 </resources>

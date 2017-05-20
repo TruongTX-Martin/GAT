@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class DataModule {
 
-    private static final int TIME_OUT_SECONDS = 60;
+    private static final int TIME_OUT_SECONDS = 20;
 
     private UserDataSource userDataSource;
     private String language;

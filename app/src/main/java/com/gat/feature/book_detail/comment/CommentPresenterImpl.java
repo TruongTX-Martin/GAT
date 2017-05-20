@@ -3,6 +3,8 @@ package com.gat.feature.book_detail.comment;
 import android.util.Log;
 
 import com.gat.common.util.MZDebug;
+import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.ServerResponse;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
@@ -31,12 +33,15 @@ public class CommentPresenterImpl implements CommentPresenter{
     private UseCase<User> useCaseLoadUser;
     private final Subject<User> subjectLoadUserSuccess;
 
+    private final Subject<String> subjectUnAuthorization;
+
     public CommentPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
         subjectPostCommentSuccess = PublishSubject.create();
         subjectPostCommentFailure = PublishSubject.create();
         subjectLoadUserSuccess = PublishSubject.create();
+        subjectUnAuthorization = PublishSubject.create();
     }
 
 
@@ -61,7 +66,16 @@ public class CommentPresenterImpl implements CommentPresenter{
                 .onError(throwable -> {
                     MZDebug.e("ERROR: postComment __________________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
-                    subjectPostCommentFailure.onNext("Failed");
+
+                    if (throwable instanceof LoginException) {
+                        LoginException exception = (LoginException) throwable;
+                        subjectUnAuthorization.onNext(exception.responseData().message());
+                    } else if (throwable instanceof CommonException) {
+                        subjectPostCommentFailure.onNext(((CommonException) throwable).getMessage());
+                    } else {
+                        subjectPostCommentFailure.onNext(ServerResponse.EXCEPTION.message());
+                    }
+
                 }).execute();
 
     }
@@ -94,5 +108,10 @@ public class CommentPresenterImpl implements CommentPresenter{
     @Override
     public Observable<User> onLoadUserCachedSuccess() {
         return subjectLoadUserSuccess.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onUnAuthorization() {
+        return subjectUnAuthorization.subscribeOn(schedulerFactory.main());
     }
 }

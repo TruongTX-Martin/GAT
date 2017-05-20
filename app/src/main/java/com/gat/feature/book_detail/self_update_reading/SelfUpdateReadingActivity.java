@@ -43,7 +43,12 @@ public class SelfUpdateReadingActivity
 
     private int mReadingState;
     private int mNewReadingState = -2;
-    private AlertDialog dialog;
+
+    AlertDialog errorDialog;
+    AlertDialog changedValueDialog;
+    AlertDialog loadingDialog;
+    AlertDialog unAuthorizationDialog;
+    AlertDialog removeConfirmDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -66,7 +71,7 @@ public class SelfUpdateReadingActivity
                 getPresenter().onUnAuthorization().subscribe(this::onUnAuthorization),
                 getPresenter().onError().subscribe(this::onError)
         );
-        dialog = ClientUtils.createLoadingDialog(this);
+        loadingDialog = ClientUtils.createLoadingDialog(this);
         radioGroup.setOnCheckedChangeListener(this);
 
         getPresenter().setEditionId(getScreen().editionId());
@@ -84,10 +89,25 @@ public class SelfUpdateReadingActivity
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         disposable.dispose();
-        hideProgress();
-        dialog = null;
+
+        if (errorDialog != null) {
+            errorDialog.dismiss();
+        }
+        if (changedValueDialog != null) {
+            changedValueDialog.dismiss();
+        }
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+        if (unAuthorizationDialog != null) {
+            unAuthorizationDialog.dismiss();
+        }
+        if (removeConfirmDialog != null) {
+            removeConfirmDialog.dismiss();
+        }
+
+        super.onDestroy();
     }
 
     @Override
@@ -114,17 +134,22 @@ public class SelfUpdateReadingActivity
         // show dialog warning
         // yes -> update reading status = -1
         // no -> do nothing
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getString(R.string.ask_remove_from_reading_list));
-        builder.setPositiveButton(android.R.string.yes, (dialog, id) -> {
 
-            dialog.dismiss();
-            showProgress();
-            getPresenter().updateReadingStatus(ReadingState.REMOVE);
-        });
-        builder.setNegativeButton(android.R.string.cancel, (dialog, id) -> dialog.dismiss());
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        removeConfirmDialog = ClientUtils.showAlertDialog(this, getString(R.string.remove_from_reading_list),
+                getString(R.string.ask_remove_from_reading_list), getString(R.string.yes), getString(R.string.no),
+                new ClientUtils.OnDialogPressed() {
+                    @Override
+                    public void onClickAccept() {
+                        removeConfirmDialog.dismiss();
+                        showProgress();
+                        getPresenter().updateReadingStatus(ReadingState.REMOVE);
+                    }
+
+                    @Override
+                    public void onClickRefuse() {
+                        // do nothing
+                    }
+                });
     }
 
     @OnClick(R.id.image_button_save)
@@ -185,21 +210,23 @@ public class SelfUpdateReadingActivity
     }
 
     private void onError (String message) {
-        ClientUtils.showDialogError(this, getString(R.string.err), message);
+        hideProgress();
+
+        errorDialog = ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private void onUnAuthorization (String message) {
-        ClientUtils.showDialogUnAuthorization(this, this, message);
+        unAuthorizationDialog = ClientUtils.showDialogUnAuthorization(this, this, message);
     }
 
 
     private void showProgress () {
-        dialog.show();
+        loadingDialog.show();
     }
 
     private void hideProgress () {
-        if (dialog.isShowing()) {
-            dialog.hide();
+        if (loadingDialog.isShowing()) {
+            loadingDialog.hide();
         }
     }
 

@@ -13,8 +13,9 @@ public class OnNetworkChangeListener extends Observable {
     boolean isOnline = true;
 
     void onNetworkChange (boolean isOnline) {
-        setChanged();
         this.isOnline = isOnline;
+        setChanged();
+        notifyObservers();
     }
 
     public boolean isOnline() {

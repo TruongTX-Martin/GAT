@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -51,8 +50,6 @@ import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.repository.entity.User;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -62,7 +59,9 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDetailPresenter>
-        implements RatingBar.OnRatingBarChangeListener, Observer{
+        implements RatingBar.OnRatingBarChangeListener{
+
+    private final String TAG = BookDetailActivity.class.getSimpleName();
 
     private static final int RC_UPDATE_READING_STATUS = 0x01;
     private static final int RC_UPDATE_COMMENT = 0x02;
@@ -117,8 +116,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     private CompositeDisposable disposables;
     private EvaluationItemAdapter adapter;
-    private AlertDialog mProgressDialog;
-    private boolean isLoggedIn;
+
+    AlertDialog errorDialog;
+    AlertDialog loginDialog;
+    AlertDialog loadingDialog;
+    AlertDialog unAuthorizationDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -144,7 +146,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mProgressDialog = ClientUtils.createLoadingDialog(BookDetailActivity.this);
+        loadingDialog = ClientUtils.createLoadingDialog(BookDetailActivity.this);
         setupRecyclerViewComments();
         getPresenter().setEditionId(getScreen().editionId());
 
@@ -172,7 +174,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         stars.getDrawable(0).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
 
-        mProgressDialog.show();
+        showProgress();
         getPresenter().isUserLoggedIn();
         getPresenter().getEditionSharingUsers();
         getPresenter().getBookEditionEvaluation();
@@ -187,10 +189,30 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         disposables.dispose();
+
+        if (errorDialog != null) {
+            errorDialog.dismiss();
+        }
+        if (loginDialog != null) {
+            loginDialog.dismiss();
+        }
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+        if (unAuthorizationDialog != null) {
+            unAuthorizationDialog.dismiss();
+        }
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+
         hideProgress();
-        mProgressDialog = null;
+
+        super.onBackPressed();
     }
 
     @Override
@@ -204,6 +226,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
         } else if (requestCode == RC_UPDATE_COMMENT && resultCode == RESULT_OK) {
             String comment = data.getStringExtra(KEY_UPDATE_COMMENT);
+            textViewCommentByUser.setVisibility(View.VISIBLE);
             textViewCommentByUser.setText(comment == null ? "" : comment);
 
         } else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
@@ -225,7 +248,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     @OnClick(R.id.image_button_go_share)
     void onGoShare () {
         if (mUser == null) {
+            MZDebug.w(TAG, "user = null, show login dialog");
             showLoginDialog();
+            return;
+        }
+
+        if (mBookInfo == null) {
             return;
         }
 
@@ -287,7 +315,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             showLoginDialog();
             return;
         }
-        startForResult(this, AddToBookcaseActivity.class, AddToBookcaseScreen.instance(mBookInfo), RC_UPDATE_BOOKCASE);
+        startForResult(this, AddToBookcaseActivity.class,
+                AddToBookcaseScreen.instance(mBookInfo, textViewBookAuthor.getText().toString()), RC_UPDATE_BOOKCASE);
     }
 
     @OnClick(R.id.button_view_list)
@@ -384,6 +413,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private List<UserResponse> mListUserSharing;
     private void onGetEditionSharingUsersSuccess (List<UserResponse> list) {
         MZDebug.w("onGetEditionSharingUsersSuccess: " + list.size());
+        hideProgress();
 
         mListUserSharing = list;
         textViewSharingBook.setText(String.valueOf(list.size()));
@@ -475,10 +505,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private static CallbackManager callbackManager;
 
     private void showFacebookShareOpenGraph () {
-        if (mBookInfo == null) {
-            return;
-        }
-
         SharePhoto photo;
         ShareOpenGraphObject object;
         if (mBookInfo.getImageId().isEmpty()) {
@@ -560,6 +586,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         if (fromUser) {
+            if (mBookInfo == null) {
+                return;
+            }
             ratingBarUserRate.setRating(rating);
             showProgress();
             // spoiler default = false
@@ -583,33 +612,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     }
 
     private void showProgress () {
-        mProgressDialog.show();
+        loadingDialog.show();
     }
 
     private void hideProgress () {
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
+        if (loadingDialog.isShowing()) {
+            loadingDialog.hide();
         }
     }
 
     private void showLoginDialog () {
-        ClientUtils.showRequiredLoginDialog(BookDetailActivity.this, this);
+        loginDialog = ClientUtils.showRequiredLoginDialog(BookDetailActivity.this, this);
     }
 
-    private void onCheckLoginDone (Boolean isLoggedIn) {
-        this.isLoggedIn = isLoggedIn;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        boolean isNetworkOn = gatApplication.getObserverNetworkChange().isOnline();
-
-        if (isNetworkOn) {
-            Toast.makeText(this, "Network is online", Toast.LENGTH_SHORT).show();
-            MZDebug.w("Network is online");
-        } else {
-            Toast.makeText(this, "Network is offline", Toast.LENGTH_SHORT).show();
-            MZDebug.w("Network is offline");
-        }
-    }
 }

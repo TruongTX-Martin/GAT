@@ -3,6 +3,7 @@ package com.gat.feature.book_detail.list_user_sharing_book;
 import android.support.annotation.LayoutRes;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.ClientUtils;
 import com.gat.data.response.UserResponse;
 
 import butterknife.BindView;
@@ -59,6 +61,14 @@ public class UserSharingItemViewHolder extends ItemViewHolder<UserSharingItem> {
         buttonBookState.setOnClickListener(v -> {
             buttonBorrowClickListener.onButtonBorrowClick(getAdapterPosition(), item.user());
         });
+
+        textViewWaitForAccept.setOnClickListener(v -> {
+            buttonBorrowClickListener.onButtonBorrowDetailsClick(getAdapterPosition(), item.user());
+        });
+
+        if ( ! TextUtils.isEmpty(item.user().getImageId())) {
+            ClientUtils.setImage(mContext, imageViewAvatar, R.drawable.default_user_icon, ClientUtils.getUrlImage(item.user().getImageId(), ClientUtils.SIZE_SMALL));
+        }
     }
 
     private void executeTypeOfRow(UserResponse user) {

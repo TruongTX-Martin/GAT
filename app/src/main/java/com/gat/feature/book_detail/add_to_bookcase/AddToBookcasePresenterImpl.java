@@ -3,6 +3,8 @@ package com.gat.feature.book_detail.add_to_bookcase;
 import android.util.Log;
 
 import com.gat.common.util.MZDebug;
+import com.gat.data.exception.CommonException;
+import com.gat.data.exception.LoginException;
 import com.gat.data.response.ServerResponse;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.domain.SchedulerFactory;
@@ -27,6 +29,7 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
     private UseCase<ServerResponse> addBookInstanceUseCase;
     private final Subject<String> subjectAddBookInstance;
     private final Subject<String> subjectAddBookFailure;
+    private final Subject<String> subjectUnAuthorization;
 
     private int mEditionId;
 
@@ -36,6 +39,7 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
         subjectBookTotalInstance = PublishSubject.create();
         subjectAddBookInstance = PublishSubject.create();
         subjectAddBookFailure = PublishSubject.create();
+        subjectUnAuthorization = PublishSubject.create();
     }
 
 
@@ -65,7 +69,16 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: getBookTotalInstance _________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
-                    subjectAddBookFailure.onNext("Get Book Failed.");
+
+                    if (throwable instanceof LoginException) {
+                        LoginException exception = (LoginException) throwable;
+                        subjectUnAuthorization.onNext(exception.responseData().message());
+                    } else if (throwable instanceof CommonException){
+                        subjectAddBookFailure.onNext( throwable.getMessage() );
+                    } else {
+                        subjectAddBookFailure.onNext( ServerResponse.EXCEPTION.message() );
+                    }
+
                 }).execute();
     }
 
@@ -85,7 +98,15 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: addBookInstance ______________________________________ E \n\r"
                             + Log.getStackTraceString(throwable));
-                    subjectAddBookFailure.onNext("Add book instance failed");
+
+                    if (throwable instanceof LoginException) {
+                        LoginException exception = (LoginException) throwable;
+                        subjectUnAuthorization.onNext(exception.responseData().message());
+                    } else if (throwable instanceof CommonException){
+                        subjectAddBookFailure.onNext( throwable.getMessage() );
+                    } else {
+                        subjectAddBookFailure.onNext( ServerResponse.EXCEPTION.message() );
+                    }
                 })
                 .execute();
     }
@@ -98,6 +119,11 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
     @Override
     public Observable<String> onAddBookInstanceFailure() {
         return subjectAddBookFailure.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onUnAuthorization() {
+        return subjectUnAuthorization.subscribeOn(schedulerFactory.main());
     }
 
 

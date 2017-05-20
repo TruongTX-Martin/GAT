@@ -11,4 +11,6 @@ public interface OnButtonBorrowClickListener {
 
     void onButtonBorrowClick (int position, UserResponse userResponse);
 
+    void onButtonBorrowDetailsClick (int position, UserResponse userResponse);
+
 }

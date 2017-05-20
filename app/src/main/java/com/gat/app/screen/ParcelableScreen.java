@@ -195,6 +195,7 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof AddToBookcaseScreen ) {
             AddToBookcaseScreen addToBookcaseScreen = (AddToBookcaseScreen) screen;
             dest.writeParcelable(addToBookcaseScreen.bookInfo(), flags);
+            dest.writeString(addToBookcaseScreen.authorName());
         } else if (screen instanceof CommentScreen) {
             CommentScreen commentScreen = (CommentScreen) screen;
             dest.writeInt(commentScreen.editionId());
@@ -291,7 +292,8 @@ public class ParcelableScreen implements Parcelable {
                 screen = ListUserSharingBookScreen.instance(myList);
                 break;
             case ADD_TO_BOOKCASE:
-                screen = AddToBookcaseScreen.instance(in.readParcelable(BookInfo.class.getClassLoader()));
+                screen = AddToBookcaseScreen.instance(
+                        in.readParcelable(BookInfo.class.getClassLoader()), in.readString());
                 break;
             case ADD_COMMENT:
                 screen = CommentScreen.instance(in.readInt(), in.readFloat(), in.readString());
