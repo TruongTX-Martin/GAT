@@ -75,7 +75,6 @@ public class ShareNearByUserDistanceActivity
     RecyclerView mRecyclerViewUsersNear;
 
     private CompositeDisposable disposables;
-    private AlertDialog progressDialog;
     private List<UserNearByDistance> mListUserShareNearByDistance;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private double mCurrentLongitude;
@@ -92,6 +91,8 @@ public class ShareNearByUserDistanceActivity
     private List<UserNearByDistance> mListUsers;
     private List<Marker> mListMarker;
     private LinearLayoutManager mLinearLayoutManager;
+
+    private AlertDialog loadingDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -133,8 +134,7 @@ public class ShareNearByUserDistanceActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        progressDialog = ClientUtils.createLoadingDialog(ShareNearByUserDistanceActivity.this);
-        progressDialog.show();
+        loadingDialog = ClientUtils.createLoadingDialog(ShareNearByUserDistanceActivity.this);
     }
 
     @Override
@@ -156,10 +156,10 @@ public class ShareNearByUserDistanceActivity
     protected void onDestroy() {
         super.onDestroy();
         disposables.dispose();
-        if (progressDialog.isShowing()) {
-            progressDialog.hide();
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
         }
-        progressDialog = null;
+
     }
 
     @OnClick(R.id.tv_header)
@@ -298,7 +298,7 @@ public class ShareNearByUserDistanceActivity
                 // kiểm tra nếu (top-left bottom-right) vẫn nằm trong khung map mà suggest fragment pass sang
                 // thì không request lấy thêm làm gì cả
                 // nếu khung màn hình map user kéo ra ngoài, thì mới request lấy list user near
-                progressDialog.show();
+                loadingDialog.show();
                 getPresenter().requestUserNearOnTheMap(mCenterLatLng, mNELatLng, mWSLatLng);
 
                 break;
@@ -423,13 +423,13 @@ public class ShareNearByUserDistanceActivity
 
     @Override
     public void onLoadMoreClick() {
-        progressDialog.show();
+        loadingDialog.show();
         getPresenter().requestLoadMoreUser();
     }
 
     private void hideProgress () {
-        if (progressDialog.isShowing()) {
-            progressDialog.hide();
+        if (loadingDialog.isShowing()) {
+            loadingDialog.hide();
         }
     }
 
