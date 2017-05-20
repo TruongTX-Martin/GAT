@@ -24,6 +24,7 @@ import com.gat.common.event.NetWorkEvent;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.DataLocal;
+import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.common.view.NonSwipeableViewPager;
 import com.gat.data.response.ResponseData;
@@ -436,6 +437,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     private void getBookInstanceError(ServerResponse<ResponseData> error) {
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
+            MZDebug.w("PersonalFragment", "ServerResponse.HTTP_CODE.TOKEN -> StartActivity");
             MainActivity.start(getActivity(), StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         } else {
             ClientUtils.showDialogError(MainActivity.instance, ClientUtils.getStringLanguage(R.string.titleError), error.message());

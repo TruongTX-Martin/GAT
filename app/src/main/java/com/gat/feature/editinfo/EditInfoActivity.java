@@ -34,6 +34,7 @@ import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
+import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
@@ -187,6 +188,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     private void editInfoError(ServerResponse<ResponseData> error) {
         progressBar.setVisibility(View.GONE);
         if (error.code() == ServerResponse.HTTP_CODE.TOKEN) {
+            MZDebug.w("EditInfoActivity", "ServerResponse.HTTP_CODE.TOKEN -> StartActivity");
             MainActivity.start(this, StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
         }else{
             ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
