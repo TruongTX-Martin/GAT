@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -35,13 +34,8 @@ import com.gat.common.util.CommonCheck;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
-import com.gat.data.response.ResponseData;
-import com.gat.data.response.ServerResponse;
-import com.gat.data.response.impl.LoginResponseData;
 import com.gat.data.user.EmailLoginData;
 import com.gat.data.user.SocialLoginData;
-import com.gat.feature.register.update.category.AddCategoryActivity;
-import com.gat.feature.register.update.info.UpdateInfoActivity;
 import com.gat.feature.register.update.location.AddLocationActivity;
 import com.gat.feature.register.update.location.AddLocationScreen;
 import com.gat.repository.entity.LoginData;
@@ -54,7 +48,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -146,6 +139,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
 
         headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
         txtTitle.setText(getString(R.string.register_title));
+        txtTitle.setAllCaps(true);
         txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
         imgBack.setVisibility(View.VISIBLE);
         imgSave.setVisibility(View.INVISIBLE);
@@ -218,7 +212,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                             @Override
                             public void failure(TwitterException exception) {
                                 exception.printStackTrace();
-                                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -226,7 +220,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                     @Override
                     public void failure(TwitterException exception) {
                         exception.printStackTrace();
-                        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             });
@@ -346,7 +340,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                     }
                     @Override
                     public void onCancel() {
-                        Toast.makeText(getApplicationContext(), getString(R.string.login_social_cancel), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), getString(R.string.login_social_cancel), Toast.LENGTH_SHORT).show();
                     }
                 });
         faceRegisterBtn.setOnClickListener(e -> {
@@ -407,7 +401,7 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
                         token
                 ));
             } else {
-                Toast.makeText(getApplicationContext(), "Cannot SignIn.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Cannot SignIn.", Toast.LENGTH_SHORT).show();
             }
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);

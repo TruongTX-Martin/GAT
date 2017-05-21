@@ -87,6 +87,7 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
 
         headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
         txtTitle.setText(getString(R.string.register_category_header));
+        txtTitle.setAllCaps(true);
         txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
         imgBack.setImageResource(R.drawable.narrow_back_black);
         imgSave.setVisibility(View.GONE);

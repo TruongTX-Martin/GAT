@@ -5,9 +5,9 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
     android:orientation="vertical"
+    android:paddingBottom="@dimen/paddingNormal"
     android:paddingLeft="@dimen/paddingNormal"
-    android:paddingRight="@dimen/paddingNormal"
-    android:paddingBottom="@dimen/paddingNormal">
+    android:paddingRight="@dimen/paddingNormal">
 
     <ImageView
         android:id="@+id/image_view_book_cover"
@@ -29,13 +29,15 @@
         android:textColor="@color/colorTextViewDark"
         android:textSize="@dimen/small_textsize_s" />
 
-    <com.gat.common.customview.MZRatingBar
+    <RatingBar
         android:id="@+id/rating_bar_book"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:transformPivotX="0dp"
         android:isIndicator="true"
-        android:numStars="5"
-        />
+        android:numStars="5" />
 
 </LinearLayout>

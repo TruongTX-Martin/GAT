@@ -170,6 +170,7 @@ public class ClientUtils {
         View view = layoutInflater.inflate(R.layout.error_popup_dialog, null);
         builder.setView(view);
         AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         TextView textHeader = (TextView) view.findViewById(R.id.error_header);
         textHeader.setText(header);
         TextView textContent = (TextView) view.findViewById(R.id.error_text);

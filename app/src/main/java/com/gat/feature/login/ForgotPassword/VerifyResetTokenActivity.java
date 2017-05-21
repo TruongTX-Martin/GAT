@@ -65,6 +65,7 @@ public class VerifyResetTokenActivity extends ScreenActivity<LoginScreen, LoginP
 
         headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
         txtTitle.setText(getString(R.string.forgot_password));
+        txtTitle.setAllCaps(true);
         txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
         imgBack.setImageResource(R.drawable.narrow_back_black);
         imgSave.setVisibility(View.GONE);

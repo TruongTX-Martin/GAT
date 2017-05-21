@@ -18,7 +18,7 @@
     <string name="start_login_btn">Đăng nhập</string>
     <string name="start_register_btn">Đăng ký</string>
 
-    <string name="login_title">Đăng nhập</string>
+    <string name="login_title">ĐĂNG NHẬP</string>
     <string name="login_bysocial_title"></string>
     <string name="login_forgot_password">Quên mật khẩu?</string>
     <string name="login_button">Đăng nhập</string>
@@ -42,7 +42,7 @@
     <string name="verify_token_btn">Xác nhận mã </string>
     <string name="reset_pass_btn">Quên mật khẩu</string>
 
-    <string name="register_title">Đăng ký</string>
+    <string name="register_title">ĐĂNG KÍ</string>
     <string name="register_btn">Đăng ký</string>
     <string name="register_google_btn">Đăng ký bằng tài khoản Google</string>
     <string name="register_face_btn">Đăng ký bằng tài khoản Facebook</string>
@@ -151,6 +151,7 @@
     <string name="tab_book_name">Tên sách</string>
     <string name="tab_book_author">Tác giả</string>
     <string name="tab_user_name">Người dùng</string>
+    <string name="search_result">Kết quả tìm kiếm</string>
 
     <!-- book details -->
     <string name="book_detail">Thông tin sách</string>

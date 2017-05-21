@@ -28,12 +28,12 @@
             android:layout_marginBottom="@dimen/slider_margin_text_bottom"/>
         <TextView
             android:id="@+id/intro_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/intro_content_1"
             android:textSize="@dimen/normal_textsize_l"
             android:textStyle="normal"
-            android:textAlignment="center"
+            android:gravity="center_horizontal"
             android:layout_marginLeft="@dimen/slider_margin_left_right"
             android:layout_marginRight="@dimen/slider_margin_left_right"/>
     </LinearLayout>

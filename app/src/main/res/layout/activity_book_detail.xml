@@ -143,14 +143,15 @@
     </RelativeLayout>
 
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -235,7 +236,7 @@
                         android:layout_marginRight="11.5dp"
                         android:ellipsize="end"
                         android:lines="1"
-                        android:text="232asdasdasddasdasdasdsadasdasd323"
+                        android:text=" "
                         android:textColor="@color/colorTextViewDark"
                         android:textSize="@dimen/normal_textsize_s" />
 
@@ -245,6 +246,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/text_view_comment_by_user"
                         android:layout_toLeftOf="@+id/text_view_comment_by_user"
+                        android:visibility="gone"
                         android:src="@drawable/ic_quote_left" />
 
                     <ImageView
@@ -253,6 +255,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/text_view_comment_by_user"
                         android:layout_toRightOf="@+id/text_view_comment_by_user"
+                        android:visibility="gone"
                         android:src="@drawable/ic_quote_right" />
 
                 </RelativeLayout>
@@ -268,6 +271,7 @@
                     android:paddingLeft="@dimen/paddingLarge"
                     android:paddingRight="@dimen/paddingLarge"
                     android:text="Viết bình luận"
+                    android:textSize="@dimen/small_textsize_l"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white" />
 
@@ -320,7 +324,7 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 
 </LinearLayout>

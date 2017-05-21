@@ -20,7 +20,11 @@ public class EvaluationItemResponse implements Parcelable{
     private boolean spoiler;
     private long evaluationTime;
 
-    protected EvaluationItemResponse(Parcel in) {
+    public EvaluationItemResponse() {
+
+    }
+
+    public EvaluationItemResponse(Parcel in) {
         evaluationId = in.readString();
         userId = in.readInt();
         name = in.readString();
@@ -45,12 +49,39 @@ public class EvaluationItemResponse implements Parcelable{
         }
     };
 
-    public void setValue(float value) {
-        this.value = value;
+    public EvaluationItemResponse setUserId(int userId) {
+        this.userId = userId;
+        return this;
     }
 
-    public void setName(String name) {
+    public EvaluationItemResponse setImageId(String imageId) {
+        this.imageId = imageId;
+        return this;
+    }
+
+    public EvaluationItemResponse setReview(String review) {
+        this.review = review;
+        return this;
+    }
+
+    public EvaluationItemResponse setSpoiler(boolean spoiler) {
+        this.spoiler = spoiler;
+        return this;
+    }
+
+    public EvaluationItemResponse setEvaluationTime(long evaluationTime) {
+        this.evaluationTime = evaluationTime;
+        return this;
+    }
+
+    public EvaluationItemResponse setValue(float value) {
+        this.value = value;
+        return this;
+    }
+
+    public EvaluationItemResponse setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getEvaluationId() {

@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_fail_title"
-        android:textSize="@dimen/header_textsize_m"
+        android:textSize="@dimen/header_textsize_l"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/error_popup_margin_top"/>

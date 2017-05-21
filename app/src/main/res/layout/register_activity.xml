@@ -28,6 +28,7 @@
             android:drawablePadding="10dp"
             android:scaleType="fitCenter"
             android:text="@string/register_face_btn"
+            android:textAllCaps="false"
             android:drawableStart="@drawable/facebook_btn"
             android:textSize="@dimen/normal_textsize_l"/>
         <Button
@@ -41,6 +42,7 @@
             android:drawablePadding="10dp"
             android:scaleType="fitCenter"
             android:text="@string/register_twitter_btn"
+            android:textAllCaps="false"
             android:textSize="@dimen/normal_textsize_l"
             android:drawableStart="@drawable/twitter_btn"/>
         <Button
@@ -54,6 +56,7 @@
             android:drawablePadding="10dp"
             android:scaleType="fitCenter"
             android:text="@string/register_google_btn"
+            android:textAllCaps="false"
             android:drawableStart="@drawable/google_btn"
             android:textSize="@dimen/normal_textsize_l"/>
         <View
@@ -97,7 +100,7 @@
                 android:inputType="textPassword"
                 android:hint="@string/login_password_hint"
                 android:drawableStart="@drawable/pass_input_icon"
-                android:drawablePadding="10dp"
+                android:drawablePadding="15dp"
                 android:textSize="@dimen/normal_textsize_l"
                 android:maxLength="10"
                 android:background="@drawable/text_edit_shape_white"/>

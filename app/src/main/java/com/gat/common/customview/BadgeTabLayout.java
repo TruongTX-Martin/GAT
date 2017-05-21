@@ -76,7 +76,7 @@ public class BadgeTabLayout extends TabLayout {
 
         this.mImageViewIcon = (ImageView) mView.findViewById(R.id.tab_icon);
         this.mTextViewBadge = (TextView) mView.findViewById(R.id.tab_badge);
-        this.mTextViewTitle = (TextView) mView.findViewById(R.id.tab_title);
+        this.mTextViewTitle = (TextView) mView.findViewById(R.id.tab_title_xxx);
 
         setNoticeCount(notice_count);
 

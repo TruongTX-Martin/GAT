@@ -10,7 +10,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -136,6 +135,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
         headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
         txtTitle.setText(getString(R.string.login_title));
+        txtTitle.setAllCaps(true);
         txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
         imgBack.setVisibility(View.VISIBLE);
         imgSave.setVisibility(View.INVISIBLE);
@@ -166,6 +166,7 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
         imgBack.setOnClickListener(v -> finish());
     }
+
 
     private void loginWithGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -351,9 +352,10 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         finish();
     }
 
+    private AlertDialog errorDialog;
     private void onLoginError(String error) {
         progressSubject.onNext(false);
-        ClientUtils.showErrorDialog(getString(R.string.login_error_header), error, this);
+        errorDialog = ClientUtils.showDialogError(this, getString(R.string.login_error_header), error);
     }
 
     private void onLogging(boolean enter) {
@@ -369,8 +371,14 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+
         disposables.dispose();
+
+        if (errorDialog != null) {
+            errorDialog.dismiss();
+        }
+
+        super.onDestroy();
     }
 
     @Override

@@ -63,13 +63,23 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Observable<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage) {
-        return Observable.defer(()-> networkDataSourceLazy.get().searchBookByTitle(title, userId, page, sizeOfPage));
+    public Observable<DataResultListResponse<BookResponse>> searchBookByTitle(String title, int page, int sizeOfPage) {
+        return Observable.defer(()-> networkDataSourceLazy.get().searchBookByTitle(title, page, sizeOfPage));
     }
 
     @Override
-    public Observable<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage) {
-        return Observable.defer(()->networkDataSourceLazy.get().searchBookByAuthor(author, userId, page, sizeOfPage));
+    public Observable<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, int page, int sizeOfPage) {
+        return Observable.defer(()->networkDataSourceLazy.get().searchBookByAuthor(author, page, sizeOfPage));
+    }
+
+    @Override
+    public Observable<DataResultListResponse> searchBookByTitleTotal(String title, int userId) {
+        return Observable.defer(()->networkDataSourceLazy.get().searchBookByTitleTotal(title, userId));
+    }
+
+    @Override
+    public Observable<DataResultListResponse> searchBookByAuthorTotal(String author, int userId) {
+        return Observable.defer(()->networkDataSourceLazy.get().searchBookByAuthorTotal(author, userId));
     }
 
     @Override

@@ -58,7 +58,6 @@ public class DateTimeUtil {
 
         Date now = new Date();
         long minutesAgo = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - milliseconds);
-        MZDebug.w("NOW = " + now.getTime() + ", TIME NOTIFY = " + milliseconds);
 
         if (minutesAgo >= 1440) { // 24h x 60p = 1440
             long daysAgo= TimeUnit.MILLISECONDS.toDays(now.getTime() - milliseconds);
@@ -85,20 +84,5 @@ public class DateTimeUtil {
 
         return mDay + " tháng " + (mMonth + 1) + " năm " + mYear;
     }
-
-
-    public static String transformDate (String timeString) {
-
-        if (timeString == null || timeString.isEmpty()) {
-            return "";
-        }
-
-        String[] split = timeString.split(" ");
-        String[] date = split[0].split("-");
-        String result = date[2] + " tháng " + date[1] + " năm " + date[0];
-
-        return result;
-    }
-
 
 }

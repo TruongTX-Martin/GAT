@@ -23,7 +23,7 @@ import com.gat.common.util.MZDebug;
 
 public class ViewMoreTextView {
 
-    private static final int DEFAULT_END_CHARACTERS = 12;
+    private static final int DEFAULT_END_CHARACTERS = 0;
     private static final int DEFAULT_MAX_LINES = 5;
     private static final String DEFAULT_VIEW_MORE = "Xem thêm";
     private static final String DEFAULT_VIEW_LESS = "Ít hơn";
@@ -44,11 +44,12 @@ public class ViewMoreTextView {
                 obs.removeGlobalOnLayoutListener(this);
                 if (maxLine == 0) {
                     int lineEndIndex = tv.getLayout().getLineEnd(0);
+                    MZDebug.w("lineEndIndex = " + lineEndIndex);
 
                     String text = tv.getText().toString();
                     // maxLine = 0 make app crash -> fix it when you have done the other bugs.
                     // maxLine must be >0
-                    if (tv.getText().toString().length() > (expandText.length() + DEFAULT_END_CHARACTERS)) {
+                    if (lineEndIndex > (expandText.length() + DEFAULT_END_CHARACTERS)) {
                         text = tv.getText().subSequence(0, lineEndIndex - expandText.length() - DEFAULT_END_CHARACTERS ) + "... " + expandText;
                     }
 
@@ -59,10 +60,11 @@ public class ViewMoreTextView {
                                     viewMore), TextView.BufferType.SPANNABLE);
                 } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
                     int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
+                    MZDebug.w("maxLine>0, lineEndIndex = " + lineEndIndex);
 
                     MZDebug.w("Text comment: " + tv.getText());
                     String text = Html.fromHtml(tv.getText().toString()).toString();
-                    if (tv.getText().length() > (expandText.length() + DEFAULT_END_CHARACTERS)) {
+                    if (lineEndIndex > (expandText.length() + DEFAULT_END_CHARACTERS)) {
                         text = tv.getText().subSequence(0, lineEndIndex - expandText.length() - DEFAULT_END_CHARACTERS) + "... " + expandText;
                     }
                     tv.setText(text);

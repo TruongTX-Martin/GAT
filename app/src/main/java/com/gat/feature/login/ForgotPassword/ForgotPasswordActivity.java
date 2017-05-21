@@ -65,6 +65,7 @@ public class ForgotPasswordActivity extends ScreenActivity<LoginScreen, LoginPre
 
         headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
         txtTitle.setText(getString(R.string.forgot_password));
+        txtTitle.setAllCaps(true);
         txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
         imgBack.setVisibility(View.GONE);
         imgSave.setVisibility(View.GONE);

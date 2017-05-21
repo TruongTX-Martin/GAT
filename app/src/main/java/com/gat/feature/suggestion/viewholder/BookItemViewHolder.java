@@ -1,5 +1,8 @@
 package com.gat.feature.suggestion.viewholder;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.LayoutRes;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -40,5 +43,9 @@ public class BookItemViewHolder  extends ItemViewHolder<BookItem> {
         textViewBookName.setText(book.title());
         ratingBar.setRating(book.rating());
         ivBooksCoverList.setImageResource(R.mipmap.ic_launcher);
+
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(0).setColorFilter(Color.parseColor("#ffffff"), PorterDuff.Mode.SRC_ATOP);
+
     }
 }

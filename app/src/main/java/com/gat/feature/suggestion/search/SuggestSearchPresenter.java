@@ -22,6 +22,7 @@ public interface SuggestSearchPresenter extends Presenter {
     Observable<DataResultListResponse<BookResponse>> onSearchBookWithTitleSuccess();
     Observable<DataResultListResponse<BookResponse>> onLoadMoreBookWithTitleSuccess();
     Observable<Boolean> onCanLoadMoreBookWithTitle ();
+    Observable<Integer> onSearchBookWithTitleTotalResult ();
 
 
     void loadHistorySearchAuthor();
@@ -32,6 +33,7 @@ public interface SuggestSearchPresenter extends Presenter {
     Observable<DataResultListResponse<BookResponse>> onSearchBookWithAuthorSuccess();
     Observable<DataResultListResponse<BookResponse>> onLoadMoreBookWithAuthorSuccess();
     Observable<Boolean> onCanLoadMoreBookWithAuthor ();
+    Observable<Integer> onSearchBookWithAuthorTotalResult ();
 
 
     void loadHistorySearchUser();
@@ -42,6 +44,7 @@ public interface SuggestSearchPresenter extends Presenter {
     Observable<DataResultListResponse<UserResponse>> onSearchUserWithNameSuccess();
     Observable<DataResultListResponse<UserResponse>> onLoadMoreUserWithNameSuccess();
     Observable<Boolean> onCanLoadMoreUserWithName ();
+    Observable<Integer> onSearchUserWithNameTotalResult ();
 
     Observable<String> onError();
 

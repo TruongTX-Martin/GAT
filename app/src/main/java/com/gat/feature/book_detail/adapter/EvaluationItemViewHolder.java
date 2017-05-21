@@ -16,6 +16,7 @@ import com.gat.common.adapter.ItemViewHolder;
 import com.gat.common.customview.ViewMoreTextView;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.DateTimeUtil;
+import com.gat.common.util.MZDebug;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,10 +51,12 @@ public class EvaluationItemViewHolder extends ItemViewHolder<EvaluationItem> {
     public void onBindItem(EvaluationItem item) {
         super.onBindItem(item);
 
+        MZDebug.e("EvaluationItemViewHolder", "onBindItem");
+
         textViewTimeAgo.setText(String.valueOf(DateTimeUtil.calculateTimeAgo(item.evaluation().getEvaluationTime())));
-        textViewName.setText(item.evaluation().getName());
+        textViewName.setText(TextUtils.isEmpty(item.evaluation().getName()) ? "" : item.evaluation().getName());
         ratingBarComment.setRating(item.evaluation().getValue());
-        textViewCommentEvaluation.setText(item.evaluation().getReview());
+        textViewCommentEvaluation.setText( TextUtils.isEmpty(item.evaluation().getReview()) ? "" : item.evaluation().getReview() );
         ViewMoreTextView.makeTextViewResizable(textViewCommentEvaluation, 3, mContext.getString(R.string.view_more), false);
 
         if ( ! TextUtils.isEmpty(item.evaluation().getImageId())) {

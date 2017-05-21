@@ -144,32 +144,51 @@ public interface GatApi {
             @Query("per_page") int perPage
     );
 
-    @FormUrlEncoded
-    @POST("search/book_by_title")
-    Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> searchBookByTitle(
-            @Field("title") String title,
-            @Field("userId") long userId,
-            @Field("page") int page,
-            @Field("per_page") int perPage
-    );
 
-    @FormUrlEncoded
-    @POST("search/book_by_author")
-    Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> searchBookByAuthor(
-            @Field("authorName") String author,
-            @Field("userId") long userId,
+    @GET("search/book_by_title")
+    Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> searchBookByTitle(
+            @Query("title") String title,
             @Query("page") int page,
             @Query("per_page") int perPage
     );
 
     @FormUrlEncoded
-    @POST("search/user")
+    @POST("search/book_by_title_total")
+    Observable<Response<ServerResponse<DataResultListResponse>>> searchBookByTitleTotal(
+            @Field("title") String title,
+            @Field("userId") long userId
+    );
+
+
+    @GET("search/book_by_author")
+    Observable<Response<ServerResponse<DataResultListResponse<BookResponse>>>> searchBookByAuthor(
+            @Query("authorName") String author,
+            @Query("page") int page,
+            @Query("per_page") int perPage
+    );
+
+    @FormUrlEncoded
+    @POST("search/book_by_author_total")
+    Observable<Response<ServerResponse<DataResultListResponse>>> searchBookByAuthorTotal(
+            @Field("authorName") String author,
+            @Field("userId") long userId
+    );
+
+
+    @GET("search/user")
     Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> searchUser (
-            @Field("name") String title,
-            @Field("userId") int userId,
+            @Query("name") String title,
             @Query("page") int page,
             @Query("per_page") int per_page
             );
+
+
+    @FormUrlEncoded
+    @POST("search/user_total")
+    Observable<Response<ServerResponse<DataResultListResponse>>> searchUserTotal (
+            @Field("name") String title,
+            @Field("userId") int userId
+    );
 
     @GET("share/get_book_record")
     Observable<Response<ServerResponse<Data>>> getBookRequest(

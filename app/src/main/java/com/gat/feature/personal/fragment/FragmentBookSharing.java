@@ -49,9 +49,10 @@ public class FragmentBookSharing extends Fragment {
     private List<BookSharingEntity> listBook = new ArrayList<>();
     private PersonalFragment parrentActivity;
     private Context context;
-    private View rootView;
+    private View rootView = null;
     private BookInstanceInput currentInput;
     private boolean isSharing, isNotSharing, isLost;
+
     //for loadmore listview
     private boolean isRequesting;
     private boolean isContinueMore = true;
@@ -128,16 +129,18 @@ public class FragmentBookSharing extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.layout_fragment_book_loan, container, false);
-        context = getActivity().getApplicationContext();
-        initView();
-        handleEvent();
-        showLoading();
-        if (DataLocal.getPersonalInputSharing() != null ) {
-            currentInput = DataLocal.getPersonalInputSharing();
-            searchBook(currentInput);
-        }else if(currentInput != null) {
-            searchBook(currentInput);
+        if(rootView == null) {
+            rootView = inflater.inflate(R.layout.layout_fragment_book_loan, container, false);
+            context = getActivity().getApplicationContext();
+            initView();
+            handleEvent();
+            showLoading();
+            if (DataLocal.getPersonalInputSharing() != null ) {
+                currentInput = DataLocal.getPersonalInputSharing();
+                searchBook(currentInput);
+            }else if(currentInput != null) {
+                searchBook(currentInput);
+            }
         }
         return rootView;
     }

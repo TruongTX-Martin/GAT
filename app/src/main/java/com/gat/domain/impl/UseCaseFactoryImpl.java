@@ -219,18 +219,33 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage) {
-        return new SearchBookByTitle(bookRepositoryLazy.get(), title, userId, page, sizeOfPage);
+    public UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, int page, int sizeOfPage) {
+        return new SearchBookByTitle(bookRepositoryLazy.get(), title, page, sizeOfPage);
     }
 
     @Override
-    public UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage) {
-        return new SearchBookByAuthor(bookRepositoryLazy.get(), author, userId, page, sizeOfPage);
+    public UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, int page, int sizeOfPage) {
+        return new SearchBookByAuthor(bookRepositoryLazy.get(), author, page, sizeOfPage);
     }
 
     @Override
-    public UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage) {
-        return new SearchUser(userRepositoryLazy.get(), name, userId, page, sizeOfPage);
+    public UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        return new SearchUser(userRepositoryLazy.get(), name, page, sizeOfPage);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse> searchBookByTitleTotal(String title, long userId) {
+        return new SearchBookByTitleTotal(bookRepositoryLazy.get(), title, (int)userId);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse> searchBookByAuthorTotal(String author, long userId) {
+        return new SearchBookByAuthorTotal(bookRepositoryLazy.get(), author, (int)userId);
+    }
+
+    @Override
+    public UseCase<DataResultListResponse> searchUserTotal(String name, int userId) {
+        return new SearchUserTotal(userRepositoryLazy.get(), name, userId);
     }
 
     @Override

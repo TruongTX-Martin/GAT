@@ -36,6 +36,7 @@
             android:layout_height="@dimen/button_height"
             android:drawablePadding="@dimen/paddingLarge"
             android:drawableRight="@drawable/narrow_right_gray"
+            android:gravity="center_vertical"
             android:textColor="@color/colorTextViewDarkNormal"
             android:textSize="@dimen/small_textsize_s"
             android:clickable="true"

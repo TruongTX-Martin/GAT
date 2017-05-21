@@ -52,6 +52,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import pl.droidsonroids.gif.GifTextView;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -78,11 +79,14 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     @BindView(R.id.ll_user_near_suggest)
     LinearLayout llUserNearSuggest;
 
-    @BindView(R.id.group_message)
-    ImageView groupMessage;
-
     @BindView(R.id.unread_count)
     TextView unReadGroupMessageCnt;
+
+    @BindView(R.id.gif_text_view_suggest)
+    GifTextView gifTextViewSuggest;
+
+    @BindView(R.id.gif_text_view_most_borrow)
+    GifTextView gifTextViewMostBorrow;
 
     private CompositeDisposable disposables;
     private BookSuggestAdapter mMostBorrowingAdapter;
@@ -146,12 +150,6 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
                 })
         );
 
-        groupMessage.setOnClickListener(v -> {
-            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (firebaseUser != null)
-                ScreenActivity.start(getContext(), GroupMessageActivity.class, GroupMessageScreen.instance());
-        });
-
         return view;
     }
 
@@ -199,9 +197,19 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         disposables.dispose();
-        gps.stopUsingGPS();
+
+        if (gps != null)
+            gps.stopUsingGPS();
+
+        super.onDestroy();
+    }
+
+    @OnClick(R.id.rl_group_message)
+    void onButtonGoMessageTap () {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null)
+            ScreenActivity.start(getContext(), GroupMessageActivity.class, GroupMessageScreen.instance());
     }
 
     @OnClick(R.id.button_go_setting)
@@ -236,6 +244,78 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
 //        intent.putExtras(bundle);
 //        startActivity(intent);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // EasyPermissions handles the request result.
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @AfterPermissionGranted(PERMISSION_ACCESS_COARSE_LOCATION)
+    private void processLocationToUpdateUserShareNearByDistance() {
+        MZDebug.i("_______________________________ processLocationToUpdateUserShareNearByDistance");
+        if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            requestUserNear ();
+        } else {
+            MZDebug.w("onPermissionsDenied -_- ");
+            // Request one permission
+            EasyPermissions.requestPermissions(this, mContext.getResources().getString(R.string.msg_allow_location),
+                    PERMISSION_ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        MZDebug.w("onPermissionsGranted");
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
+    }
+
+
+    @Override
+    public void onItemBookClickListener(View view, BookResponse book) {
+        MainActivity.start(getActivity(), BookDetailActivity.class, BookDetailScreen.instance( (int) book.getEditionId()));
+    }
+
+    private void displayBadge() {
+        int badge = SharedData.getInstance().getBadge();
+        if (badge > 0) {
+            unReadGroupMessageCnt.setVisibility(View.VISIBLE);
+            unReadGroupMessageCnt.setText(badge + "");
+        } else {
+            unReadGroupMessageCnt.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void requestUserNear () {
+        if (gps == null) {
+            gps = new TrackGPS(getActivity());
+        }
+        if (gps.isGPSAvailable()) {
+            // Have permission, remove button request permission
+            llUserNearSuggest.removeAllViews();
+
+            // request list user near
+            processUserNearByDistance();
+        }
+    }
+
+    private void processUserNearByDistance() {
+        double longitude = gps.getLongitude();
+        double latitude = gps.getLatitude();
+        MZDebug.i("longitude: " + longitude + ", lat: " + latitude);
+        currentLatLng = new LatLng(latitude, longitude);
+
+        LatLng neLocation = new LatLng(latitude +1, longitude +1);
+        LatLng wsLocation = new LatLng(latitude -1, longitude -1);
+
+        getPresenter().getPeopleNearByUser(currentLatLng, neLocation, wsLocation);
+    }
+
 
     void onPeopleNearByUserByDistanceSuccess(DataResultListResponse<UserNearByDistance> data) {
         MZDebug.i("_________________________________________ onPeopleNearByUserByDistance Success");
@@ -297,6 +377,9 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     }
 
     void onTopBorrowingSuccess(List<BookResponse> list) {
+
+        gifTextViewMostBorrow.setVisibility(View.GONE);
+
         mListBookMostBorrowing.addAll(list);
         if (null == mMostBorrowingAdapter) {
             mMostBorrowingAdapter = new BookSuggestAdapter(mContext, mListBookMostBorrowing, this);
@@ -307,6 +390,9 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     }
 
     void onSuggestBooksSuccess(List<BookResponse> list) {
+
+        gifTextViewSuggest.setVisibility(View.GONE);
+
         mListBookSuggest.addAll(list);
         if (null == mBookSuggestAdapter) {
             mBookSuggestAdapter = new BookSuggestAdapter(getActivity(), mListBookSuggest, this);
@@ -316,79 +402,9 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
         mBookSuggestAdapter.notifyDataSetChanged();
     }
 
+
     void onError(String message) {
         MZDebug.e(message);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // EasyPermissions handles the request result.
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    @AfterPermissionGranted(PERMISSION_ACCESS_COARSE_LOCATION)
-    private void processLocationToUpdateUserShareNearByDistance() {
-        MZDebug.i("_______________________________ processLocationToUpdateUserShareNearByDistance");
-        if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            requestUserNear ();
-        } else {
-            MZDebug.w("onPermissionsDenied -_- ");
-            // Request one permission
-            EasyPermissions.requestPermissions(this, mContext.getResources().getString(R.string.msg_allow_location),
-                    PERMISSION_ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-        MZDebug.w("onPermissionsGranted");
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-
-    }
-
-    private void processUserNearByDistance() {
-        double longitude = gps.getLongitude();
-        double latitude = gps.getLatitude();
-        MZDebug.i("longitude: " + longitude + ", lat: " + latitude);
-        currentLatLng = new LatLng(latitude, longitude);
-
-        LatLng neLocation = new LatLng(latitude +1, longitude +1);
-        LatLng wsLocation = new LatLng(latitude -1, longitude -1);
-
-        getPresenter().getPeopleNearByUser(currentLatLng, neLocation, wsLocation);
-    }
-
-    @Override
-    public void onItemBookClickListener(View view, BookResponse book) {
-        MainActivity.start(getActivity(), BookDetailActivity.class, BookDetailScreen.instance( (int) book.getEditionId()));
-    }
-
-    private void displayBadge() {
-        int badge = SharedData.getInstance().getBadge();
-        if (badge > 0) {
-            unReadGroupMessageCnt.setVisibility(View.VISIBLE);
-            unReadGroupMessageCnt.setText(badge + "");
-        } else {
-            unReadGroupMessageCnt.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    private void requestUserNear () {
-
-        if (gps == null) {
-            gps = new TrackGPS(getActivity());
-        }
-        if (gps.isGPSAvailable()) {
-            // Have permission, remove button request permission
-            llUserNearSuggest.removeAllViews();
-
-            // request list user near
-            processUserNearByDistance();
-        }
     }
 
 }

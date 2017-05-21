@@ -235,9 +235,15 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage) {
-        return Observable.defer(() -> networkUserDataSourceLazy.get().searchUser(name, userId, page, sizeOfPage));
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        return Observable.defer(() -> networkUserDataSourceLazy.get().searchUser(name, page, sizeOfPage));
     }
+
+    @Override
+    public Observable<DataResultListResponse> searchUserTotal(String name, int userId) {
+        return Observable.defer(()->networkUserDataSourceLazy.get().searchUserTotal(name, userId));
+    }
+
     @Override
     public Observable<Data> getBookRequest(BookRequestInput input) {
         return Observable.defer( () -> networkUserDataSourceLazy.get().getBookRequest(input));

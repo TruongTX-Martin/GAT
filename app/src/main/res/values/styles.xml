@@ -65,10 +65,9 @@
 
     <style name="TextViewHeaderTitle" parent="TextViewBase">
         <item name="android:textSize">14sp</item>
-        <item name="android:paddingTop">6sp</item>
-        <item name="android:paddingBottom">6sp</item>
+        <item name="android:paddingTop">@dimen/title_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/title_padding_vertical</item>
         <item name="android:fontFamily">@string/font_family_regular</item>
-        <item name="android:textStyle">bold</item>
         <item name="textAllCaps">false</item>
     </style>
 
