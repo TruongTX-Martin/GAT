@@ -43,6 +43,7 @@ import java.util.List;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
+import pl.droidsonroids.gif.GifTextView;
 
 /**
  * Created by root on 20/04/2017.
@@ -79,6 +80,9 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
     @BindView(R.id.layoutBack)
     RelativeLayout layoutBack;
+
+    @BindView(R.id.loadingInfo)
+    GifTextView loadingInfo;
     private Context context;
 
     //init fragment
@@ -86,7 +90,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
 
     private FragmentBookUserReading fragmentBookUserReading;
-    private TextView txtNumberSharing,txtNumberReading;
+    private TextView txtNumberSharing, txtNumberReading;
     private CompositeDisposable disposablesBookUserSharing;
 
 
@@ -125,12 +129,12 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
         layoutMenutop.setBackgroundColor(Color.parseColor("#8ec3df"));
         txtTitle.setText("CÁ NHÂN");
         imgChat.setImageResource(R.drawable.ic_chat_white);
-        if(currentUser != null) {
-            if(!Strings.isNullOrEmpty(currentUser.name())) {
+        if (currentUser != null) {
+            if (!Strings.isNullOrEmpty(currentUser.name())) {
                 txtName.setText(currentUser.name());
             }
-            if(currentUser.usuallyLocation().size() > 0){
-                if(!Strings.isNullOrEmpty(currentUser.usuallyLocation().get(0).getAddress())){
+            if (currentUser.usuallyLocation().size() > 0) {
+                if (!Strings.isNullOrEmpty(currentUser.usuallyLocation().get(0).getAddress())) {
                     txtAddress.setText(currentUser.usuallyLocation().get(0).getAddress());
                 }
             }
@@ -146,15 +150,17 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
     private void requestUserVisitorInfo(int userId) {
+        checkInternet();
         getPresenter().requestVisitorInfo(userId);
+        loadingInfo.setVisibility(View.VISIBLE);
     }
 
-    private void handleEvent(){
+    private void handleEvent() {
         layoutBack.setOnClickListener(v -> finish());
 
         //event chating
         imgChat.setOnClickListener(v -> {
-            if(currentUser == null) return;
+            if (currentUser == null) return;
             start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(currentUser.userId()));
         });
     }
@@ -189,16 +195,18 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
                 BookSharingUserInput input = new BookSharingUserInput();
                 input.setOwnerId(currentUser.userId());
                 fragmentBookUserSharing.setCurrentInput(input);
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
         if (fragmentBookUserReading == null) {
             fragmentBookUserReading = new FragmentBookUserReading();
             fragmentBookUserReading.setParrentActivity(this);
             try {
-                BookReadingInput currentInput = new BookReadingInput(false,true,false);
+                BookReadingInput currentInput = new BookReadingInput(false, true, false);
                 currentInput.setUserId(currentUser.userId());
                 fragmentBookUserReading.setCurrentInput(currentInput);
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
         adapter.addFragment(fragmentBookUserSharing, "");
         adapter.addFragment(fragmentBookUserReading, "");
@@ -207,18 +215,18 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
     private void checkInternet() {
         if (!ClientUtils.isOnline()) {
-            ClientUtils.showViewNotInternet(MainActivity.instance,layoutMenutop);
+            ClientUtils.showViewNotInternet(MainActivity.instance, layoutMenutop);
             return;
         }
     }
 
-    public void requestBookUserSharing(BookSharingUserInput input){
+    public void requestBookUserSharing(BookSharingUserInput input) {
         checkInternet();
         getPresenter().requestBookUserSharing(input);
     }
 
-    private void getBookUserSharingSuccess(Data data){
-        if(data != null){
+    private void getBookUserSharingSuccess(Data data) {
+        if (data != null) {
             int totalSharing = data.getTotalSharing();
             txtNumberSharing.setText(totalSharing + "");
             List<BookSharingEntity> list = data.getListDataReturn(BookSharingEntity.class);
@@ -226,6 +234,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
 
         }
     }
+
     public void checkLogin() {
         getPresenter().checkLogin();
     }
@@ -233,47 +242,51 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     private void checkLoginSuccess(String input) {
         //do nothing
     }
+
     private void checkLoginFailed(String input) {
     }
 
     private void getBookUserSharingError(ServerResponse<ResponseData> error) {
-        ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error.message());
+        loadingInfo.setVisibility(View.GONE);
+        ClientUtils.showDialogError(this, ClientUtils.getStringLanguage(R.string.titleError), error.message());
     }
 
-    private void borrowBookError(String  error) {
+    private void borrowBookError(String error) {
         fragmentBookUserSharing.hideLoadBook();
-        ClientUtils.showDialogError(this,ClientUtils.getStringLanguage(R.string.titleError),error);
+        ClientUtils.showDialogError(this, ClientUtils.getStringLanguage(R.string.titleError), error);
     }
 
     private void getUserVisitorInfoSuccess(User user) {
-        if(user != null){
+        loadingInfo.setVisibility(View.GONE);
+        if (user != null) {
             currentUser = user;
             initView();
             handleEvent();
         }
     }
 
-    private void borrowBookSuccess(Data data){
-        if(data != null) {
+    private void borrowBookSuccess(Data data) {
+        if (data != null) {
             if (!Strings.isNullOrEmpty(data.getMessage())) {
-                ClientUtils.showToast(this,data.getMessage());
+                ClientUtils.showToast(this, data.getMessage());
             }
-            
+
             BookSharingEntity entity = (BookSharingEntity) data.getDataReturn(BookSharingEntity.class);
             fragmentBookUserSharing.refreshAdapterSharingBook(entity.getRecordStatus());
         }
         fragmentBookUserSharing.hideLoadBook();
     }
-    private void getBookUserReadingSuccess(Data data){
-        if(data != null){
+
+    private void getBookUserReadingSuccess(Data data) {
+        if (data != null) {
             List<BookReadingEntity> list = data.getListDataReturn(BookReadingEntity.class);
             fragmentBookUserReading.setListBook(list);
             int totalReading = data.getReadingTotal();
-            txtNumberReading.setText(totalReading+"");
+            txtNumberReading.setText(totalReading + "");
         }
     }
 
-    public void requestBorrowBook(BorrowRequestInput input){
+    public void requestBorrowBook(BorrowRequestInput input) {
         checkInternet();
         input.setOwnerId(currentUser.userId());
         getPresenter().requestBorrowBook(input);
@@ -281,8 +294,7 @@ public class PersonalUserActivity extends ScreenActivity<PersonalUserScreen, Per
     }
 
 
-
-    public void requestBookUserReading(BookReadingInput input){
+    public void requestBookUserReading(BookReadingInput input) {
         checkInternet();
         getPresenter().requestBookUserReading(input);
     }

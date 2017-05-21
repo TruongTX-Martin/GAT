@@ -59,6 +59,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.CompositeDisposable;
+import pl.droidsonroids.gif.GifTextView;
 
 /**
  * Created by root on 17/04/2017.
@@ -72,6 +73,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private TabLayout tabLayout;
     private NonSwipeableViewPager viewPager;
     private RelativeLayout layoutInfo;
+    private GifTextView loadingInfo;
 
 
     private RelativeLayout layoutTop, layoutButton;
@@ -174,6 +176,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
 
     private void initView() {
+        loadingInfo = (GifTextView) rootView.findViewById(R.id.loadingInfo);
         viewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
         imgAvatar = (CircleImageView) rootView.findViewById(R.id.imgAvatar);
@@ -279,13 +282,14 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         try {
             checkInternet();
             getPresenter().requestPersonalInfor("");
+            loadingInfo.setVisibility(View.VISIBLE);
         } catch (Exception e) {
         }
     }
 
     //handle data personal return
     private void getUserInfoSuccess(Data<User> data) {
-
+        loadingInfo.setVisibility(View.GONE);
         if (data != null) {
             userInfo = data.getDataReturn(User.typeAdapter(new Gson()));
             if (userInfo == null)
@@ -326,6 +330,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     }
 
     private void getUserInfoError(ServerResponse<ResponseData> error) {
+        loadingInfo.setVisibility(View.GONE);
         ClientUtils.showDialogError(MainActivity.instance, ClientUtils.getStringLanguage(R.string.titleError), error.message());
     }
 
@@ -360,7 +365,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             dialog.setOnKeyListener((dialog1, keyCode, event) -> {
                 if(keyCode  == event.KEYCODE_BACK) {
                     dialog1.dismiss();
-                    mainActivity.setTabDesire(0);
+                    mainActivity.onBackPressed();
                     return true;
                 }
                 return false;

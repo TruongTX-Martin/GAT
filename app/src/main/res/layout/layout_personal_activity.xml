@@ -82,6 +82,14 @@
             android:layout_toRightOf="@+id/imgAvatar"
             android:textColor="@color/colorGray"
             android:textSize="@dimen/normal_textsize_s" />
+
+        <pl.droidsonroids.gif.GifTextView
+            android:id="@+id/loadingInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:background="@drawable/ic_loading_book" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -110,7 +110,7 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         dialog.setContentView(R.layout.layout_dialog_login);
         dialog.setCanceledOnTouchOutside(false);
 
-
+        getPresenter().checkLogin();
         return view;
     }
 
@@ -212,7 +212,7 @@ implements NotificationAdapter.OnItemNotifyClickListener{
             dialog.setOnKeyListener((dialog1, keyCode, event) -> {
                 if(keyCode  == event.KEYCODE_BACK) {
                     dialog1.dismiss();
-                    mainActivity.setTabDesire(0);
+                    mainActivity.onBackPressed();
                     return true;
                 }
                 return false;
