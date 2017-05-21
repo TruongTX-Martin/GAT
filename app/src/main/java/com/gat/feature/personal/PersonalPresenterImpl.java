@@ -178,7 +178,6 @@ public class PersonalPresenterImpl implements PersonalPresenter {
                     } else {
                         isLogin = false;
                     }
-                    personalInputSubject.onNext("");
                 })
                 .onError(throwable -> {
                     MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"

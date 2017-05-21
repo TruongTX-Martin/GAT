@@ -22,6 +22,7 @@ import com.gat.common.customview.MZRatingBar;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
 import com.gat.common.util.Strings;
+import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
 import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.personaluser.PersonalUserActivity;
@@ -141,16 +142,9 @@ public class BookSharingAdapter extends RecyclerView.Adapter<BookSharingAdapter.
         });
         holder.imgBook.setOnClickListener(v -> {
             int borrowingRecordId = entity.getBorrowingRecordId();
-            int sharingStatus = entity.getSharingStatus();
-            if (sharingStatus == 1) {
-                //sharing
-
-            } else if (sharingStatus == 2) {
-                //borrowing
-                Intent intent = new Intent(MainActivity.instance, BookDetailSenderActivity.class);
-                intent.putExtra("BorrowingRecordId", borrowingRecordId);
-                MainActivity.instance.startActivity(intent);
-            }
+            Intent intent = new Intent(MainActivity.instance, BookDetailOwnerActivity.class);
+            intent.putExtra("BorrowingRecordId", borrowingRecordId);
+            MainActivity.instance.startActivity(intent);
         });
         if (getItemCount() > 9 && position == (getItemCount() - 1)) {
             fragmentBookSharing.loadMore();

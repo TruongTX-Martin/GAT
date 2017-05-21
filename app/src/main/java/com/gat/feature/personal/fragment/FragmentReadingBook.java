@@ -110,9 +110,11 @@ public class FragmentReadingBook extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
-        rootView = inflater.inflate(R.layout.layout_fragment_book_reading, container, false);
-        initView();
-        handleEvent();
+        if(rootView == null) {
+            rootView = inflater.inflate(R.layout.layout_fragment_book_reading, container, false);
+            initView();
+            handleEvent();
+        }
         return rootView;
     }
 

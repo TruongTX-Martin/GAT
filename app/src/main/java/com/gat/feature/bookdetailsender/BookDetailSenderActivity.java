@@ -16,6 +16,7 @@ import com.gat.app.activity.ScreenActivity;
 import com.gat.common.customview.MZRatingBar;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Constance;
+import com.gat.common.util.DateTimeUtil;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
@@ -213,12 +214,25 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
     @BindView(R.id.layoutMenutop)
     RelativeLayout layoutMenutop;
 
+    @BindView(R.id.layoutBook)
+    RelativeLayout layoutBook;
+
+    @BindView(R.id.layoutDate)
+    LinearLayout layoutDate;
+
+    @BindView(R.id.layoutBorrower)
+    RelativeLayout layoutBorrower;
+
+    @BindView(R.id.txtRequest)
+    TextView txtRequest;
+
+
     private Context context;
 
 
     private RequestStatusInput statusInput = new RequestStatusInput();
     int borrowingRecordId = 0;
-    private BookDetailEntity bookDetail;
+    private BookDetailEntity bookDetail = null;
     private int recordStatus = 0;
     private CompositeDisposable disposablesBookDetail;
     private CompositeDisposable disposablesRequestBookByBorrower;
@@ -233,6 +247,21 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         context = getApplicationContext();
         initView();
         handleEvent();
+        showViewAfterRequest(false);
+    }
+
+    private void showViewAfterRequest(boolean show) {
+        if(show) {
+            layoutBook.setVisibility(View.VISIBLE);
+            layoutDate.setVisibility(View.VISIBLE);
+            layoutBorrower.setVisibility(View.VISIBLE);
+            txtRequest.setVisibility(View.VISIBLE);
+        }else{
+            layoutBook.setVisibility(View.INVISIBLE);
+            layoutDate.setVisibility(View.INVISIBLE);
+            layoutBorrower.setVisibility(View.INVISIBLE);
+            txtRequest.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void initView() {
@@ -268,6 +297,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         layoutBack.setOnClickListener(v -> finish());
         
         layoutParrentCancleRequest.setOnClickListener(v -> {
+            if(bookDetail == null) return;
             if (recordStatus == 0) {
                 statusInput.setCurrentStatus(0);
                 statusInput.setNewStatus(6);
@@ -276,6 +306,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
             }
         });
         layoutParrentCancleRequest.setOnClickListener(v -> {
+            if(bookDetail == null) return;
             statusInput.setCurrentStatus(2);
             statusInput.setNewStatus(6);
             statusInput.setRecordId(bookDetail.getRecordId());
@@ -284,6 +315,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         imgEditionBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(bookDetail == null)  return;
                 if (bookDetail.getEditionInfo().getEditionId() > 0) {
                     MainActivity.start(context, BookDetailActivity.class, BookDetailScreen.instance(bookDetail.getEditionInfo().getEditionId()));
                 }
@@ -291,6 +323,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
         });
         imgBorrower.setOnClickListener(v -> BookDetailSenderActivity.start(getApplicationContext(), PersonalUserActivity.class, PersonalUserScreen.instance(bookDetail.getOwnerInfo().getUserId())));
         layoutChat.setOnClickListener(v -> {
+            if(bookDetail == null) return;
             if (bookDetail.getOwnerInfo() != null)
                 start(getApplicationContext(), MessageActivity.class, MessageScreen.instance(bookDetail.getOwnerInfo().getUserId()));
         });
@@ -326,6 +359,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
             updateView();
         }
         loading.setVisibility(View.GONE);
+        showViewAfterRequest(true);
     }
 
     private void requestBookByBorrowerSuccess(String data) {
@@ -387,7 +421,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                 case 0:
                     //wait to confirm
                     layoutSendRequest.setVisibility(View.VISIBLE);
-                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
+                    txtDateSendRequest.setText(DateTimeUtil.transformDate(bookDetail.getRequestTime()));
                     layoutParrentCancleRequest.setVisibility(View.VISIBLE);
                     rltRejectClose.setVisibility(View.GONE);
                     layoutBottomLeft.setVisibility(View.GONE);
@@ -395,7 +429,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                 case 1:
                     //on hold
                     layoutSendRequest.setVisibility(View.VISIBLE);
-                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
+                    txtDateSendRequest.setText(DateTimeUtil.transformDate(bookDetail.getRequestTime()));
                     txtWaitForTurnMessage.setVisibility(View.VISIBLE);
                     layoutParrentWaitForTurn.setVisibility(View.VISIBLE);
                     layoutBottomLeft.setVisibility(View.GONE);
@@ -405,7 +439,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                 case 2:
                     //contacting
                     layoutSendRequest.setVisibility(View.VISIBLE);
-                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
+                    txtDateSendRequest.setText(DateTimeUtil.transformDate(bookDetail.getRequestTime()));
                     layoutParrentContacting.setVisibility(View.VISIBLE);
                     layoutParrentCancleRequest.setVisibility(View.VISIBLE);
                     layoutBottomLeft.setVisibility(View.VISIBLE);
@@ -418,8 +452,8 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     //borrowing - sender cannot change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
                     layoutStartBorrow.setVisibility(View.VISIBLE);
-                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
-                    txtDateStartBorrow.setText(ClientUtils.getDateFromString(bookDetail.getBorrowTime()));
+                    txtDateSendRequest.setText(DateTimeUtil.transformDate(bookDetail.getRequestTime()));
+                    txtDateStartBorrow.setText(DateTimeUtil.transformDate(bookDetail.getBorrowTime()));
                     layoutParrentContacting.setVisibility(View.VISIBLE);
                     layoutParrentBorrowBook.setVisibility(View.VISIBLE);
                     layoutContactingBorder.setVisibility(View.VISIBLE);
@@ -437,9 +471,9 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                     layoutSendRequest.setVisibility(View.VISIBLE);
                     layoutStartBorrow.setVisibility(View.VISIBLE);
                     layoutReturnDate.setVisibility(View.VISIBLE);
-                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
-                    txtDateStartBorrow.setText(ClientUtils.getDateFromString(bookDetail.getBorrowTime()));
-                    txtDateReturn.setText(ClientUtils.getDateFromString(bookDetail.getCompleteTime()));
+                    txtDateSendRequest.setText(DateTimeUtil.transformDate(bookDetail.getRequestTime()));
+                    txtDateStartBorrow.setText(DateTimeUtil.transformDate(bookDetail.getBorrowTime()));
+                    txtDateReturn.setText(DateTimeUtil.transformDate(bookDetail.getCompleteTime()));
                     layoutParrentContacting.setVisibility(View.VISIBLE);
                     layoutParrentBorrowBook.setVisibility(View.VISIBLE);
                     layoutParrentReturnBook.setVisibility(View.VISIBLE);
@@ -456,18 +490,18 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                 case 5:
                     //reject - can't change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
-                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
+                    txtDateSendRequest.setText(DateTimeUtil.transformDate(bookDetail.getRequestTime()));
                     layoutRejectRequest.setVisibility(View.VISIBLE);
-                    txtDateRejectRequest.setText(ClientUtils.getDateFromString(bookDetail.getRejectTime()));
+                    txtDateRejectRequest.setText(DateTimeUtil.transformDate(bookDetail.getRejectTime()));
                     layoutParrentRejected.setVisibility(View.VISIBLE);
                     layoutBottomLeft.setVisibility(View.GONE);
                     break;
                 case 6:
                     //cancled - can't change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
-                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
+                    txtDateSendRequest.setText(DateTimeUtil.transformDate(bookDetail.getRequestTime()));
                     layoutDeletedRequest.setVisibility(View.VISIBLE);
-                    txtDateDeleteRequest.setText(ClientUtils.getDateFromString(bookDetail.getRejectTime()));
+                    txtDateDeleteRequest.setText(DateTimeUtil.transformDate(bookDetail.getRejectTime()));
                     layoutBottomLeft.setVisibility(View.GONE);
                     rltCancleRequestClose.setVisibility(View.VISIBLE);
                     layoutParrentCancleRequest.setVisibility(View.VISIBLE);
@@ -475,9 +509,9 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
                 case 7:
                     //unreturnd - can't change status
                     layoutSendRequest.setVisibility(View.VISIBLE);
-                    txtDateSendRequest.setText(ClientUtils.getDateFromString(bookDetail.getRequestTime()));
+                    txtDateSendRequest.setText(DateTimeUtil.transformDate(bookDetail.getRequestTime()));
                     layoutStartBorrow.setVisibility(View.VISIBLE);
-                    txtDateStartBorrow.setText(ClientUtils.getDateFromString(bookDetail.getBorrowTime()));
+                    txtDateStartBorrow.setText(DateTimeUtil.transformDate(bookDetail.getBorrowTime()));
                     layoutParrentContacting.setVisibility(View.VISIBLE);
                     layoutContactingBorder.setVisibility(View.VISIBLE);
                     layoutParrentBorrowBook.setVisibility(View.VISIBLE);
