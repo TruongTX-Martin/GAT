@@ -11,6 +11,8 @@ import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.User;
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
@@ -35,12 +37,47 @@ public class NotificationPresenterImpl implements NotificationPresenter {
     private final Subject<String> subjectOnUnAuthorization;
 
 
+    //check login
+    private CompositeDisposable checkLoginDisposable;
+    private final Subject<String> checkLoginResultSubject;
+    private final Subject<String> checkLoginInputSubject;
+    private final Subject<String> checkLoginError;
+    private final UseCase<User> loadLocalUser;
+
+    private boolean isLogin;
+
     public NotificationPresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
         this.schedulerFactory = schedulerFactory;
         subjectLoadNotificationsSuccess = PublishSubject.create();
         subjectOnError = PublishSubject.create();
         subjectOnUnAuthorization = PublishSubject.create();
+
+
+        this.checkLoginError = PublishSubject.create();
+        checkLoginResultSubject = PublishSubject.create();
+        checkLoginInputSubject = BehaviorSubject.create();
+
+        loadLocalUser = useCaseFactory.getUser();
+
+        isLogin = false;
+
+
+        loadLocalUser.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    MZDebug.w("local login: " + user.isValid());
+                    if (user.isValid()) {
+                        isLogin = true;
+                    } else {
+                        isLogin = false;
+                    }
+                })
+                .onError(throwable -> {
+                    MZDebug.e("ERROR: suggestBooks : get local login data___________________ E \n\r"
+                            + Log.getStackTraceString(throwable));
+                })
+                .execute();
     }
 
 
@@ -48,11 +85,22 @@ public class NotificationPresenterImpl implements NotificationPresenter {
     public void onCreate() {
         mCurrentPage = 1;
         mTotalResult = 0;
+
+        checkLoginDisposable = new CompositeDisposable(checkLoginInputSubject.
+                observeOn(schedulerFactory.main()).subscribe(this::startCheckLogin));
     }
 
     @Override
     public void onDestroy() {
+        checkLoginDisposable.dispose();
+    }
 
+    private void startCheckLogin(String input){
+        if(isLogin) {
+            checkLoginResultSubject.onNext("");
+        }else{
+            checkLoginError.onNext("");
+        }
     }
 
     @Override
@@ -119,5 +167,20 @@ public class NotificationPresenterImpl implements NotificationPresenter {
     @Override
     public Observable<String> onUnAuthorization() {
         return subjectOnUnAuthorization.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public void checkLogin() {
+        checkLoginInputSubject.onNext("");
+    }
+
+    @Override
+    public Observable<String> checkLoginSucess() {
+        return checkLoginResultSubject.observeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> checkLoginFailed() {
+        return checkLoginError.observeOn(schedulerFactory.main());
     }
 }

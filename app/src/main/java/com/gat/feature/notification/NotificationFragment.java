@@ -1,6 +1,7 @@
 package com.gat.feature.notification;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,15 +11,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.fragment.ScreenFragment;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
+import com.gat.common.util.Strings;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.impl.NotifyEntity;
 import com.gat.feature.bookdetailowner.BookDetailOwnerActivity;
 import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
+import com.gat.feature.login.LoginActivity;
+import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.IMainDelegate;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.message.GroupMessageActivity;
@@ -46,8 +52,18 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     RecyclerView recyclerView;
 
     private CompositeDisposable disposable;
+    private CompositeDisposable disposablesCheckLogin;
     private NotificationAdapter adapter;
     private IMainDelegate delegate;
+
+
+    private MainActivity mainActivity;
+    private boolean isLogin;
+    private Dialog dialog;
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     public NotificationFragment () {}
 
@@ -74,6 +90,9 @@ implements NotificationAdapter.OnItemNotifyClickListener{
                 getPresenter().onError().subscribe(this::onError),
                 getPresenter().onUnAuthorization().subscribe(this::onUnAuthorization)
         );
+
+        disposablesCheckLogin = new CompositeDisposable(getPresenter().checkLoginSucess().subscribe(this::checkLoginSuccess),
+                getPresenter().checkLoginFailed().subscribe(this::checkLoginFailed));
     }
 
     @Override
@@ -85,6 +104,12 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
         swipeRefreshLayout.setOnRefreshListener(() -> getPresenter().loadUserNotification(true));
+
+        dialog = new Dialog(MainActivity.instance);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_login);
+        dialog.setCanceledOnTouchOutside(false);
+
 
         return view;
     }
@@ -112,6 +137,7 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         }
 
     }
+
 
 
     @Override
@@ -166,6 +192,40 @@ implements NotificationAdapter.OnItemNotifyClickListener{
                 startBorrowFromAnother(item.referId());
                  break;
         }
+    }
+
+    public void checkLogin() {
+        if (!isLogin) {
+            //show dialog
+            Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
+            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+            btnCancle.setOnClickListener(v -> {
+                mainActivity.setTabDesire(0);
+                dialog.dismiss();
+            });
+            btnOk.setOnClickListener(v -> {
+                MainActivity.start(MainActivity.instance.getApplicationContext(), LoginActivity.class, LoginScreen.instance(Strings.EMPTY));
+            });
+            if (dialog != null && !dialog.isShowing()) {
+                dialog.show();
+            }
+            dialog.setOnKeyListener((dialog1, keyCode, event) -> {
+                if(keyCode  == event.KEYCODE_BACK) {
+                    dialog1.dismiss();
+                    mainActivity.setTabDesire(0);
+                    return true;
+                }
+                return false;
+            });
+            //hide loading in fragment request
+        }
+    }
+
+    private void checkLoginSuccess(String input) {
+        isLogin = true;
+    }
+    private void checkLoginFailed(String input) {
+        isLogin = false;
     }
 
     private void setupRecyclerView () {

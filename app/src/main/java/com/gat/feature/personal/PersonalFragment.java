@@ -3,11 +3,13 @@ package com.gat.feature.personal;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -355,6 +357,14 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
             if (dialog != null && !dialog.isShowing()) {
                 dialog.show();
             }
+            dialog.setOnKeyListener((dialog1, keyCode, event) -> {
+                if(keyCode  == event.KEYCODE_BACK) {
+                    dialog1.dismiss();
+                    mainActivity.setTabDesire(0);
+                    return true;
+                }
+                return false;
+            });
             //hide loading in fragment request
             fragmentBookRequest.hideLoadBook();
             fragmentBookSharing.hideLoadBook();
