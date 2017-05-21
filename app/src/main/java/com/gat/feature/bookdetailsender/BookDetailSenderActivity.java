@@ -383,6 +383,7 @@ public class BookDetailSenderActivity extends ScreenActivity<BookDetailSenderScr
             return;
         }
     }
+    
     private void updateView() {
         if (bookDetail != null) {
             BookDetailEntity.OwnerInfo ownerInfo = bookDetail.getOwnerInfo();
