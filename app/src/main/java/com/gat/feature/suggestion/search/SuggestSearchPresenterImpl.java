@@ -329,7 +329,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 })
                 .execute();
 
-        useCaseSearchBookByAuthorTotalResult = useCaseFactory.searchBookByTitleTotal(author, mUserId)
+        useCaseSearchBookByAuthorTotalResult = useCaseFactory.searchBookByAuthorTotal(author, mUserId)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
@@ -469,7 +469,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .execute();
 
 
-        useCaseSearchUserByNameTotalResult = useCaseFactory.searchBookByTitleTotal(name, mUserId)
+        useCaseSearchUserByNameTotalResult = useCaseFactory.searchUserTotal(name, mUserId)
                 .executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {

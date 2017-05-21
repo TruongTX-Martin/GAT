@@ -24,6 +24,6 @@ public class SearchBookByTitleTotal extends UseCase<DataResultListResponse> {
 
     @Override
     protected Observable<DataResultListResponse> createObservable() {
-        return bookRepository.searchBookByTitleTotal(title, userId);
+        return bookRepository.searchBookByAuthorTotal(title, userId);
     }
 }

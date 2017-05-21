@@ -184,7 +184,7 @@ public interface GatApi {
 
 
     @FormUrlEncoded
-    @POST("search/user")
+    @POST("search/user_total")
     Observable<Response<ServerResponse<DataResultListResponse>>> searchUserTotal (
             @Field("name") String title,
             @Field("userId") int userId
