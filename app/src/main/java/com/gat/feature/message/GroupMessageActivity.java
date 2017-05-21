@@ -2,6 +2,7 @@ package com.gat.feature.message;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,6 +64,9 @@ public class GroupMessageActivity extends ScreenActivity<GroupMessageScreen, Gro
 
         );
 
+        messageHeader.setText(getString(R.string.message_header));
+        messageHeader.setTextColor(ResourcesCompat.getColor(getResources(), R.color.textPrimary, null));
+        messageHeader.setAllCaps(true);
         imgBack.setImageResource(R.drawable.narrow_back_black);
         imgSave.setVisibility(View.GONE);
 

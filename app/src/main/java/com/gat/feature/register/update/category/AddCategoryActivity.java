@@ -163,6 +163,8 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
             }
             this.finish();
         });
+
+        categoryAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -101,6 +101,8 @@ public class MessageActivity extends ScreenActivity<MessageScreen, MessagePresen
         );
 
         messageHeader.setText(getString(R.string.message_header));
+        messageHeader.setTextColor(ResourcesCompat.getColor(getResources(), R.color.textPrimary, null));
+        messageHeader.setAllCaps(true);
         imgBack.setImageResource(R.drawable.narrow_back_black);
         imgSave.setVisibility(View.GONE);
 
