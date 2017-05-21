@@ -38,6 +38,8 @@ import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.share.SharedData;
+import com.gat.data.user.UserAddressData;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.feature.login.LoginActivity;
 import com.gat.feature.login.LoginScreen;
@@ -125,6 +127,14 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         initView();
         handleEvent();
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UserAddressData userAddressData = SharedData.getInstance().getUsuallyLocation();
+        if (userAddressData != null && !Strings.isNullOrEmpty(userAddressData.address())) {
+            txtAddress.setText(userAddressData.address());
+        }
+    }
 
     private void initView() {
         txtTitle.setText("SỬA THÔNG TIN CÁ NHÂN");
@@ -136,7 +146,7 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         }
         if (!Strings.isNullOrEmpty(user.name())) {
             edtName.setText(user.name());
-            txtAddress.setText(user.name());
+            txtAddress.setText(Strings.EMPTY);
         }
         if(user.usuallyLocation().size() > 0){
             if(!Strings.isNullOrEmpty(user.usuallyLocation().get(0).getAddress())){
@@ -160,13 +170,11 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
         layoutBack.setOnClickListener(v -> backToPreviousView());
         layoutAddress.setOnClickListener(v -> {
             //mr.Duc redirect here
-            try {
-                start(MainActivity.instance, AddLocationActivity.class, AddLocationScreen.instance());
-            }catch (Exception e){}
+            start(MainActivity.instance, AddLocationActivity.class, AddLocationScreen.instance(AddLocationScreen.FROM.EDIT_INFO));
         });
         layoutFavorit.setOnClickListener(v -> {
             //mr.Duc redirect here
-            start(getApplicationContext(), AddCategoryActivity.class, AddCategoryScreen.instance(user.interestCategory()));
+            start(getApplicationContext(), AddCategoryActivity.class, AddCategoryScreen.instance(user.interestCategory(), AddCategoryScreen.FROM.EDIT_INFO));
         });
         edtName.setOnFocusChangeListener((v, hasFocus) -> imgChangeName.setVisibility(View.VISIBLE));
     }
@@ -219,6 +227,9 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
             input.setImageBase64(encoded);
             input.setChangeImage(true);
         }
+        input.setAddressData(SharedData.getInstance().getUsuallyLocation());
+        input.setCategories(SharedData.getInstance().getCategoryList());
+
         checkInternet();
         getPresenter().requestEditInfo(input);
     }
@@ -333,6 +344,8 @@ public class EditInfoActivity extends ScreenActivity<EditInfoScreen, EditInfoPre
     protected void onDestroy() {
         super.onDestroy();
         disposablesEditInfo.dispose();
+        SharedData.getInstance().setUsuallyLocation(null);
+        SharedData.getInstance().setCategoryList(null);
     }
 
     @Override

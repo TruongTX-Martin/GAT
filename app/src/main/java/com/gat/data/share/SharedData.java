@@ -1,5 +1,10 @@
 package com.gat.data.share;
 
+import com.gat.data.user.UserAddressData;
+import com.gat.repository.entity.UsuallyLocation;
+
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
@@ -19,6 +24,10 @@ public class SharedData {
     private static boolean isLoggedIn = false;
 
     private Integer mMessagingUserId = 0;
+
+    private List<Integer> categoryList;
+
+    private UserAddressData usuallyLocation;
 
     private SharedData() {
 
@@ -63,5 +72,21 @@ public class SharedData {
 
     public Observable<Integer> getBadgeSubject() {
         return badgeChangeSubject;
+    }
+
+    public void setCategoryList(List<Integer> categoryList) {
+        this.categoryList = categoryList;
+    }
+
+    public List<Integer> getCategoryList() {
+        return this.categoryList;
+    }
+
+    public void setUsuallyLocation(UserAddressData usuallyLocation) {
+        this.usuallyLocation = usuallyLocation;
+    }
+
+    public UserAddressData getUsuallyLocation() {
+        return this.usuallyLocation;
     }
 }

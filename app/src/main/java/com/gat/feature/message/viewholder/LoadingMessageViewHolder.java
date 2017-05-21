@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.gat.R;
 import com.gat.common.adapter.ItemViewHolder;
+import com.gat.common.util.ClientUtils;
+import com.gat.common.util.Strings;
 import com.gat.feature.message.item.LoadingMessage;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -48,13 +50,13 @@ public class LoadingMessageViewHolder extends ItemViewHolder<LoadingMessage> {
 
             switch (item.message()) {
                 case LoadingMessage.Message.DEFAULT:
-                    messageView.setText("Have no message.");
+                    messageView.setText(Strings.EMPTY);
                     break;
                 case LoadingMessage.Message.EMPTY:
-                    messageView.setText("Have no message.");
+                    messageView.setText(Strings.EMPTY);
                     break;
                 case LoadingMessage.Message.ERROR:
-                    messageView.setText("There is an error.\nPlease try again.");
+                    messageView.setText(ClientUtils.getStringLanguage(R.string.message_error));
                     break;
             }
         }

@@ -2,9 +2,12 @@ package com.gat.feature.editinfo;
 
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.user.UserAddressData;
 import com.gat.feature.editinfo.entity.EditInfoInput;
 import com.gat.repository.entity.Data;
 import com.rey.mvp2.Presenter;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 

@@ -28,6 +28,7 @@ import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.share.SharedData;
 import com.gat.data.user.UserAddressData;
 import com.gat.feature.register.update.category.AddCategoryActivity;
 import com.gat.feature.register.update.category.AddCategoryScreen;
@@ -100,7 +101,6 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
     private LatLng selectedLocation = null;
     private Location lastKnownLocation = null;
 
-    private Unbinder unbinder;
     private CompositeDisposable disposables;
     private ProgressDialog progressDialog;
 
@@ -145,8 +145,6 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        unbinder = ButterKnife.bind(findViewById(R.id.register_location_view));
 
         getPlaceIdSubject = BehaviorSubject.create();
         getLocationSubject = BehaviorSubject.create();
@@ -195,12 +193,22 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         googleApiClient.connect();
 
         addLocationBtn.setOnClickListener(view -> {
-            if (!Strings.isNullOrEmpty(inputAddress) && selectedLocation != null) {
-                onUpdating(true);
-                getPresenter().setLocation(UserAddressData.instance(inputAddress, selectedLocation));
+            if (getScreen().requestFrom() == AddLocationScreen.FROM.LOGIN) {
+                if (!Strings.isNullOrEmpty(inputAddress) && selectedLocation != null) {
+                    onUpdating(true);
+                    getPresenter().setLocation(UserAddressData.instance(inputAddress, selectedLocation));
+                } else {
+                    // Start add category
+                    start(this, AddCategoryActivity.class, AddCategoryScreen.instance());
+                    finish();
+                }
             } else {
-                // Start add category
-                start(this, AddCategoryActivity.class, AddCategoryScreen.instance());
+                UserAddressData usuallyLocation = null;
+                if (!Strings.isNullOrEmpty(inputAddress) && selectedLocation != null)
+                    usuallyLocation = UserAddressData.instance(inputAddress, selectedLocation);
+                else
+                    usuallyLocation = UserAddressData.instance(Strings.EMPTY, new LatLng(0.0, 0.0));
+                SharedData.getInstance().setUsuallyLocation(usuallyLocation);
                 finish();
             }
         });
@@ -329,9 +337,8 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
         disposables.dispose();
+        super.onDestroy();
     }
 
     /**
@@ -488,7 +495,11 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
         if (!Strings.isNullOrEmpty(inputAddress)) {
             addLocationBtn.setText(getString(R.string.btn_add_location));
         } else {
-            addLocationBtn.setText(getString(R.string.btn_pass_over));
+            if (getScreen().requestFrom() == AddLocationScreen.FROM.LOGIN) {
+                addLocationBtn.setText(getString(R.string.btn_pass_over));
+            } else {
+                addLocationBtn.setText(getString(R.string.btn_no_save));
+            }
         }
     }
 
@@ -533,6 +544,7 @@ public class AddLocationActivity  extends ScreenActivity<AddLocationScreen, AddL
                 countryCode = addresses.get(0).getCountryCode();
                 Log.d(TAG, "CountryCode:"+countryCode);
             }
+            selectedLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
         }
 
         changeButtonLable();

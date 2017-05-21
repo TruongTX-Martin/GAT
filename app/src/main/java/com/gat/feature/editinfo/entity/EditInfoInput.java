@@ -1,8 +1,10 @@
 package com.gat.feature.editinfo.entity;
 
 import com.gat.common.util.Strings;
+import com.gat.data.user.UserAddressData;
 
 import java.io.File;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -17,7 +19,8 @@ public class EditInfoInput {
     private String name = Strings.EMPTY;
     private String imageBase64 = Strings.EMPTY;
     private boolean isChangeImage = false;
-
+    private UserAddressData addressData;
+    private List<Integer> categories;
 
     public EditInfoInput() {
     }
@@ -48,4 +51,19 @@ public class EditInfoInput {
     }
 
 
+    public UserAddressData getAddressData() {
+        return addressData;
+    }
+
+    public void setAddressData(UserAddressData addressData) {
+        this.addressData = addressData;
+    }
+
+    public List<Integer> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Integer> categories) {
+        this.categories = categories;
+    }
 }

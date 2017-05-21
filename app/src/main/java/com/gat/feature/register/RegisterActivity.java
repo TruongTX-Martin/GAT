@@ -147,8 +147,8 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
         headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
         txtTitle.setText(getString(R.string.register_title));
         txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
-        imgBack.setVisibility(View.GONE);
-        imgSave.setVisibility(View.GONE);
+        imgBack.setVisibility(View.VISIBLE);
+        imgSave.setVisibility(View.INVISIBLE);
 
         unbinder = ButterKnife.bind(this);
 
@@ -169,6 +169,8 @@ public class RegisterActivity extends ScreenActivity<RegisterScreen, RegisterPre
         registerWithTwitter();
 
         registerWithEmail();
+
+        imgBack.setOnClickListener(v -> finish());
 
     }
 

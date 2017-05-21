@@ -18,10 +18,12 @@ import android.widget.Toast;
 
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
+import com.gat.common.util.ClientUtils;
 import com.gat.common.util.Strings;
 import com.gat.common.util.Views;
 import com.gat.data.response.ResponseData;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.share.SharedData;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.main.MainScreen;
 import com.gat.feature.register.RegisterPresenter;
@@ -69,7 +71,6 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
     @BindView(R.id.layoutMenutop)
     RelativeLayout headerLayout;
 
-    private Unbinder unbinder;
     private BookCategory bookCategories[];
     private ProgressDialog progressDialog;
     private CompositeDisposable disposables;
@@ -140,18 +141,32 @@ public class AddCategoryActivity extends ScreenActivity<AddCategoryScreen, AddCa
                     listCate.add(bookCategories[i].categoryId());
                 }
             }
-            onUpdating(true);
-            getPresenter().setCategories(listCate);
+            if (listCate.isEmpty()) {
+                // Error
+                ClientUtils.showErrorDialog(getString(R.string.titleError), getString(R.string.category_empty), this);
+                return;
+            }
+            if (getScreen().requestFrom() == AddCategoryScreen.FROM.LOGIN) {
+                onUpdating(true);
+                getPresenter().setCategories(listCate);
+            } else {
+                // Store data temporary
+                SharedData.getInstance().setCategoryList(listCate);
+                finish();
+            }
         });
 
         imgBack.setOnClickListener(v -> {
-            start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
+            if (getScreen().requestFrom() == AddCategoryScreen.FROM.LOGIN) {
+                start(getApplicationContext(), AddLocationActivity.class, AddLocationScreen.instance());
+            }
             this.finish();
         });
     }
 
     @Override
     protected void onDestroy() {
+        disposables.dispose();
         super.onDestroy();
     }
 

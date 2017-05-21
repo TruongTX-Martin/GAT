@@ -218,14 +218,6 @@ public class MessagePresenterImpl implements MessagePresenter {
                     }
                 })
         );
-
-        UseCase<User> getUserUseCase = useCaseFactory.getVisitorInfor(userId);
-        getUserUseCase.executeOn(schedulerFactory.io())
-                .returnOn(schedulerFactory.main())
-                .onNext(user -> {
-                    getUserSubject.onNext(user);
-                })
-                .execute();
     }
 
     @Override
@@ -286,6 +278,13 @@ public class MessagePresenterImpl implements MessagePresenter {
 
     @Override
     public Observable<User> getUserInfo(int userId) {
+        UseCase<User> getUserUseCase = useCaseFactory.getVisitorInfor(userId);
+        getUserUseCase.executeOn(schedulerFactory.io())
+                .returnOn(schedulerFactory.main())
+                .onNext(user -> {
+                    getUserSubject.onNext(user);
+                })
+                .execute();
         return getUserSubject.subscribeOn(schedulerFactory.main());
     }
 

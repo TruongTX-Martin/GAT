@@ -26,7 +26,6 @@ public class UsuallyLocation implements Serializable{
     @SerializedName("longitude")
     private double longitude;
 
-
     public int getUserId() {
         return userId;
     }

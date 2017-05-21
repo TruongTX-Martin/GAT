@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.Pair;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,8 +95,17 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     @BindView(R.id.twitter_login_btn)
     ImageButton twitterLoginBtn;
 
-    @BindView(R.id.header_text)
-    TextView headerText;
+    @BindView(R.id.imgBack)
+    ImageView imgBack;
+
+    @BindView(R.id.imgSave)
+    ImageView imgSave;
+
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+
+    @BindView(R.id.layoutMenutop)
+    RelativeLayout headerLayout;
 
     private CompositeDisposable disposables;
     private ProgressDialog progressDialog;
@@ -122,7 +134,11 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        headerText.setText(getString(R.string.login_title));
+        headerLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.background_header_blue, null));
+        txtTitle.setText(getString(R.string.login_title));
+        txtTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
+        imgBack.setVisibility(View.VISIBLE);
+        imgSave.setVisibility(View.INVISIBLE);
 
         progressDialog = new ProgressDialog(this);
         progressSubject = BehaviorSubject.create();
@@ -147,6 +163,8 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
             start(getApplicationContext(), ForgotPasswordActivity.class, LoginScreen.instance(Strings.EMPTY));
             finish();
         });
+
+        imgBack.setOnClickListener(v -> finish());
     }
 
     private void loginWithGoogle() {

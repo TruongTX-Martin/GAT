@@ -37,7 +37,7 @@
     <string name="forgot_sendreq_message">Yêu cầu thay đổi sẽ được gửi tới email bên dưới</string>
     <string name="forgot_inputtoken_message">Nhập mã thay đổi mật khẩu  được gửi tới email</string>
     <string name="forgot_inputpass_message">Please input new password</string>
-    <string name="forgot_inputtoken_hint">Mã gồm 4 chữ số</string>
+    <string name="forgot_inputtoken_hint">Mã gồm 6 chữ số</string>
     <string name="forgot_inputtoken_length">Mã hợp lệ</string>
     <string name="verify_token_btn">Xác nhận mã </string>
     <string name="reset_pass_btn">Quên mật khẩu</string>
@@ -55,6 +55,7 @@
     <string name="name_field_null">Tên không được để trống</string>
     <string name="btn_add_location">Lưu vị trí</string>
     <string name="btn_pass_over">Tiếp</string>
+    <string name="btn_no_save">Bỏ qua</string>
 
     <!-- For map -->
     <string name="title_activity_maps">Chi tiết địa điểm hiện tại</string>
@@ -92,23 +93,23 @@
     <string name="invalid_location">Vui lòng chọn toạ độ trước.</string>
 
     <!-- Book category -->
-    <string name="category_1">Literary</string>
-    <string name="category_2">Skill</string>
-    <string name="category_3">Business</string>
-    <string name="category_4">History&amp;Geography</string>
-    <string name="category_5">Art&amp;Photography</string>
-    <string name="category_6">Religion&amp;Spirituality</string>
-    <string name="category_7">Children</string>
-    <string name="category_8">Comic</string>
-    <string name="category_9">Science</string>
-    <string name="category_10">Schoolbook</string>
-    <string name="category_11">Textbook</string>
-    <string name="category_12">Language&amp;Dictionary</string>
-    <string name="category_13">Mother&amp;Children</string>
-    <string name="category_14">Magazine</string>
-    <string name="category_15">General</string>
-    <string name="btn_add_category">Add category</string>
-    <string name="register_category_header">Favourite category</string>
+    <string name="category_1">Sách văn học</string>
+    <string name="category_2">Sách kĩ năng</string>
+    <string name="category_3">Sách kinh tế</string>
+    <string name="category_4">Lịch sử-Địa lý</string>
+    <string name="category_5">Sách nghệ thuật</string>
+    <string name="category_6">Sách tôn giáo</string>
+    <string name="category_7">Sách thiếu nhi</string>
+    <string name="category_8">Truyện tranh</string>
+    <string name="category_9">Sách khoa học</string>
+    <string name="category_10">Sách giáo khoa</string>
+    <string name="category_11">Sách giáo trình ĐH</string>
+    <string name="category_12">Sách ngoại ngữ</string>
+    <string name="category_13">Sách mẹ và bé</string>
+    <string name="category_14">Tạp chí</string>
+    <string name="category_15">Sách tổng hợp</string>
+    <string name="btn_add_category">Thêm loại sách</string>
+    <string name="register_category_header">Loại sách yêu thích</string>
 
     <string name="scan_barcode_header">Quét mã barcode</string>
     <string name="scan_barcode_guide">Di chuyển màn hình camera để quét barcode</string>
@@ -229,12 +230,12 @@
     <string name="in_google_connection">Đang kết nối với tài khoản google %1$s</string>
     <string name="in_twitter_connection">Đang kết nối với tài khoản twitter %1$s</string>
     <string name="logout">Thoát tài khoản</string>
-    <string name="new_password_hint">Input new password</string>
+    <string name="new_password_hint">Nhập mật khẩu mới</string>
     <string name="ask_for_logout">Bạn thực sự muốn thoát?</string>
 
     <!-- Error message -->
-    <string name="password_invalid">Password is invalid</string>
-    <string name="email_invalid">Email is invalid</string>
+    <string name="password_invalid">Mật khẩu không hợp lệ</string>
+    <string name="email_invalid">Email không hợp lệ</string>
     <!-- fonts -->
     <string name="font_family_light">sans-serif-light</string>
     <string name="font_family_medium">sans-serif-medium</string>
@@ -252,5 +253,7 @@
     <string name="strNo">No</string>
     <string name="strAgreed">Đồng Ý</string>
     <string name="titleError">Lỗi</string>
+    <string name="category_empty">Bạn vui lòng chọn loại sách yêu thích.</string>
+    <string name="message_error">Có lỗi xảy ra\\n Vui lòng quay trờ lại sau.</string>
 
 </resources>

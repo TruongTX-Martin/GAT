@@ -40,6 +40,7 @@ import com.gat.feature.suggestion.search.SuggestSearchScreen;
 import com.gat.repository.entity.InterestCategory;
 import com.gat.repository.entity.User;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -161,10 +162,12 @@ public class ParcelableScreen implements Parcelable {
         } else if (screen instanceof RegisterScreen) {
 
         } else if (screen instanceof AddLocationScreen) {
-
+            AddLocationScreen addLocationScreen = (AddLocationScreen) screen;
+            dest.writeInt(addLocationScreen.requestFrom());
         } else if (screen instanceof AddCategoryScreen) {
             AddCategoryScreen addCategoryScreen = (AddCategoryScreen)screen;
             dest.writeList(addCategoryScreen.categories());
+            dest.writeInt(addCategoryScreen.requestFrom());
 
         } else if (screen instanceof SuggestionScreen) {
 
@@ -252,15 +255,20 @@ public class ParcelableScreen implements Parcelable {
                 screen = RegisterScreen.instance();
                 break;
             case ADD_LOCATION:
-                screen = AddLocationScreen.instance();
-                break;
+                {
+                    int request = in.readInt();
+                    screen = AddLocationScreen.instance(request);
+                    break;
+                }
             case ADD_CATEGORY:
-                List<InterestCategory> list = in.readArrayList(InterestCategory.class.getClassLoader());
-                if (list != null)
-                    screen = AddCategoryScreen.instance(list);
-                else
-                    screen = AddCategoryScreen.instance();
-                break;
+                {
+                    List<InterestCategory> list = in.readArrayList(InterestCategory.class.getClassLoader());
+                    int request = in.readInt();
+                    if (list == null)
+                        list = new ArrayList<>();
+                    screen = AddCategoryScreen.instance(list, request);
+                    break;
+                }
             case SUGGESTION:
                 screen = SuggestionScreen.instance();
                 break;
