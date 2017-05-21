@@ -386,7 +386,7 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
         progressDialog.show();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 status -> {});
-        getPresenter().requestConnectSocial(account.getEmail() , account.getDisplayName(), SocialType.GOOGLE);
+        getPresenter().requestConnectSocial(account.getId() , account.getDisplayName(), SocialType.GOOGLE);
 
     }
 

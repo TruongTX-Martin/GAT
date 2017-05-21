@@ -128,8 +128,10 @@ public class SearchBookAdapter extends ItemAdapter {
     }
 
     public void clearAllItems () {
-        items.clear();
-        notifyDataSetChanged();
+        if (items != null) {
+            items.clear();
+            notifyDataSetChanged();
+        }
     }
 
     public void setItems (List<Item> list) {
@@ -137,8 +139,10 @@ public class SearchBookAdapter extends ItemAdapter {
             MZDebug.w(" onSearchUserResult set new list items");
             items.clear();
             items.addAll(list);
-            notifyDataSetChanged();
+        } else {
+            items = list;
         }
+        notifyDataSetChanged();
     }
 
     public void setMoreBookItems (List<BookResponse> list) {

@@ -29,7 +29,7 @@
         android:textColor="@color/colorTextViewDark"
         android:textSize="@dimen/small_textsize_s" />
 
-    <com.gat.common.customview.MZRatingBar
+    <RatingBar
         android:id="@+id/rating_bar_book"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"

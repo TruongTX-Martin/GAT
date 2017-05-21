@@ -51,6 +51,9 @@ import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.repository.entity.User;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -60,7 +63,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDetailPresenter>
-        implements RatingBar.OnRatingBarChangeListener{
+        implements RatingBar.OnRatingBarChangeListener, Observer{
 
     private final String TAG = BookDetailActivity.class.getSimpleName();
 
@@ -157,6 +160,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         loadingDialog = ClientUtils.createLoadingDialog(BookDetailActivity.this);
         setupRecyclerViewComments();
         getPresenter().setEditionId(getScreen().editionId());
+
+        gatApplication.getObserverNetworkChange().addObserver(this);
 
         disposables = new CompositeDisposable(
                 getPresenter().onGetBookInfoSuccess().subscribe(this::onGetBookInfoSuccess),
@@ -684,4 +689,8 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         loginDialog = ClientUtils.showRequiredLoginDialog(BookDetailActivity.this, this);
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
 }

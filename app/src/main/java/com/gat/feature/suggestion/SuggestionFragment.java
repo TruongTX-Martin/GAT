@@ -79,9 +79,6 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
     @BindView(R.id.ll_user_near_suggest)
     LinearLayout llUserNearSuggest;
 
-    @BindView(R.id.group_message)
-    ImageView groupMessage;
-
     @BindView(R.id.unread_count)
     TextView unReadGroupMessageCnt;
 
@@ -153,12 +150,6 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
                 })
         );
 
-        groupMessage.setOnClickListener(v -> {
-            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (firebaseUser != null)
-                ScreenActivity.start(getContext(), GroupMessageActivity.class, GroupMessageScreen.instance());
-        });
-
         return view;
     }
 
@@ -212,6 +203,13 @@ public class SuggestionFragment extends ScreenFragment<SuggestionScreen, Suggest
             gps.stopUsingGPS();
 
         super.onDestroy();
+    }
+
+    @OnClick(R.id.rl_group_message)
+    void onButtonGoMessageTap () {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null)
+            ScreenActivity.start(getContext(), GroupMessageActivity.class, GroupMessageScreen.instance());
     }
 
     @OnClick(R.id.button_go_setting)
