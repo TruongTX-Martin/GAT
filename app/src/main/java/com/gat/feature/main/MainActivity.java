@@ -97,6 +97,8 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
 
     public static MainActivity instance;
     private PersonalFragment personalFragment;
+    private  ScanFragment scanFragment;
+    private NotificationFragment notificationFragment;
 
     @Override
     protected int getLayoutResource() {
@@ -146,6 +148,9 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
                     if(tab.getPosition() == 1) {
                         personalFragment.checkLogin();
                     }
+                    if (tab.getPosition() == 3) {
+                        notificationFragment.checkLogin();
+                    }
                 }catch (Exception e){}
             }
 
@@ -170,14 +175,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
             CommonCheck.processNotification(getScreen().notificationParcelable().getNotification(), this);
         }
 
-//        if(!EventBus.getDefault().isRegistered(MainActivity.class)) {
-//            EventBus.getDefault().registerSticky(MainActivity.class);
-//        }
     }
-
-//    public void onEventMainThread(NetWorkEvent event) {
-//        System.out.println(event);
-//    }
 
     @Override
     protected void onResume() {
@@ -225,7 +223,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
 
     @Override
     public void onBackPressed() {
-        // TODO Không biết đoạn code này nhằm mục đích gì-> nó gây cảm giác lỗi khi back từ fragment child
         int currentTab = mTabLayout.getSelectedTabPosition();
         if(currentTab > 0) {
             currentTab --;
@@ -239,7 +236,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         mTabLayout.setScrollPosition(position,0f,true);
         mViewPager.setCurrentItem(position);
     }
-    ScanFragment scanFragment;
 
     @Override
     public void goTo631PageRequest () {
@@ -262,11 +258,13 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         personalFragment = new PersonalFragment();
         scanFragment = new ScanFragment();
         personalFragment.setMainActivity(this);
+        notificationFragment = new NotificationFragment(this);
+        notificationFragment.setMainActivity(this);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SuggestionFragment(), getString(R.string.tab_home));
         adapter.addFragment(personalFragment, getString(R.string.tab_personal));
         adapter.addFragment(scanFragment, getString(R.string.tab_scanbarcode));
-        adapter.addFragment(new NotificationFragment(this), getString(R.string.tab_notification));
+        adapter.addFragment(notificationFragment, getString(R.string.tab_notification));
         adapter.addFragment(new SettingFragment(), getString(R.string.tab_setting));
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
@@ -297,6 +295,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
 
                 tabNotification.setTabIcon(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
                 tabNotification.setTitleColor(select ? Color.parseColor("#FFFFFF") : Color.parseColor("#919191"));
+
 
                 break;
             case TAB_POS.TAB_SETTING:

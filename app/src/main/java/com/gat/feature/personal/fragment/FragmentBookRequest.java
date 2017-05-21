@@ -38,7 +38,7 @@ import pl.droidsonroids.gif.GifTextView;
 
 public class FragmentBookRequest extends Fragment {
 
-    private View rootView;
+    private View rootView = null;
     private Context context;
     private RecyclerView recyclerView;
     private RelativeLayout layoutFilter;
@@ -134,14 +134,16 @@ public class FragmentBookRequest extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         context = getActivity().getApplicationContext();
-        rootView = inflater.inflate(R.layout.layout_fragment_book_request, container, false);
-        initView();
-        handleEvent();
-        isInitView = true;
-        if (DataLocal.getPersonalInputRequest() != null) {
-            currentInput = DataLocal.getPersonalInputRequest();
+        if(rootView == null) {
+            rootView = inflater.inflate(R.layout.layout_fragment_book_request, container, false);
+            initView();
+            handleEvent();
+            isInitView = true;
+            if (DataLocal.getPersonalInputRequest() != null) {
+                currentInput = DataLocal.getPersonalInputRequest();
+            }
+            searchBook();
         }
-        searchBook();
         return rootView;
     }
 

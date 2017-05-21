@@ -79,7 +79,7 @@
                 <RelativeLayout
                     android:id="@+id/layoutRequestToYou"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp">
+                    android:layout_height="80dp">
 
                     <View
                         android:id="@+id/viewTo"
@@ -92,8 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_margin="20dp"
                         android:layout_toRightOf="@+id/viewTo"
                         android:gravity="center"
                         android:text="Yêu cầu tới bạn"
@@ -106,7 +105,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
                         android:background="#C8d7d7d7"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        />
 
                 </RelativeLayout>
 
@@ -125,8 +125,7 @@
                         android:id="@+id/txtRequestFromYou"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_margin="20dp"
                         android:layout_toRightOf="@+id/viewFrom"
                         android:gravity="center"
                         android:text="Yêu cầu từ bạn"

@@ -97,7 +97,7 @@
                 android:inputType="textPassword"
                 android:hint="@string/login_password_hint"
                 android:drawableStart="@drawable/pass_input_icon"
-                android:drawablePadding="10dp"
+                android:drawablePadding="15dp"
                 android:textSize="@dimen/normal_textsize_l"
                 android:maxLength="10"
                 android:background="@drawable/text_edit_shape_white"/>

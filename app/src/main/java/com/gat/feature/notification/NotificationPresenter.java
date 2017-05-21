@@ -26,4 +26,9 @@ public interface NotificationPresenter extends Presenter {
     // nếu isRefresh = true -> mà lỗi 401 thì quăng ra thằng này.
     Observable<String> onUnAuthorization ();
 
+
+    void checkLogin();
+    Observable<String> checkLoginSucess();
+    Observable<String> checkLoginFailed();
+
 }
