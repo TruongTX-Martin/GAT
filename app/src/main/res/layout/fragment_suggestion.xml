@@ -14,29 +14,31 @@
         android:paddingStart="@dimen/paddingNormal">
 
         <ImageView
-            android:layout_width="40dp"
+            android:id="@+id/group_message"
+            android:layout_width="21.5dp"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
+            android:scaleType="centerInside"
             android:contentDescription="@string/ic_chat_description"
-            android:src="@drawable/ic_chat"
-            android:id="@+id/group_message"/>
+            android:src="@drawable/ic_chat" />
+
         <TextView
             android:id="@+id/unread_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/paddingNormal"
+            android:layout_toRightOf="@+id/group_message"
             android:background="@drawable/ellipse_6_copy_2"
             android:gravity="center_vertical|center_horizontal"
-            android:layout_marginStart="@dimen/paddingNormal"
-            android:layout_toRightOf="@+id/group_message"/>
+            android:text="1" />
 
         <ImageButton
             android:id="@+id/image_button_search"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/cover_content_description"
             android:scaleType="centerInside"
@@ -62,9 +64,9 @@
             android:id="@+id/ll_user_near_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/margin_horizontal_large"
             android:layout_marginRight="@dimen/margin_top_bottom_normal"
-            android:layout_marginLeft="@dimen/margin_horizontal_large">
+            android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -75,8 +77,8 @@
                     style="@style/TextViewHeaderTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="0dp"
                     android:layout_gravity="start|center_vertical"
+                    android:paddingTop="0dp"
                     android:text="@string/share_near_me" />
 
                 <Button
@@ -95,6 +97,7 @@
                 android:fillViewport="true"
                 android:measureAllChildren="false"
                 android:scrollbars="none">
+
                 <LinearLayout
                     android:id="@+id/ll_user_near_suggest"
                     android:layout_width="match_parent"
@@ -108,24 +111,39 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:gravity="center"
-                        android:textAlignment="center"
                         android:text="@string/go_setting_enable_gps"
+                        android:textAlignment="center"
                         android:textAllCaps="false"
                         android:textColor="@color/colorTextViewGray" />
 
                 </LinearLayout>
             </HorizontalScrollView>
+
             <TextView
                 style="@style/TextViewHeaderTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/most_search_by_user" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_most_borrowing"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/item_book_suggest_height"
-                android:orientation="horizontal" />
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_most_borrowing"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_book_suggest_height"
+                    android:orientation="horizontal" />
+
+                <pl.droidsonroids.gif.GifTextView
+                    android:id="@+id/gif_text_view_most_borrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_loading_book"
+                    android:layout_gravity="center"
+                    android:visibility="visible" />
+
+            </FrameLayout>
 
             <TextView
                 style="@style/TextViewHeaderTitle"
@@ -134,11 +152,25 @@
                 android:paddingTop="0dp"
                 android:text="@string/suggest" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_suggest_books"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/item_book_suggest_height"
-                android:orientation="horizontal" />
+                android:layout_height="@dimen/item_book_suggest_height">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_suggest_books"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_book_suggest_height"
+                    android:orientation="horizontal" />
+
+                <pl.droidsonroids.gif.GifTextView
+                    android:id="@+id/gif_text_view_suggest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_loading_book"
+                    android:layout_gravity="center"
+                    android:visibility="visible" />
+
+            </FrameLayout>
 
         </LinearLayout>
 

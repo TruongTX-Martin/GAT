@@ -97,11 +97,18 @@ public interface UseCaseFactory {
 
     UseCase<DataResultListResponse<UserNearByDistance>> peopleNearByUser(LatLng userLocation, LatLng neLocation, LatLng wsLocation, int page, int sizeOfPage);
 
-    UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, long userId, int page, int sizeOfPage);
+    UseCase<DataResultListResponse<BookResponse>> searchBookByTitle(String title, int page, int sizeOfPage);
 
-    UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, long userId, int page, int sizeOfPage);
+    UseCase<DataResultListResponse<BookResponse>> searchBookByAuthor(String author, int page, int sizeOfPage);
 
-    UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage);
+    UseCase<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage);
+
+    UseCase<DataResultListResponse> searchBookByTitleTotal(String title, long userId);
+
+    UseCase<DataResultListResponse> searchBookByAuthorTotal(String author, long userId);
+
+    UseCase<DataResultListResponse> searchUserTotal(String name, int userId);
+
 
     UseCase<List<Keyword>> getBooksSearchedKeyword();
 

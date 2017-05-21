@@ -10,9 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.gat.R;
@@ -22,7 +20,6 @@ import com.gat.common.listener.IRecyclerViewItemClickListener;
 import com.gat.common.listener.LoadMoreScrollListener;
 import com.gat.common.util.MZDebug;
 import com.gat.data.response.BookResponse;
-import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.Keyword;
 import com.gat.feature.book_detail.BookDetailActivity;
@@ -121,38 +118,67 @@ public class SearchResultFragment extends Fragment
 
 
     @Override
-    public void onSearchBookResult(DataResultListResponse<BookResponse> list) {
+    public void onRequestSearchBook() {
+        textViewTitle.setVisibility(View.GONE);
+        searchResultAdapter.clearAllItems();
+    }
+
+    @Override
+    public void onSearchBookResult(List<BookResponse> list) {
 
         hideProgress();
-        if (null == list || list.getResultInfo() == null) {
+        if (null == list || list.isEmpty()) {
             MZDebug.w("WARNING: onSearchBookResult : list null _________________________________W");
             return;
         }
 
-        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
-        this.textViewTitle.setText(totalString);
-
-        List<Item> listItems = SearchBuilder.transformListBook(list.getResultInfo());
+        List<Item> listItems = SearchBuilder.transformListBook(list);
         this.searchResultAdapter.setItems(listItems);
     }
 
     @Override
-    public void onSearchUserResult(DataResultListResponse<UserResponse> list) {
+    public void onSearchBookResultTotal(Integer total) {
+        textViewTitle.setVisibility(View.VISIBLE);
+        if (total >= 0) {
+            String totalString = String.format(getString(R.string.show_count_search_result), total);
+            this.textViewTitle.setText(totalString);
+        } else { // nhay vao onError roai`
+            this.textViewTitle.setText(getString(R.string.search_result));
+        }
+
+    }
+
+    @Override
+    public void onRequestSearchUser() {
+        textViewTitle.setVisibility(View.GONE);
+        searchResultAdapter.clearAllItems();
+    }
+
+    @Override
+    public void onSearchUserResult(List<UserResponse> list) {
 
         hideProgress();
-        if (null == list || list.getResultInfo() == null) {
+        if (null == list || list.isEmpty()) {
             MZDebug.w("WARNING: onSearchUserResult : list null _________________________________W");
             return;
         }
 
-        // set title
-        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
-        this.textViewTitle.setText(totalString);
-
         // set new list items result
         MZDebug.w(" onSearchUserResult set new list items");
-        List<Item> listItems = SearchBuilder.transformListUser(list.getResultInfo());
+        List<Item> listItems = SearchBuilder.transformListUser(list);
         this.searchResultAdapter.setItems(listItems);
+    }
+
+    @Override
+    public void onSearchUserResultTotal(Integer total) {
+        textViewTitle.setVisibility(View.VISIBLE);
+
+        if (total >= 0) {
+            String totalString = String.format(getString(R.string.show_count_search_result), total);
+            this.textViewTitle.setText(totalString);
+        } else { // nhay vao onError roai`
+            this.textViewTitle.setText(getString(R.string.search_result));
+        }
     }
 
 
@@ -198,29 +224,17 @@ public class SearchResultFragment extends Fragment
     }
 
     @Override
-    public void onLoadMoreBookWithTitleSuccess(DataResultListResponse<BookResponse> list) {
-
-        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
-        this.textViewTitle.setText(totalString);
-
-        this.searchResultAdapter.setMoreBookItems(list.getResultInfo());
+    public void onLoadMoreBookWithTitleSuccess(List<BookResponse> list) {
+        this.searchResultAdapter.setMoreBookItems(list);
     }
 
     @Override
-    public void onLoadMoreBookWithAuthorSuccess(DataResultListResponse<BookResponse> list) {
-
-        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
-        this.textViewTitle.setText(totalString);
-
-        this.searchResultAdapter.setMoreBookItems(list.getResultInfo());
+    public void onLoadMoreBookWithAuthorSuccess(List<BookResponse> list) {
+        this.searchResultAdapter.setMoreBookItems(list);
     }
 
     @Override
-    public void onLoadMoreUserSuccess(DataResultListResponse<UserResponse> list) {
-
-        String totalString = String.format(getString(R.string.show_count_search_result), list.getTotalResult());
-        this.textViewTitle.setText(totalString);
-
-        this.searchResultAdapter.setMoreUserItems(list.getResultInfo());
+    public void onLoadMoreUserSuccess(List<UserResponse> list) {
+        this.searchResultAdapter.setMoreUserItems(list);
     }
 }

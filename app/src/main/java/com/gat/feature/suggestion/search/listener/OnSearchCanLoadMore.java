@@ -14,10 +14,10 @@ public interface OnSearchCanLoadMore {
 
     void onCanLoadMoreItem (int tab_position);
 
-    void onLoadMoreBookWithTitleSuccess (DataResultListResponse<BookResponse> list);
+    void onLoadMoreBookWithTitleSuccess (List<BookResponse> list);
 
-    void onLoadMoreBookWithAuthorSuccess (DataResultListResponse<BookResponse> list);
+    void onLoadMoreBookWithAuthorSuccess (List<BookResponse> list);
 
-    void onLoadMoreUserSuccess (DataResultListResponse<UserResponse> list);
+    void onLoadMoreUserSuccess (List<UserResponse> list);
 
 }

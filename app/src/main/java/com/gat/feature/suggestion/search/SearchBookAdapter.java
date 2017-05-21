@@ -127,6 +127,10 @@ public class SearchBookAdapter extends ItemAdapter {
 
     }
 
+    public void clearAllItems () {
+        items.clear();
+        notifyDataSetChanged();
+    }
 
     public void setItems (List<Item> list) {
         if (items != null) {
@@ -135,7 +139,6 @@ public class SearchBookAdapter extends ItemAdapter {
             items.addAll(list);
             notifyDataSetChanged();
         }
-
     }
 
     public void setMoreBookItems (List<BookResponse> list) {

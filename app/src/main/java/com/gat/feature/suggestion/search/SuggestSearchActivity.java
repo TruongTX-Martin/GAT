@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -35,17 +36,13 @@ import com.gat.feature.suggestion.search.listener.OnSearchBookResult;
 import com.gat.feature.suggestion.search.listener.OnSearchCanLoadMore;
 import com.gat.feature.suggestion.search.listener.OnSearchUserResult;
 import com.gat.feature.suggestion.search.listener.OnUserTapOnKeyword;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
-import android.widget.Toast;
 
 /**
  * Created by mryit on 4/9/2017.
@@ -81,7 +78,6 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     }
 
     private int mCurrentTab = 0;
-    private AlertDialog progressDialog;
     private CompositeDisposable disposables;
     private OnLoadHistorySuccess onSearchBookHistorySuccess;
     private OnLoadHistorySuccess onSearchAuthorHistorySuccess;
@@ -93,6 +89,9 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     private OnSearchCanLoadMore onSearchAuthorCanLoadMore;
     private OnSearchCanLoadMore onSearchUserCanLoadMore;
     public static SuggestSearchActivity instance;
+
+    private AlertDialog progressDialog;
+    private AlertDialog errorDialog;
 
     @Override
     protected int getLayoutResource() {
@@ -126,7 +125,10 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
                 getPresenter().onCanLoadMoreUserWithName().subscribe(this::onCanLoadMoreUserWithName),
                 getPresenter().onLoadMoreBookWithTitleSuccess().subscribe(this::onLoadMoreBookWithTitleSuccess),
                 getPresenter().onLoadMoreBookWithAuthorSuccess().subscribe(this::onLoadMoreBookWithAuthorSuccess),
-                getPresenter().onLoadMoreUserWithNameSuccess().subscribe(this::onLoadMoreUserWithNameSuccess)
+                getPresenter().onLoadMoreUserWithNameSuccess().subscribe(this::onLoadMoreUserWithNameSuccess),
+                getPresenter().onSearchBookWithTitleTotalResult().subscribe(this::onSearchBookWithTitleTotalResult),
+                getPresenter().onSearchBookWithAuthorTotalResult().subscribe(this::onSearchBookWithAuthorTotalResult),
+                getPresenter().onSearchUserWithNameTotalResult().subscribe(this::onSearchUserWithNameTotalResult)
         );
 
         progressDialog = ClientUtils.createLoadingDialog(SuggestSearchActivity.this);
@@ -154,8 +156,14 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     @Override
     protected void onDestroy() {
         disposables.dispose();
-        hideProgress();
-        progressDialog = null;
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+        if (errorDialog != null) {
+            errorDialog.dismiss();
+        }
+
         super.onDestroy();
     }
 
@@ -253,6 +261,21 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
             return true;
         }
 
+        switch (mCurrentTab) {
+            case TAB_POS.TAB_BOOK:
+                onSearchBookResult.onRequestSearchBook();
+                break;
+
+            case TAB_POS.TAB_AUTHOR:
+                onSearchAuthorResult.onRequestSearchBook();
+                break;
+
+            case TAB_POS.TAB_USER:
+                onSearchUserResult.onRequestSearchUser();
+                break;
+
+        }
+
         showProgress();
         startSearchWithKeyword(editTextSearch.getText().toString());
 
@@ -261,6 +284,22 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     @Override
     public void onUserTapOnHistoryKeyword(String keyword) {
+
+        switch (mCurrentTab) {
+            case TAB_POS.TAB_BOOK:
+                onSearchBookResult.onRequestSearchBook();
+                break;
+
+            case TAB_POS.TAB_AUTHOR:
+                onSearchAuthorResult.onRequestSearchBook();
+                break;
+
+            case TAB_POS.TAB_USER:
+                onSearchUserResult.onRequestSearchUser();
+                break;
+
+        }
+
         editTextSearch.setText(keyword);
         imageButtonScan.setTag(BUTTON_TYPE.CLEAR);
         imageButtonScan.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_cancle, null));
@@ -336,24 +375,38 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         hideProgress();
     }
 
-    private void onSearchBookWithTitleSuccess (DataResultListResponse<BookResponse> list) {
+    private void onSearchBookWithTitleSuccess (DataResultListResponse<BookResponse> data) {
         hideProgress();
-        onSearchBookResult.onSearchBookResult(list);
+        onSearchBookResult.onSearchBookResult(data.getResultInfo());
     }
 
-    private void onSearchBookWithAuthorSuccess (DataResultListResponse<BookResponse> list) {
-        hideProgress();
-        onSearchAuthorResult.onSearchBookResult(list);
+    private void onSearchBookWithTitleTotalResult (Integer total) {
+        onSearchBookResult.onSearchBookResultTotal(total);
     }
 
-    private void onSearchUserWithNameSuccess (DataResultListResponse<UserResponse> list) {
+
+    private void onSearchBookWithAuthorSuccess (DataResultListResponse<BookResponse> data) {
         hideProgress();
-        onSearchUserResult.onSearchUserResult(list);
+        onSearchAuthorResult.onSearchBookResult(data.getResultInfo());
+    }
+
+    private void onSearchBookWithAuthorTotalResult (Integer total) {
+        onSearchAuthorResult.onSearchBookResultTotal(total);
+    }
+
+
+    private void onSearchUserWithNameSuccess (DataResultListResponse<UserResponse> data) {
+        hideProgress();
+        onSearchUserResult.onSearchUserResult(data.getResultInfo());
+    }
+
+    private void onSearchUserWithNameTotalResult (Integer total) {
+        onSearchUserResult.onSearchUserResultTotal(total);
     }
 
     private void onSearchFailure (String message) {
         hideProgress();
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        errorDialog = ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
     private void onCanLoadMoreBookWithTitle (Boolean isCanLoadMore) {
@@ -369,19 +422,19 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     }
 
 
-    private void onLoadMoreBookWithTitleSuccess (DataResultListResponse<BookResponse> list) {
+    private void onLoadMoreBookWithTitleSuccess (DataResultListResponse<BookResponse> data) {
         hideProgress();
-        onSearchBookCanLoadMore.onLoadMoreBookWithTitleSuccess(list);
+        onSearchBookCanLoadMore.onLoadMoreBookWithTitleSuccess(data.getResultInfo());
     }
 
-    private void onLoadMoreBookWithAuthorSuccess (DataResultListResponse<BookResponse> list) {
+    private void onLoadMoreBookWithAuthorSuccess (DataResultListResponse<BookResponse> data) {
         hideProgress();
-        onSearchAuthorCanLoadMore.onLoadMoreBookWithAuthorSuccess(list);
+        onSearchAuthorCanLoadMore.onLoadMoreBookWithAuthorSuccess(data.getResultInfo());
     }
 
-    private void onLoadMoreUserWithNameSuccess (DataResultListResponse<UserResponse> list) {
+    private void onLoadMoreUserWithNameSuccess (DataResultListResponse<UserResponse> data) {
         hideProgress();
-        onSearchUserCanLoadMore.onLoadMoreUserSuccess(list);
+        onSearchUserCanLoadMore.onLoadMoreUserSuccess(data.getResultInfo());
     }
 
     private void showProgress () {

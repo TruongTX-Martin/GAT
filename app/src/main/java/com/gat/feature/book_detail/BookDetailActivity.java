@@ -7,6 +7,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +38,6 @@ import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookReadingInfo;
 import com.gat.data.response.impl.EvaluationItemResponse;
-import com.gat.feature.book_detail.adapter.EvaluationBuilder;
 import com.gat.feature.book_detail.adapter.EvaluationItemAdapter;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseActivity;
 import com.gat.feature.book_detail.add_to_bookcase.AddToBookcaseScreen;
@@ -49,6 +49,7 @@ import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.repository.entity.User;
+import java.util.Date;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -76,7 +77,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     ImageView imageViewBookCover;
 
     @BindView(R.id.scroll_view)
-    ScrollView scrollView;
+    NestedScrollView scrollView;
 
     @BindView(R.id.text_view_book_name)
     TextView textViewBookName;
@@ -113,6 +114,13 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @BindView(R.id.recycler_view_comments)
     RecyclerView recyclerView;
+
+    @BindView(R.id.image_view_quote_left)
+    ImageView imageViewQuoteLeft;
+
+    @BindView(R.id.image_view_quote_right)
+    ImageView imageViewQuoteRight;
+
 
     private CompositeDisposable disposables;
     private EvaluationItemAdapter adapter;
@@ -228,6 +236,24 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             String comment = data.getStringExtra(KEY_UPDATE_COMMENT);
             textViewCommentByUser.setVisibility(View.VISIBLE);
             textViewCommentByUser.setText(comment == null ? "" : comment);
+            imageViewQuoteLeft.setVisibility(View.VISIBLE);
+            imageViewQuoteRight.setVisibility(View.VISIBLE);
+            buttonComment.setText(getResources().getString(R.string.edit_comment));
+
+            // update in list comments
+            if (mEvaluationByUser == null) {
+                mEvaluationByUser = new EvaluationItemResponse();
+                mEvaluationByUser.setUserId(mUser.userId())
+                        .setImageId(mUser.imageId())
+                        .setReview(textViewCommentByUser.getText().toString())
+                        .setValue(ratingBarUserRate.getRating())
+                        .setName(mUser.name())
+                        .setSpoiler(false)
+                        .setEvaluationTime( (new Date()).getTime());
+            } else {
+                mEvaluationByUser.setReview(comment);
+            }
+            adapter.updateItem(mEvaluationByUser);
 
         } else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -293,14 +319,22 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.button_comment)
     void onGoComment () {
-        if (mBookInfo == null) {
+        if (mBookInfo == null) { // có thể bắt load lại book info
             return;
         }
         float value = 0;
         String comment = "";
         if (mEvaluationByUser != null) {
             value = mEvaluationByUser.getValue();
+            if (ratingBarUserRate.getRating() != 0) {
+                value = ratingBarUserRate.getRating();
+            }
+
             comment = TextUtils.isEmpty(mEvaluationByUser.getReview()) ? "" : mEvaluationByUser.getReview();
+            if ( ! TextUtils.isEmpty(textViewCommentByUser.getText().toString()) ) {
+                comment = textViewCommentByUser.getText().toString();
+            }
+
         }
 
         startForResult(this, CommentActivity.class, CommentScreen.instance(mBookInfo.getEditionId(), value, comment), RC_UPDATE_COMMENT);
@@ -396,7 +430,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         }
 
         listEvaluations = list;
-        adapter.setItem(EvaluationBuilder.transformListEvaluation(list));
+        adapter.setItems(list);
     }
 
     private void onGetSelfReadingStatusSuccess (BookReadingInfo bookReadingInfo) {
@@ -431,7 +465,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             ratingBarUserRate.setRating(0);
             textViewCommentByUser.setVisibility(View.GONE);
             buttonComment.setVisibility(View.GONE);
-            //buttonComment.setText(getResources().getString(R.string.write_comment));
         } else {
             avgRating = (int) evaluation.getValue();
             ratingBarUserRate.setRating(evaluation.getValue());
@@ -454,10 +487,15 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 buttonComment.setVisibility(View.VISIBLE);
                 if (TextUtils.isEmpty(evaluation.getReview())) {
                     textViewCommentByUser.setVisibility(View.GONE);
+                    imageViewQuoteLeft.setVisibility(View.GONE);
+                    imageViewQuoteRight.setVisibility(View.GONE);
+
                     buttonComment.setText(getResources().getString(R.string.write_comment));
                 } else {
                     textViewCommentByUser.setVisibility(View.VISIBLE);
                     textViewCommentByUser.setText(evaluation.getReview());
+                    imageViewQuoteLeft.setVisibility(View.VISIBLE);
+                    imageViewQuoteRight.setVisibility(View.VISIBLE);
                     buttonComment.setText(getResources().getString(R.string.edit_comment));
                 }
             }
@@ -505,6 +543,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     private static CallbackManager callbackManager;
 
     private void showFacebookShareOpenGraph () {
+        MZDebug.w(TAG, "showFacebookShareOpenGraph");
         SharePhoto photo;
         ShareOpenGraphObject object;
         if (mBookInfo.getImageId().isEmpty()) {
@@ -580,7 +619,9 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 MZDebug.d(BookDetailActivity.class.getSimpleName(), "SHARING ERROR: \n\r" + error.getMessage());
             }
         });
+
         shareDialog.show(BookDetailActivity.this, content);
+        MZDebug.w(TAG, "shareDialog is showing");
     }
 
     @Override
@@ -597,15 +638,33 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
     }
 
     private void onPostRatingSuccess (String message) {
+        MZDebug.w(TAG, "onPostRatingSuccess");
         hideProgress();
 
-        if (listEvaluations == null || listEvaluations.isEmpty()) {
-            ratingBarBook.setRating(avgRating);
+        // update in list comments
+        if (mEvaluationByUser == null) {
+            mEvaluationByUser = new EvaluationItemResponse();
+            mEvaluationByUser.setUserId(mUser.userId())
+                    .setImageId(mUser.imageId())
+                    .setReview(textViewCommentByUser.getText().toString())
+                    .setValue(ratingBarUserRate.getRating())
+                    .setName(mUser.name())
+                    .setSpoiler(false)
+                    .setEvaluationTime( (new Date()).getTime());
+        } else {
+            mEvaluationByUser.setValue(ratingBarUserRate.getRating());
         }
+        adapter.updateItem(mEvaluationByUser);
+        // update rate avg
+        float rateAvg = adapter.rateAvg();
+        ratingBarBook.setRating(rateAvg);
+        textViewRating.setText(String.valueOf(rateAvg));
 
+        // update button comment
         buttonComment.setVisibility(View.VISIBLE);
         buttonComment.setText(getResources().getString(R.string.write_comment));
         if (mEvaluationByUser != null && ! TextUtils.isEmpty(mEvaluationByUser.getReview())) {
+            textViewCommentByUser.setVisibility(View.VISIBLE);
             buttonComment.setText(getResources().getString(R.string.edit_comment));
         }
 

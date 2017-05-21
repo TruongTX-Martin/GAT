@@ -11,5 +11,10 @@ import java.util.List;
 
 public interface OnSearchBookResult {
 
-    void onSearchBookResult (DataResultListResponse<BookResponse> list);
+    void onRequestSearchBook ();
+
+    void onSearchBookResult (List<BookResponse> list);
+
+    void onSearchBookResultTotal (Integer total);
+
 }

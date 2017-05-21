@@ -14,21 +14,19 @@ public class SearchBookByAuthor extends UseCase<DataResultListResponse<BookRespo
 
     private final BookRepository bookRepository;
     private final String author;
-    private final long userId;
     private final int page;
     private final int sizeOfPage;
 
 
-    public SearchBookByAuthor(BookRepository bookRepository, String author, long userId, int page, int sizeOfPage) {
+    public SearchBookByAuthor(BookRepository bookRepository, String author, int page, int sizeOfPage) {
         this.bookRepository = bookRepository;
         this.author = author;
-        this.userId = userId;
         this.page = page;
         this.sizeOfPage = sizeOfPage;
     }
 
     @Override
     protected Observable<DataResultListResponse<BookResponse>> createObservable() {
-        return bookRepository.searchBookByAuthor(author, userId, page, sizeOfPage);
+        return bookRepository.searchBookByAuthor(author, page, sizeOfPage);
     }
 }

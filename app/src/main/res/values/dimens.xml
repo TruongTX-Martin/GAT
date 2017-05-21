@@ -51,7 +51,12 @@
     <dimen name="btn_margin_lr">20dp</dimen>
     <dimen name="register_btn_margin_lr">40dp</dimen>
     <dimen name="btn_margin_bt">15dp</dimen>
-    <dimen name="item_book_suggest_height">160dp</dimen>
+
+    <dimen name="item_book_suggest_height">180dp</dimen>
+    <dimen name="suggestion_cover_width">94dp</dimen>
+    <dimen name="suggestion_cover_height">141dp</dimen>
+
+    <dimen name="title_padding_vertical">12dp</dimen>
 
     <dimen name="button_height">40dp</dimen>
     <dimen name="button_height_large">68dp</dimen>
@@ -118,6 +123,5 @@
 
     <dimen name="header_margin_lr">14.5dp</dimen>
     <dimen name="suggestion_user_img_size">52dp</dimen>
-    <dimen name="suggestion_cover_width">60dp</dimen>
-    <dimen name="suggestion_cover_height">90dp</dimen>
+
 </resources>

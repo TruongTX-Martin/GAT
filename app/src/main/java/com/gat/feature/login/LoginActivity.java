@@ -333,9 +333,10 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
         finish();
     }
 
+    private AlertDialog errorDialog;
     private void onLoginError(String error) {
         progressSubject.onNext(false);
-        ClientUtils.showErrorDialog(getString(R.string.login_error_header), error, this);
+        errorDialog = ClientUtils.showDialogError(this, getString(R.string.login_error_header), error);
     }
 
     private void onLogging(boolean enter) {
@@ -351,8 +352,14 @@ public class LoginActivity extends ScreenActivity<LoginScreen, LoginPresenter> {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+
         disposables.dispose();
+
+        if (errorDialog != null) {
+            errorDialog.dismiss();
+        }
+
+        super.onDestroy();
     }
 
     @Override

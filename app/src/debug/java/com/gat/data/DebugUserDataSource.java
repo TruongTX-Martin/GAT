@@ -252,15 +252,30 @@ public class DebugUserDataSource implements UserDataSource {
 
     @Override
     public Observable<DataResultListResponse<UserResponse>> searchUser
-            (String name, int userId, int page, int sizeOfPage) {
+            (String name, int page, int sizeOfPage) {
         MZDebug.i("_____________________________________ searchUser _____________________________");
 
         GatApi api = dataComponent.getPublicGatApi();
         Observable<Response<ServerResponse<DataResultListResponse<UserResponse>>>> responseObservable;
-        responseObservable = api.searchUser(name, userId, page, sizeOfPage);
+        responseObservable = api.searchUser(name, page, sizeOfPage);
 
         return responseObservable.map(response -> {
             DataResultListResponse<UserResponse> data = response.body().data();
+            return data;
+        });
+    }
+
+
+    @Override
+    public Observable<DataResultListResponse<UserResponse>> searchUserTotal(String name, int userId) {
+        MZDebug.i("___________________________________ searchUserTotal __________________________");
+
+        GatApi api = dataComponent.getPublicGatApi();
+        Observable<Response<ServerResponse<DataResultListResponse>>> responseObservable;
+        responseObservable = api.searchUserTotal(name, userId);
+
+        return responseObservable.map( response -> {
+            DataResultListResponse data = response.body().data();
             return data;
         });
     }

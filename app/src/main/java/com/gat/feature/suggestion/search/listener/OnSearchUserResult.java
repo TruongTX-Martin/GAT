@@ -11,5 +11,10 @@ import java.util.List;
 
 public interface OnSearchUserResult {
 
-    void onSearchUserResult (DataResultListResponse<UserResponse> list);
+    void onRequestSearchUser ();
+
+    void onSearchUserResult (List<UserResponse> list);
+
+    void onSearchUserResultTotal (Integer total);
+
 }

@@ -262,9 +262,15 @@ public class PaperUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int userId, int page, int sizeOfPage) {
-        return null;
+    public Observable<DataResultListResponse<UserResponse>> searchUser(String name, int page, int sizeOfPage) {
+        throw new UnsupportedOperationException();
     }
+
+    @Override
+    public Observable<DataResultListResponse<UserResponse>> searchUserTotal(String name, int userId) {
+        throw new UnsupportedOperationException();
+    }
+
 
     @Override
     public Observable<List<Keyword>> getUsersSearchedKeyword() {

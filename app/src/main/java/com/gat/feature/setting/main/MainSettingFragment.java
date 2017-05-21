@@ -159,36 +159,15 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
         // update ui after back from another fragment
         int key = getArguments().getInt(KEY_BACK_TO_MAIN);
-//        switch (key) {
-//            case KeyBackToMain.FRIST_CREATE:
-//                break;
-//
-//            case KeyBackToMain.BACK_BUTTON:
-//                break;
-//
-//            case KeyBackToMain.DISCONNECT_FACEBOOK:
-//                textViewFacebook.setText("");
-//                break;
-//
-//            case KeyBackToMain.DISCONNECT_TWITTER:
-//                textViewTwitter.setText("");
-//                break;
-//
-//            case KeyBackToMain.DISCONNECT_GOOGLE:
-//                textViewGoogle.setText("");
-//                break;
-//
-//            case KeyBackToMain.ADD_EMAIL_PASSWORD:
-//                break;
-//
-//        }
 
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onDestroy() {
         disposable.dispose();
         super.onDestroy();
+        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -405,11 +384,10 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
 
         MZDebug.w("account email:" + account.getEmail() + ", display name: " + account.getDisplayName() );
         progressDialog.show();
-        getPresenter().requestConnectSocial(account.getEmail() , account.getDisplayName(), SocialType.GOOGLE);
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                status -> {
+                status -> {});
+        getPresenter().requestConnectSocial(account.getEmail() , account.getDisplayName(), SocialType.GOOGLE);
 
-                });
     }
 
     FacebookCallback<LoginResult> facebookCallback = new FacebookCallback<LoginResult>() {

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -295,7 +296,7 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
                 //tab.setIcon(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
 
                 tabNotification.setTabIcon(select ? R.drawable.notic_ic_selected : R.drawable.notic_ic);
-                tabNotification.setTitleColor(select ? R.color.colorWhite : R.color.colorGray);
+                tabNotification.setTitleColor(select ? Color.parseColor("#FFFFFF") : Color.parseColor("#919191"));
 
                 break;
             case TAB_POS.TAB_SETTING:

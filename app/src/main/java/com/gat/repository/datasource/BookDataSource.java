@@ -33,10 +33,16 @@ public interface BookDataSource {
     Observable<List<BookResponse>> suggestBooksAfterLogin();
 
     Observable<DataResultListResponse<BookResponse>> searchBookByTitle
-            (String title, long userId, int page, int sizeOfPage);
+            (String title, int page, int sizeOfPage);
 
     Observable<DataResultListResponse<BookResponse>> searchBookByAuthor
-            (String author, long userId, int page, int sizeOfPage);
+            (String author, int page, int sizeOfPage);
+
+    Observable<DataResultListResponse> searchBookByTitleTotal
+            (String title, int userId);
+
+    Observable<DataResultListResponse> searchBookByAuthorTotal
+            (String author, int userId);
 
     Observable<List<Keyword>> getBooksSearchedKeyword();
 

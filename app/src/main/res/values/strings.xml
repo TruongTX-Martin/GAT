@@ -150,6 +150,7 @@
     <string name="tab_book_name">Tên sách</string>
     <string name="tab_book_author">Tác giả</string>
     <string name="tab_user_name">Người dùng</string>
+    <string name="search_result">Kết quả tìm kiếm</string>
 
     <!-- book details -->
     <string name="book_detail">Thông tin sách</string>

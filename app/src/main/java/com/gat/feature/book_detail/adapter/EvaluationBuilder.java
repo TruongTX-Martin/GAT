@@ -1,6 +1,7 @@
 package com.gat.feature.book_detail.adapter;
 
 import com.gat.common.adapter.Item;
+import com.gat.common.util.MZDebug;
 import com.gat.data.response.impl.EvaluationItemResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class EvaluationBuilder {
         List<Item> newList = new ArrayList<>();
 
         for (EvaluationItemResponse evaluation : list) {
+            MZDebug.w("Evaluation = " + evaluation.toString());
             newList.add(EvaluationItem.instance(evaluation));
         }
 

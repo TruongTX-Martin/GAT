@@ -98,7 +98,7 @@ public class NotificationPresenterImpl implements NotificationPresenter {
 
                     if (throwable instanceof LoginException) {
                         subjectOnUnAuthorization.onNext( ((LoginException)throwable).responseData().message() );
-                    } else {
+                    } else if (throwable instanceof CommonException){
                         subjectOnError.onNext( ((CommonException)throwable).getMessage() );
                     }
 

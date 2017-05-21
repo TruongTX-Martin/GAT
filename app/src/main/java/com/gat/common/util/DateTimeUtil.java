@@ -58,7 +58,6 @@ public class DateTimeUtil {
 
         Date now = new Date();
         long minutesAgo = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - milliseconds);
-        MZDebug.w("NOW = " + now.getTime() + ", TIME NOTIFY = " + milliseconds);
 
         if (minutesAgo >= 1440) { // 24h x 60p = 1440
             long daysAgo= TimeUnit.MILLISECONDS.toDays(now.getTime() - milliseconds);

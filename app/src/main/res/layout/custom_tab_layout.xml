@@ -34,7 +34,7 @@
         android:textSize="12dp" />
 
     <TextView
-        android:id="@+id/tab_title"
+        android:id="@+id/tab_title_xxx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tab_icon"
