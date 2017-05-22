@@ -224,17 +224,16 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     @Override
     public void onBackPressed() {
         int currentTab = mTabLayout.getSelectedTabPosition();
-        if(currentTab > 0) {
+        if (currentTab > 0) {
             currentTab --;
             setTabDesire(currentTab);
-        }else {
-            finish();
+        } else {
+            // finish() will call onDestroy().. this code used to back to home screen.
+            Intent startMain = new Intent(Intent.ACTION_MAIN);
+            startMain.addCategory(Intent.CATEGORY_HOME);
+            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startMain);
         }
-    }
-
-    public void setTabDesire(int position) {
-        mTabLayout.setScrollPosition(position,0f,true);
-        mViewPager.setCurrentItem(position);
     }
 
     @Override
@@ -251,6 +250,12 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     public void haveToPullNotifyPage(int pullCount) {
         MZDebug.w("haveToPullNotifyPage : pullCount = " + pullCount);
         tabNotification.setNoticeCount(pullCount);
+    }
+
+
+    public void setTabDesire(int position) {
+        mTabLayout.setScrollPosition(position,0f,true);
+        mViewPager.setCurrentItem(position);
     }
 
 
@@ -306,7 +311,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         }
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
-
 
 
 }

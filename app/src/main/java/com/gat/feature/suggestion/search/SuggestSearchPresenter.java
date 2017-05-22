@@ -46,6 +46,8 @@ public interface SuggestSearchPresenter extends Presenter {
     Observable<Boolean> onCanLoadMoreUserWithName ();
     Observable<Integer> onSearchUserWithNameTotalResult ();
 
-    Observable<String> onError();
+    Observable<String> onError ();
+    Observable<String> onShowProgressFragment ();
+    Observable<String> onHideProgressFragment ();
 
 }

@@ -466,7 +466,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         MZDebug.w("onGetEditionSharingUsersSuccess: " + evaluation.toString());
         llComment.setVisibility(View.VISIBLE);
 
-        if (evaluation == null) {
+        if (evaluation == null || evaluation.getValue() == 0) {
             ratingBarUserRate.setRating(0);
             textViewCommentByUser.setVisibility(View.GONE);
             buttonComment.setVisibility(View.GONE);

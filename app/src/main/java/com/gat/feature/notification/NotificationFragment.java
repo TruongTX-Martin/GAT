@@ -249,8 +249,10 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         }
 
         MZDebug.w("Notify: " + data.getResultInfo().get(0).toString());
-        delegate.haveToPullNotifyPage(data.getNotifyTotal());
         adapter.setItems(data.getResultInfo());
+        if (delegate != null) {
+            delegate.haveToPullNotifyPage(data.getNotifyTotal());
+        }
     }
 
 
