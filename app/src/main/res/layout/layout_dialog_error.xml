@@ -1,47 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dp"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_layout_dialog"
-    android:orientation="vertical">
+    android:background="@android:color/transparent">
 
-    <TextView
-        android:id="@+id/txtTopTitle"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="25dp"
-        android:gravity="center_horizontal"
-        android:text="Lỗi"
-        android:textColor="#4e4e4e"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/txtContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="Có lỗi sảy ra"
-        android:textColor="#4e4e4e"
-        android:textSize="14sp" />
-
-    <Button
-        android:id="@+id/btnAgreed"
-        android:layout_width="@dimen/button_width_normal"
-        android:layout_height="36dp"
-        android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/margin_top_bottom_large"
-        android:background="@drawable/bg_button_dialog"
-        android:text="@string/strAgreed"
-        android:textColor="#ffffff"
-        android:textSize="14sp" />
+        android:background="@drawable/bg_layout_dialog"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/txtTopTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/error_popup_margin_top"
+            android:gravity="center_horizontal"
+            android:text="Lỗi"
+            android:textColor="#4e4e4e"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/txtContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/error_popup_margin_top"
+            android:gravity="center_horizontal"
+            android:text="Có lỗi sảy ra"
+            android:textColor="#4e4e4e"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnAgreed"
+            android:layout_width="@dimen/button_width_normal"
+            android:layout_height="@dimen/button_height"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/error_popup_button_margin_top"
+            android:layout_marginBottom="@dimen/margin_top_bottom_large"
+            android:background="@drawable/bg_button_dialog"
+            android:text="@string/strAgreed"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</FrameLayout>

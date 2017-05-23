@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -268,6 +269,7 @@ public class ClientUtils {
         builder.setView(view);
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         if (message == null) {
@@ -301,7 +303,6 @@ public class ClientUtils {
         });
 
         dialog.show();
-
         return dialog;
     }
 
@@ -320,6 +321,7 @@ public class ClientUtils {
                     @Override
                     public void onClickRefuse() {
                         // do nothing
+
                     }
                 });
     }
@@ -349,6 +351,7 @@ public class ClientUtils {
         builder.setView(view);
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         TextView txtTitle = (TextView) view.findViewById(R.id.txtTopTitle);
@@ -386,6 +389,16 @@ public class ClientUtils {
         txtTitle.setText(title);
         txtContent.setText(message);
         btnAgreed.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.setOnKeyListener((dialog1, keyCode, event) -> {
+            if ((keyCode ==  android.view.KeyEvent.KEYCODE_BACK)) {
+                dialog.dismiss();
+                return true; // pretend we've processed it
+            }
+            else
+                return false; // pass on to be processed as normal
+        });
+
 
         dialog.show();
 

@@ -104,7 +104,7 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
     private boolean isLogin;
 
     private MainActivity mainActivity;
-    Dialog dialog;
+    android.support.v7.app.AlertDialog dialog;
 
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -196,10 +196,6 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         txtTitle.setTextColor(Color.parseColor("#ffffff"));
         layoutTop.setBackgroundColor(Color.parseColor("#8ec3df"));
 
-        dialog = new Dialog(MainActivity.instance);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.layout_dialog_login);
-        dialog.setCanceledOnTouchOutside(false);
     }
 
     private void handleEvent() {
@@ -349,30 +345,29 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
 
     public void checkLogin() {
         if (!isLogin) {
-            //show dialog
-            Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
-            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-            btnCancle.setOnClickListener(v -> {
-                mainActivity.setTabDesire(0);
-                dialog.dismiss();
-            });
-            btnOk.setOnClickListener(v -> {
-                MainActivity.start(MainActivity.instance.getApplicationContext(), LoginActivity.class, LoginScreen.instance(Strings.EMPTY));
-            });
-            if (dialog != null && !dialog.isShowing()) {
-                dialog.show();
-            }
-            dialog.setOnKeyListener((dialog1, keyCode, event) -> {
-                if(keyCode  == event.KEYCODE_BACK) {
-                    dialog1.dismiss();
-                    mainActivity.onBackPressed();
-                    return true;
-                }
-                return false;
-            });
+
             //hide loading in fragment request
             fragmentBookRequest.hideLoadBook();
             fragmentBookSharing.hideLoadBook();
+
+            // show dialog login
+            dialog = ClientUtils.showAlertDialog(getActivity(), getResources().getString(R.string.err_notice),
+                    getResources().getString(R.string.err_required_login),
+                    getResources().getString(R.string.login),
+                    getResources().getString(R.string.dont_care), new ClientUtils.OnDialogPressed() {
+                        @Override
+                        public void onClickAccept() {
+                            // .start not clear back stack -> bug (can not start next time),
+                            // -> resolved by use .startAndClear
+                            MainActivity.startAndClear(getActivity().getApplicationContext(),
+                                    StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+                        }
+
+                        @Override
+                        public void onClickRefuse() {
+                            mainActivity.setTabDesire(0);
+                        }
+                    });
         }
     }
 
@@ -524,6 +519,9 @@ public class PersonalFragment extends ScreenFragment<PersonalScreen, PersonalPre
         disposablesRequestBookByOwner.dispose();
         disposablesCheckLogin.dispose();
         EventBus.getDefault().unregister(this);
+        if (dialog != null) {
+            dialog.dismiss();
+        }
     }
 
 }

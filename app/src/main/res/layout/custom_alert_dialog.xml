@@ -1,63 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="285dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/bg_layout_dialog"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/paddingLarge"
-    android:paddingLeft="@dimen/paddingLarge"
-    android:paddingRight="@dimen/paddingLarge">
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/error_popup_margin_top"
-        android:textColor="#4e4e4e"
-        android:textSize="@dimen/header_textsize_l"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewTitle"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/error_popup_margin_top"
-        android:paddingEnd="@dimen/error_popup_padding_lr"
-        android:paddingStart="@dimen/error_popup_padding_lr"
-        android:textAlignment="center"
-        android:textSize="@dimen/normal_textsize_l" />
-
-    <Button
-        android:id="@+id/buttonAccept"
-        android:layout_width="110dp"
-        android:layout_height="36dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textViewMessage"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/error_popup_margin_top"
-        android:background="@drawable/bg_rounded_blue"
-        android:text="@string/yes"
-        android:textColor="@color/colorWhite"
-        android:textSize="@dimen/normal_textsize_l" />
-
-    <Button
-        android:id="@+id/buttonRefuse"
-        android:layout_width="110dp"
-        android:layout_height="36dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textViewMessage"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/error_popup_margin_top"
-        android:background="@drawable/bg_rounded_blue"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_layout_dialog"
+        android:paddingBottom="@dimen/paddingLarge"
         android:paddingLeft="@dimen/paddingLarge"
-        android:paddingRight="@dimen/paddingLarge"
-        android:text="@string/no"
-        android:textColor="@color/colorWhite"
-        android:textSize="@dimen/normal_textsize_l" />
+        android:paddingRight="@dimen/paddingLarge">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/error_popup_margin_top"
+            android:textColor="#4e4e4e"
+            android:textSize="@dimen/header_textsize_l"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTitle"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/error_popup_margin_top"
+            android:paddingEnd="@dimen/error_popup_padding_lr"
+            android:paddingStart="@dimen/error_popup_padding_lr"
+            android:textAlignment="center"
+            android:textSize="@dimen/normal_textsize_l" />
+
+        <Button
+            android:id="@+id/buttonAccept"
+            android:layout_width="@dimen/button_width_normal"
+            android:layout_height="@dimen/button_height"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textViewMessage"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/error_popup_button_margin_top"
+            android:background="@drawable/bg_rounded_blue"
+            android:text="@string/yes"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/normal_textsize_l" />
+
+        <Button
+            android:id="@+id/buttonRefuse"
+            android:layout_width="@dimen/button_width_normal"
+            android:layout_height="@dimen/button_height"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textViewMessage"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/error_popup_button_margin_top"
+            android:background="@drawable/bg_rounded_blue"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:paddingRight="@dimen/paddingLarge"
+            android:text="@string/no"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/normal_textsize_l" />
+
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

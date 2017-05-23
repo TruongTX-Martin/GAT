@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,8 +23,12 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.internal.CallbackManagerImpl;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareOpenGraphAction;
 import com.facebook.share.model.ShareOpenGraphContent;
 import com.facebook.share.model.ShareOpenGraphObject;
@@ -49,6 +54,8 @@ import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.repository.entity.User;
+
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
@@ -278,17 +285,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.image_button_go_share)
     void onGoShare () {
-        if (mUser == null) {
-            MZDebug.w(TAG, "user = null, show login dialog");
-            showLoginDialog();
-            return;
-        }
+//        if (mUser == null) {
+//            MZDebug.w(TAG, "user = null, show login dialog");
+//            showLoginDialog();
+//            return;
+//        }
 
         if (mBookInfo == null) {
             return;
         }
-
-        showFacebookShareOpenGraph();
+        authenFacebookAndShare();
+        //showFacebookShareOpenGraph();
     }
 
     @OnClick(R.id.button_reading_state)
@@ -545,7 +552,41 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
+
+    private LoginManager loginManager;
     private static CallbackManager callbackManager;
+
+    private void authenFacebookAndShare () {
+        List<String> permissionNeeds = Arrays.asList("publish_actions");
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
+//        loginManager = LoginManager.getInstance();
+//        loginManager.logInWithPublishPermissions(this, permissionNeeds);
+//
+//        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                showFacebookShareOpenGraph();
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                MZDebug.w("facebook on cancel");
+//            }
+//
+//            @Override
+//            public void onError(FacebookException exception) {
+//                MZDebug.w("facebook on error \n\r: " + Log.getStackTraceString(exception));
+//            }
+//        });
+
+
+
+        showFacebookShareOpenGraph();
+    }
+
 
     private void showFacebookShareOpenGraph () {
         MZDebug.w(TAG, "showFacebookShareOpenGraph");
@@ -592,7 +633,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 actionRead = "books.reads";
             }
         }
-        MZDebug.w("BookDetailActivity", "state = " + buttonReadingState.getTag() + ", action= " + actionRead);
 
         ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
                     .setActionType(actionRead)
@@ -605,8 +645,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 .setAction(action)
                 .build();
 
-        ShareDialog shareDialog = new ShareDialog(this);
-        callbackManager = CallbackManager.Factory.create();
+        ShareDialog shareDialog = new ShareDialog(BookDetailActivity.this);
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
@@ -625,8 +664,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             }
         });
 
-        shareDialog.show(BookDetailActivity.this, content);
-        MZDebug.w(TAG, "shareDialog is showing");
+        if (shareDialog.canShow(ShareLinkContent.class) ) {
+            shareDialog.show(BookDetailActivity.this, content);
+            MZDebug.w(TAG, "shareDialog is showing");
+        } else {
+            MZDebug.w(TAG, "shareDialog.canShow(ShareLinkContent.class) = false");
+        }
     }
 
     @Override
