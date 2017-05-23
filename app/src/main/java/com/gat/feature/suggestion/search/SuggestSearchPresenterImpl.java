@@ -2,6 +2,7 @@ package com.gat.feature.suggestion.search;
 
 import android.util.Log;
 import com.gat.common.util.MZDebug;
+import com.gat.common.util.Strings;
 import com.gat.data.exception.CommonException;
 import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
@@ -12,6 +13,8 @@ import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
 import com.gat.domain.usecase.UseCase;
 import com.gat.repository.entity.User;
+import com.google.zxing.common.StringUtils;
+
 import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -73,6 +76,8 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
     // use case error
     private final Subject<String> errorSubject;
+    private final Subject<String> subjectShowProgress;
+    private final Subject<String> subjectHideProgress;
 
     public SuggestSearchPresenterImpl(UseCaseFactory useCaseFactory,
                                       SchedulerFactory schedulerFactory) {
@@ -96,6 +101,8 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         subjectBookByTitleTotalResult = PublishSubject.create();
         subjectBookByAuthorTotalResult = PublishSubject.create();
         subjectUserByNameTotalResult = PublishSubject.create();
+        subjectHideProgress = PublishSubject.create();
+        subjectShowProgress = PublishSubject.create();
     }
 
     @Override
@@ -111,6 +118,8 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                     mUserId = user.userId();
                 })
                 .onError(throwable -> {
+                    MZDebug.e("ERROR : SuggestSearchPresenterImpl : onCreate _______________E: \n\r"
+                            + Log.getStackTraceString(throwable));
                     mUserId = -1;
                 }).execute();
     }
@@ -126,13 +135,18 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
             MZDebug.e("____________________________________________ loadHistorySearchBook = false");
             return;
         }
+
         // get cached user data
         UseCase<User> loadLocalUser = useCaseFactory.getUser();
         loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(user -> {
+                    MZDebug.w("local user cached: " + user.toString());
                     if (user.isValid()) {
+                        subjectShowProgress.onNext(Strings.EMPTY);
                         doLoadHistorySearchBook();
+                    } else {
+                        subjectHideProgress.onNext(Strings.EMPTY);
                     }
                 })
                 .onError(throwable -> {
@@ -151,6 +165,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                     resultHistorySearchBookSubject.onNext(list);
                 })
                 .onError(throwable -> {
+                    isCanLoadHistoryBook = false;
                     MZDebug.e("ERROR: loadHistorySearchBook ____________________________________E: "
                             + Log.getStackTraceString(throwable));
                 }).execute();
@@ -166,10 +181,16 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
     @Override
     public void searchBookWithTitle(String book_title) {
+
+        // release history
+        if (useCaseHistorySearchBook != null)
+            useCaseHistorySearchBook.release();
+
         // user press 'search' -> page = 1 && keyword = new keyword
         mPageBook = 1;
         mKeyword = book_title;
         totalResultBookWithTitle = 0;
+
 
         useCaseSearchBookByTitle = useCaseFactory.searchBookByTitle(mKeyword, mPageBook, SIZE_OF_PAGE)
                 .executeOn(schedulerFactory.io())
@@ -269,9 +290,12 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
         loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(user -> {
-                    MZDebug.w("local login: " + user.isValid());
+                    MZDebug.w("local user cached: " + user.toString());
                     if (user.isValid()) {
+                        subjectShowProgress.onNext(Strings.EMPTY);
                         doLoadHistorySearchAuthor();
+                    } else {
+                        subjectHideProgress.onNext(Strings.EMPTY);
                     }
                 })
                 .onError(throwable -> {
@@ -293,6 +317,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: loadHistorySearchAuthor ______________________________E: \n\r"
                             + Log.getStackTraceString(throwable));
+                    isCanLoadHistoryAuthor = false;
                 }).execute();
     }
 
@@ -306,6 +331,11 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
     @Override
     public void searchBookWithAuthor(String author) {
+
+        // release history
+        if (useCaseHistorySearchAuthor != null)
+            useCaseHistorySearchAuthor.release();
+
         // user press 'search' -> page = 1 && keyword = new keyword
         mPageAuthor = 1;
         mKeyword = author;
@@ -405,14 +435,18 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
             MZDebug.e("_____________________________________________ isCanLoadHistoryUser = false");
             return;
         }
+
         // get cached user data
         UseCase<User> loadLocalUser = useCaseFactory.getUser();
         loadLocalUser.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(user -> {
-                    MZDebug.w("local login: " + user.isValid());
+                    MZDebug.w("local user cached: " + user.toString());
                     if (user.isValid()) {
+                        subjectShowProgress.onNext(Strings.EMPTY);
                         doLoadHistorySearchUser();
+                    } else {
+                        subjectHideProgress.onNext(Strings.EMPTY);
                     }
                 })
                 .onError(throwable -> {
@@ -433,6 +467,7 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
                 .onError(throwable -> {
                     MZDebug.e("ERROR: doLoadHistorySearchUser : ____________________________E: \n\r"
                             + Log.getStackTraceString(throwable));
+                    isCanLoadHistoryUser = false;
                 }).execute();
     }
 
@@ -445,6 +480,11 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
 
     @Override
     public void searchUserWithName(String name) {
+
+        // release history
+        if (useCaseHistorySearchUser != null)
+            useCaseHistorySearchUser.release();
+
         // user press 'search' -> page = 1 && keyword = new keyword
         mPageUser = 1;
         mKeyword = name;
@@ -540,4 +580,17 @@ public class SuggestSearchPresenterImpl implements SuggestSearchPresenter {
     public Observable<String> onError() {
         return errorSubject.subscribeOn(schedulerFactory.main());
     }
+
+    @Override
+    public Observable<String> onShowProgressFragment() {
+        return subjectShowProgress.subscribeOn(schedulerFactory.main());
+    }
+
+    @Override
+    public Observable<String> onHideProgressFragment() {
+
+        return subjectHideProgress.subscribeOn(schedulerFactory.main());
+    }
+
+
 }

@@ -147,11 +147,13 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorWhite"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -169,7 +171,7 @@
                     android:layout_marginRight="@dimen/margin_horizontal_small"
                     android:background="@drawable/bg_cirle_green_height_24"
                     android:gravity="center"
-                    android:text="1"
+                    android:text="0"
                     android:textColor="@android:color/white" />
 
                 <Button
@@ -181,10 +183,10 @@
                     android:background="@drawable/bg_rounded_cool_blue"
                     android:paddingLeft="@dimen/paddingLarge"
                     android:paddingRight="@dimen/paddingLarge"
-                    android:textSize="@dimen/small_textsize_l"
                     android:text="Xem danh sách"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/small_textsize_l" />
 
                 <TextView
                     android:id="@+id/text_view_sharing_text"
@@ -193,9 +195,9 @@
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/text_view_sharing_book"
                     android:layout_toStartOf="@+id/button_view_list"
+                    android:ellipsize="end"
                     android:lines="1"
                     android:maxLines="1"
-                    android:ellipsize="end"
                     android:text="người đang cho mượn quyển sách này"
                     android:textSize="@dimen/small_text_view_size" />
 
@@ -215,17 +217,17 @@
                     android:id="@+id/rating_bar_user_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleX="0.8"
-                    android:scaleY="0.8"
                     android:layout_gravity="center_horizontal"
                     android:numStars="5"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     android:stepSize="1" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/margin_top_bottom_normal"
-                    android:paddingBottom="@dimen/margin_top_bottom_normal">
+                    android:paddingBottom="@dimen/margin_top_bottom_normal"
+                    android:paddingTop="@dimen/margin_top_bottom_normal">
 
                     <TextView
                         android:id="@+id/text_view_comment_by_user"
@@ -246,8 +248,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/text_view_comment_by_user"
                         android:layout_toLeftOf="@+id/text_view_comment_by_user"
-                        android:visibility="gone"
-                        android:src="@drawable/ic_quote_left" />
+                        android:src="@drawable/ic_quote_left"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/image_view_quote_right"
@@ -255,8 +257,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/text_view_comment_by_user"
                         android:layout_toRightOf="@+id/text_view_comment_by_user"
-                        android:visibility="gone"
-                        android:src="@drawable/ic_quote_right" />
+                        android:src="@drawable/ic_quote_right"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 
@@ -271,9 +273,9 @@
                     android:paddingLeft="@dimen/paddingLarge"
                     android:paddingRight="@dimen/paddingLarge"
                     android:text="Viết bình luận"
-                    android:textSize="@dimen/small_textsize_l"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/small_textsize_l" />
 
             </LinearLayout>
 
@@ -289,10 +291,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_horizontal_large"
                     android:layout_marginTop="@dimen/margin_horizontal_large"
+                    android:fontFamily="@string/font_family_regular"
                     android:text="@string/book_description"
                     android:textColor="@color/colorTextViewDark"
-                    android:textStyle="bold"
-                    android:fontFamily="@string/font_family_regular"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/text_view_book_description"
@@ -302,8 +304,8 @@
                     android:layout_marginRight="@dimen/margin_horizontal_large"
                     android:ellipsize="end"
                     android:text="..."
-                    android:textSize="@dimen/normal_textsize_s"
-                    android:textColor="@color/colorTextViewDark" />
+                    android:textColor="@color/colorTextViewDark"
+                    android:textSize="@dimen/normal_textsize_s" />
 
                 <TextView
                     style="@style/TextViewHeaderTitle"

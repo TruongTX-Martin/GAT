@@ -340,12 +340,12 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler) {
+    public Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId) {
         MZDebug.w("______________________________________ postComment ___________________________");
 
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse>> responseObservable;
-        responseObservable = api.postComment(editionId, value, review, spoiler);
+        responseObservable = api.postComment(editionId, value, review, spoiler, evaluationId, readingId, bookId);
 
         return responseObservable.map(response -> response.body());
     }
@@ -377,11 +377,11 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
+    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook, int bookId, Integer readingId) {
         MZDebug.w("______________________________________ selfAddInstance _____________ [ DEBUG ]");
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse>> responseObservable;
-        responseObservable = api.selfAddInstance(editionId, sharingStatus, numberOfBook);
+        responseObservable = api.selfAddInstance(editionId, sharingStatus, numberOfBook, bookId, readingId);
 
         return responseObservable.map(response -> {
 
@@ -392,12 +392,12 @@ public class DebugBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
+    public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus, Integer readingId, int bookId) {
         MZDebug.w("________________ selfUpdateReadingStatus :" + editionId + " = " + readingStatus);
 
         GatApi api = dataComponent.getPrivateGatApi();
         Observable<Response<ServerResponse>> responseObservable;
-        responseObservable = api.selfUpdateReadingStatus(editionId, readingStatus);
+        responseObservable = api.selfUpdateReadingStatus(editionId, readingStatus, readingId, bookId);
 
         return responseObservable.map(response -> response.body());
     }

@@ -1,6 +1,6 @@
 package com.gat.feature.suggestion.search;
 
-import android.app.ProgressDialog;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.adapter.ViewPagerAdapter;
-import com.gat.common.event.LoadingEvent;
 import com.gat.common.util.ClientUtils;
 import com.gat.common.util.MZDebug;
 import com.gat.common.util.Strings;
@@ -28,14 +27,12 @@ import com.gat.data.response.BookResponse;
 import com.gat.data.response.DataResultListResponse;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.Keyword;
-import com.gat.feature.search.SearchActivity;
-import com.gat.feature.search.SearchScreen;
+import com.gat.feature.suggestion.search.listener.IFragmentRequest;
 import com.gat.feature.suggestion.search.listener.OnFragmentRequestLoadMore;
 import com.gat.feature.suggestion.search.listener.OnLoadHistorySuccess;
 import com.gat.feature.suggestion.search.listener.OnSearchBookResult;
 import com.gat.feature.suggestion.search.listener.OnSearchCanLoadMore;
 import com.gat.feature.suggestion.search.listener.OnSearchUserResult;
-import com.gat.feature.suggestion.search.listener.OnUserTapOnKeyword;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
@@ -50,7 +47,7 @@ import android.support.design.widget.TabLayout.OnTabSelectedListener;
 
 public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, SuggestSearchPresenter>
         implements OnFragmentRequestLoadMore, EditText.OnEditorActionListener, EditText.OnTouchListener,
-        OnUserTapOnKeyword{
+        IFragmentRequest {
 
     @BindView(R.id.tab_layout)
     TabLayout mTabLayout;
@@ -128,7 +125,9 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
                 getPresenter().onLoadMoreUserWithNameSuccess().subscribe(this::onLoadMoreUserWithNameSuccess),
                 getPresenter().onSearchBookWithTitleTotalResult().subscribe(this::onSearchBookWithTitleTotalResult),
                 getPresenter().onSearchBookWithAuthorTotalResult().subscribe(this::onSearchBookWithAuthorTotalResult),
-                getPresenter().onSearchUserWithNameTotalResult().subscribe(this::onSearchUserWithNameTotalResult)
+                getPresenter().onSearchUserWithNameTotalResult().subscribe(this::onSearchUserWithNameTotalResult),
+                getPresenter().onHideProgressFragment().subscribe(this::onHideProgress),
+                getPresenter().onShowProgressFragment().subscribe(this::onShowProgressFragment)
         );
 
         progressDialog = ClientUtils.createLoadingDialog(SuggestSearchActivity.this);
@@ -148,8 +147,6 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     @Override
     protected void onResume() {
         super.onResume();
-
-        // request list history search book by title
         getPresenter().loadHistorySearchBook();
     }
 
@@ -163,6 +160,8 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
         if (errorDialog != null) {
             errorDialog.dismiss();
         }
+
+        Views.hideKeyboard(this);
 
         super.onDestroy();
     }
@@ -217,6 +216,7 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     @OnClick(R.id.button_cancel)
     void onButtonCancelTap () {
+        Views.hideKeyboard(this);
         finish();
         overridePendingTransition( R.anim.no_change, R.anim.push_down );
     }
@@ -435,6 +435,32 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
     private void onLoadMoreUserWithNameSuccess (DataResultListResponse<UserResponse> data) {
         hideProgress();
         onSearchUserCanLoadMore.onLoadMoreUserSuccess(data.getResultInfo());
+    }
+
+    private void onShowProgressFragment (String no_message) {
+
+//        if (onSearchBookHistorySuccess != null) {
+//            onSearchBookHistorySuccess.onShowProgress();
+//        }
+//        if (onSearchAuthorHistorySuccess != null) {
+//            onSearchAuthorHistorySuccess.onShowProgress();
+//        }
+//        if (onSearchUserHistorySuccess != null) {
+//            onSearchUserHistorySuccess.onShowProgress();
+//        }
+    }
+
+    private void onHideProgress (String no_message) {
+        hideProgress();
+        if (onSearchBookHistorySuccess != null) {
+            onSearchBookHistorySuccess.onHideProgress();
+        }
+        if (onSearchAuthorHistorySuccess != null) {
+            onSearchAuthorHistorySuccess.onHideProgress();
+        }
+        if (onSearchUserHistorySuccess != null) {
+            onSearchUserHistorySuccess.onHideProgress();
+        }
     }
 
     private void showProgress () {

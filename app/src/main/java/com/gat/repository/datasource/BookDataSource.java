@@ -58,13 +58,13 @@ public interface BookDataSource {
 
     Observable<List<UserResponse>> getEditionSharingUser (int editionId, Integer userId, Float latitude, Float longitude);
 
-    Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler);
+    Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId);
 
     Observable <BookInstanceInfo> getSelfInstanceInfo (int editionId);
 
-    Observable<ServerResponse> selfAddInstance (int editionId, int sharingStatus, int numberOfBook);
+    Observable<ServerResponse> selfAddInstance (int editionId, int sharingStatus, int numberOfBook, int bookId, Integer readingId);
 
-    Observable<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
+    Observable<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus, Integer readingId, int bookId);
 
     Observable<BorrowResponse> requestBorrow (int editionId, int ownerId);
 

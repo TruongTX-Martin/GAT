@@ -328,8 +328,8 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler) {
-        return new PostComment(bookRepositoryLazy.get(), editionId, value, review, spoiler);
+    public UseCase<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId) {
+        return new PostComment(bookRepositoryLazy.get(), editionId, value, review, spoiler, evaluationId, readingId, bookId);
     }
 
     @Override
@@ -338,13 +338,13 @@ public class UseCaseFactoryImpl implements UseCaseFactory {
     }
 
     @Override
-    public UseCase<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
-        return new SelfAddInstance(bookRepositoryLazy.get(), editionId, sharingStatus, numberOfBook);
+    public UseCase<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook, int bookId, Integer readingId) {
+        return new SelfAddInstance(bookRepositoryLazy.get(), editionId, sharingStatus, numberOfBook, bookId, readingId);
     }
 
     @Override
-    public UseCase<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
-        return new SelfUpdateReadingStatus(bookRepositoryLazy.get(), editionId, readingStatus);
+    public UseCase<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus, Integer readingId, int bookId) {
+        return new SelfUpdateReadingStatus(bookRepositoryLazy.get(), editionId, readingStatus, readingId, bookId);
     }
 
     @Override

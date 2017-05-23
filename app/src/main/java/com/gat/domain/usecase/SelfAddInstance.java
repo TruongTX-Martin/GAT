@@ -14,16 +14,20 @@ public class SelfAddInstance extends UseCase<ServerResponse> {
     private final int editionId;
     private final int sharingStatus;
     private final int numberOfBook;
+    private final int bookId;
+    private final Integer readingId;
 
-    public SelfAddInstance(BookRepository repository, int editionId, int sharingStatus, int numberOfBook) {
+    public SelfAddInstance(BookRepository repository, int editionId, int sharingStatus, int numberOfBook, int bookId, Integer readingId) {
         this.repository = repository;
         this.editionId = editionId;
         this.sharingStatus = sharingStatus;
         this.numberOfBook = numberOfBook;
+        this.bookId = bookId;
+        this.readingId = readingId;
     }
 
     @Override
     protected Observable<ServerResponse> createObservable() {
-        return repository.selfAddInstance(editionId, sharingStatus, numberOfBook);
+        return repository.selfAddInstance(editionId, sharingStatus, numberOfBook, bookId, readingId);
     }
 }

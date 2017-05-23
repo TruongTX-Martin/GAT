@@ -74,8 +74,10 @@
 
     <dimen name="error_popup_width">250dp</dimen>
     <dimen name="error_popup_height">200dp</dimen>
-    <dimen name="error_popup_margin_top">30dp</dimen>
-    <dimen name="error_popup_padding_lr">30dp</dimen>
+    <dimen name="error_popup_margin_top">25dp</dimen>
+    <dimen name="error_margin_title_message">35dp</dimen>
+    <dimen name="error_margin_message_button">25dp</dimen>
+    <dimen name="error_popup_padding_lr">25dp</dimen>
     <dimen name="error_btn_width">145dp</dimen>
 
     <dimen name="button_width_small">100dp</dimen>

@@ -30,9 +30,9 @@ import com.gat.feature.suggestion.search.item.SearchBookResultItem;
 import com.gat.feature.suggestion.search.item.SearchBuilder;
 import com.gat.feature.suggestion.search.item.SearchHistoryItem;
 import com.gat.feature.suggestion.search.item.SearchUserResultItem;
+import com.gat.feature.suggestion.search.listener.IFragmentRequest;
 import com.gat.feature.suggestion.search.listener.OnFragmentRequestLoadMore;
 import com.gat.feature.suggestion.search.listener.OnSearchCanLoadMore;
-import com.gat.feature.suggestion.search.listener.OnUserTapOnKeyword;
 import com.gat.feature.suggestion.search.listener.OnLoadHistorySuccess;
 import com.gat.feature.suggestion.search.listener.OnSearchBookResult;
 import com.gat.feature.suggestion.search.listener.OnSearchUserResult;
@@ -57,7 +57,7 @@ public class SearchResultFragment extends Fragment
     @BindView(R.id.image_view_loading)
     ImageView imageLoading;
 
-    private OnUserTapOnKeyword onUserTapOnKeyword;
+    private IFragmentRequest mFragmentRequest;
     private OnFragmentRequestLoadMore requestLoadMore;
     private int mTabType = 0;
     
@@ -67,10 +67,10 @@ public class SearchResultFragment extends Fragment
     public SearchResultFragment() {}
 
     @SuppressLint("ValidFragment")
-    public SearchResultFragment(int tab_position, OnFragmentRequestLoadMore requestLoadMore, OnUserTapOnKeyword onUserTapOnKeyword) {
+    public SearchResultFragment(int tab_position, OnFragmentRequestLoadMore requestLoadMore, IFragmentRequest fragmentRequest) {
         this.mTabType = tab_position;
         this.requestLoadMore = requestLoadMore;
-        this.onUserTapOnKeyword = onUserTapOnKeyword;
+        this.mFragmentRequest = fragmentRequest;
     }
 
 
@@ -90,12 +90,6 @@ public class SearchResultFragment extends Fragment
         this.recyclerView.setNestedScrollingEnabled(false);
         this.recyclerView.setAdapter(this.searchResultAdapter);
 
-        loadMoreScrollListener = new LoadMoreScrollListener(3, true, () -> {
-            // request load more
-            MZDebug.e("____________________________________________________ REQUEST LOAD MORE");
-        });
-        recyclerView.addOnScrollListener(loadMoreScrollListener);
-
         return view;
     }
 
@@ -105,6 +99,23 @@ public class SearchResultFragment extends Fragment
 
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageLoading);
         Glide.with(getActivity()).load(R.raw.ic_loading_book).into(imageViewTarget);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        imageLoading = null;
+        super.onDestroy();
+    }
+
+    @Override
+    public void onShowProgress() {
+        showProgress();
+    }
+
+    @Override
+    public void onHideProgress() {
+        hideProgress();
     }
 
     @Override
@@ -189,7 +200,7 @@ public class SearchResultFragment extends Fragment
         if (item instanceof SearchHistoryItem) {
 
             SearchHistoryItem historyItem = (SearchHistoryItem) item;
-            onUserTapOnKeyword.onUserTapOnHistoryKeyword(historyItem.keyword().getKeyword());
+            mFragmentRequest.onUserTapOnHistoryKeyword(historyItem.keyword().getKeyword());
         } else if (item instanceof SearchBookResultItem) {
 
             SearchBookResultItem bookItem = (SearchBookResultItem) item;
@@ -205,11 +216,13 @@ public class SearchResultFragment extends Fragment
     }
 
     public void showProgress() {
-        imageLoading.setVisibility(View.VISIBLE);
+        if (imageLoading != null)
+            imageLoading.setVisibility(View.VISIBLE);
     }
 
     public void hideProgress() {
-        imageLoading.setVisibility(View.GONE);
+        if (imageLoading != null)
+            imageLoading.setVisibility(View.GONE);
     }
 
     @Override

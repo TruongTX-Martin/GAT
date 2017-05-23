@@ -1,21 +1,19 @@
 package com.gat.feature.book_detail.list_user_sharing_book;
 
-import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 import com.gat.R;
 import com.gat.app.activity.ScreenActivity;
 import com.gat.common.util.ClientUtils;
+import com.gat.common.util.MZDebug;
 import com.gat.data.response.UserResponse;
 import com.gat.data.response.impl.BorrowResponse;
 import com.gat.feature.bookdetailsender.BookDetailSenderActivity;
-import com.gat.feature.main.MainActivity;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -122,6 +120,7 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
 
     @Override
     public void onButtonBorrowDetailsClick(int position, UserResponse userResponse) {
+        MZDebug.w("User Sharing: " + userResponse.toString());
         Intent intent = new Intent(this, BookDetailSenderActivity.class);
         intent.putExtra("BorrowingRecordId", userResponse.getRecordId());
         startActivity(intent);
@@ -140,7 +139,7 @@ public class ListUserSharingBookActivity extends ScreenActivity<ListUserSharingB
     private void onRequestBorrowSuccess (BorrowResponse borrowResponse) {
         hideProgress();
         isRequestBorrow = true;
-        adapter.updateBorrowStatus(positionClicked, mUserResponse, borrowResponse.getRecordStatus());
+        adapter.updateBorrowStatus(positionClicked, mUserResponse, borrowResponse.getRecordStatus(), borrowResponse.getRecordId());
     }
 
     private void onRequestBorrowFailure (String message) {

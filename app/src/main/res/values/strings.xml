@@ -233,6 +233,7 @@
     <string name="logout">Thoát tài khoản</string>
     <string name="new_password_hint">Nhập mật khẩu mới</string>
     <string name="ask_for_logout">Bạn thực sự muốn thoát?</string>
+    <string name="create_account">Tạo tài khoản</string>
 
     <!-- Error message -->
     <string name="password_invalid">Mật khẩu không hợp lệ</string>

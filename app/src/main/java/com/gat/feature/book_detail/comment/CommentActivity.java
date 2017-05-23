@@ -58,7 +58,7 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
 
     @Override
     protected Object getPresenterKey() {
-        return CommentScreen.instance(getScreen().editionId(), getScreen().value(), getScreen().comment());
+        return CommentScreen.instance(getScreen().editionId(), getScreen().value(), getScreen().comment(), getScreen().evaluationId(), getScreen().readingId(), getScreen().bookId());
     }
 
     @Override
@@ -126,7 +126,7 @@ public class CommentActivity extends ScreenActivity<CommentScreen, CommentPresen
     @OnClick(R.id.button_post_comment)
     void onButtonPostCommentTap () {
         showProgress();
-        getPresenter().postComment(getScreen().editionId(), getScreen().value(), editTextComment.getText().toString(), false);
+        getPresenter().postComment(getScreen().editionId(), getScreen().value(), editTextComment.getText().toString(), false, getScreen().evaluationId(), getScreen().readingId(), getScreen().bookId());
     }
 
     private void onPostCommentSuccess (String message) {

@@ -16,15 +16,15 @@
         android:gravity="center_horizontal"
         android:text="Thông báo"
         android:textColor="#4e4e4e"
-        android:textSize="18dp"
+        android:textSize="17dp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="@dimen/error_popup_padding_lr"
+        android:layout_marginRight="@dimen/error_popup_padding_lr"
         android:layout_marginTop="25dp"
         android:gravity="center_horizontal"
         android:text="Để sử dụng chức năng này bạn phải đăng nhập vào tài khoản của mình."
@@ -41,7 +41,7 @@
         <Button
             android:id="@+id/btnOk"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:layout_weight="0.4"
             android:layout_marginRight="25dp"
             android:textColor="#ffffff"
@@ -52,7 +52,7 @@
         <Button
             android:id="@+id/btnCancle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:layout_weight="0.4"
             android:textColor="#ffffff"
             android:textSize="16dp"

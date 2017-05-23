@@ -32,8 +32,6 @@ public class SelfUpdateReadingPresenterImpl implements SelfUpdateReadingPresente
     private final Subject<String> subjectUnAuthorization;
     private final Subject<String> subjectError;
 
-    private int mEditionId;
-    private int mReadingStatus;
 
     public SelfUpdateReadingPresenterImpl(UseCaseFactory useCaseFactory,
                                           SchedulerFactory schedulerFactory) {
@@ -56,20 +54,10 @@ public class SelfUpdateReadingPresenterImpl implements SelfUpdateReadingPresente
     }
 
     @Override
-    public void setEditionId(int editionId) {
-        mEditionId = editionId;
-    }
-
-    @Override
-    public void setReadingStatus(int readingStatus) {
-        mReadingStatus = readingStatus;
-    }
-
-    @Override
-    public void updateReadingStatus(int state) {
+    public void updateReadingStatus(int editionId, int state, Integer readingId, int bookid) {
         MZDebug.i("__________ updateReadingStatus, reading status = " + state);
 
-        useCaseUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(mEditionId, state);
+        useCaseUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(editionId, state, readingId, bookid);
         useCaseUpdateReadingStatus.executeOn(schedulerFactory.io()).
                 returnOn(schedulerFactory.main()).
                 onNext(serverResponse -> {

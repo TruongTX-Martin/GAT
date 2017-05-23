@@ -17,13 +17,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.internal.CallbackManagerImpl;
+import com.facebook.login.LoginManager;
 import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareOpenGraphAction;
 import com.facebook.share.model.ShareOpenGraphContent;
 import com.facebook.share.model.ShareOpenGraphObject;
@@ -49,11 +51,11 @@ import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingActivity;
 import com.gat.feature.book_detail.self_update_reading.SelfUpdateReadingScreen;
 import com.gat.repository.entity.User;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
@@ -278,17 +280,17 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
 
     @OnClick(R.id.image_button_go_share)
     void onGoShare () {
-        if (mUser == null) {
-            MZDebug.w(TAG, "user = null, show login dialog");
-            showLoginDialog();
-            return;
-        }
+//        if (mUser == null) {
+//            MZDebug.w(TAG, "user = null, show login dialog");
+//            showLoginDialog();
+//            return;
+//        }
 
         if (mBookInfo == null) {
             return;
         }
-
-        showFacebookShareOpenGraph();
+        authenFacebookAndShare();
+        //showFacebookShareOpenGraph();
     }
 
     @OnClick(R.id.button_reading_state)
@@ -302,6 +304,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             return;
         }
 
+        Integer readingId = -1;
+        if (mBookReadingInfo != null) {
+            readingId = mBookReadingInfo.getReadingId();
+        }
+
         // nếu sẽ hiển thị là Muốn đọc
         // nhấn vào thì sẽ hiện dấu tích bên trái và gọi api update status;
 
@@ -310,14 +317,15 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         // + 1: Reading - đang đọc
         // + 2: To read - sẽ đọc
         // khi nhấp vào thì sẽ gọi SelfUpdateReadingActivity
-        if ( (int)buttonReadingState.getTag() == ReadingState.REMOVE) {
+        if ( buttonReadingState.getTag() == null || (int)buttonReadingState.getTag() == ReadingState.REMOVE) {
             showProgress();
-            getPresenter().updateReadingStatus();
+
+            getPresenter().updateReadingStatus(readingId, mBookInfo.getBookId());
             buttonReadingState.setClickable(false);
         } else {
             startForResult(BookDetailActivity.this,
                     SelfUpdateReadingActivity.class,
-                    SelfUpdateReadingScreen.instance(mBookInfo.getEditionId(), (int) buttonReadingState.getTag()),
+                    SelfUpdateReadingScreen.instance(mBookInfo.getEditionId(), (int) buttonReadingState.getTag(), readingId, mBookInfo.getBookId()),
                     RC_UPDATE_READING_STATUS);
         }
     }
@@ -327,8 +335,11 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         if (mBookInfo == null) { // có thể bắt load lại book info
             return;
         }
+
+        // create date for Evaluation by user -> post/edit comment
         float value = 0;
         String comment = "";
+        Integer evaluationId = -1;
         if (mEvaluationByUser != null) {
             value = mEvaluationByUser.getValue();
             if (ratingBarUserRate.getRating() != 0) {
@@ -340,9 +351,15 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 comment = textViewCommentByUser.getText().toString();
             }
 
+            evaluationId = mEvaluationByUser.getEvaluationId();
         }
 
-        startForResult(this, CommentActivity.class, CommentScreen.instance(mBookInfo.getEditionId(), value, comment), RC_UPDATE_COMMENT);
+        Integer readingId = -1;
+        if (mBookReadingInfo != null) {
+            readingId = mBookReadingInfo.getReadingId();
+        }
+
+        startForResult(this, CommentActivity.class, CommentScreen.instance(mBookInfo.getEditionId(), value, comment, evaluationId, readingId, mBookInfo.getBookId()), RC_UPDATE_COMMENT);
     }
 
     @OnClick(R.id.image_button_plus)
@@ -354,8 +371,14 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             showLoginDialog();
             return;
         }
+
+        Integer readingId = -1;
+        if (mBookReadingInfo != null) {
+            readingId = mBookReadingInfo.getReadingId();
+        }
+
         startForResult(this, AddToBookcaseActivity.class,
-                AddToBookcaseScreen.instance(mBookInfo, textViewBookAuthor.getText().toString()), RC_UPDATE_BOOKCASE);
+                AddToBookcaseScreen.instance(mBookInfo, textViewBookAuthor.getText().toString(), readingId), RC_UPDATE_BOOKCASE);
     }
 
     @OnClick(R.id.button_view_list)
@@ -438,10 +461,16 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         adapter.setItems(list);
     }
 
+    private BookReadingInfo mBookReadingInfo;
     private void onGetSelfReadingStatusSuccess (BookReadingInfo bookReadingInfo) {
         MZDebug.w("onGetSelfReadingStatusSuccess: " + bookReadingInfo.toString());
 
-        updateButtonReadingStatus(bookReadingInfo.getReadingStatus());
+        mBookReadingInfo = bookReadingInfo;
+        if (mBookReadingInfo == null) {
+            updateButtonReadingStatus(ReadingState.REMOVE);
+        } else {
+            updateButtonReadingStatus(bookReadingInfo.getReadingStatus());
+        }
     }
 
     private void onGetSelfReadingStatusFailure (String message) {
@@ -466,7 +495,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         MZDebug.w("onGetEditionSharingUsersSuccess: " + evaluation.toString());
         llComment.setVisibility(View.VISIBLE);
 
-        if (evaluation == null) {
+        if (evaluation == null || evaluation.getValue() == 0) {
             ratingBarUserRate.setRating(0);
             textViewCommentByUser.setVisibility(View.GONE);
             buttonComment.setVisibility(View.GONE);
@@ -545,7 +574,41 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
         ClientUtils.showDialogError(this, getString(R.string.err), message);
     }
 
+
+    private LoginManager loginManager;
     private static CallbackManager callbackManager;
+
+    private void authenFacebookAndShare () {
+        List<String> permissionNeeds = Arrays.asList("publish_actions");
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
+//        loginManager = LoginManager.getInstance();
+//        loginManager.logInWithPublishPermissions(this, permissionNeeds);
+//
+//        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                showFacebookShareOpenGraph();
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                MZDebug.w("facebook on cancel");
+//            }
+//
+//            @Override
+//            public void onError(FacebookException exception) {
+//                MZDebug.w("facebook on error \n\r: " + Log.getStackTraceString(exception));
+//            }
+//        });
+
+
+
+        showFacebookShareOpenGraph();
+    }
+
 
     private void showFacebookShareOpenGraph () {
         MZDebug.w(TAG, "showFacebookShareOpenGraph");
@@ -592,7 +655,6 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 actionRead = "books.reads";
             }
         }
-        MZDebug.w("BookDetailActivity", "state = " + buttonReadingState.getTag() + ", action= " + actionRead);
 
         ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
                     .setActionType(actionRead)
@@ -605,8 +667,7 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 .setAction(action)
                 .build();
 
-        ShareDialog shareDialog = new ShareDialog(this);
-        callbackManager = CallbackManager.Factory.create();
+        ShareDialog shareDialog = new ShareDialog(BookDetailActivity.this);
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
@@ -625,8 +686,12 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
             }
         });
 
-        shareDialog.show(BookDetailActivity.this, content);
-        MZDebug.w(TAG, "shareDialog is showing");
+        if (shareDialog.canShow(ShareLinkContent.class) ) {
+            shareDialog.show(BookDetailActivity.this, content);
+            MZDebug.w(TAG, "shareDialog is showing");
+        } else {
+            MZDebug.w(TAG, "shareDialog.canShow(ShareLinkContent.class) = false");
+        }
     }
 
     @Override
@@ -636,9 +701,21 @@ public class BookDetailActivity extends ScreenActivity<BookDetailScreen, BookDet
                 return;
             }
             ratingBarUserRate.setRating(rating);
+
             showProgress();
+
+            Integer evaluationId = -1;
+            if (mEvaluationByUser != null) {
+                evaluationId = mEvaluationByUser.getEvaluationId();
+            }
+
+            Integer readingId = -1;
+            if (mBookReadingInfo != null) {
+                readingId = mBookReadingInfo.getReadingId();
+            }
             // spoiler default = false
-            getPresenter().postRating(mBookInfo.getEditionId(), rating, textViewCommentByUser.getText().toString(), false);
+            getPresenter().postRating(mBookInfo.getEditionId(), rating,
+                    textViewCommentByUser.getText().toString(), false, evaluationId, readingId, mBookInfo.getBookId());
         }
     }
 

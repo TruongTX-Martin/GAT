@@ -74,8 +74,6 @@ public class SelfUpdateReadingActivity
         loadingDialog = ClientUtils.createLoadingDialog(this);
         radioGroup.setOnCheckedChangeListener(this);
 
-        getPresenter().setEditionId(getScreen().editionId());
-        getPresenter().setReadingStatus(getScreen().readingStatus());
         mReadingState = getScreen().readingStatus();
     }
 
@@ -142,7 +140,7 @@ public class SelfUpdateReadingActivity
                     public void onClickAccept() {
                         removeConfirmDialog.dismiss();
                         showProgress();
-                        getPresenter().updateReadingStatus(ReadingState.REMOVE);
+                        getPresenter().updateReadingStatus(getScreen().editionId(), ReadingState.REMOVE, getScreen().readingId(), getScreen().bookId());
                     }
 
                     @Override
@@ -156,7 +154,7 @@ public class SelfUpdateReadingActivity
     void onButtonSaveTap () {
         MZDebug.w("___________________________________________________________ onButtonSaveTap __");
         showProgress();
-        getPresenter().updateReadingStatus(mNewReadingState);
+        getPresenter().updateReadingStatus(getScreen().editionId(), mNewReadingState, getScreen().readingId(), getScreen().bookId());
     }
 
     @Override

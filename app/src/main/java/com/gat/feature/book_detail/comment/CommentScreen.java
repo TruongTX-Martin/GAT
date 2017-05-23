@@ -10,12 +10,16 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class CommentScreen implements Screen{
 
-    public static CommentScreen instance (int editionId, float value, String comment) {
-        return new AutoValue_CommentScreen(editionId, value, comment);
+    public static CommentScreen instance (int editionId, float value, String comment, Integer evaluationId, Integer readingId, int bookId) {
+        return new AutoValue_CommentScreen(editionId, value, comment, evaluationId, readingId, bookId);
     }
 
     public abstract int editionId();
     public abstract float value();
     public abstract String comment();
+    public abstract Integer evaluationId ();
+    public abstract Integer readingId ();
+    public abstract int bookId ();
+
 
 }

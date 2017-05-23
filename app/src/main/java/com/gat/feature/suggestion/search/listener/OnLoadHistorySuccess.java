@@ -10,6 +10,10 @@ import java.util.List;
 
 public interface OnLoadHistorySuccess {
 
+    void onShowProgress ();
+
+    void onHideProgress ();
+
     void onLoadHistoryResult (List<Keyword> list);
 
 }

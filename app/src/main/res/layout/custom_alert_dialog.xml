@@ -1,61 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/bg_layout_dialog"
-    android:paddingLeft="@dimen/paddingLarge"
-    android:paddingRight="@dimen/paddingLarge"
-    android:paddingBottom="@dimen/paddingLarge">
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/header_textsize_l"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textColor="#4e4e4e"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/error_popup_margin_top"/>
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_layout_dialog"
+        android:paddingBottom="@dimen/paddingLarge"
+        android:paddingLeft="@dimen/error_popup_padding_lr"
+        android:paddingRight="@dimen/error_popup_padding_lr">
 
-    <TextView
-        android:id="@+id/textViewMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewTitle"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/error_popup_margin_top"
-        android:textAlignment="center"
-        android:paddingStart="@dimen/error_popup_padding_lr"
-        android:paddingEnd="@dimen/error_popup_padding_lr"
-        android:textSize="@dimen/normal_textsize_l"/>
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/error_popup_margin_top"
+            android:text="Thông báo"
+            android:textColor="#4e4e4e"
+            android:textSize="@dimen/header_textsize_l"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/buttonAccept"
-        android:layout_below="@+id/textViewMessage"
-        android:layout_width="@dimen/button_width_normal"
-        android:layout_height="@dimen/btn_height"
-        android:background="@drawable/bg_rounded_blue"
-        android:textColor="@color/colorWhite"
-        android:textSize="@dimen/normal_textsize_l"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/error_popup_margin_top"
-        android:text="@string/yes"/>
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTitle"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/error_margin_title_message"
+            android:text="Để sử dụng chức năng này bạn phải đăng nhập vào tài khoản của mình"
+            android:textAlignment="center"
+            android:textSize="@dimen/normal_textsize_l" />
 
-    <Button
-        android:id="@+id/buttonRefuse"
-        android:layout_below="@+id/textViewMessage"
-        android:layout_width="@dimen/button_width_normal"
-        android:layout_height="@dimen/btn_height"
-        android:background="@drawable/bg_rounded_blue"
-        android:textColor="@color/colorWhite"
-        android:textSize="@dimen/normal_textsize_l"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/error_popup_margin_top"
-        android:layout_alignParentRight="true"
-        android:text="@string/no"/>
+        <Button
+            android:id="@+id/buttonAccept"
+            android:layout_width="@dimen/button_width_normal"
+            android:layout_height="@dimen/button_height"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textViewMessage"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/error_margin_message_button"
+            android:background="@drawable/bg_rounded_blue"
+            android:text="@string/yes"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/normal_textsize_l" />
+
+        <Button
+            android:id="@+id/buttonRefuse"
+            android:layout_width="@dimen/button_width_normal"
+            android:layout_height="@dimen/button_height"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textViewMessage"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/error_margin_message_button"
+            android:background="@drawable/bg_rounded_blue"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:paddingRight="@dimen/paddingLarge"
+            android:text="@string/no"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/normal_textsize_l" />
+
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

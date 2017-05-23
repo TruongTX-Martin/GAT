@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGrayF6"
+    android:orientation="vertical">
+
+
+    <TextView
+        style="@style/TextViewHeaderTop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_header_height"
+        android:layout_marginBottom="@dimen/margin_top_bottom_large"
+        android:background="@color/background_header_blue"
+        android:text="@string/setting" />
+
+
+    <RelativeLayout
+        android:id="@+id/button_go_login"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_large"
+        android:background="@drawable/bg_white_border_top_bottom"
+        android:paddingLeft="@dimen/paddingLarge"
+        android:paddingRight="@dimen/paddingLarge">
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_profile" />
+
+        <ImageView
+            android:id="@+id/arrow_profile"
+            android:layout_width="9.5dp"
+            android:layout_height="17.5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_arrow_right" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/arrow_profile"
+            android:layout_toRightOf="@+id/iv_profile"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/paddingLarge"
+            android:text="@string/create_account"
+            android:textColor="@color/colorTextViewDark" />
+
+    </RelativeLayout>
+
+</LinearLayout>

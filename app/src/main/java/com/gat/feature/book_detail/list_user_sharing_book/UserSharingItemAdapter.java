@@ -32,11 +32,12 @@ public class UserSharingItemAdapter extends ItemAdapter {
         return viewHolder;
     }
 
-    public void updateBorrowStatus (int position, UserResponse userResponse, int recordStatus) {
+    public void updateBorrowStatus (int position, UserResponse userResponse, int recordStatus, int recordId) {
         UserSharingItem item = (UserSharingItem) getItemAt(position);
         item.user().setAvailableStatus(userResponse.getAvailableStatus());
         item.user().setRequestingStatus(1);
         item.user().setRecordStatus(recordStatus);
+        item.user().setRecordId(recordId);
 
         notifyItemChanged(position);
     }

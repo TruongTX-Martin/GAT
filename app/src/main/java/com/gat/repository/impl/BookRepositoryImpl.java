@@ -129,8 +129,8 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler) {
-        return Observable.defer( ()->networkDataSourceLazy.get().postComment(editionId, value, review, spoiler));
+    public Observable<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().postComment(editionId, value, review, spoiler, evaluationId, readingId, bookId));
     }
 
     @Override
@@ -139,13 +139,13 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook) {
-        return Observable.defer( ()->networkDataSourceLazy.get().selfAddInstance(editionId, sharingStatus, numberOfBook));
+    public Observable<ServerResponse> selfAddInstance(int editionId, int sharingStatus, int numberOfBook, int bookId, Integer readingId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().selfAddInstance(editionId, sharingStatus, numberOfBook, bookId, readingId));
     }
 
     @Override
-    public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus) {
-        return Observable.defer( ()->networkDataSourceLazy.get().selfUpdateReadingStatus(editionId, readingStatus));
+    public Observable<ServerResponse> selfUpdateReadingStatus(int editionId, int readingStatus, Integer readingId, int bookId) {
+        return Observable.defer( ()->networkDataSourceLazy.get().selfUpdateReadingStatus(editionId, readingStatus, readingId, bookId));
     }
 
     @Override

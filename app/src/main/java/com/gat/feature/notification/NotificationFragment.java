@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import com.gat.feature.message.MessageActivity;
 import com.gat.feature.message.presenter.GroupMessageScreen;
 import com.gat.feature.message.presenter.MessageScreen;
 import com.gat.feature.notification.adapter.NotificationAdapter;
+import com.gat.feature.start.StartActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -56,10 +59,8 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     private NotificationAdapter adapter;
     private IMainDelegate delegate;
 
-
     private MainActivity mainActivity;
     private boolean isLogin;
-    private Dialog dialog;
 
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -105,11 +106,6 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.backgroundCard);
         swipeRefreshLayout.setOnRefreshListener(() -> getPresenter().loadUserNotification(true));
 
-        dialog = new Dialog(MainActivity.instance);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.layout_dialog_login);
-        dialog.setCanceledOnTouchOutside(false);
-
         getPresenter().checkLogin();
         return view;
     }
@@ -124,6 +120,12 @@ implements NotificationAdapter.OnItemNotifyClickListener{
     @Override
     public void onDestroy() {
         disposable.dispose();
+        disposablesCheckLogin.dispose();
+
+        if (loginDialog != null) {
+            loginDialog.dismiss();
+        }
+
         super.onDestroy();
     }
 
@@ -193,31 +195,28 @@ implements NotificationAdapter.OnItemNotifyClickListener{
                  break;
         }
     }
-
+    AlertDialog loginDialog;
     public void checkLogin() {
         if (!isLogin) {
-            //show dialog
-            Button btnCancle = (Button) dialog.findViewById(R.id.btnCancle);
-            Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
-            btnCancle.setOnClickListener(v -> {
-                mainActivity.setTabDesire(0);
-                dialog.dismiss();
-            });
-            btnOk.setOnClickListener(v -> {
-                MainActivity.start(MainActivity.instance.getApplicationContext(), LoginActivity.class, LoginScreen.instance(Strings.EMPTY));
-            });
-            if (dialog != null && !dialog.isShowing()) {
-                dialog.show();
-            }
-            dialog.setOnKeyListener((dialog1, keyCode, event) -> {
-                if(keyCode  == event.KEYCODE_BACK) {
-                    dialog1.dismiss();
-                    mainActivity.onBackPressed();
-                    return true;
-                }
-                return false;
-            });
-            //hide loading in fragment request
+
+            loginDialog = ClientUtils.showAlertDialog(getActivity(), getResources().getString(R.string.err_notice),
+                    getResources().getString(R.string.err_required_login),
+                    getResources().getString(R.string.login),
+                    getResources().getString(R.string.dont_care), new ClientUtils.OnDialogPressed() {
+                        @Override
+                        public void onClickAccept() {
+                            // .start not clear back stack -> bug (can not start next time),
+                            // -> resolved by use .startAndClear
+                            MainActivity.startAndClear(getActivity().getApplicationContext(),
+                                    StartActivity.class, LoginScreen.instance(Strings.EMPTY, true));
+                        }
+
+                        @Override
+                        public void onClickRefuse() {
+                            mainActivity.setTabDesire(0);
+                        }
+                    });
+
         }
     }
 
@@ -249,8 +248,10 @@ implements NotificationAdapter.OnItemNotifyClickListener{
         }
 
         MZDebug.w("Notify: " + data.getResultInfo().get(0).toString());
-        delegate.haveToPullNotifyPage(data.getNotifyTotal());
         adapter.setItems(data.getResultInfo());
+        if (delegate != null) {
+            delegate.haveToPullNotifyPage(data.getNotifyTotal());
+        }
     }
 
 

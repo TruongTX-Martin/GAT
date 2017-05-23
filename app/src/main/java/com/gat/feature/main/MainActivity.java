@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -43,6 +48,8 @@ import com.gat.feature.suggestion.SuggestionFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
@@ -175,6 +182,22 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
             CommonCheck.processNotification(getScreen().notificationParcelable().getNotification(), this);
         }
 
+        // Add code to print out the key hash
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.gat",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e("NameNotFoundException", Log.getStackTraceString(e));
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("NameNotFoundException", Log.getStackTraceString(e));
+        }
+
     }
 
     @Override
@@ -224,17 +247,16 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     @Override
     public void onBackPressed() {
         int currentTab = mTabLayout.getSelectedTabPosition();
-        if(currentTab > 0) {
+        if (currentTab > 0) {
             currentTab --;
             setTabDesire(currentTab);
-        }else {
-            finish();
+        } else {
+            // finish() will call onDestroy().. this code used to back to home screen.
+            Intent startMain = new Intent(Intent.ACTION_MAIN);
+            startMain.addCategory(Intent.CATEGORY_HOME);
+            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startMain);
         }
-    }
-
-    public void setTabDesire(int position) {
-        mTabLayout.setScrollPosition(position,0f,true);
-        mViewPager.setCurrentItem(position);
     }
 
     @Override
@@ -251,6 +273,12 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
     public void haveToPullNotifyPage(int pullCount) {
         MZDebug.w("haveToPullNotifyPage : pullCount = " + pullCount);
         tabNotification.setNoticeCount(pullCount);
+    }
+
+
+    public void setTabDesire(int position) {
+        mTabLayout.setScrollPosition(position,0f,true);
+        mViewPager.setCurrentItem(position);
     }
 
 
@@ -306,7 +334,6 @@ public class MainActivity extends ScreenActivity<MainScreen, MainPresenter> impl
         }
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
-
 
 
 }
