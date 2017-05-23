@@ -64,6 +64,7 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
     private LatLng userLocation;
     private LatLng neLocation;
     private LatLng wsLocation;
+    private int totalResult = 0;
     @Override
     public void requestUserNearOnTheMap(LatLng userLocation, LatLng neLocation, LatLng wsLocation) {
         this.userLocation = userLocation;
@@ -76,8 +77,9 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
                 .returnOn(schedulerFactory.main())
                 .onNext(data -> {
                     resultUserNearSubject.onNext(data);
+                    totalResult = data.getTotalResult();
                     // nếu tổng mà lớn hơn trang hiện tại * size trang thì có thể load more
-                    if (data.getTotalResult() > (mCurrentPage *SIZE_OF_PAGE)) {
+                    if (totalResult > (mCurrentPage *SIZE_OF_PAGE)) {
                         subjectCanLoadMore.onNext(true);
                     }
                 })
@@ -102,8 +104,8 @@ public class ShareNearByUserDistancePresenterImpl implements ShareNearByUserDist
                 .onNext(data -> {
                     subjectLoadMoreSuccess.onNext(data);
 
-                    // nếu tổng mà lớn hơn trang hiện tại * size trang thì có thể load more
-                    if (data.getTotalResult() > (mCurrentPage *SIZE_OF_PAGE)) {
+                    // nếu totalResult mà lớn hơn trang hiện tại * size trang thì có thể load more
+                    if (totalResult > (mCurrentPage *SIZE_OF_PAGE)) {
                         subjectCanLoadMore.onNext(true);
                     }
                 })

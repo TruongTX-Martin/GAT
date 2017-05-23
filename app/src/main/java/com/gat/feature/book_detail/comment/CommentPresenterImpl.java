@@ -56,8 +56,8 @@ public class CommentPresenterImpl implements CommentPresenter{
     }
 
     @Override
-    public void postComment(int editionId, float rating, String review, boolean spoiler) {
-        useCasePostComment = useCaseFactory.postComment(editionId, (int) rating, review, spoiler);
+    public void postComment(int editionId, float rating, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId) {
+        useCasePostComment = useCaseFactory.postComment(editionId, (int) rating, review, spoiler, evaluationId, readingId, bookId);
         useCasePostComment.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(serverResponse -> {

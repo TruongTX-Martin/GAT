@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/navigation_header_height"
             android:background="@color/background_header_blue"
+            android:layout_marginBottom="@dimen/margin_top_bottom_large"
             android:text="@string/setting" />
 
         <LinearLayout
@@ -207,7 +208,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_large"
                 android:background="@drawable/bg_border_bottom"
-                android:paddingRight="@dimen/paddingLarge">
+                android:layout_marginRight="@dimen/margin_horizontal_large">
 
                 <ImageView
                     android:id="@+id/icon_twitter"

@@ -13,10 +13,7 @@ import io.reactivex.Observable;
 
 public interface SelfUpdateReadingPresenter extends Presenter{
 
-    void setEditionId (int editionId);
-    void setReadingStatus (int readingStatus);
-
-    void updateReadingStatus (int state);
+    void updateReadingStatus (int editionId, int state, Integer readingId, int bookId);
     Observable<String> onUpdateReadingStatusSuccess ();
 
     Observable<String> onUnAuthorization();

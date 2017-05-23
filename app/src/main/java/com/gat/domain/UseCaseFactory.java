@@ -142,13 +142,13 @@ public interface UseCaseFactory {
 
     UseCase<List<UserResponse>> getEditionSharingUser (int editionId);
 
-    UseCase<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler);
+    UseCase<ServerResponse> postComment(int editionId, int value, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId);
 
     UseCase <BookInstanceInfo> getSelfInstanceInfo (int editionId);
 
-    UseCase<ServerResponse> selfAddInstance (int editionId, int sharingStatus, int numberOfBook);
+    UseCase<ServerResponse> selfAddInstance (int editionId, int sharingStatus, int numberOfBook, int bookId, Integer readingId);
 
-    UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus);
+    UseCase<ServerResponse> selfUpdateReadingStatus (int editionId, int readingStatus, Integer readingId, int bookId);
 
     UseCase<BorrowResponse> requestBorrow (int editionId, int ownerId);
 

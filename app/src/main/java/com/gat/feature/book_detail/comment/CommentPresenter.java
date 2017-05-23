@@ -11,7 +11,7 @@ import io.reactivex.Observable;
 
 public interface CommentPresenter extends Presenter {
 
-    void postComment (int editionId, float rating, String review, boolean spoiler);
+    void postComment (int editionId, float rating, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId);
     Observable<String> onPostCommentSuccess ();
     Observable<String> onPostCommentFailure ();
 

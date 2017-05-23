@@ -47,8 +47,10 @@ import com.gat.feature.start.StartActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -440,5 +442,16 @@ public class ClientUtils {
     }
 
 
+    public static String displayMeter (float meters) {
+
+        if (meters < 1000) {
+
+            return Math.round(meters) + " m";
+        }
+
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.CEILING);
+        return df.format(meters/1000) + " km";
+    }
 
 }

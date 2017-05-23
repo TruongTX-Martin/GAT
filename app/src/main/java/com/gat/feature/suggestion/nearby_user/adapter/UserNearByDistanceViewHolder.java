@@ -55,7 +55,8 @@ public class UserNearByDistanceViewHolder extends ItemViewHolder<UserNearByDista
             ClientUtils.setImage(mContext, imageViewUserAvatar, R.drawable.default_user_icon, ClientUtils.getUrlImage(user.getImageId(), ClientUtils.SIZE_SMALL));
         }
 
-        textViewDistance.setText(String.valueOf(user.getDistance()));
+        textViewDistance.setText(ClientUtils.displayMeter(user.getDistance()));
+
         textViewFullName.setText(user.getName());
         textViewAddress.setText(user.getAddress());
         textViewSharingCount.setText(String.valueOf(user.getSharingCount()));

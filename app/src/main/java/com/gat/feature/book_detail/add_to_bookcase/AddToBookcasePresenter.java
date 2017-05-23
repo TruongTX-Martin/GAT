@@ -1,5 +1,6 @@
 package com.gat.feature.book_detail.add_to_bookcase;
 
+import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.rey.mvp2.Presenter;
 
@@ -11,7 +12,8 @@ import io.reactivex.Observable;
 
 public interface AddToBookcasePresenter extends Presenter {
 
-    void setEditionId (int editionId);
+    void setBookInfo (BookInfo bookInfo);
+    void setReadingId (Integer readingId);
 
     void getBookTotalInstance ();
     Observable<BookInstanceInfo> onGetBookTotalInstanceSuccess ();

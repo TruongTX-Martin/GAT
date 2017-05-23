@@ -101,7 +101,9 @@ public class AddToBookcaseActivity extends ScreenActivity<AddToBookcaseScreen, A
 
         showProgress();
         setupBookInfoDisplay(getScreen().bookInfo());
-        getPresenter().setEditionId(getScreen().bookInfo().getEditionId());
+        getPresenter().setBookInfo(getScreen().bookInfo());
+        getPresenter().setReadingId(getScreen().readingId());
+
         getPresenter().getBookTotalInstance();
         toggleButton.setOnClickListener(view -> {
             int newSharing = 0;

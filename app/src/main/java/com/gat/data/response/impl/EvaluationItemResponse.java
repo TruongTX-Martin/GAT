@@ -9,7 +9,7 @@ import android.os.Parcelable;
 
 public class EvaluationItemResponse implements Parcelable{
 
-    private String evaluationId;
+    private int evaluationId;
     private int userId;
     private String name;
     private String imageId;
@@ -25,7 +25,7 @@ public class EvaluationItemResponse implements Parcelable{
     }
 
     public EvaluationItemResponse(Parcel in) {
-        evaluationId = in.readString();
+        evaluationId = in.readInt();
         userId = in.readInt();
         name = in.readString();
         imageId = in.readString();
@@ -84,7 +84,7 @@ public class EvaluationItemResponse implements Parcelable{
         return this;
     }
 
-    public String getEvaluationId() {
+    public int getEvaluationId() {
         return evaluationId;
     }
 
@@ -147,7 +147,7 @@ public class EvaluationItemResponse implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(evaluationId);
+        dest.writeInt(evaluationId);
         dest.writeInt(userId);
         dest.writeString(name);
         dest.writeString(imageId);

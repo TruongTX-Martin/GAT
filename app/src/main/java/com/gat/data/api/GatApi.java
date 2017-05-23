@@ -301,7 +301,10 @@ public interface GatApi {
             @Field("editionId") int editionId,
             @Field("value") int value,
             @Field("review") String review,
-            @Field("spoiler") boolean spoiler
+            @Field("spoiler") boolean spoiler,
+            @Field("evaluationId") Integer evaluationId,
+            @Field("readingId") Integer readingId,
+            @Field("bookId") int bookId
     );
 
     @GET("book/selfget_instance_info")
@@ -314,7 +317,9 @@ public interface GatApi {
     Observable<Response<ServerResponse>> selfAddInstance (
             @Field("editionId") int editionId,
             @Field("sharingStatus") int sharingStatus,
-            @Field("numberOfBook") int numberOfBook
+            @Field("numberOfBook") int numberOfBook,
+            @Field("bookId") int bookId,
+            @Field("readingId") Integer readingId
     );
 
 
@@ -322,7 +327,9 @@ public interface GatApi {
     @POST("book/selfupdate_reading_stt")
     Observable<Response<ServerResponse>> selfUpdateReadingStatus (
             @Field("editionId") int editionId,
-            @Field("readingStatus") int readingStatus
+            @Field("readingStatus") int readingStatus,
+            @Field("readingId") Integer readingId,
+            @Field("bookId") int bookId
     );
 
     @FormUrlEncoded

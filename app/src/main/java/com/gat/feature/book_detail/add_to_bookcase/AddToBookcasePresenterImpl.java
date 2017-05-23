@@ -6,6 +6,7 @@ import com.gat.common.util.MZDebug;
 import com.gat.data.exception.CommonException;
 import com.gat.data.exception.LoginException;
 import com.gat.data.response.ServerResponse;
+import com.gat.data.response.impl.BookInfo;
 import com.gat.data.response.impl.BookInstanceInfo;
 import com.gat.domain.SchedulerFactory;
 import com.gat.domain.UseCaseFactory;
@@ -31,7 +32,8 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
     private final Subject<String> subjectAddBookFailure;
     private final Subject<String> subjectUnAuthorization;
 
-    private int mEditionId;
+    private BookInfo mBookInfo;
+    private Integer mReadingId;
 
     public AddToBookcasePresenterImpl(UseCaseFactory useCaseFactory, SchedulerFactory schedulerFactory) {
         this.useCaseFactory = useCaseFactory;
@@ -53,14 +55,20 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
 
     }
 
+
     @Override
-    public void setEditionId(int editionId) {
-        mEditionId = editionId;
+    public void setBookInfo(BookInfo bookInfo) {
+        mBookInfo = bookInfo;
+    }
+
+    @Override
+    public void setReadingId(Integer readingId) {
+        mReadingId = readingId;
     }
 
     @Override
     public void getBookTotalInstance() {
-        bookInstanceInfoUseCase = useCaseFactory.getSelfInstanceInfo(mEditionId);
+        bookInstanceInfoUseCase = useCaseFactory.getSelfInstanceInfo(mBookInfo.getEditionId());
         bookInstanceInfoUseCase.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(bookInstanceInfo -> {
@@ -89,7 +97,7 @@ public class AddToBookcasePresenterImpl implements AddToBookcasePresenter {
 
     @Override
     public void addBookInstance(int sharingStatus, int numberOfBook) {
-        addBookInstanceUseCase = useCaseFactory.selfAddInstance(mEditionId, sharingStatus, numberOfBook);
+        addBookInstanceUseCase = useCaseFactory.selfAddInstance(mBookInfo.getEditionId(), sharingStatus, numberOfBook, mBookInfo.getBookId(), mReadingId);
         addBookInstanceUseCase.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(serverResponse -> {

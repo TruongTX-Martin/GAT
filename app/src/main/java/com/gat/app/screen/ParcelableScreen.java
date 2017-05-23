@@ -192,6 +192,9 @@ public class ParcelableScreen implements Parcelable {
             dest.writeInt(selfUpdateReadingScreen.editionId());
             dest.writeInt(selfUpdateReadingScreen.readingStatus());
 
+            dest.writeInt(selfUpdateReadingScreen.readingId());
+            dest.writeInt(selfUpdateReadingScreen.bookId());
+
         } else if (screen instanceof ListUserSharingBookScreen) {
             ListUserSharingBookScreen userSharingBookScreen = (ListUserSharingBookScreen) screen;
             dest.writeList(userSharingBookScreen.listUser());
@@ -199,11 +202,18 @@ public class ParcelableScreen implements Parcelable {
             AddToBookcaseScreen addToBookcaseScreen = (AddToBookcaseScreen) screen;
             dest.writeParcelable(addToBookcaseScreen.bookInfo(), flags);
             dest.writeString(addToBookcaseScreen.authorName());
+            dest.writeInt(addToBookcaseScreen.readingId());
+
         } else if (screen instanceof CommentScreen) {
             CommentScreen commentScreen = (CommentScreen) screen;
             dest.writeInt(commentScreen.editionId());
             dest.writeFloat(commentScreen.value());
             dest.writeString(commentScreen.comment());
+
+            dest.writeInt(commentScreen.evaluationId());
+            dest.writeInt(commentScreen.readingId());
+            dest.writeInt(commentScreen.bookId());
+
         } else if (screen instanceof ScanScreen) {
             ScanScreen scanScreen = (ScanScreen)screen;
             dest.writeInt(scanScreen.from());
@@ -292,7 +302,7 @@ public class ParcelableScreen implements Parcelable {
                 screen = BookDetailScreen.instance(in.readInt());
                 break;
             case SELF_UPDATE_READING:
-                screen = SelfUpdateReadingScreen.instance(in.readInt(), in.readInt());
+                screen = SelfUpdateReadingScreen.instance(in.readInt(), in.readInt(), in.readInt(), in.readInt());
                 break;
             case LIST_USER_SHARING_BOOK:
                 List<UserResponse> myList = null;
@@ -301,10 +311,10 @@ public class ParcelableScreen implements Parcelable {
                 break;
             case ADD_TO_BOOKCASE:
                 screen = AddToBookcaseScreen.instance(
-                        in.readParcelable(BookInfo.class.getClassLoader()), in.readString());
+                        in.readParcelable(BookInfo.class.getClassLoader()), in.readString(), in.readInt());
                 break;
             case ADD_COMMENT:
-                screen = CommentScreen.instance(in.readInt(), in.readFloat(), in.readString());
+                screen = CommentScreen.instance(in.readInt(), in.readFloat(), in.readString(), in.readInt(), in.readInt(), in.readInt());
                 break;
             case MAIN_SETTING:
                 screen = MainSettingScreen.instance();

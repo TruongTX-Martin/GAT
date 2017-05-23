@@ -8,6 +8,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,6 +38,7 @@ import com.gat.feature.book_detail.self_update_reading.ReadingState;
 import com.gat.feature.login.LoginScreen;
 import com.gat.feature.main.MainActivity;
 import com.gat.feature.setting.ISettingDelegate;
+import com.gat.feature.setting.KeyBackToMain;
 import com.gat.feature.setting.SocialType;
 import com.gat.feature.start.StartActivity;
 import com.gat.repository.entity.User;
@@ -283,6 +286,15 @@ public class MainSettingFragment extends ScreenFragment<MainSettingScreen, MainS
     private User mUser;
     private void onLoadUserSuccess (User user ) {
         if (null == user || !user.isValid()) {
+
+            // first page is main fragment page
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            Bundle args = new Bundle();
+            args.putInt(MainSettingFragment.KEY_BACK_TO_MAIN, KeyBackToMain.FRIST_CREATE);
+            transaction.replace(R.id.fl_setting, new SettingWhileNotLogin());
+            transaction.commit();
+
             return;
         }
 

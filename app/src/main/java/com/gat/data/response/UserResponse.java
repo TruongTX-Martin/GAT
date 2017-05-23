@@ -86,6 +86,10 @@ public class UserResponse implements Parcelable{
         this.requestingStatus = requestingStatus;
     }
 
+    public void setRecordId(int recordId) {
+        this.recordId = recordId;
+    }
+
     public void setRecordStatus(int recordStatus) {
         this.recordStatus = recordStatus;
     }

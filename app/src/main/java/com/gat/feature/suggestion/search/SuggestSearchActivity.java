@@ -439,15 +439,15 @@ public class SuggestSearchActivity extends ScreenActivity<SuggestSearchScreen, S
 
     private void onShowProgressFragment (String no_message) {
 
-        if (onSearchBookHistorySuccess != null) {
-            onSearchBookHistorySuccess.onShowProgress();
-        }
-        if (onSearchAuthorHistorySuccess != null) {
-            onSearchAuthorHistorySuccess.onShowProgress();
-        }
-        if (onSearchUserHistorySuccess != null) {
-            onSearchUserHistorySuccess.onShowProgress();
-        }
+//        if (onSearchBookHistorySuccess != null) {
+//            onSearchBookHistorySuccess.onShowProgress();
+//        }
+//        if (onSearchAuthorHistorySuccess != null) {
+//            onSearchAuthorHistorySuccess.onShowProgress();
+//        }
+//        if (onSearchUserHistorySuccess != null) {
+//            onSearchUserHistorySuccess.onShowProgress();
+//        }
     }
 
     private void onHideProgress (String no_message) {

@@ -362,7 +362,7 @@ public class ShareNearByUserDistanceActivity
     private void onLoadMoreUserComplete (DataResultListResponse<UserNearByDistance> data) {
         hideProgress();
         adapter.setMoreItems(data.getResultInfo());
-        textViewTotal.setText(String.format(getString(R.string.show_count_search_result), data.getTotalResult()));
+
         // nếu user nào ở list mà không có trong mListUser thì thêm vào mListUsers để add vào map
         List<UserNearByDistance> listDestination = CompareListUtil.destinationListUserNear(mListUsers, data.getResultInfo());
         mListUsers.addAll(listDestination);

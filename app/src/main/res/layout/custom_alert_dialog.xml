@@ -12,8 +12,8 @@
         android:layout_centerInParent="true"
         android:background="@drawable/bg_layout_dialog"
         android:paddingBottom="@dimen/paddingLarge"
-        android:paddingLeft="@dimen/paddingLarge"
-        android:paddingRight="@dimen/paddingLarge">
+        android:paddingLeft="@dimen/error_popup_padding_lr"
+        android:paddingRight="@dimen/error_popup_padding_lr">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -22,6 +22,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/error_popup_margin_top"
+            android:text="Thông báo"
             android:textColor="#4e4e4e"
             android:textSize="@dimen/header_textsize_l"
             android:textStyle="bold" />
@@ -32,9 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textViewTitle"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/error_popup_margin_top"
-            android:paddingEnd="@dimen/error_popup_padding_lr"
-            android:paddingStart="@dimen/error_popup_padding_lr"
+            android:layout_marginTop="@dimen/error_margin_title_message"
+            android:text="Để sử dụng chức năng này bạn phải đăng nhập vào tài khoản của mình"
             android:textAlignment="center"
             android:textSize="@dimen/normal_textsize_l" />
 
@@ -45,9 +45,10 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/textViewMessage"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/error_popup_button_margin_top"
+            android:layout_marginTop="@dimen/error_margin_message_button"
             android:background="@drawable/bg_rounded_blue"
             android:text="@string/yes"
+            android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/normal_textsize_l" />
 
@@ -58,11 +59,12 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/textViewMessage"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/error_popup_button_margin_top"
+            android:layout_marginTop="@dimen/error_margin_message_button"
             android:background="@drawable/bg_rounded_blue"
             android:paddingLeft="@dimen/paddingLarge"
             android:paddingRight="@dimen/paddingLarge"
             android:text="@string/no"
+            android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/normal_textsize_l" />
 

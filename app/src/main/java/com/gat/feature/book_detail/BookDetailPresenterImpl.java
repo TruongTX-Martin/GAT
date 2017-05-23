@@ -205,11 +205,11 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     }
 
     @Override
-    public void updateReadingStatus() {
+    public void updateReadingStatus(Integer readingId, int bookId) {
         MZDebug.w("________________________________ updateReadingStatus, editionId = "
                 + mEditionId + " TO READ = 2 ");
 
-        useCaseSelfUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(mEditionId, ReadingState.TO_READ);
+        useCaseSelfUpdateReadingStatus = useCaseFactory.selfUpdateReadingStatus(mEditionId, ReadingState.TO_READ, readingId, bookId);
         useCaseSelfUpdateReadingStatus.executeOn(schedulerFactory.io()).
                 returnOn(schedulerFactory.main()).
                 onNext(serverResponse -> {
@@ -293,8 +293,8 @@ public class BookDetailPresenterImpl implements BookDetailPresenter {
     }
 
     @Override
-    public void postRating(int editionId, float rating, String review, boolean spoiler) {
-        useCasePostRating = useCaseFactory.postComment(editionId, (int) rating, review, spoiler);
+    public void postRating(int editionId, float rating, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId) {
+        useCasePostRating = useCaseFactory.postComment(editionId, (int) rating, review, spoiler, evaluationId, readingId, bookId);
         useCasePostRating.executeOn(schedulerFactory.io())
                 .returnOn(schedulerFactory.main())
                 .onNext(serverResponse -> {

@@ -34,11 +34,11 @@ public interface BookDetailPresenter extends Presenter {
     Observable<EvaluationItemResponse> onGetBookEvaluationByUser ();
     Observable<String> onGetEvaluationByUserFailure ();
 
-    void updateReadingStatus ();
+    void updateReadingStatus (Integer readingId, int bookId);
     Observable<String> onUpdateReadingStatusSuccess ();
     Observable<String> onUpdateReadingStatusFailure ();
 
-    void postRating (int editionId, float rating, String review, boolean spoiler);
+    void postRating (int editionId, float rating, String review, boolean spoiler, Integer evaluationId, Integer readingId, int bookId);
     Observable<String> onRatingSuccess ();
 
     void isUserLoggedIn ();
