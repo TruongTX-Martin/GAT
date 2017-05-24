@@ -1,8 +1,8 @@
 ext.configuration = [
         applicationId               : "com.gat",
         versionMajor                : 0,
-        versionMinor                : 1,
-        versionPatch                : 0,
+        versionMinor                : 9,
+        versionPatch                : 99,
         versionClassifier           : "",
         minimumSdkVersion           : 15,
         compileSdkVersion           : 25,

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GAT</string>
+    <string name="app_name">GaT</string>
 
     <!-- facebook login strings for GatEx-->
     <!--<string name="facebook_app_id">1130625350393376</string>-->
@@ -8,7 +8,7 @@
     <string name="facebook_app_id">1937935059771206</string>
     <string name="twitter_api_secret">iiUTGYNsXTpwhtmGVIfxEtkBhVHl6VLNrKD4hDxZ2fwNyk9Jdl</string>
     <string name="twitter_api_key">gKxGJeazBQC8Mk5AwLZeMUxcC</string>
-    <string name="map_api_key">AIzaSyB6iy69TsVPpstHblohdVn7mGnIrETCSLo</string>
+    <string name="map_api_key">AIzaSyBJRGGFPCM2YKGTeRaRNkbYIs8_-Uuj0vc</string>
 
     <!-- DEV -->
     <!--<string name="facebook_app_id">936889173084630</string>-->

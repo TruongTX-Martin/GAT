@@ -5,7 +5,7 @@ package com.gat.common.util;
  */
 
 public class Constance {
-    public static final String BASE_URL_IMAGE = "http://gat-test-ver2.azurewebsites.net/api/";
+    public static final String BASE_URL_IMAGE = "http://gat-webservice-v10-se.azurewebsites.net/api/";
     public static final String IMAGE_SIZE_ORIGINAL = "o";
     public static final String IMAGE_SIZE_THUMBNAIL = "t";
     public static final String IMAGE_SIZE_SMALL = "s";

@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "177876099439",
-    "firebase_url": "https://gatbook-163112.firebaseio.com",
-    "project_id": "gatbook-163112",
-    "storage_bucket": "gatbook-163112.appspot.com"
+    "project_number": "1053472590152",
+    "firebase_url": "https://gat-product-ver10.firebaseio.com",
+    "project_id": "gat-product-ver10",
+    "storage_bucket": "gat-product-ver10.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:177876099439:android:ed767cc57f3481be",
+        "mobilesdk_app_id": "1:1053472590152:android:ed767cc57f3481be",
         "android_client_info": {
           "package_name": "com.gat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "177876099439-1v7jh2g75epo9bg7ev2d141u949e5gvb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.gat",
-            "certificate_hash": "9a75330dae95d959e96e8debe51f59c9ac5cf0a4"
-          }
-        },
-        {
-          "client_id": "177876099439-q6vnk5r2bjv541lkntqmbmi2ekhcmnnc.apps.googleusercontent.com",
+          "client_id": "1053472590152-2beq5rvlk87v1u05gfrs915ekovgo9go.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAvcjhK9lZCKMHD91Mz7ZY_8p2YIJRZ1q4"
+          "current_key": "AIzaSyCEqZyzzbZNBZ6HClJy0SqQ-Gb-1VR8QAw"
         }
       ],
       "services": {
@@ -37,20 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "177876099439-jf1c4lti3t7o3cu1gi7nurnv7ri0ojfe.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "GaT.app.vn"
-              }
-            },
-            {
-              "client_id": "177876099439-q6vnk5r2bjv541lkntqmbmi2ekhcmnnc.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

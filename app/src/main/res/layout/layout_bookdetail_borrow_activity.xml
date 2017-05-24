@@ -159,6 +159,7 @@
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_below="@+id/txtRequest"
                 android:background="#f6f6f6">
 
 
@@ -174,7 +175,7 @@
                     android:id="@+id/txtEditionName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtRequest"
+
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/imgEditionBook"
                     android:textColor="#202020" />
